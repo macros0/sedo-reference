@@ -15,6 +15,9 @@ on:
       - 'data/message-transitions.json'
       - 'web/message-transitions.js'
       - 'web/comparison-export.js'
+      - 'web/comparison-mapping.js'
+      - 'web/compare-core.js'
+      - 'tests/test_comparison_mapping.cjs'
       - 'web/vendor/**'
       - 'tests/test_comparison_export.cjs'
       - 'tests/test_transitions.cjs'
@@ -44,6 +47,7 @@ jobs:
           node tests/test_viewer_sections.cjs
           node tests/test_cross_message_compare.cjs
           node tests/test_comparison_export.cjs
+          node tests/test_comparison_mapping.cjs
           python import_inbox.py --check
       - name: Write validation report
         if: always()

@@ -32,22 +32,33 @@ function index(fields){
  }
  return map;
 }
-function compare(left,right){
- const a=index(left),b=index(right),results=[];
+function differences(before,after){
+ return properties.filter(([key,,get])=>{
+  if(key==="valueDescriptions"){
+   const common=(f,other)=>sorted((f.values||[]).filter(([v])=>(other.values||[]).some(([w])=>v===w)));
+   return stable(common(before,after))!==stable(common(after,before));
+  }
+  return stable(get(before))!==stable(get(after));
+ }).map(([key,label,get])=>({key,label,before:get(before),after:get(after)}));
+}
+function compare(left,right,mappings=[]){
+ const a=index(left),b=index(right),results=[],usedBefore=new Set(),usedAfter=new Set(),seen=new Set();
+ if(!Array.isArray(mappings))throw Error("Соответствия должны быть списком пар XML-путей.");
+ for(const pair of mappings){
+  if(!pair||typeof pair.beforePath!=="string"||typeof pair.afterPath!=="string"||!a.has(pair.beforePath)||!b.has(pair.afterPath))throw Error("Не найден XML-путь ручного соответствия: "+String(pair?.beforePath)+" → "+String(pair?.afterPath));
+  const key=JSON.stringify([pair.beforePath,pair.afterPath]);if(seen.has(key))continue;seen.add(key);
+  const before=a.get(pair.beforePath),after=b.get(pair.afterPath),changes=differences(before,after);
+  usedBefore.add(pair.beforePath);usedAfter.add(pair.afterPath);
+  results.push({path:pair.beforePath,beforePath:pair.beforePath,afterPath:pair.afterPath,manual:true,comment:typeof pair.comment==="string"?pair.comment:"",status:changes.length?"changed":"mapped",before,after,changes});
+ }
  for(const path of [...new Set([...a.keys(),...b.keys()])].sort()){
-  const before=a.get(path),after=b.get(path);
+  const before=usedBefore.has(path)?undefined:a.get(path),after=usedAfter.has(path)?undefined:b.get(path);
+  if(!before&&!after)continue;
   if(!before||!after){results.push({path,status:before?"removed":"added",before,after,changes:[]});continue}
-  const changes=properties.filter(([key,,get])=>{
-   if(key==="valueDescriptions"){
-    // Report annotation-only differences here; changes to allowed values are listed separately.
-    const common=(f,other)=>sorted((f.values||[]).filter(([v])=>(other.values||[]).some(([w])=>v===w)));
-    return stable(common(before,after))!==stable(common(after,before));
-   }
-   return stable(get(before))!==stable(get(after));
-  }).map(([key,label,get])=>({key,label,before:get(before),after:get(after)}));
+  const changes=differences(before,after);
   if(changes.length)results.push({path,status:"changed",before,after,changes});
  }
- return results;
+ return results.sort((x,y)=>x.path.localeCompare(y.path)||(x.afterPath||"").localeCompare(y.afterPath||""));
 }
 const api={compare};root.SedoCompare=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;

@@ -42,6 +42,7 @@ jobs:
           node tests/test_viewer_sections.cjs
           node tests/test_cross_message_compare.cjs
           node tests/test_comparison_export.cjs
+          node tests/test_comparison_mapping.cjs
       - name: Collect both contours and validate candidate
         run: python auto_update.py
       - name: Commit validated data and deploy

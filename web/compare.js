@@ -49,11 +49,11 @@ function formatDifference(value){
  return String(value);
 }
 async function renderComparison(m,params){
- const request=++comparisonRequest,section=$("comparison");section.replaceChildren(node("h1","","Сравнение сообщения "+m.number),node("p","",title(m)));
+ const comparisonHash=location.hash,request=++comparisonRequest,section=$("comparison");section.replaceChildren(node("h1","","Сравнение сообщения "+m.number),node("p","",title(m)));
  const defaults=comparisonDefaults(m),leftId=params.get("left")||defaults.left,rightId=params.get("right")||defaults.right;
  const ready=comparisonPool(m),left=ready.find(r=>r.revision_id===leftId),right=ready.find(r=>r.revision_id===rightId);
  if(!left||!right){section.append(node("p","empty","Выбранная редакция недоступна для сравнения."));return}
- if(left.number!==right.number){section.querySelector("h1").textContent="Сравнение сообщений "+left.number+" → "+right.number;section.append(node("p","meta","Сравниваются разные XML-форматы. Пути тегов сопоставляются полностью, включая имя корня."))}
+ if(left.number!==right.number){section.querySelector("h1").textContent="Сравнение сообщений "+left.number+" → "+right.number;section.append(node("p","meta","Сравниваются разные XML-форматы. Подтверждённые ручные пары учитываются отдельно; остальные теги сопоставляются по полным путям, включая имя корня."))}
  const controls=node("div","compare-controls"),selectors=[];
  for(const [caption,selected] of [["Было",left],["Стало",right]]){
   const wrap=node("label","",caption),select=node("select");
@@ -73,27 +73,31 @@ async function renderComparison(m,params){
  try{
   const [a,b]=await Promise.all([loadComparisonData(leftId),loadComparisonData(rightId)]);
   if(request!==comparisonRequest||!new URLSearchParams(location.hash.slice(1)).has("compare"))return;
-  const results=SedoCompare.compare(a,b);state.remove();
-  const counts={added:0,removed:0,changed:0};results.forEach(r=>counts[r.status]++);
-  const summaries=node("div","compare-counts");for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])summaries.append(node("span",key,text+" · "+counts[key]));section.append(summaries);
+  const mappingOptions={left,right,before:a,after:b,isCurrent:()=>request===comparisonRequest&&location.hash===comparisonHash};
+  const saved=SedoMapping.store.load(mappingOptions),mappings=saved.pairs;
+  const results=SedoCompare.compare(a,b,mappings);state.remove();
+  const counts={added:0,removed:0,changed:0,mapped:0};results.forEach(r=>counts[r.status]++);
+  const summaries=node("div","compare-counts");for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])summaries.append(node("span",key,text+" · "+counts[key]));if(mappings.length)summaries.append(node("span","mapped","Ручных соответствий · "+mappings.length));section.append(summaries);
+  SedoMapping.mount(section,mappingOptions,saved,()=>renderComparison(m,params));
   const exports=node("div","comparison-export"),exportButton=node("button","open","Выгрузить Excel для сопоставления"),exportState=node("span","meta");exportButton.type="button";exportState.setAttribute("role","status");
   exportButton.onclick=async()=>{
    exportButton.disabled=true;exportState.textContent="Готовим книгу…";
-   try{await SedoComparisonExport.download({left,right,before:a,after:b,results,baseURL:new URL(".",location.href).href});exportState.textContent="Книга передана браузеру для скачивания."}
+   try{await SedoComparisonExport.download({left,right,before:a,after:b,results,mappings,baseURL:new URL(".",location.href).href});exportState.textContent="Книга передана браузеру для скачивания."}
    catch(error){exportState.textContent="Не удалось выгрузить Excel. "+error.message}
    finally{exportButton.disabled=false}
   };
   exports.append(exportButton,exportState,node("p","meta","Вся выбранная пара редакций: исходные поля, изменения и таблица ручного сопоставления. Поиск и фильтры не ограничивают выгрузку."));section.append(exports);
   if(!results.length){section.append(node("p","empty","Деревья совпадают. Изменений в тегах, ограничениях и описаниях не найдено."));return}
   const filters=node("div","searchbar"),searchLabel=node("label","","Поиск по изменениям"),search=node("input");search.type="search";search.placeholder="Тег, путь, описание или ограничение";searchLabel.append(search);
-  const kindLabel=node("label","","Вид изменения"),kind=node("select");for(const [value,text] of [["","Все изменения"],["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])kind.add(new Option(text,value));kindLabel.append(kind);filters.append(searchLabel,kindLabel);section.append(filters);
+  const kindLabel=node("label","","Вид изменения"),kind=node("select");for(const [value,text] of [["","Все изменения"],["added","Добавлено"],["removed","Удалено"],["changed","Изменено"],["mapped","Сопоставлено без изменений"]])kind.add(new Option(text,value));kindLabel.append(kind);filters.append(searchLabel,kindLabel);section.append(filters);
   const count=node("p","meta");count.setAttribute("role","status");const list=node("div","differences");section.append(count,list);
   function draw(){
    const terms=normalize(search.value).split(/\s+/).filter(Boolean);
-   const visible=results.filter(r=>(!kind.value||r.status===kind.value)&&terms.every(t=>normalize([r.path,r.before?.doc,r.after?.doc,...r.changes.map(c=>c.label+" "+formatDifference(c.before)+" "+formatDifference(c.after))].join(" ")).includes(t)));
+   const visible=results.filter(r=>(!kind.value||r.status===kind.value)&&terms.every(t=>normalize([r.path,r.beforePath,r.afterPath,r.comment,r.before?.doc,r.after?.doc,...r.changes.map(c=>c.label+" "+formatDifference(c.before)+" "+formatDifference(c.after))].join(" ")).includes(t)));
    count.textContent="Показано изменений · "+visible.length;list.replaceChildren();
    for(const r of visible){
-    const card=node("article","difference "+r.status),head=node("div","difference-head");head.append(node("span","badge",({added:"Добавлено",removed:"Удалено",changed:"Изменено"})[r.status]),node("code","",r.path));card.append(head);
+    const card=node("article","difference "+r.status),head=node("div","difference-head");head.append(node("span","badge",({added:"Добавлено",removed:"Удалено",changed:"Изменено",mapped:"Сопоставлено без изменений"})[r.status]),node("code","",r.manual&&r.beforePath!==r.afterPath?r.beforePath+" → "+r.afterPath:r.path));if(r.manual)head.append(node("span","badge mapped","Ручное соответствие"));card.append(head);if(r.comment)card.append(node("p","mapping-comment",r.comment));
+    if(r.status==="mapped")card.append(node("p","","Ограничения и описания сопоставленных полей совпадают."));
     if(r.status!=="changed")card.append(node("p","",r.after?.doc||r.before?.doc||""));
     else{
      const table=node("table","diff-table"),thead=node("thead"),tr=node("tr");["Свойство","Было","Стало"].forEach(s=>tr.append(node("th","",s)));thead.append(tr);table.append(thead);const body=node("tbody");
@@ -101,8 +105,8 @@ async function renderComparison(m,params){
      table.append(body);const scroll=node("div","table-scroll");scroll.append(table);card.append(scroll);
     }
     const links=node("div","difference-links");
-    if(r.before)links.append(anchor("Поле в «Было»",route(left.number,left.environment,leftId,r.path)));
-    if(r.after)links.append(anchor("Поле в «Стало»",route(right.number,right.environment,rightId,r.path)));
+    if(r.before)links.append(anchor("Поле в «Было»",route(left.number,left.environment,leftId,r.before?.path||r.path)));
+    if(r.after)links.append(anchor("Поле в «Стало»",route(right.number,right.environment,rightId,r.after?.path||r.path)));
     card.append(links);list.append(card);
    }
   }
