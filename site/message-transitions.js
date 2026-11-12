@@ -1,14 +1,15 @@
-/* Confirmed message-type migrations. New XML types are never treated as aliases. */
+/* Explicit message-type correspondences. New XML types remain separate. */
 (function(root){
 "use strict";
-function replacement(number,catalog,environment){
+function replacements(number,catalog,environment){
  const config=catalog.message_transitions;
- if(!config||!Array.isArray(config.pairs))return null;
- const pair=config.pairs.find(p=>p.previous===String(number));
- if(!pair)return null;
- const exists=[...(catalog.revisions||[]),...(catalog.registry||[])].some(r=>r.number===pair.current&&(!environment||r.environment===environment));
- return exists?{...pair,platform:config.platform,production_retired_at:config.production_retired_at,source_url:config.source_url}:null;
+ if(!config||!Array.isArray(config.pairs))return [];
+ const entries=[...(catalog.revisions||[]),...(catalog.registry||[])];
+ return config.pairs.filter(p=>p.previous===String(number)&&entries.some(r=>r.number===p.current&&(!environment||r.environment===environment))).map(pair=>{
+  const source=config.sources?.[pair.source]||{};
+  return {...pair,platform:config.platform,production_retired_at:source.production_retired_at,source_url:source.url,source_title:source.title};
+ });
 }
-const api={replacement};root.SedoTransitions=api;
+const api={replacements};root.SedoTransitions=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);

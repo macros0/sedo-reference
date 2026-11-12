@@ -1,20 +1,142 @@
 {
-  "format": 1,
+  "format": 2,
   "platform": "ГИС ЕЦП",
-  "source_url": "https://lk.sfr.gov.ru/sedo.html",
-  "source_title": "Уведомление СФР о переносе проактивных процессов 19–21 сентября 2026 года",
   "verified_on": "2026-11-12",
-  "production_retired_at": "2026-09-19T10:00:00+03:00",
   "pairs": [
-    { "previous": "100", "current": "10010" },
-    { "previous": "101", "current": "10110" },
-    { "previous": "105", "current": "10510" },
-    { "previous": "107", "current": "10710" },
-    { "previous": "109", "current": "10910" },
-    { "previous": "112", "current": "11210" },
-    { "previous": "124", "current": "12410" },
-    { "previous": "320", "current": "32010" },
-    { "previous": "321", "current": "32110" },
-    { "previous": "322", "current": "32210" }
-  ]
+    {
+      "previous": "10",
+      "current": "1010",
+      "source": "vnim",
+      "scope": "Извещения о недостающих сведениях ВНиМ, ССВ"
+    },
+    {
+      "previous": "84",
+      "current": "8410",
+      "source": "vnim",
+      "scope": "Запрос статуса выплаты пособия по ВНиМ"
+    },
+    {
+      "previous": "85",
+      "current": "8510",
+      "source": "vnim",
+      "scope": "Результат запроса статуса выплаты пособия по ВНиМ"
+    },
+    {
+      "previous": "100",
+      "current": "10010",
+      "source": "september",
+      "scope": "Проактивные выплаты ВНиМ"
+    },
+    {
+      "previous": "101",
+      "current": "10110",
+      "source": "september",
+      "scope": "Проактивные выплаты ВНиМ"
+    },
+    {
+      "previous": "104",
+      "current": "10410",
+      "source": "vnim",
+      "scope": "Прекращение права на пособие по уходу за ребёнком"
+    },
+    {
+      "previous": "105",
+      "current": "10510",
+      "source": "september",
+      "scope": "Проактивные выплаты ВНиМ"
+    },
+    {
+      "previous": "106",
+      "current": "10610",
+      "source": "vnim",
+      "scope": "Результат уведомления о прекращении права на пособие"
+    },
+    {
+      "previous": "107",
+      "current": "10710",
+      "source": "september",
+      "scope": "Проактивные выплаты ВНиМ"
+    },
+    {
+      "previous": "109",
+      "current": "10910",
+      "source": "september",
+      "scope": "Проактивные выплаты ВНиМ"
+    },
+    {
+      "previous": "110",
+      "current": "11000",
+      "source": "vnim",
+      "scope": "ВНиМ: статус выплаты пособия"
+    },
+    {
+      "previous": "110",
+      "current": "11010",
+      "source": "reimbursement",
+      "scope": "Возмещение расходов страхователю: статус выплаты"
+    },
+    {
+      "previous": "112",
+      "current": "11210",
+      "source": "september",
+      "scope": "Проактивные выплаты ВНиМ"
+    },
+    {
+      "previous": "120",
+      "current": "12010",
+      "source": "reimbursement",
+      "scope": "Заявление о возмещении расходов на дополнительные выходные"
+    },
+    {
+      "previous": "121",
+      "current": "12110",
+      "source": "reimbursement",
+      "scope": "Результат обработки заявления о возмещении расходов"
+    },
+    {
+      "previous": "122",
+      "current": "12210",
+      "source": "reimbursement",
+      "scope": "Решение об отказе в возмещении расходов"
+    },
+    {
+      "previous": "124",
+      "current": "12410",
+      "source": "september",
+      "scope": "Проактивные выплаты ВНиМ"
+    },
+    {
+      "previous": "320",
+      "current": "32010",
+      "source": "september",
+      "scope": "Проактивные выплаты ВНиМ"
+    },
+    {
+      "previous": "321",
+      "current": "32110",
+      "source": "september",
+      "scope": "Проактивные выплаты ВНиМ"
+    },
+    {
+      "previous": "322",
+      "current": "32210",
+      "source": "september",
+      "scope": "Проактивные выплаты ВНиМ"
+    }
+  ],
+  "sources": {
+    "september": {
+      "url": "https://lk.sfr.gov.ru/sedo.html",
+      "title": "Уведомление СФР о переносе проактивных процессов 19–21 сентября 2026 года",
+      "production_retired_at": "2026-09-19T10:00:00+03:00"
+    },
+    "vnim": {
+      "url": "https://lk.sfr.gov.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_1_Общие положения_v3.3_19.09.26.docx",
+      "title": "Приложение 10. ВНиМ, ССВ. Том 1. Общие положения v3.3 (19.09.2026)"
+    },
+    "reimbursement": {
+      "url": "https://lk.sfr.gov.ru/specs_sedo/Приложение_6_Возмещения_Том_1_Общие положения_v3.0_06.10.25.docx",
+      "title": "Приложение 6. Возмещения. Том 1. Общие положения v3.0 (06.10.2025)"
+    }
+  }
 }

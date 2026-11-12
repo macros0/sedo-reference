@@ -24,15 +24,23 @@ function date(s){return s?s.replace(/\.(\d{2})$/,".20$1"):"Дата не ука�
 function title(m,env){return m.revisions.find(r=>!env||r.environment===env)?.title||m.rows.find(r=>!env||r.environment===env)?.title||[...m.titles][0]}
 function label(r){return envNames[r.environment]+" · "+(r.document_version||"Версия не указана")+" · "+date(r.label_date)+(r.source_type==="manual"?" · Ручная загрузка":"")}
 function replacementNotice(m,env,compact=false){
- const info=window.SedoTransitions?.replacement(m.number,catalog,env);if(!info)return null;
+ const options=window.SedoTransitions?.replacements(m.number,catalog,env)||[];if(!options.length)return null;
+ const dated=options.every(info=>info.production_retired_at);
  const notice=node("aside","message-transition"+(compact?" compact":""));
- notice.append(node("strong","",compact?"Заменён в ГИС ЕЦП":"Устаревший тип сообщения · переход на "+info.platform));
+ notice.append(node("strong","",dated?(compact?"Заменён в ГИС ЕЦП":"Устаревший тип сообщения · переход на ГИС ЕЦП"):"Новый формат ГИС ЕЦП"));
  if(!compact){
-  notice.append(node("p","","Сообщение "+info.previous+" заменено типом "+info.current+". При переходе изменилась структура XML: используйте спецификацию нового типа."));
-  notice.append(node("p","meta","По уведомлению СФР в продуктивном контуре приём и отправка прежнего типа прекращены с "+observationDate(info.production_retired_at)+"."));
+  notice.append(node("p","",options.length>1?"Для сообщения "+m.number+" в ГИС ЕЦП предусмотрены разные типы по назначению. Выберите нужный процесс. При переходе изменилась структура XML: используйте спецификацию выбранного типа.":"Сообщению "+m.number+" соответствует новый тип "+options[0].current+". При переходе изменилась структура XML: используйте спецификацию нового типа."));
  }
- notice.append(anchor(compact?"Новый тип "+info.current+" →":"Перейти к сообщению "+info.current,route(info.current,env),compact?"replacement-link":"open replacement-link"));
- if(!compact){notice.append(document.createTextNode(" · "),external("Уведомление СФР ↗",info.source_url))}
+ for(const info of options){
+  const entry=node("div","transition-option");
+  if(!compact||options.length>1)entry.append(node("p","transition-scope",info.scope));
+  entry.append(anchor(compact?"Новый тип "+info.current+" →":"Перейти к сообщению "+info.current,route(info.current,env),compact?"replacement-link":"open replacement-link"));
+  if(!compact){
+   if(info.production_retired_at)entry.append(node("p","meta","По уведомлению СФР в продуктивном контуре приём и отправка прежнего типа прекращены с "+observationDate(info.production_retired_at)+"."));
+   entry.append(document.createTextNode(" · "),external("Источник СФР ↗",info.source_url));
+  }
+  notice.append(entry);
+ }
  return notice;
 }
 function renderMessages(){
