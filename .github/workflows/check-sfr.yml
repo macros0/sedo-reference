@@ -1,49 +1,64 @@
 name: Check SFR catalogs
-on: workflow_dispatch
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
 permissions:
   contents: read
 concurrency:
-  group: sfr-catalog-check
+  group: reference-main
   cancel-in-progress: false
 jobs:
-  collect:
+  update:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 35
+    permissions:
+      contents: write
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GIT_AUTHOR_NAME: github-actions[bot]
+      GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+      GIT_COMMITTER_NAME: github-actions[bot]
+      GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Collect both catalogs and compile trees
-        run: python update_catalog.py
-      - name: Prepare candidate and history for review
+      - name: Test history preservation and update failures
+        run: python -m unittest discover -s tests -v
+      - name: Collect both contours and validate candidate
+        run: python auto_update.py
+      - name: Commit validated data and deploy
+        run: |
+          git add state data site
+          if ! git diff --cached --quiet; then
+            git commit -m "Update SFR specifications and check status"
+            git push origin HEAD:main
+          fi
+          # GITHUB_TOKEN pushes do not trigger the Pages push workflow.
+          # Explicit dispatch also retries deployment after a previous Pages failure.
+          gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main
+      - name: Write update summary
         if: always()
-        shell: bash
         run: |
           python - <<'PY'
-          import json, pathlib, shutil
-          root = pathlib.Path("candidate")
-          root.mkdir(exist_ok=True)
-          for p in ("data","state/snapshots","state/history.json","state/current.json","state/last-run.json"):
-              src = pathlib.Path(p)
-              if src.exists():
-                  dst = root / p
-                  dst.parent.mkdir(parents=True, exist_ok=True)
-                  if src.is_dir(): shutil.copytree(src, dst, dirs_exist_ok=True)
-                  else: shutil.copy2(src, dst)
-          for p in pathlib.Path("state/snapshots").glob("*.json"):
-              for r in json.loads(p.read_bytes())["entries"]:
-                  if r["kind"]=="zip" and r.get("sha256"):
-                      src = pathlib.Path("state/objects") / r["sha256"]
-                      if src.is_file():
-                          dst = root / src
-                          dst.parent.mkdir(parents=True,exist_ok=True)
-                          shutil.copy2(src,dst)
+          import json, os
+          from pathlib import Path
+          report = Path("update-report.json")
+          if report.exists():
+              r = json.loads(report.read_bytes())
+              with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf8") as f:
+                  f.write("## SFR update\n\n")
+                  f.write("~~~json\n" + json.dumps(r, ensure_ascii=False, indent=2) + "\n~~~\n")
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: catalog-candidate
-          path: candidate/
-          retention-days: 14
+          name: sfr-update-report
+          path: update-report.json
+          if-no-files-found: ignore
+          retention-days: 30
 

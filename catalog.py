@@ -58,14 +58,19 @@ def derive(snapshot):
 def export(state,target):
     ptr=json.loads((state/"current.json").read_bytes())["snapshot"]
     history=json.loads((state/"history.json").read_bytes()) if (state/"history.json").exists() else [ptr]
-    versions={};current_ids=set()
+    versions={};current_ids=set();registry={};current_registry=set()
     for key in dict.fromkeys([*history,ptr]):
         d=derive(json.loads((state/"snapshots"/(key+".json")).read_bytes()))
         for row in d["revisions"]:
             versions[row["revision_id"]]=row
             if key==ptr:current_ids.add(row["revision_id"])
+        for row in d["registry"]:
+            identity=sha(encode(row))
+            registry[identity]=row
+            if key==ptr:current_registry.add(identity)
         if key==ptr:latest=d
     latest["revisions"]=[dict(r,listed_now=i in current_ids) for i,r in versions.items()]
+    latest["registry"]=[dict(row,listed_now=identity in current_registry) for identity,row in registry.items()]
     write(target,encode(latest))
     print(len(versions),"revisions;",len(latest["registry"]),"registry rows;",len(latest["review"]),"review items")
 

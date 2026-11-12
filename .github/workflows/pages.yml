@@ -6,7 +6,7 @@ on:
 permissions:
   contents: read
 concurrency:
-  group: pages
+  group: reference-main
   cancel-in-progress: false
 jobs:
   build:

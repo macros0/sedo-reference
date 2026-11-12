@@ -4,3 +4,5 @@ __pycache__/
 *.tmp
 SEDO-source-snapshot.zip
 LOCAL.md
+
+update-report.json

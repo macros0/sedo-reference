@@ -8,7 +8,7 @@ from catalog import dependency_set,derive
 def verify(state,data):
     current=json.loads((state/"current.json").read_bytes())["snapshot"]
     snapshot=json.loads((state/"snapshots"/(current+".json")).read_bytes())
-    revisions=derive(snapshot)["revisions"]
+    revisions=json.loads((data/"catalog.json").read_bytes())["revisions"]
     pair=[r for r in revisions if r["number"]=="10110"]
     assert {r["environment"] for r in pair}=={"test","prod"}
     assert len(set(r["revision_id"] for r in pair))==2

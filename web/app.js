@@ -4,6 +4,10 @@ const $=id=>document.getElementById(id);
 const envNames={prod:"Продуктивный",test:"Тестовый"};
 const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
 const normalize=s=>String(s||"").toLocaleLowerCase("ru").replaceAll("ё","е");
+if(catalog.checked_at){
+ const dateText=new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',dateStyle:'short',timeStyle:'short'}).format(new Date(catalog.checked_at));
+ document.querySelector('header small').textContent='Проверено '+dateText+' МСК';
+}
 const messages=new Map();
 for(const r of [...catalog.revisions,...catalog.registry]){
  if(!messages.has(r.number))messages.set(r.number,{number:r.number,titles:new Set(),modules:new Set(),rows:[],revisions:[]});
@@ -48,6 +52,7 @@ function renderVersions(m,env){
     if(r.ready)card.append(anchor("Открыть дерево",route(m.number,e,r.revision_id),"open"));
     else card.append(node("p","","Схема ожидает проверки"));
     card.append(node("br"),external("Спецификация СФР ↗",r.document_url));
+    card.append(node("p","meta","Редакция "+r.revision_id.slice(0,8)));
     if(!r.listed_now)card.append(node("p","meta","Редакция сохранена в истории"));
     panel.append(card)
    }
@@ -74,7 +79,10 @@ function renderRoute(){
  $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
  $("doc-source").href=r.document_url;
  const select=$("revision-switch");select.replaceChildren();
- for(const x of m.revisions.filter(r=>r.ready))select.add(new Option(label(x),x.revision_id));
+ for(const x of m.revisions.filter(r=>r.ready)){
+  const duplicates=m.revisions.filter(y=>y.ready&&label(y)===label(x)).length>1;
+  select.add(new Option(label(x)+(duplicates?' · '+x.revision_id.slice(0,8):''),x.revision_id));
+ }
  select.value=rev;select.onchange=()=>{const x=m.revisions.find(r=>r.revision_id===select.value);go(number,x.environment,x.revision_id)};
  const src="editions/"+rev+".html"+(field?"#"+new URLSearchParams({field}):"");
  if(loadedRevision!==rev||$("frame").getAttribute("src")!==src){$("frame").src=src;loadedRevision=rev}
