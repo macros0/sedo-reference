@@ -5,3 +5,5 @@
 
 .journal-period{display:flex;gap:14px;align-items:flex-end;flex-wrap:wrap;margin-top:14px}.journal-period>label{width:260px}.journal-bounds{display:flex;gap:14px;flex-wrap:wrap}.journal-bounds label{width:190px}.journal-bounds input{min-width:0}.journal-range-error{color:#a32626;margin-top:10px}@media(max-width:600px){.journal-period>label,.journal-bounds{width:100%}.journal-bounds label{flex:1;min-width:0}}
 .journal-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin:14px 0}.journal-actions .journal-toggle{margin:0}
+
+.message-main{display:block;color:inherit;text-decoration:none}.message-transition{background:#fff8e8;border:1px solid #e4c982;border-radius:8px;padding:16px 18px;margin:18px 0}.message-transition strong{font-size:14px;color:#795408}.message-transition p{margin-top:8px}.message-transition .meta{font-size:12px}.message-transition.compact{margin:14px 0 0;padding:11px 12px}.message-transition.compact strong{display:block;font-size:12px}.replacement-link{font-weight:600}.message-transition.compact .replacement-link{display:inline-block;margin-top:5px;font-size:13px}

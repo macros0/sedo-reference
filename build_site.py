@@ -36,6 +36,8 @@ def archive_documents(catalog, state, site):
 
 def main():
     catalog=json.loads((HERE/"data/catalog.json").read_bytes())
+    transitions=HERE/"data/message-transitions.json"
+    if transitions.exists():catalog["message_transitions"]=json.loads(transitions.read_bytes())
     statuses={r["revision_id"]:r for r in json.loads((HERE/"data/fields/index.json").read_bytes())}
     site=HERE/"site";editions=site/"editions";editions.mkdir(parents=True,exist_ok=True)
     comparison=site/"fields";comparison.mkdir(exist_ok=True)
@@ -71,7 +73,7 @@ restoreField();
             raise ValueError("Не удалось посчитать изменения журнала (нужен Node.js 18+): "+detail[:1500]) from exc
         catalog["updates"]=json.loads(result.stdout)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
-    assets=("app.js","app.css","compare-core.js","compare.js","journal.js","favicon.svg")
+    assets=("app.js","app.css","compare-core.js","compare.js","journal.js","message-transitions.js","favicon.svg")
     for file in assets:
         (site/file).write_bytes((HERE/"web"/file).read_bytes())
     # Content versions prevent cached old routing code from breaking new navigation.

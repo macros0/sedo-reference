@@ -23,6 +23,18 @@ function revisionOrigin(r){return r.document_url?external("Спецификац�
 function date(s){return s?s.replace(/\.(\d{2})$/,".20$1"):"Дата не указана"}
 function title(m,env){return m.revisions.find(r=>!env||r.environment===env)?.title||m.rows.find(r=>!env||r.environment===env)?.title||[...m.titles][0]}
 function label(r){return envNames[r.environment]+" · "+(r.document_version||"Версия не указана")+" · "+date(r.label_date)+(r.source_type==="manual"?" · Ручная загрузка":"")}
+function replacementNotice(m,env,compact=false){
+ const info=window.SedoTransitions?.replacement(m.number,catalog,env);if(!info)return null;
+ const notice=node("aside","message-transition"+(compact?" compact":""));
+ notice.append(node("strong","",compact?"Заменён в ГИС ЕЦП":"Устаревший тип сообщения · переход на "+info.platform));
+ if(!compact){
+  notice.append(node("p","","Сообщение "+info.previous+" заменено типом "+info.current+". При переходе изменилась структура XML: используйте спецификацию нового типа."));
+  notice.append(node("p","meta","По уведомлению СФР в продуктивном контуре приём и отправка прежнего типа прекращены с "+observationDate(info.production_retired_at)+"."));
+ }
+ notice.append(anchor(compact?"Новый тип "+info.current+" →":"Перейти к сообщению "+info.current,route(info.current,env),compact?"replacement-link":"open replacement-link"));
+ if(!compact){notice.append(document.createTextNode(" · "),external("Уведомление СФР ↗",info.source_url))}
+ return notice;
+}
 function renderMessages(){
  const terms=normalize($("message-query").value.trim()).split(/\s+/).filter(Boolean),env=$("catalog-env").value;
  const matches=[...messages.values()].filter(m=>{
@@ -32,18 +44,20 @@ function renderMessages(){
  }).sort((a,b)=>Number(b.number===$("message-query").value.trim())-Number(a.number===$("message-query").value.trim())||Number(a.number)-Number(b.number));
  $("messages").replaceChildren();$("count").textContent="Найдено сообщений · "+matches.length;
  for(const m of matches){
-  const a=anchor("",route(m.number,env),"card");a.dataset.number=m.number;
+  const card=node("article","card message-card");card.dataset.number=m.number;
+  const a=anchor("",route(m.number,env),"message-main");
   a.append(node("span","number",m.number),node("strong","",title(m,env)));
   if(m.modules.size)a.append(node("span","meta",[...m.modules].join(" · ")));
   const badges=node("div","badges");
   for(const e of ["prod","test"])if([...m.rows,...m.revisions].some(r=>r.environment===e))badges.append(node("span","badge "+e,envNames[e]));
   a.append(badges,node("span","meta",m.revisions.some(r=>r.ready)?"Дерево тегов · "+m.revisions.filter(r=>r.ready).length+" редакции":"Документация"));
-  $("messages").append(a)
+  card.append(a);const replacement=replacementNotice(m,env,true);if(replacement)card.append(replacement);$("messages").append(card)
  }
  if(!matches.length)$("messages").append(node("p","empty","Совпадений нет. Попробуйте часть номера или названия."));
 }
 function renderVersions(m,env){
  const section=$("versions");section.replaceChildren(node("h1","","Сообщение "+m.number),node("p","",title(m,env)));
+ const replacement=replacementNotice(m,env);if(replacement)section.append(replacement);
  const ready=m.revisions.filter(r=>r.ready);
  if(ready.length>=2){const pair=comparisonDefaults(m);section.append(anchor("Сравнить редакции",comparisonRoute(m.number,pair.left,pair.right),"open"))}
  section.append(anchor("Журнал сообщения",updatesRoute(m.number,env),"message-updates"));
@@ -84,6 +98,7 @@ function renderRoute(){
  const r=m.revisions.find(r=>r.revision_id===rev&&r.environment===env);
  if(!r||!r.ready){$("error").hidden=false;$("error").replaceChildren(node("h1","","Редакция недоступна"),anchor("Посмотреть доступные редакции",route(number,env)));return}
  $("viewer").hidden=false;$("crumbs").append(node("span","","/"),node("span","",label(r)));
+ const warning=$("viewer-replacement");if(warning){warning.replaceChildren();const replacement=replacementNotice(m,env);if(replacement)warning.append(replacement)}
  $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
  $("doc-source").hidden=!r.document_url;if(r.document_url)$("doc-source").href=r.document_url;
  $("manual-source").hidden=r.source_type!=="manual";$("manual-source").textContent="Ручная загрузка · "+(r.manual_source?.label||"Файл владельца");

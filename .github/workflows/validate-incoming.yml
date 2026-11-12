@@ -9,6 +9,9 @@ on:
       - 'fields.py'
       - 'schema.py'
       - 'build_site.py'
+      - 'data/message-transitions.json'
+      - 'web/message-transitions.js'
+      - 'tests/test_transitions.cjs'
       - '.github/workflows/validate-incoming.yml'
   workflow_dispatch:
 permissions:
@@ -28,7 +31,9 @@ jobs:
         with:
           node-version: "22"
       - name: Preview incoming without saving or publishing
-        run: python import_inbox.py --check
+        run: |
+          node tests/test_transitions.cjs
+          python import_inbox.py --check
       - name: Write validation report
         if: always()
         run: |

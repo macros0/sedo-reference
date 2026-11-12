@@ -1,0 +1,20 @@
+{
+  "format": 1,
+  "platform": "ГИС ЕЦП",
+  "source_url": "https://lk.sfr.gov.ru/sedo.html",
+  "source_title": "Уведомление СФР о переносе проактивных процессов 19–21 сентября 2026 года",
+  "verified_on": "2026-11-12",
+  "production_retired_at": "2026-09-19T10:00:00+03:00",
+  "pairs": [
+    { "previous": "100", "current": "10010" },
+    { "previous": "101", "current": "10110" },
+    { "previous": "105", "current": "10510" },
+    { "previous": "107", "current": "10710" },
+    { "previous": "109", "current": "10910" },
+    { "previous": "112", "current": "11210" },
+    { "previous": "124", "current": "12410" },
+    { "previous": "320", "current": "32010" },
+    { "previous": "321", "current": "32110" },
+    { "previous": "322", "current": "32210" }
+  ]
+}
