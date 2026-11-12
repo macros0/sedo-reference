@@ -14,6 +14,9 @@ on:
       - 'build_site.py'
       - 'data/message-transitions.json'
       - 'web/message-transitions.js'
+      - 'web/comparison-export.js'
+      - 'web/vendor/**'
+      - 'tests/test_comparison_export.cjs'
       - 'tests/test_transitions.cjs'
       - '.github/workflows/validate-incoming.yml'
   workflow_dispatch:
@@ -40,6 +43,7 @@ jobs:
           node tests/test_transitions.cjs
           node tests/test_viewer_sections.cjs
           node tests/test_cross_message_compare.cjs
+          node tests/test_comparison_export.cjs
           python import_inbox.py --check
       - name: Write validation report
         if: always()

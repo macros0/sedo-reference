@@ -26,7 +26,7 @@ class DocumentArchiveTests(unittest.TestCase):
         write(self.root / "data/catalog.json", encode(dict(revisions=[revision, dict(revision, revision_id="edition2")])))
         write(self.root / "data/fields/index.json", b"[]")
         write(self.root / "viewer-template.html", b"<html></html>")
-        for name in ("index.html", "app.js", "app.css", "compare-core.js", "compare.js", "journal.js", "message-transitions.js", "favicon.svg"):
+        for name in ("index.html", "app.js", "app.css", "compare-core.js", "compare.js", "comparison-export.js", "vendor/exceljs.min.js", "vendor/exceljs-LICENSE", "vendor/README.md", "journal.js", "message-transitions.js", "favicon.svg"):
             write(self.root / "web" / name, b"test")
 
     def build(self):

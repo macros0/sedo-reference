@@ -76,6 +76,14 @@ async function renderComparison(m,params){
   const results=SedoCompare.compare(a,b);state.remove();
   const counts={added:0,removed:0,changed:0};results.forEach(r=>counts[r.status]++);
   const summaries=node("div","compare-counts");for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])summaries.append(node("span",key,text+" · "+counts[key]));section.append(summaries);
+  const exports=node("div","comparison-export"),exportButton=node("button","open","Выгрузить Excel для сопоставления"),exportState=node("span","meta");exportButton.type="button";exportState.setAttribute("role","status");
+  exportButton.onclick=async()=>{
+   exportButton.disabled=true;exportState.textContent="Готовим книгу…";
+   try{await SedoComparisonExport.download({left,right,before:a,after:b,results,baseURL:new URL(".",location.href).href});exportState.textContent="Книга передана браузеру для скачивания."}
+   catch(error){exportState.textContent="Не удалось выгрузить Excel. "+error.message}
+   finally{exportButton.disabled=false}
+  };
+  exports.append(exportButton,exportState,node("p","meta","Вся выбранная пара редакций: исходные поля, изменения и таблица ручного сопоставления. Поиск и фильтры не ограничивают выгрузку."));section.append(exports);
   if(!results.length){section.append(node("p","empty","Деревья совпадают. Изменений в тегах, ограничениях и описаниях не найдено."));return}
   const filters=node("div","searchbar"),searchLabel=node("label","","Поиск по изменениям"),search=node("input");search.type="search";search.placeholder="Тег, путь, описание или ограничение";searchLabel.append(search);
   const kindLabel=node("label","","Вид изменения"),kind=node("select");for(const [value,text] of [["","Все изменения"],["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])kind.add(new Option(text,value));kindLabel.append(kind);filters.append(searchLabel,kindLabel);section.append(filters);

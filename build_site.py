@@ -76,8 +76,9 @@ restoreField();
             raise ValueError("Не удалось посчитать изменения журнала (нужен Node.js 18+): "+detail[:1500]) from exc
         catalog["updates"]=json.loads(result.stdout)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
-    assets=("app.js","app.css","compare-core.js","compare.js","journal.js","message-transitions.js","favicon.svg")
+    assets=("app.js","app.css","compare-core.js","compare.js","comparison-export.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg")
     for file in assets:
+        (site/file).parent.mkdir(parents=True,exist_ok=True)
         (site/file).write_bytes((HERE/"web"/file).read_bytes())
     # Content versions prevent cached old routing code from breaking new navigation.
     html=(HERE/"web/index.html").read_text("utf8")

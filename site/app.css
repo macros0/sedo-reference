@@ -11,3 +11,5 @@
 .transition-option+.transition-option{margin-top:14px;padding-top:12px;border-top:1px solid #e4c982}.message-transition .transition-scope{font-size:13px;margin:8px 0}.message-transition.compact .transition-scope{font-size:12px}
 
 .related-comparisons{display:flex;flex-wrap:wrap;gap:10px 20px;margin:14px 0}
+
+.comparison-export{margin:16px 0 22px}.comparison-export button{cursor:pointer;max-width:100%;white-space:normal;text-align:left}.comparison-export button:disabled{cursor:wait;opacity:.65}.comparison-export [role="status"]{display:inline-block;margin:8px 12px}.comparison-export p{margin-top:8px}
