@@ -6,18 +6,7 @@ from pathlib import Path
 from urllib.parse import unquote
 from sync import encode,sha,write
 
-def dependency_set(schemas,entry):
-    files={s["path"]:s for s in schemas}
-    visited={}
-    def visit(path):
-        if path in visited:return
-        s=files[path];visited[path]=s["sha256"]
-        for loc in s["dependencies"]:
-            if not loc: raise ValueError("Импорт без пути в "+path)
-            visit(posixpath.normpath(posixpath.join(posixpath.dirname(path),loc)))
-    visit(entry)
-    # Paths relative to the entry directory survive archive packaging changes.
-    return sorted((posixpath.relpath(p,posixpath.dirname(entry)),h) for p,h in visited.items())
+from schema import dependency_set
 
 def derive(snapshot):
     if snapshot.get("source_type")=="manual":
@@ -75,6 +64,16 @@ def derive(snapshot):
         if d["status"]!="matched":issues.append([e,number,"Требуется проверка сопоставления",len(candidates)])
         d["revision_id"]=sha(encode([e,number,r["sha256"],d.get("dependency_digest")]))
         catalog.append(d)
+    for r in rows:
+        for match in r.get("module_matches", []):
+            version=re.search(r"[vв](\d+(?:[._]\d+)+)",r["label"],re.I)
+            date=re.search(r"(\d{2}\.\d{2}\.(?:\d{4}|\d{2}))(?!\d)",r["label"])
+            row=dict(match,environment=r["environment"],document_url=r["url"],document_sha256=r["sha256"],
+                     document_version=version[1].replace("_",".") if version else None,label_date=date[1] if date else None,
+                     module=next((x["module"] for x in registry if x["environment"]==r["environment"] and x["number"]==match["number"]),r["label"]),
+                     source_type="module",status="matched",version_tables=r.get("version_tables",[]))
+            row["revision_id"]=sha(encode([r["environment"],row["number"],r["sha256"],row["dependency_digest"]]))
+            catalog.append(row)
     return dict(revisions=catalog,registry=registry,review=issues)
 
 def export(state,target):

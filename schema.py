@@ -15,6 +15,19 @@ X = "{" + XS + "}"
 HERE = Path(__file__).resolve().parent
 FACETS = set("length minLength maxLength pattern enumeration maxInclusive minInclusive maxExclusive minExclusive totalDigits fractionDigits whiteSpace".split())
 
+def dependency_set(schemas,entry):
+    files={s["path"]:s for s in schemas}
+    visited={}
+    def visit(path):
+        if path in visited:return
+        s=files[path];visited[path]=s["sha256"]
+        for loc in s["dependencies"]:
+            if not loc: raise ValueError("Импорт без пути в "+path)
+            visit(posixpath.normpath(posixpath.join(posixpath.dirname(path),loc)))
+    visit(entry)
+    # Paths relative to the entry directory survive archive packaging changes.
+    return sorted((posixpath.relpath(p,posixpath.dirname(entry)),h) for p,h in visited.items())
+
 def local(node):
     return node.tag.rsplit("}", 1)[-1]
 
@@ -31,7 +44,7 @@ class Schema:
         self.load(archive, self.main)
         self.root = self.files[self.main][0].find(X+f"element[@name='{root_name}']")
         if self.root is None:
-            raise ValueError("Элемент benefitResponse не найден.")
+            raise ValueError("Корневой элемент " + root_name + " не найден.")
 
     def load(self, archive, path):
         if path in self.files:

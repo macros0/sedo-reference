@@ -1,17 +1,42 @@
 {
-  "observed_at": "2026-11-12T20:47:25.126903+00:00",
-  "snapshot": "840c13cc06d385ea7eae6908a1671fbb56d7f683ba83427aed5488aab7f4b1ec",
-  "previous": "82f2029898f65c2b237cd7326de8b26220809bebbdc97b0746d8c04602cbdf5e",
-  "files": 100,
+  "observed_at": "2026-11-12T21:07:42.554861+00:00",
+  "snapshot": "654b4e13181889a1a1f6d6fc23d4ba6936264fe5d3e91d93043cd1c16b926d80",
+  "previous": "840c13cc06d385ea7eae6908a1671fbb56d7f683ba83427aed5488aab7f4b1ec",
+  "files": 106,
   "errors": [],
   "diff": {
-    "added": [],
-    "removed": [],
-    "changed": [
+    "added": [
       [
         "prod",
-        "https://lk.fss.ru//mchd.html"
+        "https://lk.sfr.gov.ru/prab.html"
       ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/prab/eln-xsd.zip"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/prab/insured-card-xsd-1.22.0-SNAPSHOT.zip"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/prab/proactive-xsd-1.50.0-SNAPSHOT-prod.zip"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/prab/eln-xsd.zip"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/prab/insured-card-xsd-1.22.0-SNAPSHOT.zip"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/prab/proactive-xsd-1.51.0-SNAPSHOT-test.zip"
+      ]
+    ],
+    "removed": [],
+    "changed": [
       [
         "prod",
         "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.0_Пр_12_ЛС (23.06.2023).docx"
@@ -27,10 +52,6 @@
       [
         "prod",
         "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx"
-      ],
-      [
-        "prod",
-        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx"
       ],
       [
         "prod",
@@ -58,11 +79,11 @@
       ],
       [
         "test",
-        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx"
+        "https://lk-test.fss.ru/prab.html"
       ],
       [
         "test",
-        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx"
+        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx"
       ],
       [
         "test",

@@ -110,6 +110,9 @@ def inspect_file(b,kind):
                 messages.setdefault(number, dict(number=number, title=title.strip()))
         if messages:
             info["message_types"] = list(messages.values())
+            from module_xsd import document_bindings
+            bindings = document_bindings(doc)
+            if bindings: info["module_bindings"] = bindings
         return info
 
 def sync(base):
@@ -129,17 +132,49 @@ def sync(base):
             r=dict(environment=env,url=u,label=label,kind=ext or "link");lookup[u]=r;entries.append(r)
             if parts.hostname==urlsplit(url).hostname and parts.path.startswith("/specs_sedo/") and ext in ("docx","zip","pdf","crt","xsd","doc","xlsx"):
                 tasks.append(r)
+        # RPU and legacy process XSD are linked from the companion PRAB page.
+        # Resolve aliases to the same contour host; never mix test and prod.
+        if any(urlsplit(urljoin(url,href)).path=="/prab.html" for href,label in parser.items):
+            companion=urljoin(url,"/prab.html")
+            content=get(companion)
+            entries.append(dict(environment=env,url=companion,label="Проактивное назначение пособий",kind="html",sha256=blob(content),bytes=len(content)))
+            extra=Links();extra.feed(content.decode("utf-8-sig"))
+            for href,label in extra.items:
+                resource=urljoin(companion,href.strip());parts=urlsplit(resource)
+                if parts.hostname!=urlsplit(url).hostname or not parts.path.startswith("/prab/") or not parts.path.lower().endswith(".zip"):continue
+                if resource in lookup:continue
+                row=dict(environment=env,url=resource,label=label,kind="zip",source_page=companion)
+                lookup[resource]=row;entries.append(row);tasks.append(row)
         if not any(r["environment"]==env and r["kind"]=="zip" for r in tasks): raise ValueError(env+": отсутствуют ожидаемые архивы")
     def fetch(r):
-        b=get(r["url"]); return b,inspect_file(b,r["kind"])
+        b=get(r["url"]);meta=inspect_file(b,r["kind"]);packages=[]
+        if r["kind"]=="docx" and meta.get("module_bindings"):
+            from module_xsd import extract_archives
+            packages,issues=extract_archives(b)
+            if issues:meta["schema_diagnostics"]=issues
+            archives=[]
+            for package in packages:
+                content=package.pop("content")
+                package.update(sha256=sha(content),**inspect_file(content,"zip"))
+                archives.append(package)
+                package["content"]=content
+            if archives:meta["embedded_archives"]=[{k:v for k,v in a.items() if k!="content"} for a in archives]
+        return b,meta,packages
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
         futures={pool.submit(fetch,r):r for r in tasks}
         for fut in concurrent.futures.as_completed(futures):
             r=futures[fut]
             try:
-                b,meta=fut.result();r.update(sha256=blob(b),bytes=len(b),**meta)
+                b,meta,packages=fut.result();r.update(sha256=blob(b),bytes=len(b),**meta)
+                for package in packages:blob(package["content"])
             except Exception as e:
                 r["error"]=str(e);errors.append([r["url"],str(e)])
+    from module_xsd import match_document
+    for r in entries:
+        if not r.get("module_bindings"):continue
+        matches,issues=match_document(r,entries,lambda h:(base/"objects"/h).read_bytes())
+        if matches:r["module_matches"]=matches
+        if issues:r.setdefault("schema_diagnostics",[]).extend(issues)
     result=dict(format=1,pages=pages,entries=entries)
     payload=encode(result);digest=sha(payload);write(base/"snapshots"/(digest+".json"),payload)
     pointer=base/"current.json"

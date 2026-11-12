@@ -1,0 +1,67 @@
+{
+  "revision_id": "bae983cda590c3cffe759bd8f2072e577091d803951d332268c37998da4c7079",
+  "fields": [
+    {
+      "name": "proactiveExpireNotice",
+      "path": "proactiveExpireNotice",
+      "parent": -1,
+      "group": "",
+      "doc": "Уведомление, о том, что ответ на запрос недостающих сведений от страхователя (101 сообщение) не поступил в сроки, установленные ПП РФ № 2010 от 23 ноября 2021 г. Тип сообщения СЭДО №124",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
+      "file": "Notifications.xsd",
+      "flags": {}
+    },
+    {
+      "name": "socialAssistNum",
+      "path": "proactiveExpireNotice/socialAssistNum",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер проактивного процесса",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:long",
+      "base": "xs:long",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
+      "file": "Notifications.xsd",
+      "flags": {}
+    },
+    {
+      "name": "missingResponseToRequest",
+      "path": "proactiveExpireNotice/missingResponseToRequest",
+      "parent": 0,
+      "group": "",
+      "doc": "Информирование страхователя о том, что не получен ответ на запрос недостающих сведений в установленный срок",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "1000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
+      "file": "Notifications.xsd",
+      "flags": {}
+    }
+  ]
+}

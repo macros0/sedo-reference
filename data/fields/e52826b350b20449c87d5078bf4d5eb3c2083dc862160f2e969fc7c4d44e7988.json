@@ -1,0 +1,152 @@
+{
+  "revision_id": "e52826b350b20449c87d5078bf4d5eb3c2083dc862160f2e969fc7c4d44e7988",
+  "fields": [
+    {
+      "name": "mismatchInfo",
+      "path": "mismatchInfo",
+      "parent": -1,
+      "group": "",
+      "doc": "Корневой элемент для направления в адрес страхователя информации о несоответствии данных о застрахованном\nКод сообщения СЭДО = 88",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "InsuredPersonMismatchType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2
+      ],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {},
+      "typeFile": "InsuredPerson.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "mismatchInfo/snils",
+      "parent": 0,
+      "group": "",
+      "doc": "СНИЛС застрахованного информация о котором подавалась ранее",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "protocol",
+      "path": "mismatchInfo/protocol",
+      "parent": 0,
+      "group": "",
+      "doc": "Протокол несоответствия",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "MismatchProtocolType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        3
+      ],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {},
+      "typeFile": "InsuredPerson.xsd"
+    },
+    {
+      "name": "item",
+      "path": "mismatchInfo/protocol/item",
+      "parent": 2,
+      "group": "",
+      "doc": "Запись протокола о несоответствии данных",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        4,
+        5,
+        6
+      ],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {}
+    },
+    {
+      "name": "mnemonic",
+      "path": "mismatchInfo/protocol/item/mnemonic",
+      "parent": 3,
+      "group": "",
+      "doc": "Мнемоника",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {}
+    },
+    {
+      "name": "message",
+      "path": "mismatchInfo/protocol/item/message",
+      "parent": 3,
+      "group": "",
+      "doc": "Текст",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {}
+    },
+    {
+      "name": "description",
+      "path": "mismatchInfo/protocol/item/description",
+      "parent": 3,
+      "group": "",
+      "doc": "Описание",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {}
+    }
+  ]
+}

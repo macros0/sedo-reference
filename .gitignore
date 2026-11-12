@@ -7,3 +7,5 @@ LOCAL.md
 
 update-report.json
 inbox-report.json
+
+.venv/

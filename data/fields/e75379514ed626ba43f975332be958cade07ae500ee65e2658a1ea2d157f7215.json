@@ -1,0 +1,249 @@
+{
+  "revision_id": "e75379514ed626ba43f975332be958cade07ae500ee65e2658a1ea2d157f7215",
+  "fields": [
+    {
+      "name": "insuredPersonResponse",
+      "path": "insuredPersonResponse",
+      "parent": -1,
+      "group": "",
+      "doc": "Корневой элемент результата обработки карточки застрахованного\nКод сообщения СЭДО = 87",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2,
+        3,
+        9
+      ],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {},
+      "typeFile": "InsuredPerson.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "insuredPersonResponse/snils",
+      "parent": 0,
+      "group": "",
+      "doc": "СНИЛС застрахованного информация о котором подавалась ранее",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "status",
+      "path": "insuredPersonResponse/status",
+      "parent": 0,
+      "group": "",
+      "doc": "Статус обработки сообщения карточки застрахованного",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "InsuredPersonStatusType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "RECEIVED",
+          "Сообщение получено\nСтатус говорит о том, что началась обработка сообщения"
+        ],
+        [
+          "ERROR",
+          "Ошибка\nСтатус говорит о том, что в процессе обработки обнаружены ошибки"
+        ],
+        [
+          "PROCESSED",
+          "Сообщение успешно обработано"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {},
+      "typeFile": "InsuredPerson.xsd"
+    },
+    {
+      "name": "protocol",
+      "path": "insuredPersonResponse/protocol",
+      "parent": 0,
+      "group": "",
+      "doc": "Протокол несоответствия",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "c:ProtocolType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        4
+      ],
+      "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
+      "file": "InsuredPerson.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "item",
+      "path": "insuredPersonResponse/protocol/item",
+      "parent": 3,
+      "group": "",
+      "doc": "Запись протокола",
+      "kind": "element",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "ns": "http://www.fss.ru/integration/types/common/v01",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "mnemonic",
+      "path": "insuredPersonResponse/protocol/item/mnemonic",
+      "parent": 4,
+      "group": "",
+      "doc": "Тип записи протокола",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "ProtocolItemMnemonicType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "10"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/common/v01",
+      "file": "Common.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "level",
+      "path": "insuredPersonResponse/protocol/item/level",
+      "parent": 4,
+      "group": "",
+      "doc": "Уровень записи протокола",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "ProtocolItemLevelType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "INFO",
+          ""
+        ],
+        [
+          "WARN",
+          ""
+        ],
+        [
+          "ERR",
+          ""
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/common/v01",
+      "file": "Common.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "text",
+      "path": "insuredPersonResponse/protocol/item/text",
+      "parent": 4,
+      "group": "",
+      "doc": "Текст записи протокола",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/common/v01",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "description",
+      "path": "insuredPersonResponse/protocol/item/description",
+      "parent": 4,
+      "group": "",
+      "doc": "Дополнительное описание",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/common/v01",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@responseOn",
+      "path": "insuredPersonResponse/@responseOn",
+      "parent": 0,
+      "group": "",
+      "doc": "",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "c:UuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "InsuredPerson.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    }
+  ]
+}

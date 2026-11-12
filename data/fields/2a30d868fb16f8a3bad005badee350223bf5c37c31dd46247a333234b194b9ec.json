@@ -1,0 +1,353 @@
+{
+  "revision_id": "2a30d868fb16f8a3bad005badee350223bf5c37c31dd46247a333234b194b9ec",
+  "fields": [
+    {
+      "name": "notificationDocBp",
+      "path": "notificationDocBp",
+      "parent": -1,
+      "group": "",
+      "doc": "Уведомление о приеме (отказе в приеме) территориальным органом Фонда документов по проверке банка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "ns1:NotificationDocType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2,
+        3,
+        4,
+        7
+      ],
+      "ns": "http://www.fss.ru/integration/bp/BpNotificationDocsAsv/v01",
+      "file": "BpNotificationDocsAsv.xsd",
+      "flags": {},
+      "typeFile": "NotificationDocType.xsd"
+    },
+    {
+      "name": "responseOn",
+      "path": "notificationDocBp/responseOn",
+      "parent": 0,
+      "group": "",
+      "doc": "Идентификатор транспортного сообщения, в рамках которого направлен ответ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "cm:UuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "idMessage",
+      "path": "notificationDocBp/idMessage",
+      "parent": 0,
+      "group": "",
+      "doc": "Идентификатор сообщения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "cm:UuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "date",
+      "path": "notificationDocBp/date",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата и время приема (отказа в приеме) документов",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:dateTime",
+      "base": "xs:dateTime",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insurer",
+      "path": "notificationDocBp/insurer",
+      "parent": 0,
+      "group": "",
+      "doc": "Страхователь",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        5,
+        6
+      ],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insurerName",
+      "path": "notificationDocBp/insurer/insurerName",
+      "parent": 4,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Наименование страхователя (ЮЛ)",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "org:fullName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "4000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "FIO",
+      "path": "notificationDocBp/insurer/FIO",
+      "parent": 4,
+      "group": "Выбор 1, вариант 2",
+      "doc": "ФИО страхователя (ФЛ)",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    },
+    {
+      "name": "statusDocument",
+      "path": "notificationDocBp/statusDocument",
+      "parent": 0,
+      "group": "",
+      "doc": "Блок с описанием статуса приема документа",
+      "kind": "element",
+      "min": "1",
+      "max": "25",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    },
+    {
+      "name": "idDocumentsGroup",
+      "path": "notificationDocBp/statusDocument/idDocumentsGroup",
+      "parent": 7,
+      "group": "",
+      "doc": "Идентификатор представленного набора документов",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [
+        [
+          "minInclusive",
+          "1"
+        ],
+        [
+          "maxInclusive",
+          "999999999"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    },
+    {
+      "name": "typeDocument",
+      "path": "notificationDocBp/statusDocument/typeDocument",
+      "parent": 7,
+      "group": "",
+      "doc": "Значение из справочника видов документов",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:integer",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    },
+    {
+      "name": "count",
+      "path": "notificationDocBp/statusDocument/count",
+      "parent": 7,
+      "group": "",
+      "doc": "Количество принятых (отклоненных) документов, представленных в составе ранее направленного набора документов по idDocumentsGroup",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [
+        [
+          "minInclusive",
+          "1"
+        ],
+        [
+          "maxInclusive",
+          "50000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    },
+    {
+      "name": "status",
+      "path": "notificationDocBp/statusDocument/status",
+      "parent": 7,
+      "group": "",
+      "doc": "Статус приема документа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Документ принят"
+        ],
+        [
+          "2",
+          "Документ не принят"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    },
+    {
+      "name": "reason",
+      "path": "notificationDocBp/statusDocument/reason",
+      "parent": 7,
+      "group": "",
+      "doc": "Основание отказа в приеме",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        13,
+        14
+      ],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    },
+    {
+      "name": "codeError",
+      "path": "notificationDocBp/statusDocument/reason/codeError",
+      "parent": 12,
+      "group": "",
+      "doc": "Код основания отказа в приеме",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Несоответствие запросу территориального органа Фонда"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    },
+    {
+      "name": "description",
+      "path": "notificationDocBp/statusDocument/reason/description",
+      "parent": 12,
+      "group": "",
+      "doc": "Описание отказа в приеме",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "500"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
+      "file": "NotificationDocType.xsd",
+      "flags": {}
+    }
+  ]
+}

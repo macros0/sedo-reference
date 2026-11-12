@@ -1,0 +1,620 @@
+{
+  "revision_id": "a55e5b819a9d7213bc75f49aeef50b8c472add27a3b8cbe6e9757d8f153ddcc0",
+  "fields": [
+    {
+      "name": "insuredPersonSalaryRequest",
+      "path": "insuredPersonSalaryRequest",
+      "parent": -1,
+      "group": "",
+      "doc": "Запрос страхователя о получении от Фонда сведений о заработной плате застрахованного лица. Тип сообщения СЭДО №320",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        6,
+        14,
+        16,
+        21,
+        22
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insurerInfo",
+      "path": "insuredPersonSalaryRequest/insurerInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Сведения о страхователе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "regNum",
+      "path": "insuredPersonSalaryRequest/insurerInfo/regNum",
+      "parent": 1,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Регистрационный номер по ОСС. Так же см. документацию к полю regNumSFR",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNum",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "regNumSFR",
+      "path": "insuredPersonSalaryRequest/insurerInfo/regNumSFR",
+      "parent": 1,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Регистрационный номер страхователя СФР. ~ До начала переходного периода на регистрационные номера СФР будет приниматься (принимается) 1 поле: emplRegNo. ~ В переходном периоде будет приниматься 1 из полей: emplRegNo/regNumSFR (если страхователь не перешел на новую схему взаимодействия, то будет направлять emplRegNo, а после перехода на новую схему должен направлять regNumSFR)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNumSFR",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "emplINN",
+      "path": "insuredPersonSalaryRequest/insurerInfo/emplINN",
+      "parent": 1,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "emplKPP",
+      "path": "insuredPersonSalaryRequest/insurerInfo/emplKPP",
+      "parent": 1,
+      "group": "",
+      "doc": "КПП",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "org:kpp",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{9}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "insuredInfo",
+      "path": "insuredPersonSalaryRequest/insuredInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Сведения о застрахованном лице",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        7,
+        8,
+        12,
+        13
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "snils",
+      "path": "insuredPersonSalaryRequest/insuredInfo/snils",
+      "parent": 6,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "fullName",
+      "path": "insuredPersonSalaryRequest/insuredInfo/fullName",
+      "parent": 6,
+      "group": "",
+      "doc": "ФИО",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:FullName",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        9,
+        10,
+        11
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "insuredPersonSalaryRequest/insuredInfo/fullName/firstName",
+      "parent": 8,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/person/v02",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "insuredPersonSalaryRequest/insuredInfo/fullName/lastName",
+      "parent": 8,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/person/v02",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "insuredPersonSalaryRequest/insuredInfo/fullName/middleName",
+      "parent": 8,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/person/v02",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "insuredPersonSalaryRequest/insuredInfo/birthDate",
+      "parent": 6,
+      "group": "",
+      "doc": "Дата рождения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "gender",
+      "path": "insuredPersonSalaryRequest/insuredInfo/gender",
+      "parent": 6,
+      "group": "",
+      "doc": "Пол",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:GenderType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "MALE",
+          "Пол: мужской"
+        ],
+        [
+          "FEMALE",
+          "Пол: женский"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "contractsType",
+      "path": "insuredPersonSalaryRequest/contractsType",
+      "parent": 0,
+      "group": "",
+      "doc": "Вид договора, по которому занято застрахованное лицо",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        15
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "contractType",
+      "path": "insuredPersonSalaryRequest/contractsType/contractType",
+      "parent": 14,
+      "group": "",
+      "doc": "Застрахованное лицо занято по трудовому договору и/или по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "2",
+      "type": "",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "workerContract",
+          "Застрахованное лицо занято по трудовому договору"
+        ],
+        [
+          "GPHcontract",
+          "Застрахованное лицо занято по гражданско-правовому договору"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "periodInfo",
+      "path": "insuredPersonSalaryRequest/periodInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Сведения о запрашиваемом периоде",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        17,
+        19
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "twoPrevYears",
+      "path": "insuredPersonSalaryRequest/periodInfo/twoPrevYears",
+      "parent": 16,
+      "group": "",
+      "doc": "Два предшествующих года от даты направления запроса, а если заполнен блок \"fired\" (ЗЛ уволено), то от даты firstElnStartDate (начала страхового случая). В случае, если расчетные года не попадают в список twoPrevYears, то необходимо указать их в блоке additionalYears",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        18
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "year",
+      "path": "insuredPersonSalaryRequest/periodInfo/twoPrevYears/year",
+      "parent": 17,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "2",
+      "max": "2",
+      "type": "yearType",
+      "base": "xs:integer",
+      "facets": [
+        [
+          "minInclusive",
+          "2015"
+        ],
+        [
+          "pattern",
+          "\\d{4}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {},
+      "typeFile": "InsuredPersonSalary.xsd"
+    },
+    {
+      "name": "additionalYears",
+      "path": "insuredPersonSalaryRequest/periodInfo/additionalYears",
+      "parent": 16,
+      "group": "",
+      "doc": "Дополнительно запрашиваемый период",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        20
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "year",
+      "path": "insuredPersonSalaryRequest/periodInfo/additionalYears/year",
+      "parent": 19,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "yearType",
+      "base": "xs:integer",
+      "facets": [
+        [
+          "minInclusive",
+          "2015"
+        ],
+        [
+          "pattern",
+          "\\d{4}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {},
+      "typeFile": "InsuredPersonSalary.xsd"
+    },
+    {
+      "name": "agreementInsuredPerson",
+      "path": "insuredPersonSalaryRequest/agreementInsuredPerson",
+      "parent": 0,
+      "group": "",
+      "doc": "Признак, определяющий получение согласия застрахованного лица о запросе суммы заработка страхователем",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {
+        "fixed": "true"
+      }
+    },
+    {
+      "name": "eln3days",
+      "path": "insuredPersonSalaryRequest/eln3days",
+      "parent": 0,
+      "group": "",
+      "doc": "Запрос суммы заработка выполняется для оплаты первых 3 дней временной нетрудоспособности за счет средств страхователя",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        23,
+        24
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "employed",
+      "path": "insuredPersonSalaryRequest/eln3days/employed",
+      "parent": 22,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Застрахованное лицо на момент направления запроса - трудоустроено у страхователя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {
+        "fixed": "true"
+      }
+    },
+    {
+      "name": "fired",
+      "path": "insuredPersonSalaryRequest/eln3days/fired",
+      "parent": 22,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Застрахованное лицо на момент направления запроса - уволено",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        25
+      ],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    },
+    {
+      "name": "firstElnStartDate",
+      "path": "insuredPersonSalaryRequest/eln3days/fired/firstElnStartDate",
+      "parent": 24,
+      "group": "",
+      "doc": "Дата начала страхового случая (дата начала периода нетрудоспособности по первому ЭЛН из цепочки ЭЛН)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
+      "file": "InsuredPersonSalary.xsd",
+      "flags": {}
+    }
+  ]
+}

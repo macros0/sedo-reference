@@ -106,7 +106,9 @@ def run(root):
                      for r in current["revisions"] if r["revision_id"] not in old_ids]
             known = {(r["environment"], r["number"]) for r in previous["registry"]+previous["revisions"]}
             new_messages = sorted({(r["environment"], r["number"]) for r in current["registry"]+current["revisions"]}-known)
-            result = dict(status="ok", checked_at=current["checked_at"], new_revisions=added,
+            snapshot=json.loads((stage/"state/snapshots"/(json.loads((stage/"state/current.json").read_bytes())["snapshot"]+".json")).read_bytes())
+            schema_diagnostics=[dict(environment=r["environment"],source=r["url"],issues=r["schema_diagnostics"]) for r in snapshot["entries"] if r.get("schema_diagnostics")]
+            result = dict(status="ok", checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics,
                           new_messages=[dict(environment=e, number=n) for e,n in new_messages],
                           total_revisions=len(current["revisions"]))
             write(report, encode(result))

@@ -1,0 +1,1431 @@
+{
+  "revision_id": "a35891c6521764bd75955d9ddb73db29cc9b7394ea382c5c5f215f61d2f6bdf0",
+  "fields": [
+    {
+      "name": "paymentStatusNotice",
+      "path": "paymentStatusNotice",
+      "parent": -1,
+      "group": "",
+      "doc": "Уведомление об изменении статусов выплат",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PaymentStatusNoticeType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        7
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "person",
+      "path": "paymentStatusNotice/person",
+      "parent": 0,
+      "group": "",
+      "doc": "Сведения о застрахованном",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "PersonType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "paymentStatusNotice/person/firstName",
+      "parent": 1,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "secondName",
+      "path": "paymentStatusNotice/person/secondName",
+      "parent": 1,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "patronymic",
+      "path": "paymentStatusNotice/person/patronymic",
+      "parent": 1,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "birthDate",
+      "path": "paymentStatusNotice/person/birthDate",
+      "parent": 1,
+      "group": "",
+      "doc": "Дата рождения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "snils",
+      "path": "paymentStatusNotice/person/snils",
+      "parent": 1,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "SnilsType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "paymentNotice",
+      "path": "paymentStatusNotice/paymentNotice",
+      "parent": 0,
+      "group": "",
+      "doc": "Сообщение застрахованному",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PaymentNoticeType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        8,
+        9,
+        10,
+        11,
+        19,
+        26,
+        36,
+        45
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "noticeType",
+      "path": "paymentStatusNotice/paymentNotice/noticeType",
+      "parent": 7,
+      "group": "",
+      "doc": "Тип сообщения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "NoticeTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Уведомление о поступление информации от работодателя о необходимости осуществления выплаты."
+        ],
+        [
+          "2",
+          "Уведомление о направлении документа на оплату."
+        ],
+        [
+          "3",
+          "Уведомление об успешном проведении выплаты пособия."
+        ],
+        [
+          "4",
+          "Уведомление о поступлении отказа от банка получение статуса «Оплата не прошла»."
+        ],
+        [
+          "5",
+          "Уведомление о направлении работодателю извещения о необходимости предоставления дополнительных сведений."
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "batchNo",
+      "path": "paymentStatusNotice/paymentNotice/batchNo",
+      "parent": 7,
+      "group": "",
+      "doc": "Номер строки реестра",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "50"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "socialAssistNum",
+      "path": "paymentStatusNotice/paymentNotice/socialAssistNum",
+      "parent": 7,
+      "group": "",
+      "doc": "ИД проактивного процесса",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:long",
+      "base": "xs:long",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "registerRecieve",
+      "path": "paymentStatusNotice/paymentNotice/registerRecieve",
+      "parent": 7,
+      "group": "Выбор 1, вариант 1",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "RegisterRecieveType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        12,
+        13,
+        14,
+        17,
+        18
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "infoType",
+      "path": "paymentStatusNotice/paymentNotice/registerRecieve/infoType",
+      "parent": 11,
+      "group": "",
+      "doc": "Тип выплаты",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "0",
+          "первичная"
+        ],
+        [
+          "1",
+          "перерасчёт"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "docType",
+      "path": "paymentStatusNotice/paymentNotice/registerRecieve/docType",
+      "parent": 11,
+      "group": "",
+      "doc": "Тип пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DocTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Пособие по временной нетрудоспособности"
+        ],
+        [
+          "2",
+          "Пособие по беременности и родам"
+        ],
+        [
+          "3",
+          "Единовременное пособие женщинам, вставшим на учет в медицинских учреждениях в ранние сроки беременности"
+        ],
+        [
+          "4",
+          "Единовременное пособие при рождении ребенка"
+        ],
+        [
+          "5",
+          "Ежемесячное пособие по уходу за ребенком"
+        ],
+        [
+          "6",
+          "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием"
+        ],
+        [
+          "7",
+          "Социальное пособие на погребение"
+        ],
+        [
+          "8",
+          "Возмещение расходов Страхователю на оплату четырех дополнительных выходных дней одному из родителей (опекуну, попечителю) для ухода за детьми-инвалидами за счет средств межбюджетных трансфертов из федерального фонда"
+        ],
+        [
+          "9",
+          "Оплата отпуска (сверх ежегодного оплачиваемого отпуска, установленного законодательством РФ) на весь период лечения и проезда к месту лечения и обратно"
+        ],
+        [
+          "98",
+          "Выплата соцработникам"
+        ],
+        [
+          "99",
+          "Выплата медикам"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "period",
+      "path": "paymentStatusNotice/paymentNotice/registerRecieve/period",
+      "parent": 11,
+      "group": "",
+      "doc": "Дата и время отчёта",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "PeriodType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        15,
+        16
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "periodStart",
+      "path": "paymentStatusNotice/paymentNotice/registerRecieve/period/periodStart",
+      "parent": 14,
+      "group": "",
+      "doc": "Начало периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "periodEnd",
+      "path": "paymentStatusNotice/paymentNotice/registerRecieve/period/periodEnd",
+      "parent": 14,
+      "group": "",
+      "doc": "Окончание периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "addInformation",
+      "path": "paymentStatusNotice/paymentNotice/registerRecieve/addInformation",
+      "parent": 11,
+      "group": "",
+      "doc": "Дополнительная информация Заполняется для типов выплат 98, 99",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "AddInformationType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "250"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "insurerName",
+      "path": "paymentStatusNotice/paymentNotice/registerRecieve/insurerName",
+      "parent": 11,
+      "group": "",
+      "doc": "Наименование страхователя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "paymentSend",
+      "path": "paymentStatusNotice/paymentNotice/paymentSend",
+      "parent": 7,
+      "group": "Выбор 1, вариант 2",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PaymentSendType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        20,
+        21,
+        22,
+        25
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "infoType",
+      "path": "paymentStatusNotice/paymentNotice/paymentSend/infoType",
+      "parent": 19,
+      "group": "",
+      "doc": "Тип выплаты",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "0",
+          "первичная"
+        ],
+        [
+          "1",
+          "перерасчёт"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "docType",
+      "path": "paymentStatusNotice/paymentNotice/paymentSend/docType",
+      "parent": 19,
+      "group": "",
+      "doc": "Тип пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DocTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Пособие по временной нетрудоспособности"
+        ],
+        [
+          "2",
+          "Пособие по беременности и родам"
+        ],
+        [
+          "3",
+          "Единовременное пособие женщинам, вставшим на учет в медицинских учреждениях в ранние сроки беременности"
+        ],
+        [
+          "4",
+          "Единовременное пособие при рождении ребенка"
+        ],
+        [
+          "5",
+          "Ежемесячное пособие по уходу за ребенком"
+        ],
+        [
+          "6",
+          "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием"
+        ],
+        [
+          "7",
+          "Социальное пособие на погребение"
+        ],
+        [
+          "8",
+          "Возмещение расходов Страхователю на оплату четырех дополнительных выходных дней одному из родителей (опекуну, попечителю) для ухода за детьми-инвалидами за счет средств межбюджетных трансфертов из федерального фонда"
+        ],
+        [
+          "9",
+          "Оплата отпуска (сверх ежегодного оплачиваемого отпуска, установленного законодательством РФ) на весь период лечения и проезда к месту лечения и обратно"
+        ],
+        [
+          "98",
+          "Выплата соцработникам"
+        ],
+        [
+          "99",
+          "Выплата медикам"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "period",
+      "path": "paymentStatusNotice/paymentNotice/paymentSend/period",
+      "parent": 19,
+      "group": "",
+      "doc": "Дата и время отчёта",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "PeriodType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        23,
+        24
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "periodStart",
+      "path": "paymentStatusNotice/paymentNotice/paymentSend/period/periodStart",
+      "parent": 22,
+      "group": "",
+      "doc": "Начало периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "periodEnd",
+      "path": "paymentStatusNotice/paymentNotice/paymentSend/period/periodEnd",
+      "parent": 22,
+      "group": "",
+      "doc": "Окончание периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "addInformation",
+      "path": "paymentStatusNotice/paymentNotice/paymentSend/addInformation",
+      "parent": 19,
+      "group": "",
+      "doc": "Дополнительная информация Заполняется для типов выплат 98, 99",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "AddInformationType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "250"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "paymentDone",
+      "path": "paymentStatusNotice/paymentNotice/paymentDone",
+      "parent": 7,
+      "group": "Выбор 1, вариант 3",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PaymentDoneType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        27,
+        28,
+        29,
+        32,
+        33,
+        34,
+        35
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "infoType",
+      "path": "paymentStatusNotice/paymentNotice/paymentDone/infoType",
+      "parent": 26,
+      "group": "",
+      "doc": "Тип выплаты",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "0",
+          "первичная"
+        ],
+        [
+          "1",
+          "перерасчёт"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "docType",
+      "path": "paymentStatusNotice/paymentNotice/paymentDone/docType",
+      "parent": 26,
+      "group": "",
+      "doc": "Тип пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DocTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Пособие по временной нетрудоспособности"
+        ],
+        [
+          "2",
+          "Пособие по беременности и родам"
+        ],
+        [
+          "3",
+          "Единовременное пособие женщинам, вставшим на учет в медицинских учреждениях в ранние сроки беременности"
+        ],
+        [
+          "4",
+          "Единовременное пособие при рождении ребенка"
+        ],
+        [
+          "5",
+          "Ежемесячное пособие по уходу за ребенком"
+        ],
+        [
+          "6",
+          "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием"
+        ],
+        [
+          "7",
+          "Социальное пособие на погребение"
+        ],
+        [
+          "8",
+          "Возмещение расходов Страхователю на оплату четырех дополнительных выходных дней одному из родителей (опекуну, попечителю) для ухода за детьми-инвалидами за счет средств межбюджетных трансфертов из федерального фонда"
+        ],
+        [
+          "9",
+          "Оплата отпуска (сверх ежегодного оплачиваемого отпуска, установленного законодательством РФ) на весь период лечения и проезда к месту лечения и обратно"
+        ],
+        [
+          "98",
+          "Выплата соцработникам"
+        ],
+        [
+          "99",
+          "Выплата медикам"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "period",
+      "path": "paymentStatusNotice/paymentNotice/paymentDone/period",
+      "parent": 26,
+      "group": "",
+      "doc": "Дата и время отчёта",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "PeriodType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        30,
+        31
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "periodStart",
+      "path": "paymentStatusNotice/paymentNotice/paymentDone/period/periodStart",
+      "parent": 29,
+      "group": "",
+      "doc": "Начало периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "periodEnd",
+      "path": "paymentStatusNotice/paymentNotice/paymentDone/period/periodEnd",
+      "parent": 29,
+      "group": "",
+      "doc": "Окончание периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "addInformation",
+      "path": "paymentStatusNotice/paymentNotice/paymentDone/addInformation",
+      "parent": 26,
+      "group": "",
+      "doc": "Дополнительная информация Заполняется для типов выплат 98, 99",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "AddInformationType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "250"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "summa",
+      "path": "paymentStatusNotice/paymentNotice/paymentDone/summa",
+      "parent": 26,
+      "group": "",
+      "doc": "Сумма пособия начисленная",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "12"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "sum",
+      "path": "paymentStatusNotice/paymentNotice/paymentDone/sum",
+      "parent": 26,
+      "group": "",
+      "doc": "Сумма пособия выплаченная ЗЛ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "12"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "dutySum",
+      "path": "paymentStatusNotice/paymentNotice/paymentDone/dutySum",
+      "parent": 26,
+      "group": "",
+      "doc": "Сумма удержания",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "12"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "paymentCanceling",
+      "path": "paymentStatusNotice/paymentNotice/paymentCanceling",
+      "parent": 7,
+      "group": "Выбор 1, вариант 4",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PaymentCancelingType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        37,
+        38,
+        39,
+        42,
+        43,
+        44
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "infoType",
+      "path": "paymentStatusNotice/paymentNotice/paymentCanceling/infoType",
+      "parent": 36,
+      "group": "",
+      "doc": "Тип выплаты",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "0",
+          "первичная"
+        ],
+        [
+          "1",
+          "перерасчёт"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "docType",
+      "path": "paymentStatusNotice/paymentNotice/paymentCanceling/docType",
+      "parent": 36,
+      "group": "",
+      "doc": "Тип пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DocTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Пособие по временной нетрудоспособности"
+        ],
+        [
+          "2",
+          "Пособие по беременности и родам"
+        ],
+        [
+          "3",
+          "Единовременное пособие женщинам, вставшим на учет в медицинских учреждениях в ранние сроки беременности"
+        ],
+        [
+          "4",
+          "Единовременное пособие при рождении ребенка"
+        ],
+        [
+          "5",
+          "Ежемесячное пособие по уходу за ребенком"
+        ],
+        [
+          "6",
+          "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием"
+        ],
+        [
+          "7",
+          "Социальное пособие на погребение"
+        ],
+        [
+          "8",
+          "Возмещение расходов Страхователю на оплату четырех дополнительных выходных дней одному из родителей (опекуну, попечителю) для ухода за детьми-инвалидами за счет средств межбюджетных трансфертов из федерального фонда"
+        ],
+        [
+          "9",
+          "Оплата отпуска (сверх ежегодного оплачиваемого отпуска, установленного законодательством РФ) на весь период лечения и проезда к месту лечения и обратно"
+        ],
+        [
+          "98",
+          "Выплата соцработникам"
+        ],
+        [
+          "99",
+          "Выплата медикам"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "period",
+      "path": "paymentStatusNotice/paymentNotice/paymentCanceling/period",
+      "parent": 36,
+      "group": "",
+      "doc": "Дата и время отчёта",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "PeriodType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        40,
+        41
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "periodStart",
+      "path": "paymentStatusNotice/paymentNotice/paymentCanceling/period/periodStart",
+      "parent": 39,
+      "group": "",
+      "doc": "Начало периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "periodEnd",
+      "path": "paymentStatusNotice/paymentNotice/paymentCanceling/period/periodEnd",
+      "parent": 39,
+      "group": "",
+      "doc": "Окончание периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "addInformation",
+      "path": "paymentStatusNotice/paymentNotice/paymentCanceling/addInformation",
+      "parent": 36,
+      "group": "",
+      "doc": "Дополнительная информация Заполняется для типов выплат 98, 99",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "AddInformationType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "250"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "sum",
+      "path": "paymentStatusNotice/paymentNotice/paymentCanceling/sum",
+      "parent": 36,
+      "group": "",
+      "doc": "Сумма пособия выплаченная ЗЛ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "12"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "paymentState",
+      "path": "paymentStatusNotice/paymentNotice/paymentCanceling/paymentState",
+      "parent": 36,
+      "group": "",
+      "doc": "Статус платежа. (Оплата не прошла)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "64"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "noticeSend",
+      "path": "paymentStatusNotice/paymentNotice/noticeSend",
+      "parent": 7,
+      "group": "Выбор 1, вариант 5",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "NoticeSendType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        46,
+        47,
+        48,
+        51,
+        52
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "infoType",
+      "path": "paymentStatusNotice/paymentNotice/noticeSend/infoType",
+      "parent": 45,
+      "group": "",
+      "doc": "Тип выплаты",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "0",
+          "первичная"
+        ],
+        [
+          "1",
+          "перерасчёт"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "docType",
+      "path": "paymentStatusNotice/paymentNotice/noticeSend/docType",
+      "parent": 45,
+      "group": "",
+      "doc": "Тип пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DocTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Пособие по временной нетрудоспособности"
+        ],
+        [
+          "2",
+          "Пособие по беременности и родам"
+        ],
+        [
+          "3",
+          "Единовременное пособие женщинам, вставшим на учет в медицинских учреждениях в ранние сроки беременности"
+        ],
+        [
+          "4",
+          "Единовременное пособие при рождении ребенка"
+        ],
+        [
+          "5",
+          "Ежемесячное пособие по уходу за ребенком"
+        ],
+        [
+          "6",
+          "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием"
+        ],
+        [
+          "7",
+          "Социальное пособие на погребение"
+        ],
+        [
+          "8",
+          "Возмещение расходов Страхователю на оплату четырех дополнительных выходных дней одному из родителей (опекуну, попечителю) для ухода за детьми-инвалидами за счет средств межбюджетных трансфертов из федерального фонда"
+        ],
+        [
+          "9",
+          "Оплата отпуска (сверх ежегодного оплачиваемого отпуска, установленного законодательством РФ) на весь период лечения и проезда к месту лечения и обратно"
+        ],
+        [
+          "98",
+          "Выплата соцработникам"
+        ],
+        [
+          "99",
+          "Выплата медикам"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "period",
+      "path": "paymentStatusNotice/paymentNotice/noticeSend/period",
+      "parent": 45,
+      "group": "",
+      "doc": "Дата и время отчёта",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "PeriodType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        49,
+        50
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "periodStart",
+      "path": "paymentStatusNotice/paymentNotice/noticeSend/period/periodStart",
+      "parent": 48,
+      "group": "",
+      "doc": "Начало периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "periodEnd",
+      "path": "paymentStatusNotice/paymentNotice/noticeSend/period/periodEnd",
+      "parent": 48,
+      "group": "",
+      "doc": "Окончание периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "addInformation",
+      "path": "paymentStatusNotice/paymentNotice/noticeSend/addInformation",
+      "parent": 45,
+      "group": "",
+      "doc": "Дополнительная информация Заполняется для типов выплат 98, 99",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "AddInformationType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "250"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "insurerName",
+      "path": "paymentStatusNotice/paymentNotice/noticeSend/insurerName",
+      "parent": 45,
+      "group": "",
+      "doc": "Наименование страхователя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "file": "Notice.xsd",
+      "flags": {}
+    }
+  ]
+}
