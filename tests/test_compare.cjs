@@ -15,9 +15,9 @@ assert.equal(compare(right,left).find(x=>x.path==="root/added").status,"removed"
 assert.throws(()=>compare([field("x"),field("x")],[]),/Неоднозначный/);
 const root=path.resolve(__dirname,".."),catalog=JSON.parse(fs.readFileSync(path.join(root,"data/catalog.json"),"utf8"));
 const load=r=>JSON.parse(fs.readFileSync(path.join(root,"data/fields",r.revision_id+".json"),"utf8")).fields;
-const pair=n=>catalog.revisions.filter(r=>r.number===n);
+const pair=n=>catalog.revisions.filter(r=>r.number===n&&r.status==='matched');
 const p10110=pair("10110");assert.equal(compare(load(p10110[0]),load(p10110[1])).length,0);
 const p32=pair("32");assert.ok(compare(load(p32[0]),load(p32[1])).length>0);
-for(const revision of catalog.revisions)assert.equal(compare(load(revision),load(revision)).length,0);
+for(const revision of catalog.revisions.filter(r=>r.status==='matched'))assert.equal(compare(load(revision),load(revision)).length,0);
 console.log("Comparison verified: add/remove/change, restrictions, enum order and descriptions, duplicates, direction, real prod/test pairs and all editions.");
 

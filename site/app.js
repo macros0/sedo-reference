@@ -19,9 +19,10 @@ const go=(number,env,rev,field)=>{location.hash=route(number,env,rev,field)};
 function anchor(text,hash,cls){const a=node("a",cls,text);a.href="#"+hash;return a}
 function external(text,url){const a=node("a","source",text);a.href=url;a.target="_blank";a.rel="noopener";return a}
 function documentDownload(r){const a=node("a","source","Скачать DOCX");a.href=r.document_download;a.download=r.document_filename;return a}
+function revisionOrigin(r){return r.document_url?external("Спецификация СФР ↗",r.document_url):node("span","source","Ручная загрузка · "+(r.manual_source?.label||"Файл владельца"))}
 function date(s){return s?s.replace(/\.(\d{2})$/,".20$1"):"Дата не указана"}
 function title(m,env){return m.revisions.find(r=>!env||r.environment===env)?.title||m.rows.find(r=>!env||r.environment===env)?.title||[...m.titles][0]}
-function label(r){return envNames[r.environment]+" · "+(r.document_version||"Версия не указана")+" · "+date(r.label_date)}
+function label(r){return envNames[r.environment]+" · "+(r.document_version||"Версия не указана")+" · "+date(r.label_date)+(r.source_type==="manual"?" · Ручная загрузка":"")}
 function renderMessages(){
  const terms=normalize($("message-query").value.trim()).split(/\s+/).filter(Boolean),env=$("catalog-env").value;
  const matches=[...messages.values()].filter(m=>{
@@ -54,10 +55,10 @@ function renderVersions(m,env){
    for(const r of revisions){
     const card=node("div","card");card.append(node("strong","","Версия "+(r.document_version||"не указана")),node("p","",date(r.label_date)));
     if(r.ready)card.append(anchor("Открыть дерево",route(m.number,e,r.revision_id),"open"));
-    else card.append(node("p","","Схема ожидает проверки"));
-    card.append(node("br"),documentDownload(r),document.createTextNode(" · "),external("Спецификация СФР ↗",r.document_url));
+    else card.append(node("p","",r.status==="document_only"?"DOCX сохранён. Схема XSD не загружена.":"Схема ожидает проверки"));
+    card.append(node("br"),documentDownload(r),document.createTextNode(" · "),revisionOrigin(r));
     card.append(node("p","meta","Редакция "+r.revision_id.slice(0,8)));
-    if(!r.listed_now)card.append(node("p","meta","Редакция сохранена в истории"));
+    if(!r.listed_now&&r.source_type!=="manual")card.append(node("p","meta","Редакция сохранена в истории"));
     panel.append(card)
    }
   }else{
@@ -70,8 +71,9 @@ function renderVersions(m,env){
 let loadedRevision=null;
 function renderRoute(){
  const p=new URLSearchParams(location.hash.slice(1)),number=p.get("message"),env=p.get("env"),rev=p.get("rev"),field=p.get("field");
- for(const id of ["catalog","versions","viewer","comparison","updates","error"])$(id).hidden=true;
+ for(const id of ["catalog","versions","viewer","comparison","updates","import-help","error"])$(id).hidden=true;
  $("crumbs").replaceChildren(anchor("Все сообщения",""));
+ if(p.has("import")){$("import-help").hidden=false;document.title="Ручная загрузка · СЭДО";return}
  if(p.has("updates")){$("updates").hidden=false;$("crumbs").append(node("span","","/"),node("span","","Журнал обновлений"));document.title="Журнал обновлений · СЭДО";renderUpdates(p);return}
  if(!number){$("catalog").hidden=false;renderMessages();return}
  const m=messages.get(number);
@@ -83,7 +85,8 @@ function renderRoute(){
  if(!r||!r.ready){$("error").hidden=false;$("error").replaceChildren(node("h1","","Редакция недоступна"),anchor("Посмотреть доступные редакции",route(number,env)));return}
  $("viewer").hidden=false;$("crumbs").append(node("span","","/"),node("span","",label(r)));
  $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
- $("doc-source").href=r.document_url;
+ $("doc-source").hidden=!r.document_url;if(r.document_url)$("doc-source").href=r.document_url;
+ $("manual-source").hidden=r.source_type!=="manual";$("manual-source").textContent="Ручная загрузка · "+(r.manual_source?.label||"Файл владельца");
  $("doc-download").href=r.document_download;$("doc-download").download=r.document_filename;
  document.getElementById("compare-from-viewer")?.remove();
  const pair=comparisonDefaults(m),other=m.revisions.find(x=>x.ready&&x.revision_id!==rev);

@@ -57,9 +57,11 @@ function renderUpdates(params){
    if(nextDay!==day){list.append(node("h2","journal-day",nextDay));day=nextDay}
    const card=node("article","update-card");card.dataset.revision=r.revision_id;
    const badges=node("div","badges");badges.append(node("span","badge "+r.environment,envNames[r.environment]),node("span","badge",event.initial_import?"Первичное наполнение":event.previous_revision_id?"Новая редакция":"Первое появление"));card.append(badges);
-   const heading=node("h3");heading.append(anchor(r.number+" · Версия "+(r.document_version||"не указана"),route(r.number,r.environment,r.revision_id)));card.append(heading,node("p","",r.title));
+   const heading=node("h3");heading.append(anchor(r.number+" · Версия "+(r.document_version||"не указана"),route(r.number,r.environment,r.ready?r.revision_id:undefined)));card.append(heading,node("p","",r.title));
    const time=node("time","meta",event.observed_at?"Обнаружено: "+observationDate(event.observed_at):observationDate(null));if(event.observed_at)time.dateTime=event.observed_at;card.append(time,node("p","meta","Документ СФР: "+date(r.label_date)+" · Редакция "+r.revision_id.slice(0,8)));
-   if(!r.listed_now)card.append(node("p","meta","Редакция сохранена в истории"));
+   if(r.source_type==="manual")card.append(node("p","meta","Ручная загрузка · "+(r.manual_source?.label||"Файл владельца")));
+   else if(r.manual_source)card.append(node("p","meta","Впервые загружено вручную · "+r.manual_source.label));
+   else if(!r.listed_now)card.append(node("p","meta","Редакция сохранена в истории"));
    const summary=event.comparison;
    if(summary?.status==="ready"){
     const before=revisions.get(summary.left),after=revisions.get(summary.right);
@@ -67,7 +69,7 @@ function renderUpdates(params){
     const counts=node("div","compare-counts journal-counts");
     for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])counts.append(node("span",key,text+" · "+summary.counts[key]));
     card.append(counts);
-   }else card.append(node("p","meta",summary?.status==="no_baseline"?"Первая сохранённая редакция: подходящей редакции для сравнения пока нет.":"Подсчёт изменений недоступен: нет готового дерева для сравнения."));
+   }else card.append(node("p","meta",r.status==="document_only"?"DOCX сохранён. Схема XSD не загружена.":summary?.status==="no_baseline"?"Первая сохранённая редакция: подходящей редакции для сравнения пока нет.":"Подсчёт изменений недоступен: нет готового дерева для сравнения."));
    const links=node("div","journal-links");if(r.ready)links.append(anchor("Открыть дерево",route(r.number,r.environment,r.revision_id)));links.append(documentDownload(r));
    if(summary?.status==="ready")links.append(anchor("Открыть сравнение",comparisonRoute(r.number,summary.left,summary.right)));
    card.append(links);list.append(card);

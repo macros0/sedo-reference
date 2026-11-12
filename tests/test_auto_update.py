@@ -53,6 +53,8 @@ class UpdateAcceptanceTests(unittest.TestCase):
         current = self.execute(copy.deepcopy(self.snapshot))
         self.assertEqual(self.original_ids, {r["revision_id"] for r in current["revisions"]})
         for rid in self.original_ids:
+            revision=next(r for r in self.original["revisions"] if r["revision_id"]==rid)
+            if revision["status"]=="document_only":continue
             self.assertEqual((PROJECT / "data/fields" / (rid + ".json")).read_bytes(),
                              (self.root / "data/fields" / (rid + ".json")).read_bytes())
         self.assertEqual(json.loads((self.root / "update-report.json").read_bytes())["new_revisions"], [])

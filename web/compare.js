@@ -45,7 +45,7 @@ async function renderComparison(m,params){
  selectors.forEach(select=>select.onchange=()=>{location.hash=comparisonRoute(m.number,selectors[0].value,selectors[1].value)});
  const sources=node("div","compare-sources");
  for(const [caption,r] of [["Было",left],["Стало",right]]){
-  const box=node("div");box.append(node("strong","",caption+" · "+comparisonLabel(r)),node("br"),documentDownload(r),document.createTextNode(" · "),external("Спецификация СФР ↗",r.document_url),document.createTextNode(" · "),anchor("Открыть дерево",route(m.number,r.environment,r.revision_id),"source"));sources.append(box)
+  const box=node("div");box.append(node("strong","",caption+" · "+comparisonLabel(r)),node("br"),documentDownload(r),document.createTextNode(" · "),revisionOrigin(r),document.createTextNode(" · "),anchor("Открыть дерево",route(m.number,r.environment,r.revision_id),"source"));sources.append(box)
  }
  section.append(sources);
  const state=node("p","empty","Сравниваем деревья…");section.append(state);

@@ -17,6 +17,7 @@ def verify(state,data):
     assert len(set(r["revision_id"] for r in pair))==len(pair)
     assert all(r["root"]=="benefitResponse" for r in pair if r["revision_id"] in baseline_ids)
     for r in revisions:
+        if r["status"]=="document_only" and r.get("source_type")=="manual":continue
         obj=json.loads((data/"fields"/(r["revision_id"]+".json")).read_bytes())
         f=obj["fields"];assert f[0]["name"]==r["root"]
         assert all(f[c]["parent"]==i for i,n in enumerate(f) for c in n["children"])

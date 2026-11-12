@@ -20,6 +20,8 @@ def dependency_set(schemas,entry):
     return sorted((posixpath.relpath(p,posixpath.dirname(entry)),h) for p,h in visited.items())
 
 def derive(snapshot):
+    if snapshot.get("source_type")=="manual":
+        return dict(revisions=[dict(snapshot["revision"])],registry=[],review=[])
     rows=snapshot["entries"];catalog=[]; registry=[]; issues=[]
     for r in rows:
         for table in r.get("registry_tables",[]):
@@ -72,7 +74,11 @@ def export(state,target):
                                     observed_at=observations.get(key),initial_import=batch==0,
                                     previous_revision_id=previous_by_message.get(identity)))
                 added[identity]=row["revision_id"]
-            versions[row["revision_id"]]=row
+            old=versions.get(row["revision_id"])
+            if not old or row.get("source_type")!="manual" or old.get("source_type")=="manual":
+                if old and old.get("manual_source") and not row.get("manual_source"):
+                    row=dict(row,manual_source=old["manual_source"])
+                versions[row["revision_id"]]=row
             if key==ptr:current_ids.add(row["revision_id"])
         # Editions discovered in the same batch share a previous historical edition.
         previous_by_message.update(added)

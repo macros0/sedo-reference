@@ -33,10 +33,13 @@ def validate_history(previous, current, directory):
         raise ValueError("Новые схемы требуют проверки сопоставления")
     status = json.loads((directory / "data/fields/index.json").read_bytes())
     ready = {r["revision_id"] for r in status if r["status"] == "ready"}
-    if ready != new_ids:
+    documents = {r["revision_id"] for r in current["revisions"] if r["status"]=="document_only" and r.get("source_type")=="manual"}
+    if ready != new_ids-documents or {r["revision_id"] for r in status if r["status"]=="document_only"}!=documents:
         raise ValueError("Не все редакции удалось построить")
     for revision in current["revisions"]:
         rid = revision["revision_id"]
+        if rid in documents:
+            continue
         fields = json.loads((directory / "data/fields" / (rid + ".json")).read_bytes())["fields"]
         if not fields or fields[0]["name"] != revision["root"]:
             raise ValueError("Некорректный корень " + rid)
@@ -48,6 +51,9 @@ def validate_history(previous, current, directory):
     for rid in old_ids:
         old_field = directory / "previous-fields" / (rid + ".json")
         new_field = directory / "data/fields" / (rid + ".json")
+        old_revision=next(r for r in previous["revisions"] if r["revision_id"]==rid)
+        if old_revision["status"]=="document_only" and old_revision.get("source_type")=="manual":
+            continue
         if old_field.read_bytes() != new_field.read_bytes():
             raise ValueError("Изменилось дерево существующей редакции " + rid)
     for env in ("prod", "test"):

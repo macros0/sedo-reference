@@ -11,6 +11,8 @@ def build(index,state,target):
     statuses=[]
     for r in catalog["revisions"]:
         key=r["revision_id"]; report=dict(revision_id=key,number=r["number"],environment=r["environment"])
+        if r["status"]=="document_only" and r.get("source_type")=="manual":
+            statuses.append(dict(report,status="document_only"));continue
         if r["status"]!="matched":
             statuses.append(dict(report,status="review"));continue
         source=state/"objects"/r["archive_sha256"]

@@ -12,6 +12,6 @@ def main():
     export(args.state,index)
     build(index,args.state,args.out/"fields")
     status=json.loads((args.out/"fields"/"index.json").read_bytes())
-    if any(r["status"]!="ready" for r in status): raise SystemExit("Нужна проверка новых схем. См. fields/index.json")
+    if any(r["status"] not in ("ready","document_only") for r in status): raise SystemExit("Нужна проверка новых схем. См. fields/index.json")
 if __name__=="__main__":main()
 
