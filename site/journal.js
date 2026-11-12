@@ -25,13 +25,16 @@ function renderUpdates(params){
    const heading=node("h3");heading.append(anchor(r.number+" · Версия "+(r.document_version||"не указана"),route(r.number,r.environment,r.revision_id)));card.append(heading,node("p","",r.title));
    const time=node("time","meta",event.observed_at?"Обнаружено: "+observationDate(event.observed_at):observationDate(null));if(event.observed_at)time.dateTime=event.observed_at;card.append(time,node("p","meta","Документ СФР: "+date(r.label_date)+" · Редакция "+r.revision_id.slice(0,8)));
    if(!r.listed_now)card.append(node("p","meta","Редакция сохранена в истории"));
+   const summary=event.comparison;
+   if(summary?.status==="ready"){
+    const before=revisions.get(summary.left),after=revisions.get(summary.right);
+    card.append(node("p","meta","Сравнение: "+label(before)+" → "+label(after)));
+    const counts=node("div","compare-counts journal-counts");
+    for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])counts.append(node("span",key,text+" · "+summary.counts[key]));
+    card.append(counts);
+   }else card.append(node("p","meta",summary?.status==="no_baseline"?"Первая сохранённая редакция: подходящей редакции для сравнения пока нет.":"Подсчёт изменений недоступен: нет готового дерева для сравнения."));
    const links=node("div","journal-links");if(r.ready)links.append(anchor("Открыть дерево",route(r.number,r.environment,r.revision_id)));links.append(documentDownload(r));
-   const previous=revisions.get(event.previous_revision_id);
-   if(previous?.ready&&r.ready)links.append(anchor("Сравнить с версией "+(previous.document_version||"без номера"),comparisonRoute(r.number,previous.revision_id,r.revision_id)));
-   else if(r.ready){
-    const m=messages.get(r.number),defaults=comparisonDefaults(m),other=revisions.get(r.environment==="prod"?defaults.right:defaults.left);
-    if(other?.ready&&other.environment!==r.environment)links.append(anchor("Сравнить с "+(other.environment==="test"?"тестом":"продуктивом")+" · "+(other.document_version||"без номера"),comparisonRoute(r.number,r.environment==="prod"?r.revision_id:other.revision_id,r.environment==="test"?r.revision_id:other.revision_id)));
-   }
+   if(summary?.status==="ready")links.append(anchor("Открыть сравнение",comparisonRoute(r.number,summary.left,summary.right)));
    card.append(links);list.append(card);
   }
   if(!visible.length)list.append(node("p","empty",entries.length?"Совпадений нет. Измените поиск или контур.":"Сохранённых событий пока нет."));

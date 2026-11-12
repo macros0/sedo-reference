@@ -27,10 +27,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - name: Test history preservation and update failures
         run: |
           python -m unittest discover -s tests -v
           node tests/test_compare.cjs
+          node tests/test_update_summaries.cjs
       - name: Collect both contours and validate candidate
         run: python auto_update.py
       - name: Commit validated data and deploy

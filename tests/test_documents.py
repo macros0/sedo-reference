@@ -1,5 +1,6 @@
 import io
 import json
+import re
 import tempfile
 import unittest
 import zipfile
@@ -46,6 +47,18 @@ class DocumentArchiveTests(unittest.TestCase):
         (self.root / "state/objects" / self.digest).unlink()
         with self.assertRaisesRegex(ValueError, "DOCX"):
             self.build()
+
+    def test_changed_script_gets_new_asset_url(self):
+        write(self.root / "web/index.html", b'<link href="app.css"><script src="catalog-data.js"></script><script src="app.js"></script><script src="journal.js"></script>')
+        self.build()
+        first=(self.root / "site/index.html").read_text("utf8")
+        urls=re.findall(r'(?:src|href)="([^"]+)"',first)
+        self.assertEqual(len(urls),4)
+        self.assertTrue(all("?v=" in url for url in urls))
+        write(self.root / "web/app.js", b"updated script")
+        self.build()
+        second=(self.root / "site/index.html").read_text("utf8")
+        self.assertNotEqual(re.search(r'src="(app.js[^"]+)"',first)[1],re.search(r'src="(app.js[^"]+)"',second)[1])
 
     def test_wrong_checksum_blocks_build(self):
         write(self.root / "state/objects" / self.digest, b"replaced document")

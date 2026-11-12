@@ -1,6 +1,7 @@
 """Build the local/browser static reference from the compiled SFR catalog."""
 import json
 import re
+import subprocess
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from sync import inspect_file, sha, write
@@ -61,9 +62,24 @@ restoreField();
         (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8")
         data=dict(fields=fields,revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
         (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
+    if catalog.get("updates"):
+        try:
+            result=subprocess.run(["node",str(Path(__file__).with_name("summarize_updates.cjs")),str(HERE/"data/fields")],
+                                  input=packed(catalog),capture_output=True,text=True,encoding="utf8",check=True,timeout=120)
+        except (OSError,subprocess.SubprocessError) as exc:
+            detail=getattr(exc,"stderr",None) or str(exc)
+            raise ValueError("Не удалось посчитать изменения журнала (нужен Node.js 18+): "+detail[:1500]) from exc
+        catalog["updates"]=json.loads(result.stdout)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
-    for file in ("index.html","app.js","app.css","compare-core.js","compare.js","journal.js"):
+    assets=("app.js","app.css","compare-core.js","compare.js","journal.js")
+    for file in assets:
         (site/file).write_bytes((HERE/"web"/file).read_bytes())
+    # Content versions prevent cached old routing code from breaking new navigation.
+    html=(HERE/"web/index.html").read_text("utf8")
+    for file in (*assets,"catalog-data.js"):
+        version=sha((site/file).read_bytes())[:16]
+        html=html.replace('"'+file+'"','"'+file+'?v='+version+'"')
+    (site/"index.html").write_text(html,encoding="utf8")
     print(f"Built {len(catalog['revisions'])} revisions in {site}")
 if __name__=="__main__":main()
 

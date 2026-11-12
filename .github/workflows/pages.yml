@@ -16,10 +16,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
       - name: Check catalog and build static reference
         run: |
           python -m unittest discover -s tests -q
           node tests/test_compare.cjs
+          node tests/test_update_summaries.cjs
           python verify.py
           python build_site.py
           touch site/.nojekyll
