@@ -96,7 +96,7 @@ def run(root):
             snapshot=json.loads((stage/"state/snapshots"/(json.loads((stage/"state/current.json").read_bytes())["snapshot"]+".json")).read_bytes())
             # Keep all inputs needed to replay the successful inventory, including
             # raw WSDL/XSD bytes and schemas from supporting DOCX documents.
-            objects.update(snapshot["pages"].values())
+            objects.update(snapshot.get("pages",{}).values())
             for row in snapshot["entries"]:
                 if row.get("sha256"):objects.add(row["sha256"])
                 for archive in [*row.get("embedded_archives",[]),*row.get("wsdl_archives",[])]:
