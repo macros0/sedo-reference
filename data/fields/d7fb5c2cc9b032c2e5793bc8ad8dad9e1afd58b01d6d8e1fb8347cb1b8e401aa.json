@@ -1,0 +1,5660 @@
+{
+  "revision_id": "d7fb5c2cc9b032c2e5793bc8ad8dad9e1afd58b01d6d8e1fb8347cb1b8e401aa",
+  "fields": [
+    {
+      "name": "eventLife",
+      "path": "eventLife",
+      "parent": -1,
+      "group": "",
+      "doc": "Информирование о жизненном событии. Тип сообщения СЭДО №10910",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        3,
+        146,
+        147,
+        149,
+        152
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insurerInfo",
+      "path": "eventLife/insurerInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные о страхователе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "regNumSFR",
+      "path": "eventLife/insurerInfo/regNumSFR",
+      "parent": 1,
+      "group": "",
+      "doc": "Единый рег. номер страхователя СФР",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNumSFR",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "10"
+        ],
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "benefitInfo",
+      "path": "eventLife/benefitInfo",
+      "parent": 0,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Инициация назначения пособия по временной нетрудоспособности или материнству",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "benefitInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        4,
+        26,
+        43,
+        81,
+        123
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "benefit1",
+      "path": "eventLife/benefitInfo/benefit1",
+      "parent": 3,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Инициация назначения пособия по временной нетрудоспособности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        5,
+        8,
+        9,
+        11
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insuredInfo",
+      "path": "eventLife/benefitInfo/benefit1/insuredInfo",
+      "parent": 4,
+      "group": "",
+      "doc": "Данные о застрахованном лице",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "insuredInfoType2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        6,
+        7
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "eventLife/benefitInfo/benefit1/insuredInfo/snils",
+      "parent": 5,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "category",
+      "path": "eventLife/benefitInfo/benefit1/insuredInfo/category",
+      "parent": 5,
+      "group": "",
+      "doc": "Категория застрахованного лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "insCat:insuredCategoriesType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "2",
+          "Лица, осужденные к лишению свободы и привлеченные к оплачиваемому труду"
+        ],
+        [
+          "3",
+          "Лица, осужденные к принудительным работам, привлеченные к труду"
+        ],
+        [
+          "4",
+          "Лица, в период приостановления трудового договора после окончания военной службы"
+        ],
+        [
+          "6",
+          "Лица, работающие по трудовым договорам или по договорам гражданско-правового характера"
+        ],
+        [
+          "7",
+          "Руководители организаций, являющиеся единственными участниками (учредителями), членами организаций, собственниками их имущества"
+        ],
+        [
+          "8",
+          "Государственные гражданские (муниципальные) служащие"
+        ],
+        [
+          "9",
+          "Лица, замещающие государственные (муниципальные) должности"
+        ],
+        [
+          "10",
+          "Члены производственного кооператива, принимающие личное трудовое участие в его деятельности"
+        ],
+        [
+          "11",
+          "Священнослужители"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "InsuredCategories.xsd"
+    },
+    {
+      "name": "lnNumber",
+      "path": "eventLife/benefitInfo/benefit1/lnNumber",
+      "parent": 4,
+      "group": "",
+      "doc": "Номер ЭЛН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:lnCode",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "12"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "changeYears",
+      "path": "eventLife/benefitInfo/benefit1/changeYears",
+      "parent": 4,
+      "group": "",
+      "doc": "Информация о замененных расчетных годах. Заполняется при наличии заявления о замене лет",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "changeYearsType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        10
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "year",
+      "path": "eventLife/benefitInfo/benefit1/changeYears/year",
+      "parent": 9,
+      "group": "",
+      "doc": "Год, использующийся для расчета",
+      "kind": "element",
+      "min": "2",
+      "max": "2",
+      "type": "pr:yearType",
+      "base": "xs:integer",
+      "facets": [
+        [
+          "minInclusive",
+          "2000"
+        ],
+        [
+          "pattern",
+          "\\d{4}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "contractsInfo",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo",
+      "parent": 4,
+      "group": "",
+      "doc": "Договоры, по которым занято застрахованное лицо у страхователя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "pr:contractsInfoTypeResponse1",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        12,
+        16,
+        20
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "workerContract",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/workerContract",
+      "parent": 11,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Застрахованное лицо занято по трудовому договору. При указании условия исчисления = 46 также необходимо указать дату окончания договора",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        13
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/workerContract/period",
+      "parent": 12,
+      "group": "",
+      "doc": "Период договора. Поле обязательно для заполнения при срочном ТД на срок до 6 месяцев",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:period2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        14,
+        15
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/workerContract/period/begin",
+      "parent": 13,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/workerContract/period/end",
+      "parent": 13,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "GPHcontract",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/GPHcontract",
+      "parent": 11,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Застрахованное лицо занято по гражданско-правовому договору. При указании условия исчисления = 46 также необходимо указать дату окончания договора",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        17
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/GPHcontract/period",
+      "parent": 16,
+      "group": "",
+      "doc": "Период договора",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        18,
+        19
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "begin",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/GPHcontract/period/begin",
+      "parent": 17,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/GPHcontract/period/end",
+      "parent": 17,
+      "group": "",
+      "doc": "Дата окончания. Поле обязательно для заполнения при договоре ГПХ на срок до 6 месяцев",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "workerAndGPHcontract",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/workerAndGPHcontract",
+      "parent": 11,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Застрахованное лицо занято по трудовому договору и по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        21,
+        25
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "workerContract",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/workerAndGPHcontract/workerContract",
+      "parent": 20,
+      "group": "",
+      "doc": "Застрахованное лицо занято по трудовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        22
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/workerAndGPHcontract/workerContract/period",
+      "parent": 21,
+      "group": "",
+      "doc": "Период договора. Поле обязательно для заполнения при срочном ТД на срок до 6 месяцев",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:period2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        23,
+        24
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/workerAndGPHcontract/workerContract/period/begin",
+      "parent": 22,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/workerAndGPHcontract/workerContract/period/end",
+      "parent": 22,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "GPHcontract",
+      "path": "eventLife/benefitInfo/benefit1/contractsInfo/workerAndGPHcontract/GPHcontract",
+      "parent": 20,
+      "group": "",
+      "doc": "Застрахованное лицо занято по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "benefit2",
+      "path": "eventLife/benefitInfo/benefit2",
+      "parent": 3,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Инициация назначения пособия по беременности и родам",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        27,
+        30,
+        31,
+        33,
+        40
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insuredInfo",
+      "path": "eventLife/benefitInfo/benefit2/insuredInfo",
+      "parent": 26,
+      "group": "",
+      "doc": "Данные о застрахованном лице",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "insuredInfoType2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        28,
+        29
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "eventLife/benefitInfo/benefit2/insuredInfo/snils",
+      "parent": 27,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "category",
+      "path": "eventLife/benefitInfo/benefit2/insuredInfo/category",
+      "parent": 27,
+      "group": "",
+      "doc": "Категория застрахованного лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "insCat:insuredCategoriesType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "2",
+          "Лица, осужденные к лишению свободы и привлеченные к оплачиваемому труду"
+        ],
+        [
+          "3",
+          "Лица, осужденные к принудительным работам, привлеченные к труду"
+        ],
+        [
+          "4",
+          "Лица, в период приостановления трудового договора после окончания военной службы"
+        ],
+        [
+          "6",
+          "Лица, работающие по трудовым договорам или по договорам гражданско-правового характера"
+        ],
+        [
+          "7",
+          "Руководители организаций, являющиеся единственными участниками (учредителями), членами организаций, собственниками их имущества"
+        ],
+        [
+          "8",
+          "Государственные гражданские (муниципальные) служащие"
+        ],
+        [
+          "9",
+          "Лица, замещающие государственные (муниципальные) должности"
+        ],
+        [
+          "10",
+          "Члены производственного кооператива, принимающие личное трудовое участие в его деятельности"
+        ],
+        [
+          "11",
+          "Священнослужители"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "InsuredCategories.xsd"
+    },
+    {
+      "name": "lnNumber",
+      "path": "eventLife/benefitInfo/benefit2/lnNumber",
+      "parent": 26,
+      "group": "",
+      "doc": "Номер ЭЛН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:lnCode",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "12"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "changeYears",
+      "path": "eventLife/benefitInfo/benefit2/changeYears",
+      "parent": 26,
+      "group": "",
+      "doc": "Информация о замененных расчетных годах. Заполняется при наличии заявления о замене лет",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "changeYearsType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        32
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "year",
+      "path": "eventLife/benefitInfo/benefit2/changeYears/year",
+      "parent": 31,
+      "group": "",
+      "doc": "Год, использующийся для расчета",
+      "kind": "element",
+      "min": "2",
+      "max": "2",
+      "type": "pr:yearType",
+      "base": "xs:integer",
+      "facets": [
+        [
+          "minInclusive",
+          "2000"
+        ],
+        [
+          "pattern",
+          "\\d{4}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "contractsInfo",
+      "path": "eventLife/benefitInfo/benefit2/contractsInfo",
+      "parent": 26,
+      "group": "",
+      "doc": "Договоры, по которым занято застрахованное лицо у страхователя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "pr:contractsInfoTypeResponse2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        34,
+        35,
+        39
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "workerContract",
+      "path": "eventLife/benefitInfo/benefit2/contractsInfo/workerContract",
+      "parent": 33,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Застрахованное лицо занято по трудовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "GPHcontract",
+      "path": "eventLife/benefitInfo/benefit2/contractsInfo/GPHcontract",
+      "parent": 33,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Застрахованное лицо занято по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        36
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "eventLife/benefitInfo/benefit2/contractsInfo/GPHcontract/period",
+      "parent": 35,
+      "group": "",
+      "doc": "Период договора",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        37,
+        38
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "eventLife/benefitInfo/benefit2/contractsInfo/GPHcontract/period/begin",
+      "parent": 36,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "eventLife/benefitInfo/benefit2/contractsInfo/GPHcontract/period/end",
+      "parent": 36,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "workerAndGPHcontract",
+      "path": "eventLife/benefitInfo/benefit2/contractsInfo/workerAndGPHcontract",
+      "parent": 33,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Застрахованное лицо занято по трудовому договору и по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "eventLife/benefitInfo/benefit2/period",
+      "parent": 26,
+      "group": "",
+      "doc": "Если застрахованное лицо занято по трудовому договору, то заполняется период отпуска по беременности и родам. Если застрахованное лицо занято только по договору ГПХ, то заполняется период назначения и выплаты пособия в пределах действия договора ГПХ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        41,
+        42
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "eventLife/benefitInfo/benefit2/period/begin",
+      "parent": 40,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "eventLife/benefitInfo/benefit2/period/end",
+      "parent": 40,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "benefit4",
+      "path": "eventLife/benefitInfo/benefit4",
+      "parent": 3,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Инициация назначения единовременного пособия при рождении ребенка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        44,
+        48,
+        52,
+        63,
+        64
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insuredInfo",
+      "path": "eventLife/benefitInfo/benefit4/insuredInfo",
+      "parent": 43,
+      "group": "",
+      "doc": "Данные о застрахованном лице",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "insuredInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        45,
+        46,
+        47
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "eventLife/benefitInfo/benefit4/insuredInfo/snils",
+      "parent": 44,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "category",
+      "path": "eventLife/benefitInfo/benefit4/insuredInfo/category",
+      "parent": 44,
+      "group": "",
+      "doc": "Категория застрахованного лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "insCat:insuredCategoriesType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "2",
+          "Лица, осужденные к лишению свободы и привлеченные к оплачиваемому труду"
+        ],
+        [
+          "3",
+          "Лица, осужденные к принудительным работам, привлеченные к труду"
+        ],
+        [
+          "4",
+          "Лица, в период приостановления трудового договора после окончания военной службы"
+        ],
+        [
+          "6",
+          "Лица, работающие по трудовым договорам или по договорам гражданско-правового характера"
+        ],
+        [
+          "7",
+          "Руководители организаций, являющиеся единственными участниками (учредителями), членами организаций, собственниками их имущества"
+        ],
+        [
+          "8",
+          "Государственные гражданские (муниципальные) служащие"
+        ],
+        [
+          "9",
+          "Лица, замещающие государственные (муниципальные) должности"
+        ],
+        [
+          "10",
+          "Члены производственного кооператива, принимающие личное трудовое участие в его деятельности"
+        ],
+        [
+          "11",
+          "Священнослужители"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "InsuredCategories.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "eventLife/benefitInfo/benefit4/insuredInfo/birthDate",
+      "parent": 44,
+      "group": "",
+      "doc": "Дата рождения застрахованного лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "contractsInfo",
+      "path": "eventLife/benefitInfo/benefit4/contractsInfo",
+      "parent": 43,
+      "group": "",
+      "doc": "Договоры, по которым занято застрахованное лицо у страхователя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "pr:contractsInfoTypeRequest4",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        49,
+        50,
+        51
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "workerContract",
+      "path": "eventLife/benefitInfo/benefit4/contractsInfo/workerContract",
+      "parent": 48,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Застрахованное лицо занято по трудовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "GPHcontract",
+      "path": "eventLife/benefitInfo/benefit4/contractsInfo/GPHcontract",
+      "parent": 48,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Застрахованное лицо занято по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "workerAndGPHcontract",
+      "path": "eventLife/benefitInfo/benefit4/contractsInfo/workerAndGPHcontract",
+      "parent": 48,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Застрахованное лицо занято по трудовому договору и по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "childInfo",
+      "path": "eventLife/benefitInfo/benefit4/childInfo",
+      "parent": 43,
+      "group": "",
+      "doc": "Данные о ребёнке",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "childInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        53,
+        54,
+        61,
+        62
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "eventLife/benefitInfo/benefit4/childInfo/snils",
+      "parent": 52,
+      "group": "",
+      "doc": "СНИЛС ребёнка. Поле обязательно для заполнения: - для детей, рожденных в РФ; - для детей, рожденных за пределами РФ, в случае наличия СНИЛС",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "fullName",
+      "path": "eventLife/benefitInfo/benefit4/childInfo/fullName",
+      "parent": 52,
+      "group": "",
+      "doc": "ФИО ребёнка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:fullName2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        55,
+        56,
+        57,
+        58,
+        59,
+        60
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "eventLife/benefitInfo/benefit4/childInfo/fullName/lastName",
+      "parent": 54,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "noLastName",
+      "path": "eventLife/benefitInfo/benefit4/childInfo/fullName/noLastName",
+      "parent": 54,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Признак отсутствия фамилии",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:fixedTrueType",
+      "base": "xs:boolean",
+      "facets": [
+        [
+          "pattern",
+          "true"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "eventLife/benefitInfo/benefit4/childInfo/fullName/firstName",
+      "parent": 54,
+      "group": "Выбор 2, вариант 1",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "noFirstName",
+      "path": "eventLife/benefitInfo/benefit4/childInfo/fullName/noFirstName",
+      "parent": 54,
+      "group": "Выбор 2, вариант 2",
+      "doc": "Признак отсутствия имени",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:fixedTrueType",
+      "base": "xs:boolean",
+      "facets": [
+        [
+          "pattern",
+          "true"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "eventLife/benefitInfo/benefit4/childInfo/fullName/middleName",
+      "parent": 54,
+      "group": "Выбор 3, вариант 1",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "noMiddleName",
+      "path": "eventLife/benefitInfo/benefit4/childInfo/fullName/noMiddleName",
+      "parent": 54,
+      "group": "Выбор 3, вариант 2",
+      "doc": "Признак отсутствия отчества",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:fixedTrueType",
+      "base": "xs:boolean",
+      "facets": [
+        [
+          "pattern",
+          "true"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "eventLife/benefitInfo/benefit4/childInfo/birthDate",
+      "parent": 52,
+      "group": "",
+      "doc": "Дата рождения ребёнка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "gender",
+      "path": "eventLife/benefitInfo/benefit4/childInfo/gender",
+      "parent": 52,
+      "group": "",
+      "doc": "Пол ребёнка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:genderType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "MALE",
+          "Пол: мужской"
+        ],
+        [
+          "FEMALE",
+          "Пол: женский"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "childRelType",
+      "path": "eventLife/benefitInfo/benefit4/childRelType",
+      "parent": 43,
+      "group": "",
+      "doc": "Тип связи застрахованного лица с ребенком - мать, отец, опекун, усыновитель",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "pr:childRelTypeBenefit4",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "38",
+          "Мать"
+        ],
+        [
+          "39",
+          "Отец"
+        ],
+        [
+          "40",
+          "Опекун"
+        ],
+        [
+          "50",
+          "Усыновитель"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "baseDocuments",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments",
+      "parent": 43,
+      "group": "",
+      "doc": "Основания для назначения пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        65,
+        73,
+        76
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "birthReferenceDocs",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthReferenceDocs",
+      "parent": 64,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Справка о рождении и актовая запись",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        66,
+        70
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "birthReference",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthReferenceDocs/birthReference",
+      "parent": 65,
+      "group": "",
+      "doc": "Справка о рождении",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:birthReferenceType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        67,
+        68,
+        69
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "number",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthReferenceDocs/birthReference/number",
+      "parent": 66,
+      "group": "",
+      "doc": "Номер",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:stringMinLen1MaxLen20",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "issueDate",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthReferenceDocs/birthReference/issueDate",
+      "parent": 66,
+      "group": "",
+      "doc": "Дата выдачи",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "refType",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthReferenceDocs/birthReference/refType",
+      "parent": 66,
+      "group": "",
+      "doc": "Вид справки",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "48",
+          "Справка о рождении ребенка, выданной органами ЗАГСа форма 1"
+        ],
+        [
+          "49",
+          "Справка о рождении ребенка, выданной органами ЗАГСа форма 2"
+        ],
+        [
+          "51",
+          "Справка о рождении ребенка, выданной органами ЗАГСа форма 4"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "birthRecord",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthReferenceDocs/birthRecord",
+      "parent": 65,
+      "group": "",
+      "doc": "Актовая запись (реестровая запись) о рождении",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:birthRecordType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        71,
+        72
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "number",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthReferenceDocs/birthRecord/number",
+      "parent": 70,
+      "group": "",
+      "doc": "Номер",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "21"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "issueDate",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthReferenceDocs/birthRecord/issueDate",
+      "parent": 70,
+      "group": "",
+      "doc": "Дата",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "birthRecord",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthRecord",
+      "parent": 64,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Актовая запись (реестровая запись) о рождении",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:birthRecordType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        74,
+        75
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "number",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthRecord/number",
+      "parent": 73,
+      "group": "",
+      "doc": "Номер",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "21"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "issueDate",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthRecord/issueDate",
+      "parent": 73,
+      "group": "",
+      "doc": "Дата",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "birthDocOtherCountry",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthDocOtherCountry",
+      "parent": 64,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Иной документ, подтверждающий рождение ребёнка. Для детей, рождённых за рубежом",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:birthDocOtherCountryType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        77,
+        78,
+        79,
+        80
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "series",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthDocOtherCountry/series",
+      "parent": 76,
+      "group": "",
+      "doc": "Серия",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:stringMinLen1MaxLen20",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "number",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthDocOtherCountry/number",
+      "parent": 76,
+      "group": "",
+      "doc": "Номер",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:stringMinLen1MaxLen20",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "issueDate",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthDocOtherCountry/issueDate",
+      "parent": 76,
+      "group": "",
+      "doc": "Дата выдaчи",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "country",
+      "path": "eventLife/benefitInfo/benefit4/baseDocuments/birthDocOtherCountry/country",
+      "parent": 76,
+      "group": "",
+      "doc": "Код страны, на территории которой выдан документ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "OKSM:OKSMType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "004",
+          "АФГАНИСТАН\nПереходное Исламское Государство Афганистан"
+        ],
+        [
+          "008",
+          "АЛБАНИЯ\nРеспублика Албания"
+        ],
+        [
+          "010",
+          "АНТАРКТИДА\nАНТАРКТИДА"
+        ],
+        [
+          "012",
+          "АЛЖИР\nАлжирская Народная Демократическая Республика"
+        ],
+        [
+          "016",
+          "АМЕРИКАНСКОЕ САМОА\nАМЕРИКАНСКОЕ САМОА"
+        ],
+        [
+          "020",
+          "АНДОРРА\nКняжество Андорра"
+        ],
+        [
+          "024",
+          "АНГОЛА\nРеспублика Ангола"
+        ],
+        [
+          "028",
+          "АНТИГУА И БАРБУДА\nАНТИГУА И БАРБУДА"
+        ],
+        [
+          "031",
+          "АЗЕРБАЙДЖАН\nРеспублика Азербайджан"
+        ],
+        [
+          "032",
+          "АРГЕНТИНА\nАргентинская Республика"
+        ],
+        [
+          "036",
+          "АВСТРАЛИЯ\nАВСТРАЛИЯ"
+        ],
+        [
+          "040",
+          "АВСТРИЯ\nАвстрийская Республика"
+        ],
+        [
+          "044",
+          "БАГАМЫ\nСодружество Багамы"
+        ],
+        [
+          "048",
+          "БАХРЕЙН\nКоролевство Бахрейн"
+        ],
+        [
+          "050",
+          "БАНГЛАДЕШ\nНародная Республика Бангладеш"
+        ],
+        [
+          "051",
+          "АРМЕНИЯ\nРеспублика Армения"
+        ],
+        [
+          "052",
+          "БАРБАДОС\nБАРБАДОС"
+        ],
+        [
+          "056",
+          "БЕЛЬГИЯ\nКоролевство Бельгии"
+        ],
+        [
+          "060",
+          "БЕРМУДЫ\nБЕРМУДЫ"
+        ],
+        [
+          "064",
+          "БУТАН\nКоролевство Бутан"
+        ],
+        [
+          "068",
+          "БОЛИВИЯ, МНОГОНАЦИОНАЛЬНОЕ ГОСУДАРСТВО\nМногонациональное Государство Боливия"
+        ],
+        [
+          "070",
+          "БОСНИЯ И ГЕРЦЕГОВИНА\nБОСНИЯ И ГЕРЦЕГОВИНА"
+        ],
+        [
+          "072",
+          "БОТСВАНА\nРеспублика Ботсвана"
+        ],
+        [
+          "074",
+          "ОСТРОВ БУВЕ\nОСТРОВ БУВЕ"
+        ],
+        [
+          "076",
+          "БРАЗИЛИЯ\nФедеративная Республика Бразилия"
+        ],
+        [
+          "084",
+          "БЕЛИЗ\nБЕЛИЗ"
+        ],
+        [
+          "086",
+          "БРИТАНСКАЯ ТЕРРИТОРИЯ В ИНДИЙСКОМ ОКЕАНЕ\nБРИТАНСКАЯ ТЕРРИТОРИЯ В ИНДИЙСКОМ ОКЕАНЕ"
+        ],
+        [
+          "090",
+          "СОЛОМОНОВЫ ОСТРОВА\nСОЛОМОНОВЫ ОСТРОВА"
+        ],
+        [
+          "092",
+          "ВИРГИНСКИЕ ОСТРОВА, БРИТАНСКИЕ\nБританские Виргинские острова"
+        ],
+        [
+          "096",
+          "БРУНЕЙ-ДАРУССАЛАМ\nБРУНЕЙ-ДАРУССАЛАМ"
+        ],
+        [
+          "100",
+          "БОЛГАРИЯ\nРеспублика Болгария"
+        ],
+        [
+          "104",
+          "МЬЯНМА\nРеспублика Союза Мьянма"
+        ],
+        [
+          "108",
+          "БУРУНДИ\nРеспублика Бурунди"
+        ],
+        [
+          "112",
+          "БЕЛАРУСЬ\nРеспублика Беларусь"
+        ],
+        [
+          "116",
+          "КАМБОДЖА\nКоролевство Камбоджа"
+        ],
+        [
+          "120",
+          "КАМЕРУН\nРеспублика Камерун"
+        ],
+        [
+          "124",
+          "КАНАДА\nКАНАДА"
+        ],
+        [
+          "132",
+          "КАБО-ВЕРДЕ\nРеспублика Кабо-Верде"
+        ],
+        [
+          "136",
+          "ОСТРОВА КАЙМАН\nОСТРОВА КАЙМАН"
+        ],
+        [
+          "140",
+          "ЦЕНТРАЛЬНО-АФРИКАНСКАЯ РЕСПУБЛИКА\nЦЕНТРАЛЬНО-АФРИКАНСКАЯ РЕСПУБЛИКА"
+        ],
+        [
+          "144",
+          "ШРИ-ЛАНКА\nДемократическая Социалистическая Республика Шри-Ланка"
+        ],
+        [
+          "148",
+          "ЧАД\nРеспублика Чад"
+        ],
+        [
+          "152",
+          "ЧИЛИ\nРеспублика Чили"
+        ],
+        [
+          "156",
+          "КИТАЙ\nКитайская Народная Республика"
+        ],
+        [
+          "158",
+          "ТАЙВАНЬ (КИТАЙ)\nТАЙВАНЬ (КИТАЙ)"
+        ],
+        [
+          "162",
+          "ОСТРОВ РОЖДЕСТВА\nОСТРОВ РОЖДЕСТВА"
+        ],
+        [
+          "166",
+          "КОКОСОВЫЕ (КИЛИНГ) ОСТРОВА\nКОКОСОВЫЕ (КИЛИНГ) ОСТРОВА"
+        ],
+        [
+          "170",
+          "КОЛУМБИЯ\nРеспублика Колумбия"
+        ],
+        [
+          "174",
+          "КОМОРЫ\nСоюз Коморы"
+        ],
+        [
+          "175",
+          "МАЙОТТА\nМАЙОТТА"
+        ],
+        [
+          "178",
+          "КОНГО\nРеспублика Конго"
+        ],
+        [
+          "180",
+          "КОНГО, ДЕМОКРАТИЧЕСКАЯ РЕСПУБЛИКА\nДемократическая Республика Конго"
+        ],
+        [
+          "184",
+          "ОСТРОВА КУКА\nОСТРОВА КУКА"
+        ],
+        [
+          "188",
+          "КОСТА-РИКА\nРеспублика Коста-Рика"
+        ],
+        [
+          "191",
+          "ХОРВАТИЯ\nРеспублика Хорватия"
+        ],
+        [
+          "192",
+          "КУБА\nРеспублика Куба"
+        ],
+        [
+          "196",
+          "КИПР\nРеспублика Кипр"
+        ],
+        [
+          "203",
+          "ЧЕШСКАЯ РЕСПУБЛИКА\nЧЕШСКАЯ РЕСПУБЛИКА"
+        ],
+        [
+          "204",
+          "БЕНИН\nРеспублика Бенин"
+        ],
+        [
+          "208",
+          "ДАНИЯ\nКоролевство Дания"
+        ],
+        [
+          "212",
+          "ДОМИНИКА\nСодружество Доминики"
+        ],
+        [
+          "214",
+          "ДОМИНИКАНСКАЯ РЕСПУБЛИКА\nДОМИНИКАНСКАЯ РЕСПУБЛИКА"
+        ],
+        [
+          "218",
+          "ЭКВАДОР\nРеспублика Эквадор"
+        ],
+        [
+          "222",
+          "ЭЛЬ-САЛЬВАДОР\nРеспублика Эль-Сальвадор"
+        ],
+        [
+          "226",
+          "ЭКВАТОРИАЛЬНАЯ ГВИНЕЯ\nРеспублика Экваториальная Гвинея"
+        ],
+        [
+          "231",
+          "ЭФИОПИЯ\nФедеративная Демократическая Республика Эфиопия"
+        ],
+        [
+          "232",
+          "ЭРИТРЕЯ\nГосударство Эритрея"
+        ],
+        [
+          "233",
+          "ЭСТОНИЯ\nЭстонская Республика"
+        ],
+        [
+          "234",
+          "ФАРЕРСКИЕ ОСТРОВА\nФАРЕРСКИЕ ОСТРОВА"
+        ],
+        [
+          "238",
+          "ФОЛКЛЕНДСКИЕ ОСТРОВА (МАЛЬВИНСКИЕ)\nФОЛКЛЕНДСКИЕ ОСТРОВА (МАЛЬВИНСКИЕ)"
+        ],
+        [
+          "239",
+          "ЮЖНАЯ ДЖОРДЖИЯ И ЮЖНЫЕ САНДВИЧЕВЫ ОСТРОВА\nЮЖНАЯ ДЖОРДЖИЯ И ЮЖНЫЕ САНДВИЧЕВЫ ОСТРОВА"
+        ],
+        [
+          "242",
+          "ФИДЖИ\nРеспублика Фиджи"
+        ],
+        [
+          "246",
+          "ФИНЛЯНДИЯ\nФинляндская Республика"
+        ],
+        [
+          "248",
+          "ЭЛАНДСКИЕ ОСТРОВА\nЭЛАНДСКИЕ ОСТРОВА"
+        ],
+        [
+          "250",
+          "ФРАНЦИЯ\nФранцузская Республика"
+        ],
+        [
+          "254",
+          "ФРАНЦУЗСКАЯ ГВИАНА\nФРАНЦУЗСКАЯ ГВИАНА"
+        ],
+        [
+          "258",
+          "ФРАНЦУЗСКАЯ ПОЛИНЕЗИЯ\nФРАНЦУЗСКАЯ ПОЛИНЕЗИЯ"
+        ],
+        [
+          "260",
+          "ФРАНЦУЗСКИЕ ЮЖНЫЕ ТЕРРИТОРИИ\nФРАНЦУЗСКИЕ ЮЖНЫЕ ТЕРРИТОРИИ"
+        ],
+        [
+          "262",
+          "ДЖИБУТИ\nРеспублика Джибути"
+        ],
+        [
+          "266",
+          "ГАБОН\nГабонская Республика"
+        ],
+        [
+          "268",
+          "ГРУЗИЯ\nГРУЗИЯ"
+        ],
+        [
+          "270",
+          "ГАМБИЯ\nРеспублика Гамбия"
+        ],
+        [
+          "275",
+          "ПАЛЕСТИНА, ГОСУДАРСТВО\nГосударство Палестина"
+        ],
+        [
+          "276",
+          "ГЕРМАНИЯ\nФедеративная Республика Германия"
+        ],
+        [
+          "288",
+          "ГАНА\nРеспублика Гана"
+        ],
+        [
+          "292",
+          "ГИБРАЛТАР\nГИБРАЛТАР"
+        ],
+        [
+          "296",
+          "КИРИБАТИ\nРеспублика Кирибати"
+        ],
+        [
+          "300",
+          "ГРЕЦИЯ\nГреческая Республика"
+        ],
+        [
+          "304",
+          "ГРЕНЛАНДИЯ\nГРЕНЛАНДИЯ"
+        ],
+        [
+          "308",
+          "ГРЕНАДА\nГРЕНАДА"
+        ],
+        [
+          "312",
+          "ГВАДЕЛУПА\nГВАДЕЛУПА"
+        ],
+        [
+          "316",
+          "ГУАМ\nГУАМ"
+        ],
+        [
+          "320",
+          "ГВАТЕМАЛА\nРеспублика Гватемала"
+        ],
+        [
+          "324",
+          "ГВИНЕЯ\nГвинейская Республика"
+        ],
+        [
+          "328",
+          "ГАЙАНА\nРеспублика Гайана"
+        ],
+        [
+          "332",
+          "ГАИТИ\nРеспублика Гаити"
+        ],
+        [
+          "334",
+          "ОСТРОВ ХЕРД И ОСТРОВА МАКДОНАЛЬД\nОСТРОВ ХЕРД И ОСТРОВА МАКДОНАЛЬД"
+        ],
+        [
+          "336",
+          "ПАПСКИЙ ПРЕСТОЛ (ГОСУДАРСТВО-ГОРОД ВАТИКАН)\nПАПСКИЙ ПРЕСТОЛ (ГОСУДАРСТВО-ГОРОД ВАТИКАН)"
+        ],
+        [
+          "340",
+          "ГОНДУРАС\nРеспублика Гондурас"
+        ],
+        [
+          "344",
+          "ГОНКОНГ\nСпециальный административный регион Китая Гонконг"
+        ],
+        [
+          "348",
+          "ВЕНГРИЯ\nВенгрия"
+        ],
+        [
+          "352",
+          "ИСЛАНДИЯ\nРеспублика Исландия"
+        ],
+        [
+          "356",
+          "ИНДИЯ\nРеспублика Индия"
+        ],
+        [
+          "360",
+          "ИНДОНЕЗИЯ\nРеспублика Индонезия"
+        ],
+        [
+          "364",
+          "ИРАН, ИСЛАМСКАЯ РЕСПУБЛИКА\nИсламская Республика Иран"
+        ],
+        [
+          "368",
+          "ИРАК\nРеспублика Ирак"
+        ],
+        [
+          "372",
+          "ИРЛАНДИЯ\nИРЛАНДИЯ"
+        ],
+        [
+          "376",
+          "ИЗРАИЛЬ\nГосударство Израиль"
+        ],
+        [
+          "380",
+          "ИТАЛИЯ\nИтальянская Республика"
+        ],
+        [
+          "384",
+          "Республика Кот д`Ивуар\nРеспублика Кот д`Ивуар"
+        ],
+        [
+          "388",
+          "ЯМАЙКА\nЯМАЙКА"
+        ],
+        [
+          "392",
+          "ЯПОНИЯ\nЯПОНИЯ"
+        ],
+        [
+          "398",
+          "КАЗАХСТАН\nРеспублика Казахстан"
+        ],
+        [
+          "400",
+          "ИОРДАНИЯ\nИорданское Хашимитское Королевство"
+        ],
+        [
+          "404",
+          "КЕНИЯ\nРеспублика Кения"
+        ],
+        [
+          "408",
+          "КОРЕЯ, НАРОДНО-ДЕМОКРАТИЧЕСКАЯ РЕСПУБЛИКА\nКорейская Народно-Демократическая Республика"
+        ],
+        [
+          "410",
+          "КОРЕЯ, РЕСПУБЛИКА\nРеспублика Корея"
+        ],
+        [
+          "414",
+          "КУВЕЙТ\nГосударство Кувейт"
+        ],
+        [
+          "417",
+          "КИРГИЗИЯ\nКиргизская Республика"
+        ],
+        [
+          "418",
+          "ЛАОССКАЯ НАРОДНО-ДЕМОКРАТИЧЕСКАЯ РЕСПУБЛИКА\nЛАОССКАЯ НАРОДНО-ДЕМОКРАТИЧЕСКАЯ РЕСПУБЛИКА"
+        ],
+        [
+          "422",
+          "ЛИВАН\nЛиванская Республика"
+        ],
+        [
+          "426",
+          "ЛЕСОТО\nКоролевство Лесото"
+        ],
+        [
+          "428",
+          "ЛАТВИЯ\nЛатвийская Республика"
+        ],
+        [
+          "430",
+          "ЛИБЕРИЯ\nРеспублика Либерия"
+        ],
+        [
+          "434",
+          "ЛИВИЯ\nЛивия"
+        ],
+        [
+          "438",
+          "ЛИХТЕНШТЕЙН\nКняжество Лихтенштейн"
+        ],
+        [
+          "440",
+          "ЛИТВА\nЛитовская Республика"
+        ],
+        [
+          "442",
+          "ЛЮКСЕМБУРГ\nВеликое Герцогство Люксембург"
+        ],
+        [
+          "446",
+          "МАКАО\nСпециальный административный регион Китая Макао"
+        ],
+        [
+          "450",
+          "МАДАГАСКАР\nРеспублика Мадагаскар"
+        ],
+        [
+          "454",
+          "МАЛАВИ\nРеспублика Малави"
+        ],
+        [
+          "458",
+          "МАЛАЙЗИЯ\nМАЛАЙЗИЯ"
+        ],
+        [
+          "462",
+          "МАЛЬДИВЫ\nМальдивская Республика"
+        ],
+        [
+          "466",
+          "МАЛИ\nРеспублика Мали"
+        ],
+        [
+          "470",
+          "МАЛЬТА\nРеспублика Мальта"
+        ],
+        [
+          "474",
+          "МАРТИНИКА\nМАРТИНИКА"
+        ],
+        [
+          "478",
+          "МАВРИТАНИЯ\nИсламская Республика Мавритания"
+        ],
+        [
+          "480",
+          "МАВРИКИЙ\nРеспублика Маврикий"
+        ],
+        [
+          "484",
+          "МЕКСИКА\nМексиканские Соединенные Штаты"
+        ],
+        [
+          "492",
+          "МОНАКО\nКняжество Монако"
+        ],
+        [
+          "496",
+          "МОНГОЛИЯ\nМОНГОЛИЯ"
+        ],
+        [
+          "498",
+          "МОЛДОВА, РЕСПУБЛИКА\nРеспублика Молдова"
+        ],
+        [
+          "499",
+          "ЧЕРНОГОРИЯ\nЧЕРНОГОРИЯ"
+        ],
+        [
+          "500",
+          "МОНТСЕРРАТ\nМОНТСЕРРАТ"
+        ],
+        [
+          "504",
+          "МАРОККО\nКоролевство Марокко"
+        ],
+        [
+          "508",
+          "МОЗАМБИК\nРеспублика Мозамбик"
+        ],
+        [
+          "512",
+          "ОМАН\nСултанат Оман"
+        ],
+        [
+          "516",
+          "НАМИБИЯ\nРеспублика Намибия"
+        ],
+        [
+          "520",
+          "НАУРУ\nРеспублика Науру"
+        ],
+        [
+          "524",
+          "НЕПАЛ\nФедеративная Демократическая Республика Непал"
+        ],
+        [
+          "528",
+          "НИДЕРЛАНДЫ\nКоролевство Нидерландов"
+        ],
+        [
+          "531",
+          "КЮРАСАО\nКЮРАСАО"
+        ],
+        [
+          "533",
+          "АРУБА\nАРУБА"
+        ],
+        [
+          "534",
+          "СЕН-МАРТЕН (нидерландская часть)\nСЕН-МАРТЕН (нидерландская часть)"
+        ],
+        [
+          "535",
+          "БОНЭЙР, СИНТ-ЭСТАТИУС И САБА\nБОНЭЙР, СИНТ-ЭСТАТИУС И САБА"
+        ],
+        [
+          "540",
+          "НОВАЯ КАЛЕДОНИЯ\nНОВАЯ КАЛЕДОНИЯ"
+        ],
+        [
+          "548",
+          "ВАНУАТУ\nРеспублика Вануату"
+        ],
+        [
+          "554",
+          "НОВАЯ ЗЕЛАНДИЯ\nНОВАЯ ЗЕЛАНДИЯ"
+        ],
+        [
+          "558",
+          "НИКАРАГУА\nРеспублика Никарагуа"
+        ],
+        [
+          "562",
+          "НИГЕР\nРеспублика Нигер"
+        ],
+        [
+          "566",
+          "НИГЕРИЯ\nФедеративная Республика Нигерия"
+        ],
+        [
+          "570",
+          "НИУЭ\nНиуэ"
+        ],
+        [
+          "574",
+          "ОСТРОВ НОРФОЛК\nОСТРОВ НОРФОЛК"
+        ],
+        [
+          "578",
+          "НОРВЕГИЯ\nКоролевство Норвегия"
+        ],
+        [
+          "580",
+          "СЕВЕРНЫЕ МАРИАНСКИЕ ОСТРОВА\nСодружество Северных Марианских островов"
+        ],
+        [
+          "581",
+          "МАЛЫЕ ТИХООКЕАНСКИЕ ОТДАЛЕННЫЕ ОСТРОВА СОЕДИНЕННЫХ ШТАТОВ\nМАЛЫЕ ТИХООКЕАНСКИЕ ОТДАЛЕННЫЕ ОСТРОВА СОЕДИНЕННЫХ ШТАТОВ"
+        ],
+        [
+          "583",
+          "МИКРОНЕЗИЯ, ФЕДЕРАТИВНЫЕ ШТАТЫ\nФедеративные Штаты Микронезии"
+        ],
+        [
+          "584",
+          "МАРШАЛЛОВЫ ОСТРОВА\nРеспублика Маршалловы Острова"
+        ],
+        [
+          "585",
+          "ПАЛАУ\nРеспублика Палау"
+        ],
+        [
+          "586",
+          "ПАКИСТАН\nИсламская Республика Пакистан"
+        ],
+        [
+          "591",
+          "ПАНАМА\nРеспублика Панама"
+        ],
+        [
+          "598",
+          "ПАПУА НОВАЯ ГВИНЕЯ\nНезависимое Государство Папуа Новая Гвинея"
+        ],
+        [
+          "600",
+          "ПАРАГВАЙ\nРеспублика Парагвай"
+        ],
+        [
+          "604",
+          "ПЕРУ\nРеспублика Перу"
+        ],
+        [
+          "608",
+          "ФИЛИППИНЫ\nРеспублика Филиппины"
+        ],
+        [
+          "612",
+          "ПИТКЕРН\nПИТКЕРН"
+        ],
+        [
+          "616",
+          "ПОЛЬША\nРеспублика Польша"
+        ],
+        [
+          "620",
+          "ПОРТУГАЛИЯ\nПортугальская Республика"
+        ],
+        [
+          "624",
+          "ГВИНЕЯ-БИСАУ\nРеспублика Гвинея-Бисау"
+        ],
+        [
+          "626",
+          "ТИМОР-ЛЕСТЕ\nДемократическая Республика Тимор-Лесте"
+        ],
+        [
+          "630",
+          "ПУЭРТО-РИКО\nПУЭРТО-РИКО"
+        ],
+        [
+          "634",
+          "КАТАР\nГосударство Катар"
+        ],
+        [
+          "638",
+          "РЕЮНЬОН\nРЕЮНЬОН"
+        ],
+        [
+          "642",
+          "РУМЫНИЯ\nРУМЫНИЯ"
+        ],
+        [
+          "643",
+          "РОССИЯ\nРоссийская Федерация"
+        ],
+        [
+          "646",
+          "РУАНДА\nРуандийская Республика"
+        ],
+        [
+          "652",
+          "СЕН-БАРТЕЛЕМИ\nСЕН-БАРТЕЛЕМИ"
+        ],
+        [
+          "654",
+          "СВЯТАЯ ЕЛЕНА, ОСТРОВ ВОЗНЕСЕНИЯ, ТРИСТАН-ДА-КУНЬЯ\nСВЯТАЯ ЕЛЕНА, ОСТРОВ ВОЗНЕСЕНИЯ, ТРИСТАН-ДА-КУНЬЯ"
+        ],
+        [
+          "659",
+          "СЕНТ-КИТС И НЕВИС\nСЕНТ-КИТС И НЕВИС"
+        ],
+        [
+          "660",
+          "АНГИЛЬЯ\nАНГИЛЬЯ"
+        ],
+        [
+          "662",
+          "СЕНТ-ЛЮСИЯ\nСЕНТ-ЛЮСИЯ"
+        ],
+        [
+          "663",
+          "СЕН-МАРТЕН\nСЕН-МАРТЕН"
+        ],
+        [
+          "666",
+          "СЕНТ-ПЬЕР И МИКЕЛОН\nСЕНТ-ПЬЕР И МИКЕЛОН"
+        ],
+        [
+          "670",
+          "СЕНТ-ВИНСЕНТ И ГРЕНАДИНЫ\nСЕНТ-ВИНСЕНТ И ГРЕНАДИНЫ"
+        ],
+        [
+          "674",
+          "САН-МАРИНО\nРеспублика Сан-Марино"
+        ],
+        [
+          "678",
+          "САН-ТОМЕ И ПРИНСИПИ\nДемократическая Республика Сан-Томе и Принсипи"
+        ],
+        [
+          "682",
+          "САУДОВСКАЯ АРАВИЯ\nКоролевство Саудовская Аравия"
+        ],
+        [
+          "686",
+          "СЕНЕГАЛ\nРеспублика Сенегал"
+        ],
+        [
+          "688",
+          "СЕРБИЯ\nРеспублика Сербия"
+        ],
+        [
+          "690",
+          "СЕЙШЕЛЫ\nРеспублика Сейшелы"
+        ],
+        [
+          "694",
+          "СЬЕРРА-ЛЕОНЕ\nРеспублика Сьерра-Леоне"
+        ],
+        [
+          "702",
+          "СИНГАПУР\nРеспублика Сингапур"
+        ],
+        [
+          "703",
+          "СЛОВАКИЯ\nСловацкая Республика"
+        ],
+        [
+          "704",
+          "ВЬЕТНАМ\nСоциалистическая Республика Вьетнам"
+        ],
+        [
+          "705",
+          "СЛОВЕНИЯ\nРеспублика Словения"
+        ],
+        [
+          "706",
+          "СОМАЛИ\nФедеративная Республика Сомали"
+        ],
+        [
+          "710",
+          "ЮЖНАЯ АФРИКА\nЮжно-Африканская Республика"
+        ],
+        [
+          "716",
+          "ЗИМБАБВЕ\nРеспублика Зимбабве"
+        ],
+        [
+          "724",
+          "ИСПАНИЯ\nКоролевство Испания"
+        ],
+        [
+          "728",
+          "ЮЖНЫЙ СУДАН\nРеспублика Южный Судан"
+        ],
+        [
+          "729",
+          "СУДАН\nРеспублика Судан"
+        ],
+        [
+          "732",
+          "ЗАПАДНАЯ САХАРА\nЗАПАДНАЯ САХАРА"
+        ],
+        [
+          "740",
+          "СУРИНАМ\nРеспублика Суринам"
+        ],
+        [
+          "744",
+          "ШПИЦБЕРГЕН И ЯН МАЙЕН\nШПИЦБЕРГЕН И ЯН МАЙЕН"
+        ],
+        [
+          "748",
+          "ЭСВАТИНИ\nКоролевство Эсватини"
+        ],
+        [
+          "752",
+          "ШВЕЦИЯ\nКоролевство Швеция"
+        ],
+        [
+          "756",
+          "ШВЕЙЦАРИЯ\nШвейцарская Конфедерация"
+        ],
+        [
+          "760",
+          "СИРИЙСКАЯ АРАБСКАЯ РЕСПУБЛИКА\nСИРИЙСКАЯ АРАБСКАЯ РЕСПУБЛИКА"
+        ],
+        [
+          "762",
+          "ТАДЖИКИСТАН\nРеспублика Таджикистан"
+        ],
+        [
+          "764",
+          "ТАИЛАНД\nКоролевство Таиланд"
+        ],
+        [
+          "768",
+          "ТОГО\nТоголезская Республика"
+        ],
+        [
+          "772",
+          "ТОКЕЛАУ\nТОКЕЛАУ"
+        ],
+        [
+          "776",
+          "ТОНГА\nКоролевство Тонга"
+        ],
+        [
+          "780",
+          "ТРИНИДАД И ТОБАГО\nРеспублика Тринидад и Тобаго"
+        ],
+        [
+          "784",
+          "ОБЪЕДИНЕННЫЕ АРАБСКИЕ ЭМИРАТЫ\nОБЪЕДИНЕННЫЕ АРАБСКИЕ ЭМИРАТЫ"
+        ],
+        [
+          "788",
+          "ТУНИС\nТунисская Республика"
+        ],
+        [
+          "792",
+          "ТУРЦИЯ\nТурецкая Республика"
+        ],
+        [
+          "795",
+          "ТУРКМЕНИЯ\nТуркменистан"
+        ],
+        [
+          "796",
+          "ОСТРОВА ТЕРКС И КАЙКОС\nОСТРОВА ТЕРКС И КАЙКОС"
+        ],
+        [
+          "798",
+          "ТУВАЛУ\nТУВАЛУ"
+        ],
+        [
+          "800",
+          "УГАНДА\nРеспублика Уганда"
+        ],
+        [
+          "804",
+          "УКРАИНА\nУКРАИНА"
+        ],
+        [
+          "807",
+          "СЕВЕРНАЯ МАКЕДОНИЯ\nРеспублика Северная Македония"
+        ],
+        [
+          "818",
+          "ЕГИПЕТ\nАрабская Республика Египет"
+        ],
+        [
+          "826",
+          "СОЕДИНЕННОЕ КОРОЛЕВСТВО\nСоединенное Королевство Великобритании и Северной Ирландии"
+        ],
+        [
+          "831",
+          "ГЕРНСИ\nГЕРНСИ"
+        ],
+        [
+          "832",
+          "ДЖЕРСИ\nДЖЕРСИ"
+        ],
+        [
+          "833",
+          "ОСТРОВ МЭН\nОСТРОВ МЭН"
+        ],
+        [
+          "834",
+          "ТАНЗАНИЯ, ОБЪЕДИНЕННАЯ РЕСПУБЛИКА\nОбъединенная Республика Танзания"
+        ],
+        [
+          "840",
+          "СОЕДИНЕННЫЕ ШТАТЫ\nСоединенные Штаты Америки"
+        ],
+        [
+          "850",
+          "ВИРГИНСКИЕ ОСТРОВА, США\nВиргинские острова Соединенных Штатов"
+        ],
+        [
+          "854",
+          "БУРКИНА-ФАСО\nБУРКИНА-ФАСО"
+        ],
+        [
+          "858",
+          "УРУГВАЙ\nВосточная Республика Уругвай"
+        ],
+        [
+          "860",
+          "УЗБЕКИСТАН\nРеспублика Узбекистан"
+        ],
+        [
+          "862",
+          "ВЕНЕСУЭЛА, БОЛИВАРИАНСКАЯ РЕСПУБЛИКА\nБоливарианская Республика Венесуэла"
+        ],
+        [
+          "876",
+          "УОЛЛИС И ФУТУНА\nУОЛЛИС И ФУТУНА"
+        ],
+        [
+          "882",
+          "САМОА\nНезависимое Государство Самоа"
+        ],
+        [
+          "887",
+          "ЙЕМЕН\nЙеменская Республика"
+        ],
+        [
+          "894",
+          "ЗАМБИЯ\nРеспублика Замбия"
+        ],
+        [
+          "895",
+          "АБХАЗИЯ\nРеспублика Абхазия"
+        ],
+        [
+          "896",
+          "ЮЖНАЯ ОСЕТИЯ\nРеспублика Южная Осетия"
+        ],
+        [
+          "897",
+          "ДНР\nДонецкая Народная Республика"
+        ],
+        [
+          "898",
+          "ЛНР\nЛуганская Народная Республика"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "OKSM.xsd"
+    },
+    {
+      "name": "benefit5",
+      "path": "eventLife/benefitInfo/benefit5",
+      "parent": 3,
+      "group": "Выбор 1, вариант 4",
+      "doc": "Инициация назначения пособия по уходу за ребёнком до достижения им возраста 1.5 лет",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        82,
+        86,
+        88,
+        95,
+        98,
+        109,
+        110
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insuredInfo",
+      "path": "eventLife/benefitInfo/benefit5/insuredInfo",
+      "parent": 81,
+      "group": "",
+      "doc": "Данные о застрахованном лице",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "insuredInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        83,
+        84,
+        85
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "eventLife/benefitInfo/benefit5/insuredInfo/snils",
+      "parent": 82,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "category",
+      "path": "eventLife/benefitInfo/benefit5/insuredInfo/category",
+      "parent": 82,
+      "group": "",
+      "doc": "Категория застрахованного лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "insCat:insuredCategoriesType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "2",
+          "Лица, осужденные к лишению свободы и привлеченные к оплачиваемому труду"
+        ],
+        [
+          "3",
+          "Лица, осужденные к принудительным работам, привлеченные к труду"
+        ],
+        [
+          "4",
+          "Лица, в период приостановления трудового договора после окончания военной службы"
+        ],
+        [
+          "6",
+          "Лица, работающие по трудовым договорам или по договорам гражданско-правового характера"
+        ],
+        [
+          "7",
+          "Руководители организаций, являющиеся единственными участниками (учредителями), членами организаций, собственниками их имущества"
+        ],
+        [
+          "8",
+          "Государственные гражданские (муниципальные) служащие"
+        ],
+        [
+          "9",
+          "Лица, замещающие государственные (муниципальные) должности"
+        ],
+        [
+          "10",
+          "Члены производственного кооператива, принимающие личное трудовое участие в его деятельности"
+        ],
+        [
+          "11",
+          "Священнослужители"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "InsuredCategories.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "eventLife/benefitInfo/benefit5/insuredInfo/birthDate",
+      "parent": 82,
+      "group": "",
+      "doc": "Дата рождения застрахованного лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "changeYears",
+      "path": "eventLife/benefitInfo/benefit5/changeYears",
+      "parent": 81,
+      "group": "",
+      "doc": "Информация о замененных расчетных годах. Заполняется при наличии заявления о замене лет",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "changeYearsType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        87
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "year",
+      "path": "eventLife/benefitInfo/benefit5/changeYears/year",
+      "parent": 86,
+      "group": "",
+      "doc": "Год, использующийся для расчета",
+      "kind": "element",
+      "min": "2",
+      "max": "2",
+      "type": "pr:yearType",
+      "base": "xs:integer",
+      "facets": [
+        [
+          "minInclusive",
+          "2000"
+        ],
+        [
+          "pattern",
+          "\\d{4}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "contractsInfo",
+      "path": "eventLife/benefitInfo/benefit5/contractsInfo",
+      "parent": 81,
+      "group": "",
+      "doc": "Договоры, по которым занято застрахованное лицо у страхователя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "pr:contractsInfoTypeResponse2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        89,
+        90,
+        94
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "workerContract",
+      "path": "eventLife/benefitInfo/benefit5/contractsInfo/workerContract",
+      "parent": 88,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Застрахованное лицо занято по трудовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "GPHcontract",
+      "path": "eventLife/benefitInfo/benefit5/contractsInfo/GPHcontract",
+      "parent": 88,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Застрахованное лицо занято по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        91
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "eventLife/benefitInfo/benefit5/contractsInfo/GPHcontract/period",
+      "parent": 90,
+      "group": "",
+      "doc": "Период договора",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        92,
+        93
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "eventLife/benefitInfo/benefit5/contractsInfo/GPHcontract/period/begin",
+      "parent": 91,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "eventLife/benefitInfo/benefit5/contractsInfo/GPHcontract/period/end",
+      "parent": 91,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "workerAndGPHcontract",
+      "path": "eventLife/benefitInfo/benefit5/contractsInfo/workerAndGPHcontract",
+      "parent": 88,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Застрахованное лицо занято по трудовому договору и по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "eventLife/benefitInfo/benefit5/period",
+      "parent": 81,
+      "group": "",
+      "doc": "Если застрахованное лицо занято по трудовому договору, то заполняется период отпуска по уходу за ребёнком до достижения им возраста 1.5 лет. Если застрахованное лицо занято только по договору ГПХ, то заполняется период назначения и выплаты пособия в пределах действия договора ГПХ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        96,
+        97
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "eventLife/benefitInfo/benefit5/period/begin",
+      "parent": 95,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "eventLife/benefitInfo/benefit5/period/end",
+      "parent": 95,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "childInfo",
+      "path": "eventLife/benefitInfo/benefit5/childInfo",
+      "parent": 81,
+      "group": "",
+      "doc": "Данные о ребёнке",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "childInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        99,
+        100,
+        107,
+        108
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "eventLife/benefitInfo/benefit5/childInfo/snils",
+      "parent": 98,
+      "group": "",
+      "doc": "СНИЛС ребёнка. Поле обязательно для заполнения: - для детей, рожденных в РФ; - для детей, рожденных за пределами РФ, в случае наличия СНИЛС",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "fullName",
+      "path": "eventLife/benefitInfo/benefit5/childInfo/fullName",
+      "parent": 98,
+      "group": "",
+      "doc": "ФИО ребёнка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:fullName2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "eventLife/benefitInfo/benefit5/childInfo/fullName/lastName",
+      "parent": 100,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "noLastName",
+      "path": "eventLife/benefitInfo/benefit5/childInfo/fullName/noLastName",
+      "parent": 100,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Признак отсутствия фамилии",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:fixedTrueType",
+      "base": "xs:boolean",
+      "facets": [
+        [
+          "pattern",
+          "true"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "eventLife/benefitInfo/benefit5/childInfo/fullName/firstName",
+      "parent": 100,
+      "group": "Выбор 2, вариант 1",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "noFirstName",
+      "path": "eventLife/benefitInfo/benefit5/childInfo/fullName/noFirstName",
+      "parent": 100,
+      "group": "Выбор 2, вариант 2",
+      "doc": "Признак отсутствия имени",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:fixedTrueType",
+      "base": "xs:boolean",
+      "facets": [
+        [
+          "pattern",
+          "true"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "eventLife/benefitInfo/benefit5/childInfo/fullName/middleName",
+      "parent": 100,
+      "group": "Выбор 3, вариант 1",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "noMiddleName",
+      "path": "eventLife/benefitInfo/benefit5/childInfo/fullName/noMiddleName",
+      "parent": 100,
+      "group": "Выбор 3, вариант 2",
+      "doc": "Признак отсутствия отчества",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:fixedTrueType",
+      "base": "xs:boolean",
+      "facets": [
+        [
+          "pattern",
+          "true"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "eventLife/benefitInfo/benefit5/childInfo/birthDate",
+      "parent": 98,
+      "group": "",
+      "doc": "Дата рождения ребёнка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "gender",
+      "path": "eventLife/benefitInfo/benefit5/childInfo/gender",
+      "parent": 98,
+      "group": "",
+      "doc": "Пол ребёнка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:genderType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "MALE",
+          "Пол: мужской"
+        ],
+        [
+          "FEMALE",
+          "Пол: женский"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "childRelType",
+      "path": "eventLife/benefitInfo/benefit5/childRelType",
+      "parent": 81,
+      "group": "",
+      "doc": "Тип связи застрахованного лица с ребенком - мать, отец, опекун, иной родственник, фактически осуществляющий уход",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "pr:childRelTypeBenefit5",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "38",
+          "Мать"
+        ],
+        [
+          "39",
+          "Отец"
+        ],
+        [
+          "40",
+          "Опекун"
+        ],
+        [
+          "42",
+          "Иной родственник"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "baseDocuments",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments",
+      "parent": 81,
+      "group": "",
+      "doc": "Основания для назначения пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        111,
+        115,
+        118
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "birthCertificate",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthCertificate",
+      "parent": 110,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Свидетельство о рождении",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:birthCertificateType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        112,
+        113,
+        114
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "series",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthCertificate/series",
+      "parent": 111,
+      "group": "",
+      "doc": "Серия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:stringMinLen1MaxLen20",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "number",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthCertificate/number",
+      "parent": 111,
+      "group": "",
+      "doc": "Номер",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:stringMinLen1MaxLen20",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "issueDate",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthCertificate/issueDate",
+      "parent": 111,
+      "group": "",
+      "doc": "Даты выдачи",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "birthRecord",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthRecord",
+      "parent": 110,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Актовая запись (реестровая запись) о рождении",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:birthRecordType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        116,
+        117
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "number",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthRecord/number",
+      "parent": 115,
+      "group": "",
+      "doc": "Номер",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "21"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "issueDate",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthRecord/issueDate",
+      "parent": 115,
+      "group": "",
+      "doc": "Дата",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "birthDocOtherCountry",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthDocOtherCountry",
+      "parent": 110,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Иной документ, подтверждающий рождение ребёнка. Для детей, рождённых за рубежом",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:birthDocOtherCountryType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        119,
+        120,
+        121,
+        122
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "series",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthDocOtherCountry/series",
+      "parent": 118,
+      "group": "",
+      "doc": "Серия",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:stringMinLen1MaxLen20",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "number",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthDocOtherCountry/number",
+      "parent": 118,
+      "group": "",
+      "doc": "Номер",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:stringMinLen1MaxLen20",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "issueDate",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthDocOtherCountry/issueDate",
+      "parent": 118,
+      "group": "",
+      "doc": "Дата выдaчи",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {}
+    },
+    {
+      "name": "country",
+      "path": "eventLife/benefitInfo/benefit5/baseDocuments/birthDocOtherCountry/country",
+      "parent": 118,
+      "group": "",
+      "doc": "Код страны, на территории которой выдан документ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "OKSM:OKSMType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "004",
+          "АФГАНИСТАН\nПереходное Исламское Государство Афганистан"
+        ],
+        [
+          "008",
+          "АЛБАНИЯ\nРеспублика Албания"
+        ],
+        [
+          "010",
+          "АНТАРКТИДА\nАНТАРКТИДА"
+        ],
+        [
+          "012",
+          "АЛЖИР\nАлжирская Народная Демократическая Республика"
+        ],
+        [
+          "016",
+          "АМЕРИКАНСКОЕ САМОА\nАМЕРИКАНСКОЕ САМОА"
+        ],
+        [
+          "020",
+          "АНДОРРА\nКняжество Андорра"
+        ],
+        [
+          "024",
+          "АНГОЛА\nРеспублика Ангола"
+        ],
+        [
+          "028",
+          "АНТИГУА И БАРБУДА\nАНТИГУА И БАРБУДА"
+        ],
+        [
+          "031",
+          "АЗЕРБАЙДЖАН\nРеспублика Азербайджан"
+        ],
+        [
+          "032",
+          "АРГЕНТИНА\nАргентинская Республика"
+        ],
+        [
+          "036",
+          "АВСТРАЛИЯ\nАВСТРАЛИЯ"
+        ],
+        [
+          "040",
+          "АВСТРИЯ\nАвстрийская Республика"
+        ],
+        [
+          "044",
+          "БАГАМЫ\nСодружество Багамы"
+        ],
+        [
+          "048",
+          "БАХРЕЙН\nКоролевство Бахрейн"
+        ],
+        [
+          "050",
+          "БАНГЛАДЕШ\nНародная Республика Бангладеш"
+        ],
+        [
+          "051",
+          "АРМЕНИЯ\nРеспублика Армения"
+        ],
+        [
+          "052",
+          "БАРБАДОС\nБАРБАДОС"
+        ],
+        [
+          "056",
+          "БЕЛЬГИЯ\nКоролевство Бельгии"
+        ],
+        [
+          "060",
+          "БЕРМУДЫ\nБЕРМУДЫ"
+        ],
+        [
+          "064",
+          "БУТАН\nКоролевство Бутан"
+        ],
+        [
+          "068",
+          "БОЛИВИЯ, МНОГОНАЦИОНАЛЬНОЕ ГОСУДАРСТВО\nМногонациональное Государство Боливия"
+        ],
+        [
+          "070",
+          "БОСНИЯ И ГЕРЦЕГОВИНА\nБОСНИЯ И ГЕРЦЕГОВИНА"
+        ],
+        [
+          "072",
+          "БОТСВАНА\nРеспублика Ботсвана"
+        ],
+        [
+          "074",
+          "ОСТРОВ БУВЕ\nОСТРОВ БУВЕ"
+        ],
+        [
+          "076",
+          "БРАЗИЛИЯ\nФедеративная Республика Бразилия"
+        ],
+        [
+          "084",
+          "БЕЛИЗ\nБЕЛИЗ"
+        ],
+        [
+          "086",
+          "БРИТАНСКАЯ ТЕРРИТОРИЯ В ИНДИЙСКОМ ОКЕАНЕ\nБРИТАНСКАЯ ТЕРРИТОРИЯ В ИНДИЙСКОМ ОКЕАНЕ"
+        ],
+        [
+          "090",
+          "СОЛОМОНОВЫ ОСТРОВА\nСОЛОМОНОВЫ ОСТРОВА"
+        ],
+        [
+          "092",
+          "ВИРГИНСКИЕ ОСТРОВА, БРИТАНСКИЕ\nБританские Виргинские острова"
+        ],
+        [
+          "096",
+          "БРУНЕЙ-ДАРУССАЛАМ\nБРУНЕЙ-ДАРУССАЛАМ"
+        ],
+        [
+          "100",
+          "БОЛГАРИЯ\nРеспублика Болгария"
+        ],
+        [
+          "104",
+          "МЬЯНМА\nРеспублика Союза Мьянма"
+        ],
+        [
+          "108",
+          "БУРУНДИ\nРеспублика Бурунди"
+        ],
+        [
+          "112",
+          "БЕЛАРУСЬ\nРеспублика Беларусь"
+        ],
+        [
+          "116",
+          "КАМБОДЖА\nКоролевство Камбоджа"
+        ],
+        [
+          "120",
+          "КАМЕРУН\nРеспублика Камерун"
+        ],
+        [
+          "124",
+          "КАНАДА\nКАНАДА"
+        ],
+        [
+          "132",
+          "КАБО-ВЕРДЕ\nРеспублика Кабо-Верде"
+        ],
+        [
+          "136",
+          "ОСТРОВА КАЙМАН\nОСТРОВА КАЙМАН"
+        ],
+        [
+          "140",
+          "ЦЕНТРАЛЬНО-АФРИКАНСКАЯ РЕСПУБЛИКА\nЦЕНТРАЛЬНО-АФРИКАНСКАЯ РЕСПУБЛИКА"
+        ],
+        [
+          "144",
+          "ШРИ-ЛАНКА\nДемократическая Социалистическая Республика Шри-Ланка"
+        ],
+        [
+          "148",
+          "ЧАД\nРеспублика Чад"
+        ],
+        [
+          "152",
+          "ЧИЛИ\nРеспублика Чили"
+        ],
+        [
+          "156",
+          "КИТАЙ\nКитайская Народная Республика"
+        ],
+        [
+          "158",
+          "ТАЙВАНЬ (КИТАЙ)\nТАЙВАНЬ (КИТАЙ)"
+        ],
+        [
+          "162",
+          "ОСТРОВ РОЖДЕСТВА\nОСТРОВ РОЖДЕСТВА"
+        ],
+        [
+          "166",
+          "КОКОСОВЫЕ (КИЛИНГ) ОСТРОВА\nКОКОСОВЫЕ (КИЛИНГ) ОСТРОВА"
+        ],
+        [
+          "170",
+          "КОЛУМБИЯ\nРеспублика Колумбия"
+        ],
+        [
+          "174",
+          "КОМОРЫ\nСоюз Коморы"
+        ],
+        [
+          "175",
+          "МАЙОТТА\nМАЙОТТА"
+        ],
+        [
+          "178",
+          "КОНГО\nРеспублика Конго"
+        ],
+        [
+          "180",
+          "КОНГО, ДЕМОКРАТИЧЕСКАЯ РЕСПУБЛИКА\nДемократическая Республика Конго"
+        ],
+        [
+          "184",
+          "ОСТРОВА КУКА\nОСТРОВА КУКА"
+        ],
+        [
+          "188",
+          "КОСТА-РИКА\nРеспублика Коста-Рика"
+        ],
+        [
+          "191",
+          "ХОРВАТИЯ\nРеспублика Хорватия"
+        ],
+        [
+          "192",
+          "КУБА\nРеспублика Куба"
+        ],
+        [
+          "196",
+          "КИПР\nРеспублика Кипр"
+        ],
+        [
+          "203",
+          "ЧЕШСКАЯ РЕСПУБЛИКА\nЧЕШСКАЯ РЕСПУБЛИКА"
+        ],
+        [
+          "204",
+          "БЕНИН\nРеспублика Бенин"
+        ],
+        [
+          "208",
+          "ДАНИЯ\nКоролевство Дания"
+        ],
+        [
+          "212",
+          "ДОМИНИКА\nСодружество Доминики"
+        ],
+        [
+          "214",
+          "ДОМИНИКАНСКАЯ РЕСПУБЛИКА\nДОМИНИКАНСКАЯ РЕСПУБЛИКА"
+        ],
+        [
+          "218",
+          "ЭКВАДОР\nРеспублика Эквадор"
+        ],
+        [
+          "222",
+          "ЭЛЬ-САЛЬВАДОР\nРеспублика Эль-Сальвадор"
+        ],
+        [
+          "226",
+          "ЭКВАТОРИАЛЬНАЯ ГВИНЕЯ\nРеспублика Экваториальная Гвинея"
+        ],
+        [
+          "231",
+          "ЭФИОПИЯ\nФедеративная Демократическая Республика Эфиопия"
+        ],
+        [
+          "232",
+          "ЭРИТРЕЯ\nГосударство Эритрея"
+        ],
+        [
+          "233",
+          "ЭСТОНИЯ\nЭстонская Республика"
+        ],
+        [
+          "234",
+          "ФАРЕРСКИЕ ОСТРОВА\nФАРЕРСКИЕ ОСТРОВА"
+        ],
+        [
+          "238",
+          "ФОЛКЛЕНДСКИЕ ОСТРОВА (МАЛЬВИНСКИЕ)\nФОЛКЛЕНДСКИЕ ОСТРОВА (МАЛЬВИНСКИЕ)"
+        ],
+        [
+          "239",
+          "ЮЖНАЯ ДЖОРДЖИЯ И ЮЖНЫЕ САНДВИЧЕВЫ ОСТРОВА\nЮЖНАЯ ДЖОРДЖИЯ И ЮЖНЫЕ САНДВИЧЕВЫ ОСТРОВА"
+        ],
+        [
+          "242",
+          "ФИДЖИ\nРеспублика Фиджи"
+        ],
+        [
+          "246",
+          "ФИНЛЯНДИЯ\nФинляндская Республика"
+        ],
+        [
+          "248",
+          "ЭЛАНДСКИЕ ОСТРОВА\nЭЛАНДСКИЕ ОСТРОВА"
+        ],
+        [
+          "250",
+          "ФРАНЦИЯ\nФранцузская Республика"
+        ],
+        [
+          "254",
+          "ФРАНЦУЗСКАЯ ГВИАНА\nФРАНЦУЗСКАЯ ГВИАНА"
+        ],
+        [
+          "258",
+          "ФРАНЦУЗСКАЯ ПОЛИНЕЗИЯ\nФРАНЦУЗСКАЯ ПОЛИНЕЗИЯ"
+        ],
+        [
+          "260",
+          "ФРАНЦУЗСКИЕ ЮЖНЫЕ ТЕРРИТОРИИ\nФРАНЦУЗСКИЕ ЮЖНЫЕ ТЕРРИТОРИИ"
+        ],
+        [
+          "262",
+          "ДЖИБУТИ\nРеспублика Джибути"
+        ],
+        [
+          "266",
+          "ГАБОН\nГабонская Республика"
+        ],
+        [
+          "268",
+          "ГРУЗИЯ\nГРУЗИЯ"
+        ],
+        [
+          "270",
+          "ГАМБИЯ\nРеспублика Гамбия"
+        ],
+        [
+          "275",
+          "ПАЛЕСТИНА, ГОСУДАРСТВО\nГосударство Палестина"
+        ],
+        [
+          "276",
+          "ГЕРМАНИЯ\nФедеративная Республика Германия"
+        ],
+        [
+          "288",
+          "ГАНА\nРеспублика Гана"
+        ],
+        [
+          "292",
+          "ГИБРАЛТАР\nГИБРАЛТАР"
+        ],
+        [
+          "296",
+          "КИРИБАТИ\nРеспублика Кирибати"
+        ],
+        [
+          "300",
+          "ГРЕЦИЯ\nГреческая Республика"
+        ],
+        [
+          "304",
+          "ГРЕНЛАНДИЯ\nГРЕНЛАНДИЯ"
+        ],
+        [
+          "308",
+          "ГРЕНАДА\nГРЕНАДА"
+        ],
+        [
+          "312",
+          "ГВАДЕЛУПА\nГВАДЕЛУПА"
+        ],
+        [
+          "316",
+          "ГУАМ\nГУАМ"
+        ],
+        [
+          "320",
+          "ГВАТЕМАЛА\nРеспублика Гватемала"
+        ],
+        [
+          "324",
+          "ГВИНЕЯ\nГвинейская Республика"
+        ],
+        [
+          "328",
+          "ГАЙАНА\nРеспублика Гайана"
+        ],
+        [
+          "332",
+          "ГАИТИ\nРеспублика Гаити"
+        ],
+        [
+          "334",
+          "ОСТРОВ ХЕРД И ОСТРОВА МАКДОНАЛЬД\nОСТРОВ ХЕРД И ОСТРОВА МАКДОНАЛЬД"
+        ],
+        [
+          "336",
+          "ПАПСКИЙ ПРЕСТОЛ (ГОСУДАРСТВО-ГОРОД ВАТИКАН)\nПАПСКИЙ ПРЕСТОЛ (ГОСУДАРСТВО-ГОРОД ВАТИКАН)"
+        ],
+        [
+          "340",
+          "ГОНДУРАС\nРеспублика Гондурас"
+        ],
+        [
+          "344",
+          "ГОНКОНГ\nСпециальный административный регион Китая Гонконг"
+        ],
+        [
+          "348",
+          "ВЕНГРИЯ\nВенгрия"
+        ],
+        [
+          "352",
+          "ИСЛАНДИЯ\nРеспублика Исландия"
+        ],
+        [
+          "356",
+          "ИНДИЯ\nРеспублика Индия"
+        ],
+        [
+          "360",
+          "ИНДОНЕЗИЯ\nРеспублика Индонезия"
+        ],
+        [
+          "364",
+          "ИРАН, ИСЛАМСКАЯ РЕСПУБЛИКА\nИсламская Республика Иран"
+        ],
+        [
+          "368",
+          "ИРАК\nРеспублика Ирак"
+        ],
+        [
+          "372",
+          "ИРЛАНДИЯ\nИРЛАНДИЯ"
+        ],
+        [
+          "376",
+          "ИЗРАИЛЬ\nГосударство Израиль"
+        ],
+        [
+          "380",
+          "ИТАЛИЯ\nИтальянская Республика"
+        ],
+        [
+          "384",
+          "Республика Кот д`Ивуар\nРеспублика Кот д`Ивуар"
+        ],
+        [
+          "388",
+          "ЯМАЙКА\nЯМАЙКА"
+        ],
+        [
+          "392",
+          "ЯПОНИЯ\nЯПОНИЯ"
+        ],
+        [
+          "398",
+          "КАЗАХСТАН\nРеспублика Казахстан"
+        ],
+        [
+          "400",
+          "ИОРДАНИЯ\nИорданское Хашимитское Королевство"
+        ],
+        [
+          "404",
+          "КЕНИЯ\nРеспублика Кения"
+        ],
+        [
+          "408",
+          "КОРЕЯ, НАРОДНО-ДЕМОКРАТИЧЕСКАЯ РЕСПУБЛИКА\nКорейская Народно-Демократическая Республика"
+        ],
+        [
+          "410",
+          "КОРЕЯ, РЕСПУБЛИКА\nРеспублика Корея"
+        ],
+        [
+          "414",
+          "КУВЕЙТ\nГосударство Кувейт"
+        ],
+        [
+          "417",
+          "КИРГИЗИЯ\nКиргизская Республика"
+        ],
+        [
+          "418",
+          "ЛАОССКАЯ НАРОДНО-ДЕМОКРАТИЧЕСКАЯ РЕСПУБЛИКА\nЛАОССКАЯ НАРОДНО-ДЕМОКРАТИЧЕСКАЯ РЕСПУБЛИКА"
+        ],
+        [
+          "422",
+          "ЛИВАН\nЛиванская Республика"
+        ],
+        [
+          "426",
+          "ЛЕСОТО\nКоролевство Лесото"
+        ],
+        [
+          "428",
+          "ЛАТВИЯ\nЛатвийская Республика"
+        ],
+        [
+          "430",
+          "ЛИБЕРИЯ\nРеспублика Либерия"
+        ],
+        [
+          "434",
+          "ЛИВИЯ\nЛивия"
+        ],
+        [
+          "438",
+          "ЛИХТЕНШТЕЙН\nКняжество Лихтенштейн"
+        ],
+        [
+          "440",
+          "ЛИТВА\nЛитовская Республика"
+        ],
+        [
+          "442",
+          "ЛЮКСЕМБУРГ\nВеликое Герцогство Люксембург"
+        ],
+        [
+          "446",
+          "МАКАО\nСпециальный административный регион Китая Макао"
+        ],
+        [
+          "450",
+          "МАДАГАСКАР\nРеспублика Мадагаскар"
+        ],
+        [
+          "454",
+          "МАЛАВИ\nРеспублика Малави"
+        ],
+        [
+          "458",
+          "МАЛАЙЗИЯ\nМАЛАЙЗИЯ"
+        ],
+        [
+          "462",
+          "МАЛЬДИВЫ\nМальдивская Республика"
+        ],
+        [
+          "466",
+          "МАЛИ\nРеспублика Мали"
+        ],
+        [
+          "470",
+          "МАЛЬТА\nРеспублика Мальта"
+        ],
+        [
+          "474",
+          "МАРТИНИКА\nМАРТИНИКА"
+        ],
+        [
+          "478",
+          "МАВРИТАНИЯ\nИсламская Республика Мавритания"
+        ],
+        [
+          "480",
+          "МАВРИКИЙ\nРеспублика Маврикий"
+        ],
+        [
+          "484",
+          "МЕКСИКА\nМексиканские Соединенные Штаты"
+        ],
+        [
+          "492",
+          "МОНАКО\nКняжество Монако"
+        ],
+        [
+          "496",
+          "МОНГОЛИЯ\nМОНГОЛИЯ"
+        ],
+        [
+          "498",
+          "МОЛДОВА, РЕСПУБЛИКА\nРеспублика Молдова"
+        ],
+        [
+          "499",
+          "ЧЕРНОГОРИЯ\nЧЕРНОГОРИЯ"
+        ],
+        [
+          "500",
+          "МОНТСЕРРАТ\nМОНТСЕРРАТ"
+        ],
+        [
+          "504",
+          "МАРОККО\nКоролевство Марокко"
+        ],
+        [
+          "508",
+          "МОЗАМБИК\nРеспублика Мозамбик"
+        ],
+        [
+          "512",
+          "ОМАН\nСултанат Оман"
+        ],
+        [
+          "516",
+          "НАМИБИЯ\nРеспублика Намибия"
+        ],
+        [
+          "520",
+          "НАУРУ\nРеспублика Науру"
+        ],
+        [
+          "524",
+          "НЕПАЛ\nФедеративная Демократическая Республика Непал"
+        ],
+        [
+          "528",
+          "НИДЕРЛАНДЫ\nКоролевство Нидерландов"
+        ],
+        [
+          "531",
+          "КЮРАСАО\nКЮРАСАО"
+        ],
+        [
+          "533",
+          "АРУБА\nАРУБА"
+        ],
+        [
+          "534",
+          "СЕН-МАРТЕН (нидерландская часть)\nСЕН-МАРТЕН (нидерландская часть)"
+        ],
+        [
+          "535",
+          "БОНЭЙР, СИНТ-ЭСТАТИУС И САБА\nБОНЭЙР, СИНТ-ЭСТАТИУС И САБА"
+        ],
+        [
+          "540",
+          "НОВАЯ КАЛЕДОНИЯ\nНОВАЯ КАЛЕДОНИЯ"
+        ],
+        [
+          "548",
+          "ВАНУАТУ\nРеспублика Вануату"
+        ],
+        [
+          "554",
+          "НОВАЯ ЗЕЛАНДИЯ\nНОВАЯ ЗЕЛАНДИЯ"
+        ],
+        [
+          "558",
+          "НИКАРАГУА\nРеспублика Никарагуа"
+        ],
+        [
+          "562",
+          "НИГЕР\nРеспублика Нигер"
+        ],
+        [
+          "566",
+          "НИГЕРИЯ\nФедеративная Республика Нигерия"
+        ],
+        [
+          "570",
+          "НИУЭ\nНиуэ"
+        ],
+        [
+          "574",
+          "ОСТРОВ НОРФОЛК\nОСТРОВ НОРФОЛК"
+        ],
+        [
+          "578",
+          "НОРВЕГИЯ\nКоролевство Норвегия"
+        ],
+        [
+          "580",
+          "СЕВЕРНЫЕ МАРИАНСКИЕ ОСТРОВА\nСодружество Северных Марианских островов"
+        ],
+        [
+          "581",
+          "МАЛЫЕ ТИХООКЕАНСКИЕ ОТДАЛЕННЫЕ ОСТРОВА СОЕДИНЕННЫХ ШТАТОВ\nМАЛЫЕ ТИХООКЕАНСКИЕ ОТДАЛЕННЫЕ ОСТРОВА СОЕДИНЕННЫХ ШТАТОВ"
+        ],
+        [
+          "583",
+          "МИКРОНЕЗИЯ, ФЕДЕРАТИВНЫЕ ШТАТЫ\nФедеративные Штаты Микронезии"
+        ],
+        [
+          "584",
+          "МАРШАЛЛОВЫ ОСТРОВА\nРеспублика Маршалловы Острова"
+        ],
+        [
+          "585",
+          "ПАЛАУ\nРеспублика Палау"
+        ],
+        [
+          "586",
+          "ПАКИСТАН\nИсламская Республика Пакистан"
+        ],
+        [
+          "591",
+          "ПАНАМА\nРеспублика Панама"
+        ],
+        [
+          "598",
+          "ПАПУА НОВАЯ ГВИНЕЯ\nНезависимое Государство Папуа Новая Гвинея"
+        ],
+        [
+          "600",
+          "ПАРАГВАЙ\nРеспублика Парагвай"
+        ],
+        [
+          "604",
+          "ПЕРУ\nРеспублика Перу"
+        ],
+        [
+          "608",
+          "ФИЛИППИНЫ\nРеспублика Филиппины"
+        ],
+        [
+          "612",
+          "ПИТКЕРН\nПИТКЕРН"
+        ],
+        [
+          "616",
+          "ПОЛЬША\nРеспублика Польша"
+        ],
+        [
+          "620",
+          "ПОРТУГАЛИЯ\nПортугальская Республика"
+        ],
+        [
+          "624",
+          "ГВИНЕЯ-БИСАУ\nРеспублика Гвинея-Бисау"
+        ],
+        [
+          "626",
+          "ТИМОР-ЛЕСТЕ\nДемократическая Республика Тимор-Лесте"
+        ],
+        [
+          "630",
+          "ПУЭРТО-РИКО\nПУЭРТО-РИКО"
+        ],
+        [
+          "634",
+          "КАТАР\nГосударство Катар"
+        ],
+        [
+          "638",
+          "РЕЮНЬОН\nРЕЮНЬОН"
+        ],
+        [
+          "642",
+          "РУМЫНИЯ\nРУМЫНИЯ"
+        ],
+        [
+          "643",
+          "РОССИЯ\nРоссийская Федерация"
+        ],
+        [
+          "646",
+          "РУАНДА\nРуандийская Республика"
+        ],
+        [
+          "652",
+          "СЕН-БАРТЕЛЕМИ\nСЕН-БАРТЕЛЕМИ"
+        ],
+        [
+          "654",
+          "СВЯТАЯ ЕЛЕНА, ОСТРОВ ВОЗНЕСЕНИЯ, ТРИСТАН-ДА-КУНЬЯ\nСВЯТАЯ ЕЛЕНА, ОСТРОВ ВОЗНЕСЕНИЯ, ТРИСТАН-ДА-КУНЬЯ"
+        ],
+        [
+          "659",
+          "СЕНТ-КИТС И НЕВИС\nСЕНТ-КИТС И НЕВИС"
+        ],
+        [
+          "660",
+          "АНГИЛЬЯ\nАНГИЛЬЯ"
+        ],
+        [
+          "662",
+          "СЕНТ-ЛЮСИЯ\nСЕНТ-ЛЮСИЯ"
+        ],
+        [
+          "663",
+          "СЕН-МАРТЕН\nСЕН-МАРТЕН"
+        ],
+        [
+          "666",
+          "СЕНТ-ПЬЕР И МИКЕЛОН\nСЕНТ-ПЬЕР И МИКЕЛОН"
+        ],
+        [
+          "670",
+          "СЕНТ-ВИНСЕНТ И ГРЕНАДИНЫ\nСЕНТ-ВИНСЕНТ И ГРЕНАДИНЫ"
+        ],
+        [
+          "674",
+          "САН-МАРИНО\nРеспублика Сан-Марино"
+        ],
+        [
+          "678",
+          "САН-ТОМЕ И ПРИНСИПИ\nДемократическая Республика Сан-Томе и Принсипи"
+        ],
+        [
+          "682",
+          "САУДОВСКАЯ АРАВИЯ\nКоролевство Саудовская Аравия"
+        ],
+        [
+          "686",
+          "СЕНЕГАЛ\nРеспублика Сенегал"
+        ],
+        [
+          "688",
+          "СЕРБИЯ\nРеспублика Сербия"
+        ],
+        [
+          "690",
+          "СЕЙШЕЛЫ\nРеспублика Сейшелы"
+        ],
+        [
+          "694",
+          "СЬЕРРА-ЛЕОНЕ\nРеспублика Сьерра-Леоне"
+        ],
+        [
+          "702",
+          "СИНГАПУР\nРеспублика Сингапур"
+        ],
+        [
+          "703",
+          "СЛОВАКИЯ\nСловацкая Республика"
+        ],
+        [
+          "704",
+          "ВЬЕТНАМ\nСоциалистическая Республика Вьетнам"
+        ],
+        [
+          "705",
+          "СЛОВЕНИЯ\nРеспублика Словения"
+        ],
+        [
+          "706",
+          "СОМАЛИ\nФедеративная Республика Сомали"
+        ],
+        [
+          "710",
+          "ЮЖНАЯ АФРИКА\nЮжно-Африканская Республика"
+        ],
+        [
+          "716",
+          "ЗИМБАБВЕ\nРеспублика Зимбабве"
+        ],
+        [
+          "724",
+          "ИСПАНИЯ\nКоролевство Испания"
+        ],
+        [
+          "728",
+          "ЮЖНЫЙ СУДАН\nРеспублика Южный Судан"
+        ],
+        [
+          "729",
+          "СУДАН\nРеспублика Судан"
+        ],
+        [
+          "732",
+          "ЗАПАДНАЯ САХАРА\nЗАПАДНАЯ САХАРА"
+        ],
+        [
+          "740",
+          "СУРИНАМ\nРеспублика Суринам"
+        ],
+        [
+          "744",
+          "ШПИЦБЕРГЕН И ЯН МАЙЕН\nШПИЦБЕРГЕН И ЯН МАЙЕН"
+        ],
+        [
+          "748",
+          "ЭСВАТИНИ\nКоролевство Эсватини"
+        ],
+        [
+          "752",
+          "ШВЕЦИЯ\nКоролевство Швеция"
+        ],
+        [
+          "756",
+          "ШВЕЙЦАРИЯ\nШвейцарская Конфедерация"
+        ],
+        [
+          "760",
+          "СИРИЙСКАЯ АРАБСКАЯ РЕСПУБЛИКА\nСИРИЙСКАЯ АРАБСКАЯ РЕСПУБЛИКА"
+        ],
+        [
+          "762",
+          "ТАДЖИКИСТАН\nРеспублика Таджикистан"
+        ],
+        [
+          "764",
+          "ТАИЛАНД\nКоролевство Таиланд"
+        ],
+        [
+          "768",
+          "ТОГО\nТоголезская Республика"
+        ],
+        [
+          "772",
+          "ТОКЕЛАУ\nТОКЕЛАУ"
+        ],
+        [
+          "776",
+          "ТОНГА\nКоролевство Тонга"
+        ],
+        [
+          "780",
+          "ТРИНИДАД И ТОБАГО\nРеспублика Тринидад и Тобаго"
+        ],
+        [
+          "784",
+          "ОБЪЕДИНЕННЫЕ АРАБСКИЕ ЭМИРАТЫ\nОБЪЕДИНЕННЫЕ АРАБСКИЕ ЭМИРАТЫ"
+        ],
+        [
+          "788",
+          "ТУНИС\nТунисская Республика"
+        ],
+        [
+          "792",
+          "ТУРЦИЯ\nТурецкая Республика"
+        ],
+        [
+          "795",
+          "ТУРКМЕНИЯ\nТуркменистан"
+        ],
+        [
+          "796",
+          "ОСТРОВА ТЕРКС И КАЙКОС\nОСТРОВА ТЕРКС И КАЙКОС"
+        ],
+        [
+          "798",
+          "ТУВАЛУ\nТУВАЛУ"
+        ],
+        [
+          "800",
+          "УГАНДА\nРеспублика Уганда"
+        ],
+        [
+          "804",
+          "УКРАИНА\nУКРАИНА"
+        ],
+        [
+          "807",
+          "СЕВЕРНАЯ МАКЕДОНИЯ\nРеспублика Северная Македония"
+        ],
+        [
+          "818",
+          "ЕГИПЕТ\nАрабская Республика Египет"
+        ],
+        [
+          "826",
+          "СОЕДИНЕННОЕ КОРОЛЕВСТВО\nСоединенное Королевство Великобритании и Северной Ирландии"
+        ],
+        [
+          "831",
+          "ГЕРНСИ\nГЕРНСИ"
+        ],
+        [
+          "832",
+          "ДЖЕРСИ\nДЖЕРСИ"
+        ],
+        [
+          "833",
+          "ОСТРОВ МЭН\nОСТРОВ МЭН"
+        ],
+        [
+          "834",
+          "ТАНЗАНИЯ, ОБЪЕДИНЕННАЯ РЕСПУБЛИКА\nОбъединенная Республика Танзания"
+        ],
+        [
+          "840",
+          "СОЕДИНЕННЫЕ ШТАТЫ\nСоединенные Штаты Америки"
+        ],
+        [
+          "850",
+          "ВИРГИНСКИЕ ОСТРОВА, США\nВиргинские острова Соединенных Штатов"
+        ],
+        [
+          "854",
+          "БУРКИНА-ФАСО\nБУРКИНА-ФАСО"
+        ],
+        [
+          "858",
+          "УРУГВАЙ\nВосточная Республика Уругвай"
+        ],
+        [
+          "860",
+          "УЗБЕКИСТАН\nРеспублика Узбекистан"
+        ],
+        [
+          "862",
+          "ВЕНЕСУЭЛА, БОЛИВАРИАНСКАЯ РЕСПУБЛИКА\nБоливарианская Республика Венесуэла"
+        ],
+        [
+          "876",
+          "УОЛЛИС И ФУТУНА\nУОЛЛИС И ФУТУНА"
+        ],
+        [
+          "882",
+          "САМОА\nНезависимое Государство Самоа"
+        ],
+        [
+          "887",
+          "ЙЕМЕН\nЙеменская Республика"
+        ],
+        [
+          "894",
+          "ЗАМБИЯ\nРеспублика Замбия"
+        ],
+        [
+          "895",
+          "АБХАЗИЯ\nРеспублика Абхазия"
+        ],
+        [
+          "896",
+          "ЮЖНАЯ ОСЕТИЯ\nРеспублика Южная Осетия"
+        ],
+        [
+          "897",
+          "ДНР\nДонецкая Народная Республика"
+        ],
+        [
+          "898",
+          "ЛНР\nЛуганская Народная Республика"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "OKSM.xsd"
+    },
+    {
+      "name": "benefit6",
+      "path": "eventLife/benefitInfo/benefit6",
+      "parent": 3,
+      "group": "Выбор 1, вариант 5",
+      "doc": "Инициация назначения пособия по временной нетрудоспособности в связи с НС или ПЗ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        124,
+        127,
+        128,
+        130
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insuredInfo",
+      "path": "eventLife/benefitInfo/benefit6/insuredInfo",
+      "parent": 123,
+      "group": "",
+      "doc": "Данные о застрахованном лице",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "insuredInfoType2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        125,
+        126
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "eventLife/benefitInfo/benefit6/insuredInfo/snils",
+      "parent": 124,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "category",
+      "path": "eventLife/benefitInfo/benefit6/insuredInfo/category",
+      "parent": 124,
+      "group": "",
+      "doc": "Категория застрахованного лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "insCat:insuredCategoriesType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "2",
+          "Лица, осужденные к лишению свободы и привлеченные к оплачиваемому труду"
+        ],
+        [
+          "3",
+          "Лица, осужденные к принудительным работам, привлеченные к труду"
+        ],
+        [
+          "4",
+          "Лица, в период приостановления трудового договора после окончания военной службы"
+        ],
+        [
+          "6",
+          "Лица, работающие по трудовым договорам или по договорам гражданско-правового характера"
+        ],
+        [
+          "7",
+          "Руководители организаций, являющиеся единственными участниками (учредителями), членами организаций, собственниками их имущества"
+        ],
+        [
+          "8",
+          "Государственные гражданские (муниципальные) служащие"
+        ],
+        [
+          "9",
+          "Лица, замещающие государственные (муниципальные) должности"
+        ],
+        [
+          "10",
+          "Члены производственного кооператива, принимающие личное трудовое участие в его деятельности"
+        ],
+        [
+          "11",
+          "Священнослужители"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "InsuredCategories.xsd"
+    },
+    {
+      "name": "lnNumber",
+      "path": "eventLife/benefitInfo/benefit6/lnNumber",
+      "parent": 123,
+      "group": "",
+      "doc": "Номер ЭЛН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:lnCode",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "12"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "changeYears",
+      "path": "eventLife/benefitInfo/benefit6/changeYears",
+      "parent": 123,
+      "group": "",
+      "doc": "Информация о замененных расчетных годах. Заполняется при наличии заявления о замене лет",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "changeYearsType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        129
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "year",
+      "path": "eventLife/benefitInfo/benefit6/changeYears/year",
+      "parent": 128,
+      "group": "",
+      "doc": "Год, использующийся для расчета",
+      "kind": "element",
+      "min": "2",
+      "max": "2",
+      "type": "pr:yearType",
+      "base": "xs:integer",
+      "facets": [
+        [
+          "minInclusive",
+          "2000"
+        ],
+        [
+          "pattern",
+          "\\d{4}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "contractsInfo",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo",
+      "parent": 123,
+      "group": "",
+      "doc": "Договоры, по которым занято застрахованное лицо у страхователя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "pr:contractsInfoTypeResponse6",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        131,
+        135,
+        140
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "workerContract",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/workerContract",
+      "parent": 130,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Застрахованное лицо занято по трудовому договору. При указании условия исчисления = 46 также необходимо указать дату окончания договора",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        132
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/workerContract/period",
+      "parent": 131,
+      "group": "",
+      "doc": "Период договора. Поле обязательно для заполнения при срочном ТД на срок до 6 месяцев",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:period2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        133,
+        134
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/workerContract/period/begin",
+      "parent": 132,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/workerContract/period/end",
+      "parent": 132,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "GPHcontract",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/GPHcontract",
+      "parent": 130,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Застрахованное лицо занято по гражданско-правовому договору. При указании условия исчисления = 46 также необходимо указать дату окончания договора",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        136,
+        139
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/GPHcontract/period",
+      "parent": 135,
+      "group": "",
+      "doc": "Период договора",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        137,
+        138
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "begin",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/GPHcontract/period/begin",
+      "parent": 136,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/GPHcontract/period/end",
+      "parent": 136,
+      "group": "",
+      "doc": "Дата окончания. Поле обязательно для заполнения при договоре ГПХ на срок до 6 месяцев",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "GPHinsurancePaymentObligation",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/GPHcontract/GPHinsurancePaymentObligation",
+      "parent": 135,
+      "group": "",
+      "doc": "В договоре ГПХ указана обязанность уплаты страховых взносов от НС и ПЗ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:fixedTrueType",
+      "base": "xs:boolean",
+      "facets": [
+        [
+          "pattern",
+          "true"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "workerAndGPHcontract",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/workerAndGPHcontract",
+      "parent": 130,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Застрахованное лицо занято по трудовому договору и по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        141,
+        145
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "workerContract",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/workerAndGPHcontract/workerContract",
+      "parent": 140,
+      "group": "",
+      "doc": "Застрахованное лицо занято по трудовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        142
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/workerAndGPHcontract/workerContract/period",
+      "parent": 141,
+      "group": "",
+      "doc": "Период договора. Поле обязательно для заполнения при срочном ТД на срок до 6 месяцев",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:period2",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        143,
+        144
+      ],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/workerAndGPHcontract/workerContract/period/begin",
+      "parent": 142,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/workerAndGPHcontract/workerContract/period/end",
+      "parent": 142,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "GPHcontract",
+      "path": "eventLife/benefitInfo/benefit6/contractsInfo/workerAndGPHcontract/GPHcontract",
+      "parent": 140,
+      "group": "",
+      "doc": "Застрахованное лицо занято по гражданско-правовому договору",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "recalculationFlag",
+      "path": "eventLife/recalculationFlag",
+      "parent": 0,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Инициация перерасчёта на основании сведений по пособию - benefitInfo",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:fixedTrueType",
+      "base": "xs:boolean",
+      "facets": [
+        [
+          "pattern",
+          "true"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "recalculation",
+      "path": "eventLife/recalculation",
+      "parent": 0,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Инициация перерасчёта на основании номера документа в СФР - batchNo",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        148
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {}
+    },
+    {
+      "name": "batchNo",
+      "path": "eventLife/recalculation/batchNo",
+      "parent": 147,
+      "group": "",
+      "doc": "Номер документа в СФР (батч номер), по которому необходимы сведения для формирования перерасчётного документа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "batchNoType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "[E|P]_\\d{10}_(19|20)[0-9]{2}_[0|1][0-9]_[0-3][0-9]_\\d{1,9}[\\S]{0,5}:\\d{1,3}|\\S{18}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "EventLife.xsd"
+    },
+    {
+      "name": "notice",
+      "path": "eventLife/notice",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные извещения о представлении недостающих сведений",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "pr:noticeType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        150,
+        151
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "number",
+      "path": "eventLife/notice/number",
+      "parent": 149,
+      "group": "",
+      "doc": "Номер извещения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "noticeNumberType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "12"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {},
+      "typeFile": "Proactive.xsd"
+    },
+    {
+      "name": "date",
+      "path": "eventLife/notice/date",
+      "parent": 149,
+      "group": "",
+      "doc": "Дата извещения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
+      "file": "Proactive.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@specVersion",
+      "path": "eventLife/@specVersion",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер версии спецификации для xml документа",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:specVersionType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "EventLife.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+"""Build the local/browser static reference from the compiled SFR catalog."""
+import json
+from pathlib import Path
+from urllib.parse import unquote, urlsplit
+HERE=Path(__file__).resolve().parent
+def packed(value):
+    return json.dumps(value,ensure_ascii=False,separators=(",",":")).replace("<","\\u003c")
+def main():
+    catalog=json.loads((HERE/"data/catalog.json").read_bytes())
+    statuses={r["revision_id"]:r for r in json.loads((HERE/"data/fields/index.json").read_bytes())}
+    site=HERE/"site";editions=site/"editions";editions.mkdir(parents=True,exist_ok=True)
+    template=(HERE/"viewer-template.html").read_text("utf-8-sig")
+    template=template.replace("<title>СЭДО · Справочник 10110</title>","<title>Справочник XML-полей</title>")
+    # The containing catalog carries the selected message and revision.
+    template=template.replace("</style>","header,h1,.sub{display:none}.page{padding-top:0}.layout{margin-top:0}body{background:#f3f6f5}</style>")
+    template=template.replace("function select(i,show=false){current=i;","function select(i,show=false){current=i;location.hash=new URLSearchParams({field:fields[i].path}).toString();")
+    restore="""
+function restoreField(){
+ const path=new URLSearchParams(location.hash.slice(1)).get('field');
+ const idx=fields.findIndex(f=>f.path===path);
+ if(idx>=0 && idx!==current){current=idx;for(let p=fields[idx].parent;p>=0;p=fields[p].parent)expanded.add(p);render()}
+}
+window.addEventListener('hashchange',()=>{restoreField();if(parent!==window)parent.postMessage({type:'sedo-field',revision:data.revision,path:fields[current].path},'*')});
+restoreField();
+"""
+    template=template.replace("</script></html>",restore+"</script></html>")
+    for r in catalog["revisions"]:
+        rid=r["revision_id"];ready=statuses.get(rid,{}).get("status")=="ready";r["ready"]=ready
+        if not ready:continue
+        fields=json.loads((HERE/"data/fields"/(rid+".json")).read_bytes())["fields"]
+        data=dict(fields=fields,revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
+        (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
+    (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
+    for file in ("index.html","app.js","app.css"):
+        (site/file).write_bytes((HERE/"web"/file).read_bytes())
+    print(f"Built {len(catalog['revisions'])} revisions in {site}")
+if __name__=="__main__":main()
+

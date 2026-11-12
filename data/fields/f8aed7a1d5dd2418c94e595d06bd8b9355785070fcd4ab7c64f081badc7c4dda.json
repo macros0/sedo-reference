@@ -1,0 +1,1454 @@
+{
+  "revision_id": "f8aed7a1d5dd2418c94e595d06bd8b9355785070fcd4ab7c64f081badc7c4dda",
+  "fields": [
+    {
+      "name": "noticeRequest",
+      "path": "noticeRequest",
+      "parent": -1,
+      "group": "",
+      "doc": "Запрос уточненных сведений для выплаты пособий по ВНиМ, ССВ. Тип сообщения СЭДО №32",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        14,
+        17,
+        46,
+        53,
+        57,
+        58,
+        59,
+        60,
+        61
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {}
+    },
+    {
+      "name": "noticeNumber",
+      "path": "noticeRequest/noticeNumber",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер запроса",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "notice:noticeNumberType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "35"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "noticeDate",
+      "path": "noticeRequest/noticeDate",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата формирования запроса",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {}
+    },
+    {
+      "name": "tof",
+      "path": "noticeRequest/tof",
+      "parent": 0,
+      "group": "",
+      "doc": "Территориальное подразделение СФР РФ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:territorialDivision",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        4,
+        5
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "code",
+      "path": "noticeRequest/tof/code",
+      "parent": 3,
+      "group": "",
+      "doc": "Код",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "3"
+        ],
+        [
+          "maxLength",
+          "4"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "name",
+      "path": "noticeRequest/tof/name",
+      "parent": 3,
+      "group": "",
+      "doc": "Наименование",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "300"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "registryNum",
+      "path": "noticeRequest/registryNum",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер реестра (при наличии)",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "100"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insuredInfo",
+      "path": "noticeRequest/insuredInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные о застрахованном лице",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "notice:insuredInfoTypeRequest",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        8,
+        9,
+        13
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "noticeRequest/insuredInfo/snils",
+      "parent": 7,
+      "group": "",
+      "doc": "СНИЛС застрахованного лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "fullName",
+      "path": "noticeRequest/insuredInfo/fullName",
+      "parent": 7,
+      "group": "",
+      "doc": "ФИО",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:fullName",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        10,
+        11,
+        12
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "noticeRequest/insuredInfo/fullName/firstName",
+      "parent": 9,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "noticeRequest/insuredInfo/fullName/lastName",
+      "parent": 9,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "noticeRequest/insuredInfo/fullName/middleName",
+      "parent": 9,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/insuredInfo/*",
+      "parent": 7,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "insurerInfo",
+      "path": "noticeRequest/insurerInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные о страхователе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "notice:insurerInfoTypeRequest",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        15,
+        16
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "regNumSFR",
+      "path": "noticeRequest/insurerInfo/regNumSFR",
+      "parent": 14,
+      "group": "",
+      "doc": "Единый рег. номер страхователя СФР",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNumSFR",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "10"
+        ],
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/insurerInfo/*",
+      "parent": 14,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "benefitInfo",
+      "path": "noticeRequest/benefitInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные о пособии",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "notice:benefitInfoTypeRequest",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        18,
+        19,
+        20,
+        23,
+        26,
+        30,
+        36,
+        39,
+        42,
+        45
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "proactiveProcessNum",
+      "path": "noticeRequest/benefitInfo/proactiveProcessNum",
+      "parent": 17,
+      "group": "",
+      "doc": "Номер проактивного процесса",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:proactiveProcessNumType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "25"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "rowNumber",
+      "path": "noticeRequest/benefitInfo/rowNumber",
+      "parent": 17,
+      "group": "",
+      "doc": "Номер строки реестра, по которой сформировано извещение",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "3"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "benefit1",
+      "path": "noticeRequest/benefitInfo/benefit1",
+      "parent": 17,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Пособие по временной нетрудоспособности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        21,
+        22
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "lnNumber",
+      "path": "noticeRequest/benefitInfo/benefit1/lnNumber",
+      "parent": 20,
+      "group": "",
+      "doc": "Номер ЛН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:lnCode",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "12"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/benefitInfo/benefit1/*",
+      "parent": 20,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "benefit2",
+      "path": "noticeRequest/benefitInfo/benefit2",
+      "parent": 17,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Пособие по беременности и родам",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        24,
+        25
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "lnNumber",
+      "path": "noticeRequest/benefitInfo/benefit2/lnNumber",
+      "parent": 23,
+      "group": "",
+      "doc": "Номер ЛН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:lnCode",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "12"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/benefitInfo/benefit2/*",
+      "parent": 23,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "benefit4",
+      "path": "noticeRequest/benefitInfo/benefit4",
+      "parent": 17,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Единовременное пособие при рождении ребенка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        27,
+        28,
+        29
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "childSnils",
+      "path": "noticeRequest/benefitInfo/benefit4/childSnils",
+      "parent": 26,
+      "group": "",
+      "doc": "СНИЛС ребенка",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "childBirthDate",
+      "path": "noticeRequest/benefitInfo/benefit4/childBirthDate",
+      "parent": 26,
+      "group": "",
+      "doc": "Дата рождения ребенка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/benefitInfo/benefit4/*",
+      "parent": 26,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "benefit5",
+      "path": "noticeRequest/benefitInfo/benefit5",
+      "parent": 17,
+      "group": "Выбор 1, вариант 4",
+      "doc": "Ежемесячное пособие по уходу за ребенком до 1.5 лет",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        31,
+        32,
+        35
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "childSnils",
+      "path": "noticeRequest/benefitInfo/benefit5/childSnils",
+      "parent": 30,
+      "group": "",
+      "doc": "СНИЛС ребенка",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "vacationPeriod",
+      "path": "noticeRequest/benefitInfo/benefit5/vacationPeriod",
+      "parent": 30,
+      "group": "",
+      "doc": "Период отпуска",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        33,
+        34
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "noticeRequest/benefitInfo/benefit5/vacationPeriod/begin",
+      "parent": 32,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "noticeRequest/benefitInfo/benefit5/vacationPeriod/end",
+      "parent": 32,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/benefitInfo/benefit5/*",
+      "parent": 30,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "benefit6",
+      "path": "noticeRequest/benefitInfo/benefit6",
+      "parent": 17,
+      "group": "Выбор 1, вариант 5",
+      "doc": "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        37,
+        38
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "lnNumber",
+      "path": "noticeRequest/benefitInfo/benefit6/lnNumber",
+      "parent": 36,
+      "group": "",
+      "doc": "Номер ЛН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:lnCode",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "12"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/benefitInfo/benefit6/*",
+      "parent": 36,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "benefit87",
+      "path": "noticeRequest/benefitInfo/benefit87",
+      "parent": 17,
+      "group": "Выбор 1, вариант 6",
+      "doc": "Ежемесячная выплата федеральным государственным гражданским служащим (ПП № 1652)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        40,
+        41
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "dt1",
+      "path": "noticeRequest/benefitInfo/benefit87/dt1",
+      "parent": 39,
+      "group": "",
+      "doc": "Начало отчётного периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/benefitInfo/benefit87/*",
+      "parent": 39,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "benefit88",
+      "path": "noticeRequest/benefitInfo/benefit88",
+      "parent": 17,
+      "group": "Выбор 1, вариант 7",
+      "doc": "Специальная социальная выплата отдельным категориям медицинских работников (ПП РФ № 2568)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        43,
+        44
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "dt1",
+      "path": "noticeRequest/benefitInfo/benefit88/dt1",
+      "parent": 42,
+      "group": "",
+      "doc": "Начало отчётного периода",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/benefitInfo/benefit88/*",
+      "parent": 42,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/benefitInfo/*",
+      "parent": 17,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "informationRequest",
+      "path": "noticeRequest/informationRequest",
+      "parent": 0,
+      "group": "",
+      "doc": "Запрос информации о недостающих сведениях, необходимых для назначения и выплаты пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        47
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {}
+    },
+    {
+      "name": "item",
+      "path": "noticeRequest/informationRequest/item",
+      "parent": 46,
+      "group": "",
+      "doc": "Недостающее сведение, необходимое для назначения и выплаты пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        48,
+        49
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {}
+    },
+    {
+      "name": "requestText",
+      "path": "noticeRequest/informationRequest/item/requestText",
+      "parent": 47,
+      "group": "",
+      "doc": "Текст запроса недостающего сведения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "notice:requestTextType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "4000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "requestFields",
+      "path": "noticeRequest/informationRequest/item/requestFields",
+      "parent": 47,
+      "group": "",
+      "doc": "Запрашиваемые поля (атрибуты), которые должны быть направлены в сообщении №33 в ответ на запрос",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "notice:fieldType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        50
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Notice.xsd"
+    },
+    {
+      "name": "field",
+      "path": "noticeRequest/informationRequest/item/requestFields/field",
+      "parent": 49,
+      "group": "",
+      "doc": "Запрашиваемое поле (атрибут)",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        51,
+        52
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "fieldName",
+      "path": "noticeRequest/informationRequest/item/requestFields/field/fieldName",
+      "parent": 50,
+      "group": "",
+      "doc": "Наименование поля",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "fieldCode",
+      "path": "noticeRequest/informationRequest/item/requestFields/field/fieldCode",
+      "parent": 50,
+      "group": "",
+      "doc": "Код поля (адрес в XML)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "file": "Notice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "senderInfo",
+      "path": "noticeRequest/senderInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные лица, направившего запрос",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        54,
+        55,
+        56
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {}
+    },
+    {
+      "name": "fullName",
+      "path": "noticeRequest/senderInfo/fullName",
+      "parent": 53,
+      "group": "",
+      "doc": "ФИО работника СФР, направившего запрос",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:fullNameSimple",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "255"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "role",
+      "path": "noticeRequest/senderInfo/role",
+      "parent": 53,
+      "group": "",
+      "doc": "Должность",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:roleType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "800"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "phone",
+      "path": "noticeRequest/senderInfo/phone",
+      "parent": 53,
+      "group": "",
+      "doc": "Контактный номер телефона",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:phoneNumberType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "5"
+        ],
+        [
+          "maxLength",
+          "30"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "*",
+      "path": "noticeRequest/*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "@specVersion",
+      "path": "noticeRequest/@specVersion",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер версии спецификации для xml документа",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:specVersionType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@messageUuid101",
+      "path": "noticeRequest/@messageUuid101",
+      "parent": 0,
+      "group": "",
+      "doc": "Ссылка на транспортный идентификатор сообщения СЭДО №101 (при наличии)",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "com:uuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "NoticeRequest.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@messageDateTime",
+      "path": "noticeRequest/@messageDateTime",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата и время формирования сообщения на стороне СФР",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "xs:dateTime",
+      "base": "xs:dateTime",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "NoticeRequest.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@*",
+      "path": "noticeRequest/@*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический атрибут, позволяющий расширять XML документ",
+      "kind": "anyAttribute",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "file": "NoticeRequest.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    }
+  ]
+}

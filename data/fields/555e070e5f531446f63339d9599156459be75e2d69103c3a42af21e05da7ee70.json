@@ -1,0 +1,1366 @@
+{
+  "revision_id": "555e070e5f531446f63339d9599156459be75e2d69103c3a42af21e05da7ee70",
+  "fields": [
+    {
+      "name": "paymentStatusNotice",
+      "path": "paymentStatusNotice",
+      "parent": -1,
+      "group": "",
+      "doc": "Уведомление о статусе выплаты пособия по ВНиМ. Тип сообщения СЭДО №11000",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PaymentNoticeType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2,
+        3,
+        4,
+        10,
+        17,
+        26,
+        35,
+        44,
+        51,
+        52,
+        53,
+        54
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "noticeType",
+      "path": "paymentStatusNotice/noticeType",
+      "parent": 0,
+      "group": "",
+      "doc": "Тип уведомления",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "NoticeTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Уведомление о поступление информации о необходимости осуществления выплаты"
+        ],
+        [
+          "2",
+          "Уведомление о направлении документа на оплату"
+        ],
+        [
+          "3",
+          "Уведомление об успешном проведении выплаты пособия"
+        ],
+        [
+          "4",
+          "Уведомление о поступлении отказа от банка получение статуса «Оплата не прошла»"
+        ],
+        [
+          "5",
+          "Уведомление о направлении работодателю извещения о необходимости предоставления дополнительных сведений"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "batchNo",
+      "path": "paymentStatusNotice/batchNo",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер записи реестра",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "50"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "processNum",
+      "path": "paymentStatusNotice/processNum",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер проактивного процесса",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:proactiveProcessNumType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "25"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "personInfo",
+      "path": "paymentStatusNotice/personInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Сведения о застрахованном лице",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "secondName",
+      "path": "paymentStatusNotice/personInfo/secondName",
+      "parent": 4,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "paymentStatusNotice/personInfo/firstName",
+      "parent": 4,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "patronymic",
+      "path": "paymentStatusNotice/personInfo/patronymic",
+      "parent": 4,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "paymentStatusNotice/personInfo/birthDate",
+      "parent": 4,
+      "group": "",
+      "doc": "Дата рождения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:birthDate",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "paymentStatusNotice/personInfo/snils",
+      "parent": 4,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "registerRecieve",
+      "path": "paymentStatusNotice/registerRecieve",
+      "parent": 0,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Уведомление о поступлении информации о необходимости осуществления выплаты",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "RegisterRecieveType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        11,
+        12,
+        13,
+        16
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "docType",
+      "path": "paymentStatusNotice/registerRecieve/docType",
+      "parent": 10,
+      "group": "",
+      "doc": "Тип пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DocTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Пособие по временной нетрудоспособности"
+        ],
+        [
+          "2",
+          "Пособие по беременности и родам"
+        ],
+        [
+          "4",
+          "Единовременное пособие при рождении ребенка"
+        ],
+        [
+          "5",
+          "Ежемесячное пособие по уходу за ребенком до 1.5 лет"
+        ],
+        [
+          "6",
+          "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "infoRecalcFlag",
+      "path": "paymentStatusNotice/registerRecieve/infoRecalcFlag",
+      "parent": 10,
+      "group": "",
+      "doc": "Признак перерасчета (true - перерасчет, false - первичный документ)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "paymentStatusNotice/registerRecieve/period",
+      "parent": 10,
+      "group": "",
+      "doc": "Период пособия (блок не заполняется для пособия с кодом \"4\" - единовременное пособие при рождении ребенка)",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        14,
+        15
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "paymentStatusNotice/registerRecieve/period/begin",
+      "parent": 13,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "paymentStatusNotice/registerRecieve/period/end",
+      "parent": 13,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "addInformation",
+      "path": "paymentStatusNotice/registerRecieve/addInformation",
+      "parent": 10,
+      "group": "",
+      "doc": "Дополнительная информация",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "250"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "paymentSend",
+      "path": "paymentStatusNotice/paymentSend",
+      "parent": 0,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Уведомление о направлении документа на оплату",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PaymentSendType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        18,
+        19,
+        20,
+        23,
+        24,
+        25
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "docType",
+      "path": "paymentStatusNotice/paymentSend/docType",
+      "parent": 17,
+      "group": "",
+      "doc": "Тип пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DocTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Пособие по временной нетрудоспособности"
+        ],
+        [
+          "2",
+          "Пособие по беременности и родам"
+        ],
+        [
+          "4",
+          "Единовременное пособие при рождении ребенка"
+        ],
+        [
+          "5",
+          "Ежемесячное пособие по уходу за ребенком до 1.5 лет"
+        ],
+        [
+          "6",
+          "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "infoRecalcFlag",
+      "path": "paymentStatusNotice/paymentSend/infoRecalcFlag",
+      "parent": 17,
+      "group": "",
+      "doc": "Признак перерасчета (true - перерасчет, false - первичный документ)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "paymentStatusNotice/paymentSend/period",
+      "parent": 17,
+      "group": "",
+      "doc": "Период пособия (блок не заполняется для пособия с кодом \"4\" - единовременное пособие при рождении ребенка)",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        21,
+        22
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "paymentStatusNotice/paymentSend/period/begin",
+      "parent": 20,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "paymentStatusNotice/paymentSend/period/end",
+      "parent": 20,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "addInformation",
+      "path": "paymentStatusNotice/paymentSend/addInformation",
+      "parent": 17,
+      "group": "",
+      "doc": "Дополнительная информация",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "250"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "assignedSumm",
+      "path": "paymentStatusNotice/paymentSend/assignedSumm",
+      "parent": 17,
+      "group": "",
+      "doc": "Назначенная сумма",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:sumType",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{1,9}([\\.]\\d{1,2})?"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "dutySumm",
+      "path": "paymentStatusNotice/paymentSend/dutySumm",
+      "parent": 17,
+      "group": "",
+      "doc": "Удержанная сумма НДФЛ (из назначенной суммы). Поле заполняется для пособий по временной нетрудоспособности с кодами \"1\", \"6\"",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:sumType",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{1,9}([\\.]\\d{1,2})?"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "paymentDone",
+      "path": "paymentStatusNotice/paymentDone",
+      "parent": 0,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Уведомление об успешном проведении выплаты",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PaymentDoneType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        27,
+        28,
+        29,
+        32,
+        33,
+        34
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "docType",
+      "path": "paymentStatusNotice/paymentDone/docType",
+      "parent": 26,
+      "group": "",
+      "doc": "Тип пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DocTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Пособие по временной нетрудоспособности"
+        ],
+        [
+          "2",
+          "Пособие по беременности и родам"
+        ],
+        [
+          "4",
+          "Единовременное пособие при рождении ребенка"
+        ],
+        [
+          "5",
+          "Ежемесячное пособие по уходу за ребенком до 1.5 лет"
+        ],
+        [
+          "6",
+          "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "infoRecalcFlag",
+      "path": "paymentStatusNotice/paymentDone/infoRecalcFlag",
+      "parent": 26,
+      "group": "",
+      "doc": "Признак перерасчета (true - перерасчет, false - первичный документ)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "paymentStatusNotice/paymentDone/period",
+      "parent": 26,
+      "group": "",
+      "doc": "Период пособия (блок не заполняется для пособия с кодом \"4\" - единовременное пособие при рождении ребенка)",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        30,
+        31
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "paymentStatusNotice/paymentDone/period/begin",
+      "parent": 29,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "paymentStatusNotice/paymentDone/period/end",
+      "parent": 29,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "addInformation",
+      "path": "paymentStatusNotice/paymentDone/addInformation",
+      "parent": 26,
+      "group": "",
+      "doc": "Дополнительная информация",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "250"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "assignedSumm",
+      "path": "paymentStatusNotice/paymentDone/assignedSumm",
+      "parent": 26,
+      "group": "",
+      "doc": "Назначенная сумма",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:sumType",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{1,9}([\\.]\\d{1,2})?"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "dutySumm",
+      "path": "paymentStatusNotice/paymentDone/dutySumm",
+      "parent": 26,
+      "group": "",
+      "doc": "Удержанная сумма НДФЛ (из назначенной суммы). Поле заполняется для пособий по временной нетрудоспособности с кодами \"1\", \"6\"",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:sumType",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{1,9}([\\.]\\d{1,2})?"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "paymentCanceling",
+      "path": "paymentStatusNotice/paymentCanceling",
+      "parent": 0,
+      "group": "Выбор 1, вариант 4",
+      "doc": "Уведомление о недоставке платежа (оплата не прошла)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PaymentCancelingType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        36,
+        37,
+        38,
+        41,
+        42,
+        43
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "docType",
+      "path": "paymentStatusNotice/paymentCanceling/docType",
+      "parent": 35,
+      "group": "",
+      "doc": "Тип пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DocTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Пособие по временной нетрудоспособности"
+        ],
+        [
+          "2",
+          "Пособие по беременности и родам"
+        ],
+        [
+          "4",
+          "Единовременное пособие при рождении ребенка"
+        ],
+        [
+          "5",
+          "Ежемесячное пособие по уходу за ребенком до 1.5 лет"
+        ],
+        [
+          "6",
+          "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "infoRecalcFlag",
+      "path": "paymentStatusNotice/paymentCanceling/infoRecalcFlag",
+      "parent": 35,
+      "group": "",
+      "doc": "Признак перерасчета (true - перерасчет, false - первичный документ)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "paymentStatusNotice/paymentCanceling/period",
+      "parent": 35,
+      "group": "",
+      "doc": "Период пособия (блок не заполняется для пособия с кодом \"4\" - единовременное пособие при рождении ребенка)",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        39,
+        40
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "paymentStatusNotice/paymentCanceling/period/begin",
+      "parent": 38,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "paymentStatusNotice/paymentCanceling/period/end",
+      "parent": 38,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "addInformation",
+      "path": "paymentStatusNotice/paymentCanceling/addInformation",
+      "parent": 35,
+      "group": "",
+      "doc": "Дополнительная информация",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "250"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "paymentState",
+      "path": "paymentStatusNotice/paymentCanceling/paymentState",
+      "parent": 35,
+      "group": "",
+      "doc": "Статус платежа (оплата не прошла)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "64"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "*",
+      "path": "paymentStatusNotice/paymentCanceling/*",
+      "parent": 35,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "noticeSend",
+      "path": "paymentStatusNotice/noticeSend",
+      "parent": 0,
+      "group": "Выбор 1, вариант 5",
+      "doc": "Уведомление о направлении извещения работодателю",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "NoticeSendType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        45,
+        46,
+        47,
+        50
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "docType",
+      "path": "paymentStatusNotice/noticeSend/docType",
+      "parent": 44,
+      "group": "",
+      "doc": "Тип пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DocTypeType",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Пособие по временной нетрудоспособности"
+        ],
+        [
+          "2",
+          "Пособие по беременности и родам"
+        ],
+        [
+          "4",
+          "Единовременное пособие при рождении ребенка"
+        ],
+        [
+          "5",
+          "Ежемесячное пособие по уходу за ребенком до 1.5 лет"
+        ],
+        [
+          "6",
+          "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "PaymentStatusNotice.xsd"
+    },
+    {
+      "name": "infoRecalcFlag",
+      "path": "paymentStatusNotice/noticeSend/infoRecalcFlag",
+      "parent": 44,
+      "group": "",
+      "doc": "Признак перерасчета (true - перерасчет, false - первичный документ)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "period",
+      "path": "paymentStatusNotice/noticeSend/period",
+      "parent": 44,
+      "group": "",
+      "doc": "Период пособия (блок не заполняется для пособия с кодом \"4\" - единовременное пособие при рождении ребенка)",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        48,
+        49
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "begin",
+      "path": "paymentStatusNotice/noticeSend/period/begin",
+      "parent": 47,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "end",
+      "path": "paymentStatusNotice/noticeSend/period/end",
+      "parent": 47,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "addInformation",
+      "path": "paymentStatusNotice/noticeSend/addInformation",
+      "parent": 44,
+      "group": "",
+      "doc": "Дополнительная информация",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "250"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "*",
+      "path": "paymentStatusNotice/*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "@specVersion",
+      "path": "paymentStatusNotice/@specVersion",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер версии спецификации для xml документа",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:specVersionType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@messageDateTime",
+      "path": "paymentStatusNotice/@messageDateTime",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата и время формирования сообщения на стороне СФР",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "xs:dateTime",
+      "base": "xs:dateTime",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@*",
+      "path": "paymentStatusNotice/@*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический атрибут, позволяющий расширять XML документ",
+      "kind": "anyAttribute",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
+      "file": "PaymentStatusNotice.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    }
+  ]
+}

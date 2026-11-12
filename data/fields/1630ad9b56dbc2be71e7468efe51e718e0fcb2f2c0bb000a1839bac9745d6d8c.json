@@ -1,0 +1,586 @@
+{
+  "revision_id": "1630ad9b56dbc2be71e7468efe51e718e0fcb2f2c0bb000a1839bac9745d6d8c",
+  "fields": [
+    {
+      "name": "paymentStatusResponse",
+      "path": "paymentStatusResponse",
+      "parent": -1,
+      "group": "",
+      "doc": "Результат обработки запроса статуса выплаты пособия по ВНиМ. Тип сообщения СЭДО №8510",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        12,
+        19,
+        20,
+        21,
+        22
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {}
+    },
+    {
+      "name": "paymentStatusList",
+      "path": "paymentStatusResponse/paymentStatusList",
+      "parent": 0,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Список сведений о выплатах (если запрос статуса выплаты выполняется по реестру, то блок может содержать несколько записей, иначе, если запрос статуса выплаты выполняется по записи реестра, то блок будет содержать одну запись)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {}
+    },
+    {
+      "name": "paymentStatusDetail",
+      "path": "paymentStatusResponse/paymentStatusList/paymentStatusDetail",
+      "parent": 1,
+      "group": "",
+      "doc": "Детализация сведений о выплате",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {}
+    },
+    {
+      "name": "batchNo",
+      "path": "paymentStatusResponse/paymentStatusList/paymentStatusDetail/batchNo",
+      "parent": 2,
+      "group": "",
+      "doc": "Номер записи реестра",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "50"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {}
+    },
+    {
+      "name": "processNum",
+      "path": "paymentStatusResponse/paymentStatusList/paymentStatusDetail/processNum",
+      "parent": 2,
+      "group": "",
+      "doc": "Номер проактивного процесса",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:proactiveProcessNumType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "25"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "lnNumber",
+      "path": "paymentStatusResponse/paymentStatusList/paymentStatusDetail/lnNumber",
+      "parent": 2,
+      "group": "",
+      "doc": "Номер ЛН",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:lnCode",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "12"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "paymentState",
+      "path": "paymentStatusResponse/paymentStatusList/paymentStatusDetail/paymentState",
+      "parent": 2,
+      "group": "",
+      "doc": "Статус выплаты документа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Получены сведения о необходимости осуществления выплаты"
+        ],
+        [
+          "2",
+          "Отправлен на оплату"
+        ],
+        [
+          "3",
+          "Выплачен"
+        ],
+        [
+          "4",
+          "Оплата не прошла"
+        ],
+        [
+          "5",
+          "Направлено извещение о предоставлении дополнительных сведений"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {}
+    },
+    {
+      "name": "paymentDate",
+      "path": "paymentStatusResponse/paymentStatusList/paymentStatusDetail/paymentDate",
+      "parent": 2,
+      "group": "",
+      "doc": "Дата выплаты",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {}
+    },
+    {
+      "name": "assignedSumm",
+      "path": "paymentStatusResponse/paymentStatusList/paymentStatusDetail/assignedSumm",
+      "parent": 2,
+      "group": "",
+      "doc": "Назначенная сумма",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:sumType",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{1,9}([\\.]\\d{1,2})?"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "dutySumm",
+      "path": "paymentStatusResponse/paymentStatusList/paymentStatusDetail/dutySumm",
+      "parent": 2,
+      "group": "",
+      "doc": "Удержанная сумма НДФЛ (из назначенной суммы). Поле заполняется для пособий по временной нетрудоспособности с кодами \"1\", \"6\"",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:sumType",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{1,9}([\\.]\\d{1,2})?"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "paymentStatusResponse/paymentStatusList/paymentStatusDetail/snils",
+      "parent": 2,
+      "group": "",
+      "doc": "СНИЛС застрахованного лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "*",
+      "path": "paymentStatusResponse/paymentStatusList/paymentStatusDetail/*",
+      "parent": 2,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "errorInfo",
+      "path": "paymentStatusResponse/errorInfo",
+      "parent": 0,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Информация об ошибках",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:errorInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        13,
+        18
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "errorList",
+      "path": "paymentStatusResponse/errorInfo/errorList",
+      "parent": 12,
+      "group": "",
+      "doc": "Список ошибок форматно-логических контролей",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        14
+      ],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "error",
+      "path": "paymentStatusResponse/errorInfo/errorList/error",
+      "parent": 13,
+      "group": "",
+      "doc": "Ошибка форматно-логического контроля",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "errorType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        15,
+        16,
+        17
+      ],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "code",
+      "path": "paymentStatusResponse/errorInfo/errorList/error/code",
+      "parent": 14,
+      "group": "",
+      "doc": "Код ошибки",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "message",
+      "path": "paymentStatusResponse/errorInfo/errorList/error/message",
+      "parent": 14,
+      "group": "",
+      "doc": "Сообщение ошибки",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "2000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "details",
+      "path": "paymentStatusResponse/errorInfo/errorList/error/details",
+      "parent": 14,
+      "group": "",
+      "doc": "Детализация ошибки",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "2000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "*",
+      "path": "paymentStatusResponse/errorInfo/*",
+      "parent": 12,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "@specVersion",
+      "path": "paymentStatusResponse/@specVersion",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер версии спецификации для xml документа",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:specVersionType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@responseOn",
+      "path": "paymentStatusResponse/@responseOn",
+      "parent": 0,
+      "group": "",
+      "doc": "Ссылка на транспортный идентификатор запроса (тип сообщения СЭДО №8410)",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:uuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@messageDateTime",
+      "path": "paymentStatusResponse/@messageDateTime",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата и время формирования ответного сообщения на стороне СФР",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "xs:dateTime",
+      "base": "xs:dateTime",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@*",
+      "path": "paymentStatusResponse/@*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический атрибут, позволяющий расширять XML документ",
+      "kind": "anyAttribute",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "file": "PaymentStatusResponse.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    }
+  ]
+}

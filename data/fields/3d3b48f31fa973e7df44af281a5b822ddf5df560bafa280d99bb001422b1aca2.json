@@ -1,0 +1,1141 @@
+{
+  "revision_id": "3d3b48f31fa973e7df44af281a5b822ddf5df560bafa280d99bb001422b1aca2",
+  "fields": [
+    {
+      "name": "disabilityChildrenStatementReject",
+      "path": "disabilityChildrenStatementReject",
+      "parent": -1,
+      "group": "",
+      "doc": "Решение об отказе в возмещении расходов на оплату дополнительных выходных дней для ухода за детьми инвалидами. Тип сообщения СЭДО №12210",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DisabilityChildrenRejectType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        4,
+        5,
+        8,
+        24,
+        29,
+        35,
+        39,
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "DisabilityChildrenStatementReject.xsd"
+    },
+    {
+      "name": "tof",
+      "path": "disabilityChildrenStatementReject/tof",
+      "parent": 0,
+      "group": "",
+      "doc": "Территориальное подразделение СФР РФ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:territorialDivision",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2,
+        3
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "code",
+      "path": "disabilityChildrenStatementReject/tof/code",
+      "parent": 1,
+      "group": "",
+      "doc": "Код",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "3"
+        ],
+        [
+          "maxLength",
+          "4"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "name",
+      "path": "disabilityChildrenStatementReject/tof/name",
+      "parent": 1,
+      "group": "",
+      "doc": "Наименование",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "300"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "batch_no",
+      "path": "disabilityChildrenStatementReject/batch_no",
+      "parent": 0,
+      "group": "",
+      "doc": "Идентификатор заявления",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "50"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insurerInfo",
+      "path": "disabilityChildrenStatementReject/insurerInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Сведения о страхователе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        6,
+        7
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "regNum",
+      "path": "disabilityChildrenStatementReject/insurerInfo/regNum",
+      "parent": 5,
+      "group": "",
+      "doc": "Регистрационный номер по ОСС",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "org:regNumOSS",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "10"
+        ],
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "regNumSFR",
+      "path": "disabilityChildrenStatementReject/insurerInfo/regNumSFR",
+      "parent": 5,
+      "group": "",
+      "doc": "Регистрационный номер страхователя СФР",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNumSFR",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "10"
+        ],
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "receiversRow",
+      "path": "disabilityChildrenStatementReject/receiversRow",
+      "parent": 0,
+      "group": "",
+      "doc": "Перечень получателей, в части сведений которых были обнаружены ошибки",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        9,
+        16,
+        19,
+        23
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "parentInfo",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo",
+      "parent": 8,
+      "group": "",
+      "doc": "Сведения о родителе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "dis:parentInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        10,
+        14,
+        15
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "DisabilityChildrenStatement.xsd"
+    },
+    {
+      "name": "fullName",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/fullName",
+      "parent": 9,
+      "group": "",
+      "doc": "ФИО",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:fullName",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        11,
+        12,
+        13
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
+      "file": "DisabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/fullName/firstName",
+      "parent": 10,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/fullName/lastName",
+      "parent": 10,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/fullName/middleName",
+      "parent": 10,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/snils",
+      "parent": 9,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
+      "file": "DisabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "childRelType",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/childRelType",
+      "parent": 9,
+      "group": "",
+      "doc": "Статус лица: мать, отец, опекун, попечитель 1 - Мать 2 - Отец 3 - Опекун 4 - Попечитель",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Мать"
+        ],
+        [
+          "2",
+          "Отец"
+        ],
+        [
+          "3",
+          "Опекун"
+        ],
+        [
+          "4",
+          "Попечитель"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
+      "file": "DisabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "childInfo",
+      "path": "disabilityChildrenStatementReject/receiversRow/childInfo",
+      "parent": 8,
+      "group": "",
+      "doc": "Сведения о ребенке",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "childInfoTypeReject",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        17,
+        18
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "DisabilityChildrenStatementReject.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "disabilityChildrenStatementReject/receiversRow/childInfo/snils",
+      "parent": 16,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "disabilityChildrenStatementReject/receiversRow/childInfo/birthDate",
+      "parent": 16,
+      "group": "",
+      "doc": "Дата рождения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:birthDate",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "periods",
+      "path": "disabilityChildrenStatementReject/receiversRow/periods",
+      "parent": 8,
+      "group": "",
+      "doc": "Сведения о предоставленных выходных днях и количестве рабочих часов которые приходилилсь на доп.выходные",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        20,
+        21,
+        22
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "daysAmount",
+      "path": "disabilityChildrenStatementReject/receiversRow/periods/daysAmount",
+      "parent": 19,
+      "group": "",
+      "doc": "Количество предоставленных дополнительных выходных дней",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [
+        [
+          "minInclusive",
+          "1"
+        ],
+        [
+          "maxInclusive",
+          "4"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "TotalHour",
+      "path": "disabilityChildrenStatementReject/receiversRow/periods/TotalHour",
+      "parent": 19,
+      "group": "",
+      "doc": "Суммарное количество рабочих часов, которые приходились на предоставленные дополнительные выходные дни",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:decimal_3_2",
+      "base": "xs:decimal",
+      "facets": [
+        [
+          "fractionDigits",
+          "2"
+        ],
+        [
+          "totalDigits",
+          "5"
+        ],
+        [
+          "pattern",
+          "\\d{1,3}([\\.]\\d{1,2})?"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "*",
+      "path": "disabilityChildrenStatementReject/receiversRow/periods/*",
+      "parent": 19,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "*",
+      "path": "disabilityChildrenStatementReject/receiversRow/*",
+      "parent": 8,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "rejectionInfo",
+      "path": "disabilityChildrenStatementReject/rejectionInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Общие сведения об отказе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        25,
+        26,
+        27,
+        28
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "number",
+      "path": "disabilityChildrenStatementReject/rejectionInfo/number",
+      "parent": 24,
+      "group": "",
+      "doc": "Номер решения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "date",
+      "path": "disabilityChildrenStatementReject/rejectionInfo/date",
+      "parent": 24,
+      "group": "",
+      "doc": "Дата решения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "reason",
+      "path": "disabilityChildrenStatementReject/rejectionInfo/reason",
+      "parent": 24,
+      "group": "",
+      "doc": "Общая причина отказа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "4000"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "*",
+      "path": "disabilityChildrenStatementReject/rejectionInfo/*",
+      "parent": 24,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "attachment",
+      "path": "disabilityChildrenStatementReject/attachment",
+      "parent": 0,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "AttachmentType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {},
+      "typeFile": "Attachment.xsd"
+    },
+    {
+      "name": "content",
+      "path": "disabilityChildrenStatementReject/attachment/content",
+      "parent": 29,
+      "group": "",
+      "doc": "Содержимое файла",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:base64Binary",
+      "base": "xs:base64Binary",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {}
+    },
+    {
+      "name": "ext",
+      "path": "disabilityChildrenStatementReject/attachment/ext",
+      "parent": 29,
+      "group": "",
+      "doc": "Расширение файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {}
+    },
+    {
+      "name": "mimeType",
+      "path": "disabilityChildrenStatementReject/attachment/mimeType",
+      "parent": 29,
+      "group": "",
+      "doc": "Mime-тип файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {}
+    },
+    {
+      "name": "size",
+      "path": "disabilityChildrenStatementReject/attachment/size",
+      "parent": 29,
+      "group": "",
+      "doc": "Размер файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:integer",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {}
+    },
+    {
+      "name": "name",
+      "path": "disabilityChildrenStatementReject/attachment/name",
+      "parent": 29,
+      "group": "",
+      "doc": "Название файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {}
+    },
+    {
+      "name": "senderInfo",
+      "path": "disabilityChildrenStatementReject/senderInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные лица, направившего отказ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        36,
+        37,
+        38
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "fullName",
+      "path": "disabilityChildrenStatementReject/senderInfo/fullName",
+      "parent": 35,
+      "group": "",
+      "doc": "ФИО работника СФР, направившего отказ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:fullNameSimple",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "255"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "role",
+      "path": "disabilityChildrenStatementReject/senderInfo/role",
+      "parent": 35,
+      "group": "",
+      "doc": "Должность",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:roleType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "800"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "phone",
+      "path": "disabilityChildrenStatementReject/senderInfo/phone",
+      "parent": 35,
+      "group": "",
+      "doc": "Контактный номер телефона",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:phoneNumberType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "5"
+        ],
+        [
+          "maxLength",
+          "30"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "signatoryInfo",
+      "path": "disabilityChildrenStatementReject/signatoryInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные лица, подписавшего отказ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        40,
+        41
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "fullName",
+      "path": "disabilityChildrenStatementReject/signatoryInfo/fullName",
+      "parent": 39,
+      "group": "",
+      "doc": "ФИО работника СФР, подписавшего отказ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:fullNameSimple",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "255"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "role",
+      "path": "disabilityChildrenStatementReject/signatoryInfo/role",
+      "parent": 39,
+      "group": "",
+      "doc": "Должность",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:roleType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "800"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "*",
+      "path": "disabilityChildrenStatementReject/*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    },
+    {
+      "name": "@specVersion",
+      "path": "disabilityChildrenStatementReject/@specVersion",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер версии спецификации для xml документа",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:specVersionType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@responseOn",
+      "path": "disabilityChildrenStatementReject/@responseOn",
+      "parent": 0,
+      "group": "",
+      "doc": "Ссылка на транспортный идентификатор запроса СЭДО (тип сообщения СЭДО №12010 или идентификатор заявления из клиентского обслуживания СФР",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@messageDateTime",
+      "path": "disabilityChildrenStatementReject/@messageDateTime",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата и время формирования сообщения на стороне СФР",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "xs:dateTime",
+      "base": "xs:dateTime",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@*",
+      "path": "disabilityChildrenStatementReject/@*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический атрибут, позволяющий расширять XML документ",
+      "kind": "anyAttribute",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "file": "DisabilityChildrenStatementReject.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    }
+  ]
+}

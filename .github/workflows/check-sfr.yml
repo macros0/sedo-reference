@@ -1,0 +1,49 @@
+name: Check SFR catalogs
+on: workflow_dispatch
+permissions:
+  contents: read
+concurrency:
+  group: sfr-catalog-check
+  cancel-in-progress: false
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Collect both catalogs and compile trees
+        run: python update_catalog.py
+      - name: Prepare candidate and history for review
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, pathlib, shutil
+          root = pathlib.Path("candidate")
+          root.mkdir(exist_ok=True)
+          for p in ("data","state/snapshots","state/history.json","state/current.json","state/last-run.json"):
+              src = pathlib.Path(p)
+              if src.exists():
+                  dst = root / p
+                  dst.parent.mkdir(parents=True, exist_ok=True)
+                  if src.is_dir(): shutil.copytree(src, dst, dirs_exist_ok=True)
+                  else: shutil.copy2(src, dst)
+          for p in pathlib.Path("state/snapshots").glob("*.json"):
+              for r in json.loads(p.read_bytes())["entries"]:
+                  if r["kind"]=="zip" and r.get("sha256"):
+                      src = pathlib.Path("state/objects") / r["sha256"]
+                      if src.is_file():
+                          dst = root / src
+                          dst.parent.mkdir(parents=True,exist_ok=True)
+                          shutil.copy2(src,dst)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: catalog-candidate
+          path: candidate/
+          retention-days: 14
+

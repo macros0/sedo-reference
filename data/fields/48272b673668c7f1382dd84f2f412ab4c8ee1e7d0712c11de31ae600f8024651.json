@@ -1,0 +1,1037 @@
+{
+  "revision_id": "48272b673668c7f1382dd84f2f412ab4c8ee1e7d0712c11de31ae600f8024651",
+  "fields": [
+    {
+      "name": "refundUnemplRefuse",
+      "path": "refundUnemplRefuse",
+      "parent": -1,
+      "group": "",
+      "doc": "Заявление об отказе от субсидии, предоставляемой для стимулирования найма безработных граждан. Тип сообщения СЭДО №8210",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "SttmntRefuseRefundUnemplType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        35,
+        36,
+        37,
+        38
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:v3.0",
+      "file": "RefundUnemplRefuse.xsd",
+      "flags": {},
+      "typeFile": "RefundUnemplRefuse.xsd"
+    },
+    {
+      "name": "orgInfo",
+      "path": "refundUnemplRefuse/orgInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные работодателя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "sttmnt:OrgInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2,
+        22
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:v3.0",
+      "file": "RefundUnemplRefuse.xsd",
+      "flags": {},
+      "typeFile": "RefundUnemplStatement.xsd"
+    },
+    {
+      "name": "legalEntity",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity",
+      "parent": 1,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Юр. лицо",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "LegalEntityType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        13
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "RefundUnemplStatement.xsd"
+    },
+    {
+      "name": "inn",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/inn",
+      "parent": 2,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "kpp",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/kpp",
+      "parent": 2,
+      "group": "",
+      "doc": "КПП",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:kpp",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{9}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "ogrn",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/ogrn",
+      "parent": 2,
+      "group": "",
+      "doc": "ОГРН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:ogrn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "13"
+        ],
+        [
+          "pattern",
+          "([0-9])*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "regNum",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/regNum",
+      "parent": 2,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Рег. номер страхователя по ОСС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNumOSS",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "10"
+        ],
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "regNumSFR",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/regNumSFR",
+      "parent": 2,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Единый рег. номер страхователя СФР. ~ В переходном периоде на регистрационные номера СФР будет приниматься 1 из полей: regNum/regNumSFR (если страхователь не перешел на новую схему взаимодействия, то будет направлять regNum, а после перехода на новую схему должен направлять regNumSFR)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNumSFR",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "10"
+        ],
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "publicOrganizationDisability",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/publicOrganizationDisability",
+      "parent": 2,
+      "group": "choice [0..1] / Выбор 2, вариант 1",
+      "doc": "Учредитель Общество инвалидов",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        9,
+        10,
+        11,
+        12
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "name",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/publicOrganizationDisability/name",
+      "parent": 8,
+      "group": "",
+      "doc": "Наименование общероссийской общественной организации инвалидов",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "200"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "inn",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/publicOrganizationDisability/inn",
+      "parent": 8,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "kpp",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/publicOrganizationDisability/kpp",
+      "parent": 8,
+      "group": "",
+      "doc": "КПП",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:kpp",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{9}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "ogrn",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/publicOrganizationDisability/ogrn",
+      "parent": 8,
+      "group": "",
+      "doc": "ОГРН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:ogrn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "13"
+        ],
+        [
+          "pattern",
+          "([0-9])*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "founderFizlicoDocument",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/founderFizlicoDocument",
+      "parent": 2,
+      "group": "choice [0..1] / Выбор 2, вариант 2",
+      "doc": "Учредитель физ. лицо",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "snils",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/founderFizlicoDocument/snils",
+      "parent": 13,
+      "group": "",
+      "doc": "СНИЛС предпринимателя/директора",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/founderFizlicoDocument/lastName",
+      "parent": 13,
+      "group": "",
+      "doc": "Фамилия учредителя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/founderFizlicoDocument/firstName",
+      "parent": 13,
+      "group": "",
+      "doc": "Имя учредителя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/founderFizlicoDocument/middleName",
+      "parent": 13,
+      "group": "",
+      "doc": "Отчетство учредителя",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "seria",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/founderFizlicoDocument/seria",
+      "parent": 13,
+      "group": "",
+      "doc": "Серия справки",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "number",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/founderFizlicoDocument/number",
+      "parent": 13,
+      "group": "",
+      "doc": "Номер справки",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "certificateDate",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/founderFizlicoDocument/certificateDate",
+      "parent": 13,
+      "group": "",
+      "doc": "Дата справки",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "soglasie",
+      "path": "refundUnemplRefuse/orgInfo/legalEntity/founderFizlicoDocument/soglasie",
+      "parent": 13,
+      "group": "",
+      "doc": "Согласие на обработку персональных данных",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "ip",
+      "path": "refundUnemplRefuse/orgInfo/ip",
+      "parent": 1,
+      "group": "Выбор 1, вариант 2",
+      "doc": "ИП",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "IndividualProprietorType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "RefundUnemplStatement.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "refundUnemplRefuse/orgInfo/ip/lastName",
+      "parent": 22,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "refundUnemplRefuse/orgInfo/ip/firstName",
+      "parent": 22,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "refundUnemplRefuse/orgInfo/ip/middleName",
+      "parent": 22,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "inn",
+      "path": "refundUnemplRefuse/orgInfo/ip/inn",
+      "parent": 22,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "12"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "ogrn",
+      "path": "refundUnemplRefuse/orgInfo/ip/ogrn",
+      "parent": 22,
+      "group": "",
+      "doc": "ОГРН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:ogrnip",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "15"
+        ],
+        [
+          "pattern",
+          "([0-9])*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "regNum",
+      "path": "refundUnemplRefuse/orgInfo/ip/regNum",
+      "parent": 22,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Рег. номер страхователя по ОСС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNumOSS",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "10"
+        ],
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "regNumSFR",
+      "path": "refundUnemplRefuse/orgInfo/ip/regNumSFR",
+      "parent": 22,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Единый рег. номер страхователя СФР. ~ В переходном периоде будет приниматься 1 из полей: regNum/regNumSFR (если страхователь не перешел на новую схему взаимодействия, то будет направлять regNum, а после перехода на новую схему должен направлять regNumSFR)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNumSFR",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "10"
+        ],
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "founderDisabilityDocument",
+      "path": "refundUnemplRefuse/orgInfo/ip/founderDisabilityDocument",
+      "parent": 22,
+      "group": "",
+      "doc": "Сведения об инвалидности ИП. Заполняется для 6МРОТ",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        31,
+        32,
+        33,
+        34
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "snils",
+      "path": "refundUnemplRefuse/orgInfo/ip/founderDisabilityDocument/snils",
+      "parent": 30,
+      "group": "",
+      "doc": "СНИЛС предпринимателя/директора",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "seria",
+      "path": "refundUnemplRefuse/orgInfo/ip/founderDisabilityDocument/seria",
+      "parent": 30,
+      "group": "",
+      "doc": "Серия справки",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "number",
+      "path": "refundUnemplRefuse/orgInfo/ip/founderDisabilityDocument/number",
+      "parent": 30,
+      "group": "",
+      "doc": "Номер справки",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "certificateDate",
+      "path": "refundUnemplRefuse/orgInfo/ip/founderDisabilityDocument/certificateDate",
+      "parent": 30,
+      "group": "",
+      "doc": "Дата справки",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
+      "file": "RefundUnemplStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@specVersion",
+      "path": "refundUnemplRefuse/@specVersion",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер версии спецификации для xml документа",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:specVersionType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "RefundUnemplRefuse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@author",
+      "path": "refundUnemplRefuse/@author",
+      "parent": 0,
+      "group": "",
+      "doc": "ФИО лица, предоставляющего сведения",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "com:authorType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "255"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "RefundUnemplRefuse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@phone",
+      "path": "refundUnemplRefuse/@phone",
+      "parent": 0,
+      "group": "",
+      "doc": "Контактный номер телефона (с указанием кода) страхователя (уполномоченного представителя)",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "com:phoneNumberType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "5"
+        ],
+        [
+          "maxLength",
+          "30"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "RefundUnemplRefuse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@email",
+      "path": "refundUnemplRefuse/@email",
+      "parent": 0,
+      "group": "",
+      "doc": "Адрес электронной почты страхователя (уполномоченного представителя)",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "com:emailAddress",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "4"
+        ],
+        [
+          "maxLength",
+          "100"
+        ],
+        [
+          "pattern",
+          "[^@]+@[^\\.]+\\..+"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "RefundUnemplRefuse.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    }
+  ]
+}

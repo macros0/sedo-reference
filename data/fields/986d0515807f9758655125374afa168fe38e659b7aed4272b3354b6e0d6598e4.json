@@ -1,0 +1,430 @@
+{
+  "revision_id": "986d0515807f9758655125374afa168fe38e659b7aed4272b3354b6e0d6598e4",
+  "fields": [
+    {
+      "name": "eventLifeResult",
+      "path": "eventLifeResult",
+      "parent": -1,
+      "group": "",
+      "doc": "Результат обработки информирования о жизненном событии. Тип сообщения СЭДО №11210",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2,
+        3,
+        8,
+        13,
+        14,
+        15,
+        16
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
+      "file": "EventLifeResult.xsd",
+      "flags": {}
+    },
+    {
+      "name": "status",
+      "path": "eventLifeResult/status",
+      "parent": 0,
+      "group": "",
+      "doc": "Статус обработки сообщения №10910",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "responseStatus",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "RECEIVED",
+          "Сообщение получено СФР, принято к обработке. Осуществляется проверка данных. Результат будет направлен дополнительно"
+        ],
+        [
+          "ERROR",
+          "В процессе обработки сообщения были обнаружены ошибки форматно-логических контролей, блокирующие прием сообщения"
+        ],
+        [
+          "PROCESSED",
+          "Сообщение успешно обработано"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
+      "file": "EventLifeResult.xsd",
+      "flags": {},
+      "typeFile": "EventLifeResult.xsd"
+    },
+    {
+      "name": "proactiveProcessNum",
+      "path": "eventLifeResult/proactiveProcessNum",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер сформированного проактивного процесса",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:proactiveProcessNumType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "25"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
+      "file": "EventLifeResult.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "errorList",
+      "path": "eventLifeResult/errorList",
+      "parent": 0,
+      "group": "",
+      "doc": "Информация об ошибках. Блок заполняется при статусе обработки \"ERROR\"",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        4
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
+      "file": "EventLifeResult.xsd",
+      "flags": {}
+    },
+    {
+      "name": "error",
+      "path": "eventLifeResult/errorList/error",
+      "parent": 3,
+      "group": "",
+      "doc": "Ошибка форматно-логического контроля",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "com:errorType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        5,
+        6,
+        7
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
+      "file": "EventLifeResult.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "code",
+      "path": "eventLifeResult/errorList/error/code",
+      "parent": 4,
+      "group": "",
+      "doc": "Код ошибки",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "message",
+      "path": "eventLifeResult/errorList/error/message",
+      "parent": 4,
+      "group": "",
+      "doc": "Сообщение ошибки",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "2000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "details",
+      "path": "eventLifeResult/errorList/error/details",
+      "parent": 4,
+      "group": "",
+      "doc": "Детализация ошибки",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "2000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "warnList",
+      "path": "eventLifeResult/warnList",
+      "parent": 0,
+      "group": "",
+      "doc": "Информация о предупреждениях форматно-логических контролей",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        9
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
+      "file": "EventLifeResult.xsd",
+      "flags": {}
+    },
+    {
+      "name": "warn",
+      "path": "eventLifeResult/warnList/warn",
+      "parent": 8,
+      "group": "",
+      "doc": "Предупреждение форматно-логического контроля",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "com:warnType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        10,
+        11,
+        12
+      ],
+      "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
+      "file": "EventLifeResult.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "code",
+      "path": "eventLifeResult/warnList/warn/code",
+      "parent": 9,
+      "group": "",
+      "doc": "Код предупреждения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "message",
+      "path": "eventLifeResult/warnList/warn/message",
+      "parent": 9,
+      "group": "",
+      "doc": "Сообщение предупреждения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "2000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "details",
+      "path": "eventLifeResult/warnList/warn/details",
+      "parent": 9,
+      "group": "",
+      "doc": "Детализация предупреждения",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "2000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@specVersion",
+      "path": "eventLifeResult/@specVersion",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер версии спецификации для xml документа",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:specVersionType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "EventLifeResult.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@responseOn",
+      "path": "eventLifeResult/@responseOn",
+      "parent": 0,
+      "group": "",
+      "doc": "Ссылка на транспортный идентификатор запроса (тип сообщения СЭДО №10910)",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:uuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "EventLifeResult.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "@messageDateTime",
+      "path": "eventLifeResult/@messageDateTime",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата и время формирования ответного сообщения на стороне СФР",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "xs:dateTime",
+      "base": "xs:dateTime",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "EventLifeResult.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@*",
+      "path": "eventLifeResult/@*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический атрибут, позволяющий расширять XML документ",
+      "kind": "anyAttribute",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
+      "file": "EventLifeResult.xsd",
+      "flags": {
+        "processContents": "skip"
+      }
+    }
+  ]
+}

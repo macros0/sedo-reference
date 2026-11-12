@@ -1,0 +1,93 @@
+"use strict";
+const catalog=window.SEDO_CATALOG;
+const $=id=>document.getElementById(id);
+const envNames={prod:"Продуктивный",test:"Тестовый"};
+const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
+const normalize=s=>String(s||"").toLocaleLowerCase("ru").replaceAll("ё","е");
+const messages=new Map();
+for(const r of [...catalog.revisions,...catalog.registry]){
+ if(!messages.has(r.number))messages.set(r.number,{number:r.number,titles:new Set(),modules:new Set(),rows:[],revisions:[]});
+ const m=messages.get(r.number);m.titles.add(r.title);if(r.module)m.modules.add(r.module);
+ if(r.revision_id)m.revisions.push(r);else m.rows.push(r);
+}
+const route=(number,env,rev,field)=>new URLSearchParams(Object.fromEntries(Object.entries({message:number,env,rev,field}).filter(([,v])=>v))).toString();
+const go=(number,env,rev,field)=>{location.hash=route(number,env,rev,field)};
+function anchor(text,hash,cls){const a=node("a",cls,text);a.href="#"+hash;return a}
+function external(text,url){const a=node("a","source",text);a.href=url;a.target="_blank";a.rel="noopener";return a}
+function date(s){return s?s.replace(/\.(\d{2})$/,".20$1"):"Дата не указана"}
+function title(m,env){return m.revisions.find(r=>!env||r.environment===env)?.title||m.rows.find(r=>!env||r.environment===env)?.title||[...m.titles][0]}
+function label(r){return envNames[r.environment]+" · "+(r.document_version||"Версия не указана")+" · "+date(r.label_date)}
+function renderMessages(){
+ const terms=normalize($("message-query").value.trim()).split(/\s+/).filter(Boolean),env=$("catalog-env").value;
+ const matches=[...messages.values()].filter(m=>{
+  if(env&&![...m.rows,...m.revisions].some(r=>r.environment===env))return false;
+  const text=normalize([m.number,...m.titles,...m.modules,...m.rows.map(r=>r.description)].join(" "));
+  return terms.every(t=>text.includes(t));
+ }).sort((a,b)=>Number(b.number===$("message-query").value.trim())-Number(a.number===$("message-query").value.trim())||Number(a.number)-Number(b.number));
+ $("messages").replaceChildren();$("count").textContent="Найдено сообщений · "+matches.length;
+ for(const m of matches){
+  const a=anchor("",route(m.number,env),"card");a.dataset.number=m.number;
+  a.append(node("span","number",m.number),node("strong","",title(m,env)));
+  if(m.modules.size)a.append(node("span","meta",[...m.modules].join(" · ")));
+  const badges=node("div","badges");
+  for(const e of ["prod","test"])if([...m.rows,...m.revisions].some(r=>r.environment===e))badges.append(node("span","badge "+e,envNames[e]));
+  a.append(badges,node("span","meta",m.revisions.some(r=>r.ready)?"Дерево тегов · "+m.revisions.filter(r=>r.ready).length+" редакции":"Документация"));
+  $("messages").append(a)
+ }
+ if(!matches.length)$("messages").append(node("p","empty","Совпадений нет. Попробуйте часть номера или названия."));
+}
+function renderVersions(m,env){
+ const section=$("versions");section.replaceChildren(node("h1","","Сообщение "+m.number),node("p","",title(m,env)));
+ const grid=node("div","versions-grid");section.append(grid);
+ for(const e of ["prod","test"]){
+  const panel=node("div","version-panel");panel.append(node("h2","",envNames[e]+" контур"));grid.append(panel);
+  const revisions=m.revisions.filter(r=>r.environment===e).sort((a,b)=>date(b.label_date).split(".").reverse().join("").localeCompare(date(a.label_date).split(".").reverse().join("")));
+  if(revisions.length){
+   for(const r of revisions){
+    const card=node("div","card");card.append(node("strong","","Версия "+(r.document_version||"не указана")),node("p","",date(r.label_date)));
+    if(r.ready)card.append(anchor("Открыть дерево",route(m.number,e,r.revision_id),"open"));
+    else card.append(node("p","","Схема ожидает проверки"));
+    card.append(node("br"),external("Спецификация СФР ↗",r.document_url));
+    if(!r.listed_now)card.append(node("p","meta","Редакция сохранена в истории"));
+    panel.append(card)
+   }
+  }else{
+   const rows=m.rows.filter(r=>r.environment===e);
+   panel.append(node("p","",rows.length?"Доступно описание в перечне сообщений. Дерево схемы пока не сопоставлено.":"В собранных источниках этого контура сообщение не найдено."));
+   for(const r of rows){panel.append(node("p","meta",r.module),node("p","",r.description||r.title),external("Открыть официальный перечень ↗",r.source))}
+  }
+ }
+}
+let loadedRevision=null;
+function renderRoute(){
+ const p=new URLSearchParams(location.hash.slice(1)),number=p.get("message"),env=p.get("env"),rev=p.get("rev"),field=p.get("field");
+ for(const id of ["catalog","versions","viewer","error"])$(id).hidden=true;
+ $("crumbs").replaceChildren(anchor("Все сообщения",""));
+ if(!number){$("catalog").hidden=false;renderMessages();return}
+ const m=messages.get(number);
+ if(!m){$("error").hidden=false;$("error").replaceChildren(node("h1","","Сообщение не найдено"),node("p","","Выберите сообщение из каталога."));return}
+ $("crumbs").append(node("span","","/"),anchor(number,route(number,env)));
+ if(!rev){$("versions").hidden=false;renderVersions(m,env);return}
+ const r=m.revisions.find(r=>r.revision_id===rev&&r.environment===env);
+ if(!r||!r.ready){$("error").hidden=false;$("error").replaceChildren(node("h1","","Редакция недоступна"),anchor("Посмотреть доступные редакции",route(number,env)));return}
+ $("viewer").hidden=false;$("crumbs").append(node("span","","/"),node("span","",label(r)));
+ $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
+ $("doc-source").href=r.document_url;
+ const select=$("revision-switch");select.replaceChildren();
+ for(const x of m.revisions.filter(r=>r.ready))select.add(new Option(label(x),x.revision_id));
+ select.value=rev;select.onchange=()=>{const x=m.revisions.find(r=>r.revision_id===select.value);go(number,x.environment,x.revision_id)};
+ const src="editions/"+rev+".html"+(field?"#"+new URLSearchParams({field}):"");
+ if(loadedRevision!==rev||$("frame").getAttribute("src")!==src){$("frame").src=src;loadedRevision=rev}
+ document.title="СЭДО "+number+" · "+label(r);
+}
+window.addEventListener("message",e=>{
+ const p=new URLSearchParams(location.hash.slice(1));
+ if(e.source!==$("frame").contentWindow||e.data?.type!=="sedo-field"||e.data.revision!==p.get("rev")||typeof e.data.path!=="string")return;
+ p.set("field",e.data.path);history.replaceState(null,"","#"+p);
+ // Keep parent routing in sync without reloading the embedded field viewer.
+ $("frame").setAttribute("data-field",e.data.path);
+});
+$("message-query").oninput=renderMessages;$("catalog-env").onchange=renderMessages;
+window.addEventListener("hashchange",renderRoute);
+renderRoute();
+

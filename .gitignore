@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.partial
+*.tmp
+SEDO-source-snapshot.zip
+LOCAL.md
