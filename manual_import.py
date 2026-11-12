@@ -40,6 +40,21 @@ def inspect_upload(content, kind):
         raise ValueError("Не удалось прочитать " + kind.upper() + ": " + str(exc)) from exc
 
 
+def promote_import(root, directory):
+    """Promote a validated manual-import stage; caller must check its fingerprint."""
+    for folder in ("objects", "snapshots"):
+        for source in (directory / "state" / folder).iterdir():
+            target = root / "state" / folder / source.name
+            if not target.exists():
+                write(target, source.read_bytes())
+    shutil.copytree(directory / "data/fields", root / "data/fields", dirs_exist_ok=True)
+    shutil.copytree(directory / "site", root / "site", dirs_exist_ok=True)
+    for name in ("history.json", "observations.json", "inbox.json"):
+        source=directory / "state" / name
+        if source.exists():write(root / "state" / name, source.read_bytes())
+    write(root / "data/catalog.json", (directory / "data/catalog.json").read_bytes())
+
+
 class ImportPreview:
     def __init__(self, root):
         self.root = Path(root).resolve()
@@ -57,16 +72,7 @@ class ImportPreview:
             raise ValueError("Проект изменился. Повторите предпросмотр перед сохранением.")
         if not self.changed:
             return
-        for folder in ("objects", "snapshots"):
-            for source in (self.directory / "state" / folder).iterdir():
-                target = self.root / "state" / folder / source.name
-                if not target.exists():
-                    write(target, source.read_bytes())
-        shutil.copytree(self.directory / "data/fields", self.root / "data/fields", dirs_exist_ok=True)
-        shutil.copytree(self.directory / "site", self.root / "site", dirs_exist_ok=True)
-        for name in ("history.json", "observations.json"):
-            write(self.root / "state" / name, (self.directory / "state" / name).read_bytes())
-        write(self.root / "data/catalog.json", (self.directory / "data/catalog.json").read_bytes())
+        promote_import(self.root,self.directory)
         self.original_fingerprint = fingerprint(self.root)
 
 

@@ -1,0 +1,49 @@
+name: Validate incoming specifications
+on:
+  pull_request:
+    paths:
+      - 'incoming/**'
+      - 'import_inbox.py'
+      - 'manual_import.py'
+      - 'catalog.py'
+      - 'fields.py'
+      - 'schema.py'
+      - 'build_site.py'
+      - '.github/workflows/validate-incoming.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Preview incoming without saving or publishing
+        run: python import_inbox.py --check
+      - name: Write validation report
+        if: always()
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          report = Path("inbox-report.json")
+          if report.exists():
+              with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf8") as f:
+                  f.write("## Incoming validation\n\n~~~json\n" + report.read_text("utf8") + "\n~~~\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: incoming-validation-report
+          path: inbox-report.json
+          if-no-files-found: ignore
+          retention-days: 30

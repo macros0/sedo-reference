@@ -20,7 +20,8 @@ EDGE = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
 @unittest.skipUnless(EDGE.exists(), "Windows Edge is unavailable")
 class ManualBrowserTests(unittest.TestCase):
     def test_upload_preview_confirm_duplicate_and_restart(self):
-        with tempfile.TemporaryDirectory(prefix="sedo-ui-test-") as tmp:
+        # Edge/OneAuth may briefly retain profile files after headless exit on Windows.
+        with tempfile.TemporaryDirectory(prefix="sedo-ui-test-",ignore_cleanup_errors=True) as tmp:
             base = Path(tmp)
             root = base / "project"
             root.mkdir()

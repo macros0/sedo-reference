@@ -11,6 +11,13 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GIT_AUTHOR_NAME: github-actions[bot]
+      GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+      GIT_COMMITTER_NAME: github-actions[bot]
+      GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -19,15 +26,45 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Check catalog and build static reference
+      - name: Test reference and importer
         run: |
           python -m unittest discover -s tests -q
           node tests/test_compare.cjs
           node tests/test_update_summaries.cjs
           node tests/test_journal_dates.cjs
+      - name: Import incoming specifications
+        run: python import_inbox.py
+      - name: Build the validated reference
+        run: |
           python verify.py
           python build_site.py
           touch site/.nojekyll
+      - name: Save validated imports
+        run: |
+          git add state data site
+          if ! git diff --cached --quiet; then
+            git commit -m "Import specifications from incoming"
+            git push origin HEAD:main
+          fi
+          # The token push does not start another workflow. Publish this checked artifact below.
+      - name: Write incoming report
+        if: always()
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          report = Path("inbox-report.json")
+          if report.exists():
+              with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf8") as f:
+                  f.write("## Incoming specifications\n\n~~~json\n" + report.read_text("utf8") + "\n~~~\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: incoming-import-report
+          path: inbox-report.json
+          if-no-files-found: ignore
+          retention-days: 30
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
