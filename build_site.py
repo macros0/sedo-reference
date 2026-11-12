@@ -11,7 +11,8 @@ def packed(value):
 def archive_documents(catalog, state, site):
     """Publish exact original bytes, once per document hash; never fetch from SFR."""
     checked = set()
-    for r in catalog["revisions"]:
+    documents = [*catalog["revisions"], *(r for r in catalog.get("registry", []) if r.get("document_sha256"))]
+    for r in documents:
         digest = r["document_sha256"]
         if not re.fullmatch(r"[0-9a-f]{64}", digest):
             raise ValueError("Некорректная контрольная сумма DOCX")

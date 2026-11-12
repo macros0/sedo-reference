@@ -86,7 +86,15 @@ function renderVersions(m,env){
   }else{
    const rows=m.rows.filter(r=>r.environment===e);
    panel.append(node("p","",rows.length?"Доступно описание в перечне сообщений. Дерево схемы пока не сопоставлено.":"В собранных источниках этого контура сообщение не найдено."));
-   for(const r of rows){panel.append(node("p","meta",r.module),node("p","",r.description||r.title),external("Открыть официальный перечень ↗",r.source))}
+   for(const r of rows){
+    panel.append(node("p","meta",r.module),node("p","",r.description||r.title));
+    if(r.source_type==="module"){
+     panel.append(node("p","meta","Отдельная спецификация модуля · версия "+(r.document_version||"не указана")+" · "+date(r.label_date)));
+     if(!r.listed_now)panel.append(node("p","meta","Спецификация сохранена в истории"));
+     if(r.document_download)panel.append(documentDownload(r),document.createTextNode(" · "));
+    }
+    panel.append(external(r.source_type==="module"?"Спецификация модуля СФР ↗":"Открыть официальный перечень ↗",r.source));
+   }
   }
  }
 }

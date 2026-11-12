@@ -5508,6 +5508,104 @@
       "module": "Сообщения модуля «Проактивное назначение страхового обеспеченияи прямые выплаты»",
       "source": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.21 (22.06.2026).docx",
       "listed_now": true
+    },
+    {
+      "environment": "prod",
+      "number": "600",
+      "title": "Решение об установлении (отказе в установлении) скидки к страховому тарифу",
+      "description": "Тип описан в отдельной спецификации модуля.",
+      "appendix": "5",
+      "module": "РУСТ",
+      "source": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (09.06.2026).docx",
+      "source_type": "module",
+      "document_sha256": "d048abee7679f5deddd69b07478859bb6d3ab3cd5dfd5fae2cad94fc8952fef7",
+      "document_version": "5.5",
+      "label_date": "09.06.2026",
+      "listed_now": true
+    },
+    {
+      "environment": "prod",
+      "number": "601",
+      "title": "Решение об отмене установленной скидки к страховому тарифу на обязательное социальное страхование от несчастных случаев на производстве и профессиональных заболеваний",
+      "description": "Тип описан в отдельной спецификации модуля.",
+      "appendix": "5",
+      "module": "РУСТ",
+      "source": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (09.06.2026).docx",
+      "source_type": "module",
+      "document_sha256": "d048abee7679f5deddd69b07478859bb6d3ab3cd5dfd5fae2cad94fc8952fef7",
+      "document_version": "5.5",
+      "label_date": "09.06.2026",
+      "listed_now": true
+    },
+    {
+      "environment": "prod",
+      "number": "602",
+      "title": "Решение об установлении надбавки к страховому тарифу",
+      "description": "Тип описан в отдельной спецификации модуля.",
+      "appendix": "5",
+      "module": "РУСТ",
+      "source": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (09.06.2026).docx",
+      "source_type": "module",
+      "document_sha256": "d048abee7679f5deddd69b07478859bb6d3ab3cd5dfd5fae2cad94fc8952fef7",
+      "document_version": "5.5",
+      "label_date": "09.06.2026",
+      "listed_now": true
+    },
+    {
+      "environment": "prod",
+      "number": "611",
+      "title": "Решение о несоответствии сведений об ОВЭД страхователя по результатам камеральной проверки",
+      "description": "Тип описан в отдельной спецификации модуля.",
+      "appendix": "12",
+      "module": "Доходная часть",
+      "source": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2_7_Пр_12_Доходная часть (09.06.2026).docx",
+      "source_type": "module",
+      "document_sha256": "6e53dbd41f7241b0bb9011692f0cd6e8a71cb4a42df5e4dd5cc81d5ffae4da8d",
+      "document_version": "2.7",
+      "label_date": "09.06.2026",
+      "listed_now": true
+    },
+    {
+      "environment": "prod",
+      "number": "612",
+      "title": "Решение о несоответствии сведений об ОВЭД страхователя по результатам выездной проверки",
+      "description": "Тип описан в отдельной спецификации модуля.",
+      "appendix": "12",
+      "module": "Доходная часть",
+      "source": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2_7_Пр_12_Доходная часть (09.06.2026).docx",
+      "source_type": "module",
+      "document_sha256": "6e53dbd41f7241b0bb9011692f0cd6e8a71cb4a42df5e4dd5cc81d5ffae4da8d",
+      "document_version": "2.7",
+      "label_date": "09.06.2026",
+      "listed_now": true
+    },
+    {
+      "environment": "test",
+      "number": "611",
+      "title": "Решение о несоответствии сведений об ОВЭД страхователя по результатам камеральной проверки",
+      "description": "Тип описан в отдельной спецификации модуля.",
+      "appendix": "12",
+      "module": "Доходная часть",
+      "source": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2_22_Пр_12_Доходная часть (09.02.2026).docx",
+      "source_type": "module",
+      "document_sha256": "29eb6c023e82123d3670bc915c55081e12487b749cf57ccdebcc02959f44a435",
+      "document_version": "2.22",
+      "label_date": "09.02.2026",
+      "listed_now": true
+    },
+    {
+      "environment": "test",
+      "number": "612",
+      "title": "Решение о несоответствии сведений об ОВЭД страхователя по результатам выездной проверки",
+      "description": "Тип описан в отдельной спецификации модуля.",
+      "appendix": "12",
+      "module": "Доходная часть",
+      "source": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2_22_Пр_12_Доходная часть (09.02.2026).docx",
+      "source_type": "module",
+      "document_sha256": "29eb6c023e82123d3670bc915c55081e12487b749cf57ccdebcc02959f44a435",
+      "document_version": "2.22",
+      "label_date": "09.02.2026",
+      "listed_now": true
     }
   ],
   "review": [],
@@ -5905,5 +6003,5 @@
       "previous_revision_id": null
     }
   ],
-  "checked_at": "2026-11-12T13:46:52.565371+00:00"
+  "checked_at": "2026-11-12T20:47:25.126903+00:00"
 }

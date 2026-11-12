@@ -1,7 +1,7 @@
 {
-  "observed_at": "2026-11-12T13:46:52.565371+00:00",
-  "snapshot": "82f2029898f65c2b237cd7326de8b26220809bebbdc97b0746d8c04602cbdf5e",
-  "previous": "5f4fdb9effc70467ad7ecf0a4d4af65422495f3266c96fdc2aec7756f418918b",
+  "observed_at": "2026-11-12T20:47:25.126903+00:00",
+  "snapshot": "840c13cc06d385ea7eae6908a1671fbb56d7f683ba83427aed5488aab7f4b1ec",
+  "previous": "82f2029898f65c2b237cd7326de8b26220809bebbdc97b0746d8c04602cbdf5e",
   "files": 100,
   "errors": [],
   "diff": {
@@ -11,6 +11,90 @@
       [
         "prod",
         "https://lk.fss.ru//mchd.html"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.0_Пр_12_ЛС (23.06.2023).docx"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.1_Пр_14_ЭЛН (20.01.2025).docx"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.28_Пр_10_Проактив (05.11.2025).docx"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2_7_Пр_12_Доходная часть (09.06.2026).docx"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (09.06.2026).docx"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация_типов_документов_СЭДО_v1.12_Пр_15_РПУ (22.10.2024).docx"
+      ],
+      [
+        "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация_типов_документов_СЭДО_v1_3_Пр_16_ИИС_ЕЦП_25_08_2025.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_14_ЭЛН (31.10.2024).docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2_22_Пр_12_Доходная часть (09.02.2026).docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (20.08.2025).docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация_типов_документов_СЭДО_v1.12_Пр_15_РПУ (22.10.2024).docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация_типов_документов_СЭДО_v1_3_Пр_16_ИИС_ЕЦП_25_08_2025.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация_типов_документов_СЭДО_v2_49_Пр_10_Проактив_18_12_2025.docx"
       ]
     ]
   }

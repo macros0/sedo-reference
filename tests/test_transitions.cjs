@@ -10,7 +10,7 @@ assert.equal(find('109')[0].production_retired_at,'2026-09-19T10:00:00+03:00');
 assert.deepEqual(find('110').map(r=>r.current),['11000','11010'],'110 has two functional branches');
 assert.match(find('110')[0].scope,/ВНиМ/);
 assert.match(find('110')[1].scope,/Возмещение/);
-for(const n of ['10','84','85','104','106','110','120','121','122']){
+for(const n of ['10','78','79','82','83','84','85','104','106','110','120','121','122']){
  assert.ok(find(n).length,'documented counterpart for '+n);
  assert.ok(find(n).every(r=>!r.production_retired_at),'do not extend the September cutoff to '+n);
  assert.ok(find(n).every(r=>r.source_url.endsWith('.docx')),'link module documentation');
@@ -26,5 +26,5 @@ for(const pair of catalog.message_transitions.pairs){
  assert.notEqual(pair.previous,pair.current);
  for(const env of ['prod','test'])assert.ok(find(pair.previous,env).some(r=>r.current===pair.current),pair.previous+' -> '+pair.current+' in '+env);
 }
-assert.equal(catalog.message_transitions.pairs.length,20);
-console.log('ECP transitions verified: 20 mappings, split 110, scoped cutoff and sources, contour scope, missing targets, unchanged codes.');
+assert.equal(catalog.message_transitions.pairs.length,24);
+console.log('ECP transitions verified: 24 mappings, split 110, scoped cutoff and sources, contour scope, missing targets, unchanged codes.');

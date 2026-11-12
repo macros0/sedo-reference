@@ -97,6 +97,19 @@ def inspect_file(b,kind):
                 info.setdefault("version_tables",[]).append(table)
             if any(re.search(r"(код|номер|тип).*сообщени|тип документа",s,re.I) for s in table[0]) and len(table)>2 and len(table[0])>=2:
                 info.setdefault("registry_tables",[]).append(table)
+        # Only declarations in the document body count. Tables contain XML examples
+        # and TOC paragraphs can repeat headings without describing a message.
+        messages = {}
+        for paragraph in doc.findall(WORD+"body/"+WORD+"p"):
+            style = paragraph.find(WORD+"pPr/"+WORD+"pStyle")
+            if style is not None and re.search(r"toc|contents|оглав", style.get(WORD+"val", ""), re.I):
+                continue
+            declaration = re.fullmatch(r"Тип сообщения\s+(?:СЭДО\s*)?(?:№\s*)?(\d{1,5})\s*[:—–-]\s*(.+)", cell(paragraph), re.I)
+            if declaration:
+                number, title = declaration.groups()
+                messages.setdefault(number, dict(number=number, title=title.strip()))
+        if messages:
+            info["message_types"] = list(messages.values())
         return info
 
 def sync(base):

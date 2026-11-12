@@ -31,6 +31,26 @@ def derive(snapshot):
                 if len(cells)==1:group=cells[0]
                 elif len(cells)>=4 and cells[0].isdigit():
                     registry.append(dict(environment=r["environment"],number=cells[0],title=cells[1],description=cells[2],appendix=cells[3],module=group,source=r["url"]))
+    # Module declarations supplement, rather than overwrite, the general list.
+    known = {(r["environment"], r["number"]) for r in registry}
+    for r in rows:
+        if r["kind"] != "docx": continue
+        filename = unquote(r["url"].split("/")[-1])
+        module = re.search(r"Пр[ _]+(\d+)[ _]+(.+?)(?:\s*\(|\.docx$)", filename, re.I)
+        if not module: continue
+        appendix, name = module.groups()
+        version = re.search(r"[vв](\d+(?:[._]\d+)+)", r["label"], re.I)
+        date = re.search(r"(\d{2}\.\d{2}\.(?:\d{4}|\d{2}))(?!\d)", r["label"])
+        for declaration in r.get("message_types", []):
+            identity = (r["environment"], declaration["number"])
+            if identity in known: continue
+            registry.append(dict(environment=r["environment"], number=declaration["number"],
+                                 title=declaration["title"], description="Тип описан в отдельной спецификации модуля.",
+                                 appendix=str(int(appendix)), module=name.replace("_", " ").strip(), source=r["url"],
+                                 source_type="module", document_sha256=r["sha256"],
+                                 document_version=version[1].replace("_", ".") if version else None,
+                                 label_date=date[1] if date else None))
+            known.add(identity)
     for r in rows:
         fname=unquote(r["url"].split("/")[-1]);number=re.search(r"тип[ _]+сообщения[ _]+(\d+)",fname,re.I)
         if not number or r["kind"]!="docx":continue

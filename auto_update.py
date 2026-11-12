@@ -92,6 +92,7 @@ def run(root):
             # Keep originals for all historical editions as well as their XSD archives.
             objects = {r["archive_sha256"] for r in current["revisions"] if r.get("archive_sha256")}
             objects.update(r["document_sha256"] for r in current["revisions"])
+            objects.update(r["document_sha256"] for r in current["registry"] if r.get("document_sha256"))
             for name in ("current.json", "history.json", "last-run.json", "observations.json"):
                 shutil.copy2(stage / "state" / name, root / "state" / name)
             shutil.copytree(stage / "state/snapshots", root / "state/snapshots", dirs_exist_ok=True)
@@ -103,7 +104,10 @@ def run(root):
             old_ids = {r["revision_id"] for r in previous["revisions"]}
             added = [dict(number=r["number"], environment=r["environment"], version=r["document_version"], revision_id=r["revision_id"])
                      for r in current["revisions"] if r["revision_id"] not in old_ids]
+            known = {(r["environment"], r["number"]) for r in previous["registry"]+previous["revisions"]}
+            new_messages = sorted({(r["environment"], r["number"]) for r in current["registry"]+current["revisions"]}-known)
             result = dict(status="ok", checked_at=current["checked_at"], new_revisions=added,
+                          new_messages=[dict(environment=e, number=n) for e,n in new_messages],
                           total_revisions=len(current["revisions"]))
             write(report, encode(result))
             print(json.dumps(result, ensure_ascii=False))
