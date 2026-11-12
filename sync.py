@@ -7,6 +7,7 @@ import io
 import json
 import re
 import sys
+import ssl
 import time
 import zipfile
 from datetime import datetime, timezone
@@ -45,9 +46,14 @@ class Links(HTMLParser):
 def get(url):
     u=urlsplit(url)
     safe=urlunsplit((u.scheme,u.netloc,quote(unquote(u.path),safe="/"),u.query,""))
+    context = ssl.create_default_context()
+    if u.hostname in {urlsplit(site).hostname for site in SITES.values()}:
+        bundle = Path(__file__).resolve().parent / "certs" / (u.hostname + ".pem")
+        if bundle.exists():
+            context.load_verify_locations(cafile=str(bundle))
     for attempt in range(3):
         try:
-            with urlopen(Request(safe,headers={"User-Agent":"SEDO-reference/1.0"}),timeout=30) as r:
+            with urlopen(Request(safe,headers={"User-Agent":"SEDO-reference/1.0"}),timeout=30,context=context) as r:
                 b=r.read(MAX_BYTES+1)
                 if len(b)>MAX_BYTES: raise ValueError("file exceeds limit")
                 return b
