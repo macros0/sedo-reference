@@ -11,11 +11,12 @@ function renderUpdates(params){
  const entries=(catalog.updates||[]).map(event=>({event,r:revisions.get(event.revision_id)})).filter(x=>x.r).sort((a,b)=>(Date.parse(b.event.observed_at)||0)-(Date.parse(a.event.observed_at)||0)||Number(a.r.number)-Number(b.r.number)||a.r.environment.localeCompare(b.r.environment));
  const filters=node("div","searchbar journal-filters"),queryLabel=node("label","","Номер, название или версия"),query=node("input");query.type="search";query.id="updates-query";query.placeholder="Например, 10110 или 3.0.4";query.value=params.has("q")?params.get("q"):params.get("message")||"";queryLabel.append(query);
  const envLabel=node("label","","Контур"),env=node("select");env.id="updates-env";for(const [value,text] of [["","Все контуры"],["prod","Продуктивный"],["test","Тестовый"]])env.add(new Option(text,value));env.value=params.get("env")||"";envLabel.append(env);filters.append(queryLabel,envLabel);section.append(filters);
+ const changesLabel=node("label","journal-toggle"),onlyChanges=node("input");onlyChanges.type="checkbox";onlyChanges.id="updates-only-changes";onlyChanges.checked=params.get("changed")==="1";changesLabel.append(onlyChanges,document.createTextNode("Только с изменениями"));section.append(changesLabel);
  const count=node("p","meta");count.id="updates-count";count.setAttribute("role","status");const list=node("div","journal-list");section.append(count,list);
  function draw(){
   const terms=normalize(query.value).split(/\s+/).filter(Boolean);
   const exactNumber=/^\d+$/.test(query.value.trim())&&messages.has(query.value.trim())?query.value.trim():null;
-  const visible=entries.filter(({event,r})=>(!exactNumber||r.number===exactNumber)&&(!env.value||r.environment===env.value)&&terms.every(t=>normalize([r.number,r.title,r.document_version,r.label_date,envNames[r.environment],observationDate(event.observed_at)].join(" ")).includes(t)));
+  const visible=entries.filter(({event,r})=>(!onlyChanges.checked||(event.comparison?.status==="ready"&&["added","removed","changed"].some(key=>event.comparison.counts[key]>0)))&&(!exactNumber||r.number===exactNumber)&&(!env.value||r.environment===env.value)&&terms.every(t=>normalize([r.number,r.title,r.document_version,r.label_date,envNames[r.environment],observationDate(event.observed_at)].join(" ")).includes(t)));
   count.textContent="Редакций в журнале · "+visible.length;list.replaceChildren();let day=null;
   for(const {event,r} of visible){
    const nextDay=observationDate(event.observed_at,true);
@@ -37,8 +38,8 @@ function renderUpdates(params){
    if(summary?.status==="ready")links.append(anchor("Открыть сравнение",comparisonRoute(r.number,summary.left,summary.right)));
    card.append(links);list.append(card);
   }
-  if(!visible.length)list.append(node("p","empty",entries.length?"Совпадений нет. Измените поиск или контур.":"Сохранённых событий пока нет."));
+  if(!visible.length)list.append(node("p","empty",entries.length?(onlyChanges.checked?"Нет записей с изменениями. Измените поиск, контур или отключите фильтр.":"Совпадений нет. Измените поиск или контур."):"Сохранённых событий пока нет."));
  }
- function change(){history.replaceState(null,"","#"+new URLSearchParams({updates:"1",q:query.value,env:env.value}));draw()}
- query.oninput=change;env.onchange=change;draw();
+ function change(){history.replaceState(null,"","#"+new URLSearchParams({updates:"1",q:query.value,env:env.value,...(onlyChanges.checked?{changed:"1"}:{})}));draw()}
+ query.oninput=change;env.onchange=change;onlyChanges.onchange=change;draw();
 }
