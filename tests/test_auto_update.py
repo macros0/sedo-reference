@@ -10,6 +10,7 @@ from unittest.mock import patch
 
 from auto_update import run
 from sync import encode, inspect_file, sha, write
+from verify import verify
 
 PROJECT = Path(__file__).resolve().parents[1]
 
@@ -68,7 +69,17 @@ class UpdateAcceptanceTests(unittest.TestCase):
         archive.update(sha256=sha(content), bytes=len(content), **inspect_file(content, "zip"))
         write(source.parent / archive["sha256"], content)
         doc = next(r for r in snapshot["entries"] if r["environment"] == "prod" and "сообщения_10110_" in r["url"])
-        doc["sha256"] = sha(b"new-document-fixture")
+        # Same URL, replaced original: the old bytes must remain downloadable.
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(self.root / "state/objects" / doc["sha256"]) as old, zipfile.ZipFile(buffer, "w") as new:
+            for item in old.infolist():
+                content = old.read(item.filename)
+                if item.filename == "word/document.xml":
+                    content += b"\n<!-- new-document-fixture -->"
+                new.writestr(item, content)
+        content = buffer.getvalue()
+        doc["sha256"] = sha(content)
+        write(self.root / "state/objects" / doc["sha256"], content)
         doc["label"] = "Тип_сообщения_10110 v3.1 (01.12.2026)"
         current = self.execute(snapshot)
         ids = {r["revision_id"] for r in current["revisions"]}
@@ -76,8 +87,14 @@ class UpdateAcceptanceTests(unittest.TestCase):
         older = next(r for r in current["revisions"] if r["number"] == "10110" and r["environment"] == "prod" and r["revision_id"] in self.original_ids)
         self.assertFalse(older["listed_now"])
         self.assertTrue((self.root / "site/editions" / (older["revision_id"] + ".html")).exists())
+        self.assertEqual((self.root / "site/documents" / (older["document_sha256"] + ".docx")).read_bytes(),
+                         (PROJECT / "state/objects" / older["document_sha256"]).read_bytes())
         newest = next(r for r in current["revisions"] if r["number"] == "10110" and r["environment"] == "prod" and r["listed_now"])
         self.assertEqual(newest["document_version"], "3.1")
+        self.assertEqual((self.root / "state/objects" / newest["document_sha256"]).read_bytes(), content)
+        self.assertEqual((self.root / "site/documents" / (newest["document_sha256"] + ".docx")).read_bytes(), content)
+        # The Pages acceptance check must also accept more than one prod edition.
+        verify(self.root / "state", self.root / "data")
         # A second run of the same new sources keeps exactly the same edition set.
         repeat = self.execute(snapshot)
         self.assertEqual(ids, {r["revision_id"] for r in repeat["revisions"]})
@@ -88,6 +105,10 @@ class UpdateAcceptanceTests(unittest.TestCase):
         current = self.execute(snapshot)
         self.assertEqual(self.original_ids, {r["revision_id"] for r in current["revisions"]})
         self.assertFalse(next(r for r in current["revisions"] if r["number"] == "10110" and r["environment"] == "prod")["listed_now"])
+        published = json.loads((self.root / "site/catalog-data.js").read_text("utf8").removeprefix("window.SEDO_CATALOG=").removesuffix(";"))
+        older = next(r for r in published["revisions"] if r["number"] == "10110" and r["environment"] == "prod")
+        self.assertEqual((self.root / "site" / older["document_download"]).read_bytes(),
+                         (PROJECT / "state/objects" / older["document_sha256"]).read_bytes())
 
     def test_failed_download_keeps_confirmed_state(self):
         with patch("auto_update.sync", side_effect=OSError("СФР недоступен")):
@@ -96,6 +117,17 @@ class UpdateAcceptanceTests(unittest.TestCase):
         self.assertEqual(self.pointer, (self.root / "state/current.json").read_bytes())
         self.assertEqual(self.original, json.loads((self.root / "data/catalog.json").read_bytes()))
         self.assertEqual(json.loads((self.root / "update-report.json").read_bytes())["status"], "failed")
+
+    def test_corrupt_original_keeps_confirmed_state(self):
+        snapshot = copy.deepcopy(self.snapshot)
+        doc = next(r for r in snapshot["entries"] if r["environment"] == "prod" and "сообщения_10110_" in r["url"])
+        # Simulate collection returning bytes inconsistent with its inventory.
+        doc["sha256"] = sha(b"expected DOCX")
+        write(self.root / "state/objects" / doc["sha256"], b"different DOCX")
+        with self.assertRaisesRegex(ValueError, "DOCX"):
+            self.execute(snapshot)
+        self.assertEqual(self.pointer, (self.root / "state/current.json").read_bytes())
+        self.assertEqual(self.original, json.loads((self.root / "data/catalog.json").read_bytes()))
 
     def test_unsupported_schema_keeps_confirmed_state(self):
         with patch("auto_update.sync", side_effect=self.collector(copy.deepcopy(self.snapshot))), patch("auto_update.build", side_effect=ValueError("Новая конструкция XSD")):

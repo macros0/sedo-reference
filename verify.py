@@ -8,16 +8,20 @@ from catalog import dependency_set,derive
 def verify(state,data):
     current=json.loads((state/"current.json").read_bytes())["snapshot"]
     snapshot=json.loads((state/"snapshots"/(current+".json")).read_bytes())
+    history=json.loads((state/"history.json").read_bytes())
+    baseline=derive(json.loads((state/"snapshots"/(history[0]+".json")).read_bytes()))
+    baseline_ids={r["revision_id"] for r in baseline["revisions"]}
     revisions=json.loads((data/"catalog.json").read_bytes())["revisions"]
     pair=[r for r in revisions if r["number"]=="10110"]
     assert {r["environment"] for r in pair}=={"test","prod"}
-    assert len(set(r["revision_id"] for r in pair))==2
-    assert all(r["root"]=="benefitResponse" for r in pair)
+    assert len(set(r["revision_id"] for r in pair))==len(pair)
+    assert all(r["root"]=="benefitResponse" for r in pair if r["revision_id"] in baseline_ids)
     for r in revisions:
         obj=json.loads((data/"fields"/(r["revision_id"]+".json")).read_bytes())
         f=obj["fields"];assert f[0]["name"]==r["root"]
         assert all(f[c]["parent"]==i for i,n in enumerate(f) for c in n["children"])
-        if r["number"]=="10110":
+        # These semantic examples describe the original snapshot, not future SFR rules.
+        if r["number"]=="10110" and r["revision_id"] in baseline_ids:
             p={n["path"]:n for n in f}
             assert p["benefitResponse/benefit1/assignmentParams/contractsInfo/workerAndGPHcontract/GPHcontract"]["base"]=="xs:boolean"
             assert dict(p["benefitResponse/benefit1/calculationData/calcConditionList/calcCondition"]["values"])["46"]

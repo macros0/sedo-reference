@@ -1,15 +1,44 @@
 """Build the local/browser static reference from the compiled SFR catalog."""
 import json
+import re
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
+from sync import inspect_file, sha, write
 HERE=Path(__file__).resolve().parent
 def packed(value):
     return json.dumps(value,ensure_ascii=False,separators=(",",":")).replace("<","\\u003c")
+def archive_documents(catalog, state, site):
+    """Publish exact original bytes, once per document hash; never fetch from SFR."""
+    checked = set()
+    for r in catalog["revisions"]:
+        digest = r["document_sha256"]
+        if not re.fullmatch(r"[0-9a-f]{64}", digest):
+            raise ValueError("Некорректная контрольная сумма DOCX")
+        relative = "documents/" + digest + ".docx"
+        if digest not in checked:
+            source = state / "objects" / digest
+            if not source.is_file():
+                raise ValueError("Отсутствует оригинал DOCX " + digest)
+            content = source.read_bytes()
+            if sha(content) != digest:
+                raise ValueError("Не совпадает контрольная сумма DOCX " + digest)
+            try:
+                inspect_file(content, "docx")
+            except Exception as exc:
+                raise ValueError("Повреждён DOCX " + digest) from exc
+            write(site / relative, content)
+            checked.add(digest)
+        version = r.get("document_version") or "unversioned"
+        filename = f"sedo-{r['number']}-{r['environment']}-v{version}-{digest[:8]}.docx"
+        r["document_download"] = relative
+        r["document_filename"] = re.sub(r"[^A-Za-z0-9._-]", "_", filename)
+
 def main():
     catalog=json.loads((HERE/"data/catalog.json").read_bytes())
     statuses={r["revision_id"]:r for r in json.loads((HERE/"data/fields/index.json").read_bytes())}
     site=HERE/"site";editions=site/"editions";editions.mkdir(parents=True,exist_ok=True)
     comparison=site/"fields";comparison.mkdir(exist_ok=True)
+    archive_documents(catalog, HERE/"state", site)
     template=(HERE/"viewer-template.html").read_text("utf-8-sig")
     template=template.replace("<title>СЭДО · Справочник 10110</title>","<title>Справочник XML-полей</title>")
     # The containing catalog carries the selected message and revision.

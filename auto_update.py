@@ -70,13 +70,13 @@ def run(root):
             with patch.object(build_site, "HERE", stage):
                 build_site.main()
             validate_history(previous, current, stage)
-            # Only schema archives are needed to rebuild historical trees.
-            # Original DOCX checksums and extracted metadata remain in immutable inventories.
-            archives = {r["archive_sha256"] for r in current["revisions"] if r.get("archive_sha256")}
+            # Keep originals for all historical editions as well as their XSD archives.
+            objects = {r["archive_sha256"] for r in current["revisions"] if r.get("archive_sha256")}
+            objects.update(r["document_sha256"] for r in current["revisions"])
             for name in ("current.json", "history.json", "last-run.json"):
                 shutil.copy2(stage / "state" / name, root / "state" / name)
             shutil.copytree(stage / "state/snapshots", root / "state/snapshots", dirs_exist_ok=True)
-            for digest in archives:
+            for digest in objects:
                 source = stage / "state/objects" / digest
                 shutil.copy2(source, root / "state/objects" / digest)
             for folder in ("data", "site"):

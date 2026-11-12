@@ -18,6 +18,7 @@ const route=(number,env,rev,field)=>new URLSearchParams(Object.fromEntries(Objec
 const go=(number,env,rev,field)=>{location.hash=route(number,env,rev,field)};
 function anchor(text,hash,cls){const a=node("a",cls,text);a.href="#"+hash;return a}
 function external(text,url){const a=node("a","source",text);a.href=url;a.target="_blank";a.rel="noopener";return a}
+function documentDownload(r){const a=node("a","source","Скачать DOCX");a.href=r.document_download;a.download=r.document_filename;return a}
 function date(s){return s?s.replace(/\.(\d{2})$/,".20$1"):"Дата не указана"}
 function title(m,env){return m.revisions.find(r=>!env||r.environment===env)?.title||m.rows.find(r=>!env||r.environment===env)?.title||[...m.titles][0]}
 function label(r){return envNames[r.environment]+" · "+(r.document_version||"Версия не указана")+" · "+date(r.label_date)}
@@ -53,7 +54,7 @@ function renderVersions(m,env){
     const card=node("div","card");card.append(node("strong","","Версия "+(r.document_version||"не указана")),node("p","",date(r.label_date)));
     if(r.ready)card.append(anchor("Открыть дерево",route(m.number,e,r.revision_id),"open"));
     else card.append(node("p","","Схема ожидает проверки"));
-    card.append(node("br"),external("Спецификация СФР ↗",r.document_url));
+    card.append(node("br"),documentDownload(r),document.createTextNode(" · "),external("Спецификация СФР ↗",r.document_url));
     card.append(node("p","meta","Редакция "+r.revision_id.slice(0,8)));
     if(!r.listed_now)card.append(node("p","meta","Редакция сохранена в истории"));
     panel.append(card)
@@ -81,6 +82,7 @@ function renderRoute(){
  $("viewer").hidden=false;$("crumbs").append(node("span","","/"),node("span","",label(r)));
  $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
  $("doc-source").href=r.document_url;
+ $("doc-download").href=r.document_download;$("doc-download").download=r.document_filename;
  document.getElementById("compare-from-viewer")?.remove();
  const pair=comparisonDefaults(m),other=m.revisions.find(x=>x.ready&&x.revision_id!==rev);
  if(other){const link=anchor("Сравнить с другой редакцией",comparisonRoute(number,rev,pair.right===rev?other.revision_id:pair.right),"source");link.id="compare-from-viewer";$("doc-source").after(link)}
