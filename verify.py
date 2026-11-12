@@ -29,14 +29,16 @@ def verify(state,data):
     # Replay the exact source bytes to test idempotence and failed retrieval.
     urls={SITES[k]:v for k,v in snapshot["pages"].items()}
     urls.update({r["url"]:r["sha256"] for r in snapshot["entries"] if "sha256" in r})
+    for row in snapshot["entries"]:
+        for source in row.get("source_files",[]):urls[source["url"]]=source["sha256"]
     if all((state/"objects"/v).exists() for v in urls.values()):
-        def cached(u):return (state/"objects"/urls[u]).read_bytes()
+        def cached(u,**kwargs):return (state/"objects"/urls[u]).read_bytes()
         with TemporaryDirectory() as tmp:
             base=Path(tmp)
             with patch("sync.get",side_effect=cached):
                 sync(base);first=(base/"current.json").read_bytes();sync(base)
             assert first==(base/"current.json").read_bytes() and not any(json.loads((base/"last-run.json").read_bytes())["diff"].values())
-            def failed(u):
+            def failed(u,**kwargs):
                 if u.endswith("xsd_19_09_26.zip"):raise OSError("simulated failure")
                 return cached(u)
             with patch("sync.get",side_effect=failed):

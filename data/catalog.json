@@ -11742,6 +11742,2016 @@
       "version_tables": [],
       "revision_id": "5dba78da05ddce5b469bf56aa32d07456335ac0d0eb6e8a7b77cec6dd848f553",
       "listed_now": true
+    },
+    {
+      "number": "14",
+      "title": "найденные ошибки при обработке сообщения",
+      "root": "invalidDataFault",
+      "namespace": "http://www.fss.ru/integration/types/fault/v01",
+      "archive_sha256": "bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca",
+      "archive_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl#xsd-bundle",
+      "archive_name": "wsdl-schemas.zip",
+      "schema_path": "schemas/005/Fault.xsd",
+      "dependencies": [
+        [
+          "../004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../008/FaultCode.xsd",
+          "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe"
+        ],
+        [
+          "../009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "Fault.xsd",
+          "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3"
+        ]
+      ],
+      "dependency_digest": "1d15e83b12932857cf5ce51fdebd383509a943542c8cd7dde47160ba4ac5032a",
+      "schema_source_type": "wsdl",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "c609735e71013bead408bab1727fda5c67aaf82c41305d5c4bfb3227dcc2ffcc",
+      "listed_now": true
+    },
+    {
+      "number": "14",
+      "title": "найденные ошибки при обработке сообщения",
+      "root": "invalidDataFault",
+      "namespace": "http://www.fss.ru/integration/types/fault/v01",
+      "archive_sha256": "bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca",
+      "archive_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl#xsd-bundle",
+      "archive_name": "wsdl-schemas.zip",
+      "schema_path": "schemas/005/Fault.xsd",
+      "dependencies": [
+        [
+          "../004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../008/FaultCode.xsd",
+          "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe"
+        ],
+        [
+          "../009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "Fault.xsd",
+          "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3"
+        ]
+      ],
+      "dependency_digest": "1d15e83b12932857cf5ce51fdebd383509a943542c8cd7dde47160ba4ac5032a",
+      "schema_source_type": "wsdl",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (20.08.2025).docx",
+      "document_sha256": "c02d1153d3bdd128ac9138af8bcf64bb6aacc9f172e7e211944d8632bc2df554",
+      "document_version": "5.5",
+      "label_date": "20.08.2025",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "2ba54c5b3a6267ae0b9b3840351e8db3af695ecfe8e1fe7d923f8d737d996f52",
+      "listed_now": true
+    },
+    {
+      "number": "14",
+      "title": "найденные ошибки при обработке сообщения",
+      "root": "invalidDataFault",
+      "namespace": "http://www.fss.ru/integration/types/fault/v01",
+      "archive_sha256": "bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca",
+      "archive_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl#xsd-bundle",
+      "archive_name": "wsdl-schemas.zip",
+      "schema_path": "schemas/005/Fault.xsd",
+      "dependencies": [
+        [
+          "../004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../008/FaultCode.xsd",
+          "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe"
+        ],
+        [
+          "../009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "Fault.xsd",
+          "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3"
+        ]
+      ],
+      "dependency_digest": "1d15e83b12932857cf5ce51fdebd383509a943542c8cd7dde47160ba4ac5032a",
+      "schema_source_type": "wsdl",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2_22_Пр_12_Доходная часть (09.02.2026).docx",
+      "document_sha256": "29eb6c023e82123d3670bc915c55081e12487b749cf57ccdebcc02959f44a435",
+      "document_version": "2.22",
+      "label_date": "09.02.2026",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "ca171570170bd8ec700521228ed868c46c61190e23ee68a885c0e2023ba3ba81",
+      "listed_now": true
+    },
+    {
+      "number": "1",
+      "title": "подписка абонентов оператора",
+      "root": "subscribeRequest",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "3bc8f140e2a9e2b207e2b4daa41252d8d37c9ab050a94e4cfdb59315f40e79db",
+      "listed_now": true
+    },
+    {
+      "number": "2",
+      "title": "снятие с подписки абонентов оператора",
+      "root": "unsubscribeRequest",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "90b6f54730ac8c0bf4b8e56b0319ae5c44342d5f8fc7696f9f5ad96b57db4fc2",
+      "listed_now": true
+    },
+    {
+      "number": "6",
+      "title": "подтверждение прочтения сообщения",
+      "root": "confirmMessageReadRequest",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "bca00e80f56357b4cdeb03391d949d237824a91b0a04e51dfe52982aa5657b61",
+      "listed_now": true
+    },
+    {
+      "number": "9",
+      "title": "результат подписки/снятия с подписки абонентов оператора",
+      "root": "subscriptionResponse",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "69a823ef11a9f8abcb268494dbb752aa4325d9d90995e466cf871728b2d78160",
+      "listed_now": true
+    },
+    {
+      "number": "11",
+      "title": "результат подтверждения прочтения сообщения",
+      "root": "confirmMessageReadResponse",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "0586b2cc1dc80842ecbd807edebf4875f43cc4ca4ec298670e1c09cf2a3f0879",
+      "listed_now": true
+    },
+    {
+      "number": "27",
+      "title": "запрос перечня документов, обрабатываемых СЭДО",
+      "root": "dicMessageTypeRequest",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "0e73b1db8c9ea4f0585cb7b99954c99b826e17bf4b850550c378bcbe6ed74b80",
+      "listed_now": true
+    },
+    {
+      "number": "28",
+      "title": "перечень документов, обрабатываемых СЭДО",
+      "root": "dicMessageTypeResponse",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "8cda86347800cfff30dd6ce537ab4c61a34b81e11158cf98cb9c6d5f97968613",
+      "listed_now": true
+    },
+    {
+      "number": "90",
+      "title": "запрос регистрационного номера страхователя по ИНН/КПП/ОГРН",
+      "root": "requestRegNum",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "c18d5e057d06f40a67bb08726238f97917ceb5b6e4fe2bf3161906179afc6275",
+      "listed_now": true
+    },
+    {
+      "number": "91",
+      "title": "ответ на запрос регистрационного номера страхователя по ИНН/КПП/ОГРН",
+      "root": "responseRegNum",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "7e6f8189b4b21434371ed568a364cdc59848bcbef0fb0cdf1dd68619a5bf5331",
+      "listed_now": true
+    },
+    {
+      "number": "330",
+      "title": "запрос исторических сообщений за дату абонентом",
+      "root": "getCountMessageRequest",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "76cbc9cbe378946348abbade4b91b1451b90c2911a2ff7a17157957f2bbbf3be",
+      "listed_now": true
+    },
+    {
+      "number": "331",
+      "title": "запрос исторических сообщений за дату оператором",
+      "root": "getCountMessageOperatorRequest",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "499c5a5b657835f613670f3cb62da2d9a088cab814a816e8ed285a56ad386c96",
+      "listed_now": true
+    },
+    {
+      "number": "332",
+      "title": "ответ на запрос исторических данных",
+      "root": "countMessageResponse",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "f53acd8a8de25d0557d2deb20204b201bce147cd12c13e8bd028b66e00e55cc0",
+      "listed_now": true
+    },
+    {
+      "number": "1000",
+      "title": "ответ страхователя на обращение СФР",
+      "root": "sedoAppealResponse",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "86540e2ce920efb44dd39a9946b2151fc8ba26006cd71e5da6bf5f0f43b1e2ef",
+      "listed_now": true
+    },
+    {
+      "number": "1001",
+      "title": "обращение СФР к страхователю",
+      "root": "sedoAppealRequest",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "0045b492594b00b9505a42b3e531cce4b1dda4e30e636f60865c7c3859654c8e",
+      "listed_now": true
+    },
+    {
+      "number": "1002",
+      "title": "уведомление о подтверждении получения Фондом сообщения от Страхователя",
+      "root": "sedoAppealNotification",
+      "namespace": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "archive_sha256": "9435fdd7c0671c35a5a32b83852939d6dd187835d899f483ccd3ef74b50fa8c7",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx#wsdl=bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca&schema=0f0096841f83cb40d8350b9eca9b1dfdccd7584d1646a42c7e5bf30b36ce28da",
+      "archive_name": "module-wsdl-schemas.zip",
+      "schema_path": "document/SedoArm_ЕЦП.xsd",
+      "dependencies": [
+        [
+          "../wsdl/schemas/004/Sedo.xsd",
+          "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6"
+        ],
+        [
+          "../wsdl/schemas/006/Organization.xsd",
+          "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760"
+        ],
+        [
+          "../wsdl/schemas/007/Common.xsd",
+          "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794"
+        ],
+        [
+          "../wsdl/schemas/009/Errors.xsd",
+          "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29"
+        ],
+        [
+          "SedoArm_ЕЦП.xsd",
+          "8971679d51e1833261dcb9f5e9e3394a96ba0851340cf156bd637381ee08bcca"
+        ]
+      ],
+      "dependency_digest": "6495500831feecf0b5101ba2a7de055525fcdd335813cff44aafa01c7778a4ca",
+      "schema_source_type": "wsdl_bridge",
+      "schema_source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+      "schema_sources": [
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+          "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+          "bytes": 9356,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+          "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+          "bytes": 1133,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+          "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+          "bytes": 1683,
+          "kind": "wsdl",
+          "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+          "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+          "bytes": 39925,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+          "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+          "bytes": 6011,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+          "bytes": 7173,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/organization/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+          "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+          "bytes": 37988,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/common/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+          "bytes": 735,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+        },
+        {
+          "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+          "bytes": 6427,
+          "kind": "xsd",
+          "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+        }
+      ],
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx",
+      "document_sha256": "098130a5b4e10f32467311323483f48cc20f6edb6c5fc7fbd9573c83fca3b7df",
+      "document_version": "3.1",
+      "label_date": "12.12.2024",
+      "module": "Спецификация служебных типов сообщений СЭДО",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "05180e79a816c6f01f30c2ec5c4f5a50018162c8e5f3faca43398862740269ed",
+      "listed_now": true
     }
   ],
   "registry": [
@@ -15861,7 +17871,133 @@
       "observed_at": "2026-11-12T21:57:57.688244+00:00",
       "initial_import": false,
       "previous_revision_id": null
+    },
+    {
+      "revision_id": "c609735e71013bead408bab1727fda5c67aaf82c41305d5c4bfb3227dcc2ffcc",
+      "snapshot": "6cd7fde9cdb0257a019be194741f071393802081c1398fb35ae8c8f5ec94d3e0",
+      "observed_at": "2026-11-12T23:01:36.519753+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "2ba54c5b3a6267ae0b9b3840351e8db3af695ecfe8e1fe7d923f8d737d996f52",
+      "snapshot": "6cd7fde9cdb0257a019be194741f071393802081c1398fb35ae8c8f5ec94d3e0",
+      "observed_at": "2026-11-12T23:01:36.519753+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "ca171570170bd8ec700521228ed868c46c61190e23ee68a885c0e2023ba3ba81",
+      "snapshot": "6cd7fde9cdb0257a019be194741f071393802081c1398fb35ae8c8f5ec94d3e0",
+      "observed_at": "2026-11-12T23:01:36.519753+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "3bc8f140e2a9e2b207e2b4daa41252d8d37c9ab050a94e4cfdb59315f40e79db",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "90b6f54730ac8c0bf4b8e56b0319ae5c44342d5f8fc7696f9f5ad96b57db4fc2",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "bca00e80f56357b4cdeb03391d949d237824a91b0a04e51dfe52982aa5657b61",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "69a823ef11a9f8abcb268494dbb752aa4325d9d90995e466cf871728b2d78160",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "0586b2cc1dc80842ecbd807edebf4875f43cc4ca4ec298670e1c09cf2a3f0879",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "0e73b1db8c9ea4f0585cb7b99954c99b826e17bf4b850550c378bcbe6ed74b80",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "8cda86347800cfff30dd6ce537ab4c61a34b81e11158cf98cb9c6d5f97968613",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "c18d5e057d06f40a67bb08726238f97917ceb5b6e4fe2bf3161906179afc6275",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "7e6f8189b4b21434371ed568a364cdc59848bcbef0fb0cdf1dd68619a5bf5331",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "76cbc9cbe378946348abbade4b91b1451b90c2911a2ff7a17157957f2bbbf3be",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "499c5a5b657835f613670f3cb62da2d9a088cab814a816e8ed285a56ad386c96",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "f53acd8a8de25d0557d2deb20204b201bce147cd12c13e8bd028b66e00e55cc0",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "86540e2ce920efb44dd39a9946b2151fc8ba26006cd71e5da6bf5f0f43b1e2ef",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "0045b492594b00b9505a42b3e531cce4b1dda4e30e636f60865c7c3859654c8e",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "05180e79a816c6f01f30c2ec5c4f5a50018162c8e5f3faca43398862740269ed",
+      "snapshot": "b780b14f247095bc3707229af1088040d40cef8e746a0f221ad8f79564ad448e",
+      "observed_at": "2026-11-12T23:05:44.527961+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
     }
   ],
-  "checked_at": "2026-11-12T21:57:57.688244+00:00"
+  "checked_at": "2026-11-12T23:05:44.527961+00:00"
 }

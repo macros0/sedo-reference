@@ -1,0 +1,26 @@
+{
+  "revision_id": "0e73b1db8c9ea4f0585cb7b99954c99b826e17bf4b850550c378bcbe6ed74b80",
+  "fields": [
+    {
+      "name": "dicMessageTypeRequest",
+      "path": "dicMessageTypeRequest",
+      "parent": -1,
+      "group": "",
+      "doc": "Запрос справочника типов сообщений",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DicMessageTypeRequestType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {
+        "nillable": "true"
+      },
+      "typeFile": "SedoArm_ЕЦП.xsd"
+    }
+  ]
+}

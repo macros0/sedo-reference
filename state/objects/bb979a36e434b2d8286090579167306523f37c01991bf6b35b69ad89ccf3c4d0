@@ -1,0 +1,197 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>СФР. Проактив (Тестовый контур)</title>
+        <link rel="stylesheet" href="resources/css/style.css" />
+        <link rel="stylesheet" href="resources/fonts/font-awesome/css/font-awesome.min.css">
+</head>
+
+<body link="#436B9D" alink="#284c7a" vlink="#436B9D" style="margin: 0px">
+
+        <div id="centered">
+                <div id="logoimg"><img src="resources/images/fsslogo.png" height="125px" width="145px"></div>
+                <div id="header-table">
+                        <div id="header">ФОНД ПЕНСИОННОГО И СОЦИАЛЬНОГО СТРАХОВАНИЯ <br> РОССИЙСКОЙ ФЕДЕРАЦИИ <br><br>
+
+                                <div style="color: red; font-weight: lighter;">
+                                        <p style="font-weight: bold;"> Внимание!</p>
+                                        <p>Информируем о начале тестирования взаимодействия с ЕЦП СФР по сообщениям СЭДО
+                                                модуля Проактив (ВНиМ) №10910, 11210, 10010, 10110, 10510, 32210, 12410,
+                                                10710, 32010, 32110 по пособиям:</p>
+                                        <ul>
+                                                <li>Пособие по временной нетрудоспособности</li>
+                                                <li>Пособие по беременности и родам</li>
+                                                <li>Единовременное пособие при рождении ребенка</li>
+                                                <li>Пособие по уходу за ребенком до 1,5 лет</li>
+                                                <li>Пособие в связи с несчастным случаем на производстве или
+                                                        профессиональным заболеванием</li>
+                                        </ul>
+                                        <p>Дата начала тестирования по сообщениям СЭДО №10910, 11210, 10010, 10110,
+                                                10510 - 13 июля 2026 г.</p>
+                                        <p>Дата начала тестирования по сообщениям СЭДО № 32210, 12410, 10710, 32010,
+                                                32110 - 17 июля 2026 г.</p>
+                                        <p>Дата завершения тестирования по всем сообщениям модуля Проактив – 01 сентября
+                                                2026 г.</p>
+					<p style="font-weight: bold;"> Внимание!</p>
+					<p>С 19 по 21 сентября 2026 года в продуктивном контуре запланирован перенос проактивных процессов по ВНиМ из ФГИС Соцстрах в ГИС ЕЦП по пособиям:</p>
+					<ul>
+                                                <li>Пособие по временной нетрудоспособности</li>
+                                                <li>Пособие по беременности и родам</li>
+                                                <li>Единовременное пособие при рождении ребенка</li>
+                                                <li>Пособие по уходу за ребенком до 1,5 лет</li>
+                                                <li>Пособие в связи с несчастным случаем на производстве или профессиональным заболеванием</li>
+                                        </ul>
+					<p>Перечень типов сообщений СЭДО, планируемых к переводу: 10010, 10110, 32210, 10910, 11210, 10510, 12410, 10710, 32010, 32110.</p>
+					<p>В связи с переходом на новые типы сообщений СЭДО прием и отправка прежних типов № 109, 112, 100, 101, 105, 124, 107, 320, 321, 322 будут прекращены с 19.09.2026 в 10:00 по МСК.</p>
+					<p>19.09.2026 включение отправки сообщений № 10010, 32210.</p>
+					<p>21.09.2026 в 10:00 по МСК включение приема и отправки сообщений № 10110, 10910, 11210, 10510, 12410, 10710, 32010, 32110.</p>
+					<p> Страхователям настоятельно рекомендуется до 18 сентября 2026 года (включительно) направить сообщения № 101, чтобы завершить обработку проактивных процессов по страховым случаям.</p>
+                                </div>
+
+
+                                <div id="hdtb-msb-vis">
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/">Кабинеты</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/eln.html">ЭЛН</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/ers.html">ЭРС</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/sedo.html">СЭДО</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/4fss.html">4-ФСС</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/oved.html">Подтверждение ОВЭД</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/mchd.html">Электронные доверенности (МЧД)</a></div>
+                                        <div class="hdtb-mitem hdtb-msel hdtb-imb">Проактивное назначение пособий</div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/sv.html">Cпециальные социальные выплаты</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/cert.html">Сертификаты</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/FAQ.html">Часто
+                                                        задаваемые вопросы</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/tls.html">TLS(ГОСТ)</a></div>
+                                </div>
+
+                        </div>
+                </div>
+        </div>
+
+        <div style="text-align: center;">
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%;">
+
+                                <div id="cabinets-upper-next">Проактивное назначение пособий</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px;" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <div><i class="fa fa-download" id="icon">
+                                                        </i>Спецификация документов приведена в приложении 10 к
+                                                        спецификации типов документов СЭДО
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%;">
+                                <div id="cabinets-upper-next">Примеры типов сообщений для проактивного назначения
+                                        страхового обеспечения
+                                </div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px;" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <div><i class="fa fa-download" id="icon"></i>Пример 100.xml: <a
+                                                                href="/specs_sedo/example/пример 100.xml">cкачать</a>
+                                                </div>
+                                                <div><i class="fa fa-download" id="icon"></i>Пример 101.xml: <a
+                                                                href="/specs_sedo/example/пример 101.xml">cкачать</a>
+                                                </div>
+                                                <div><i class="fa fa-download" id="icon"></i>Пример 105.xml: <a
+                                                                href="/specs_sedo/example/пример 105.xml">cкачать</a>
+                                                </div>
+                                                <div><i class="fa fa-download" id="icon"></i>Пример 86.xml: <a
+                                                                href="/specs_sedo/example/пример 86.xml">cкачать</a>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%;">
+                                <div id="cabinets-upper-next">XSD схемы проактивного назначения пособий</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px;" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <div><i class="fa fa-download" id="icon"></i>Изменение в схеме: <a
+                                                                href="/prab/Изменение в схеме.docx">cкачать</a></div>
+                                                <div><i class="fa fa-download" id="icon"></i>Карточка застрахованного
+                                                        лица (22.10.2024): <a
+                                                                href="/prab/insured-card-xsd-1.22.0-SNAPSHOT.zip">cкачать</a>
+                                                </div>
+                                                <!--div><i class="fa fa-download" id="icon"></i>Проактив (23.09.2025): <a href="/prab/proactive-xsd-1.50.0-SNAPSHOT-test.zip">cкачать</a></div-->
+                                                <div><i class="fa fa-download" id="icon"></i>Проактив (13.10.2025): <a
+                                                                href="/prab/proactive-xsd-1.51.0-SNAPSHOT-test.zip">cкачать</a>
+                                                </div>
+                                                <div><i class="fa fa-download" id="icon"></i>ЭЛН : <a
+                                                                href="/prab/eln-xsd.zip">cкачать</a></div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%;">
+                                <div id="cabinets-upper-next">Описание взаимодействия страхователя с СФР в рамках
+                                        проактивного процесса
+                                        через СЭДО</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px;" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <div>
+                                                        <i class="fa fa-download" id="icon"></i>Схема взаимодействия с
+                                                        "ЕЦП":
+                                                        <a
+                                                                href="/prab/Схема обмена сообщениями СЭДО при проактивном назначении единовременного пособия при рождении ребенка в ЕЦП СФР.pdf">cкачать</a>
+                                                </div>
+                                                <div><i class="fa fa-download" id="icon"></i>Схема взаимодействия с
+                                                        "Соцстрах": <a href="/prab/СЭДО ПРОАКТИВ.jpg">cкачать</a></div>
+                                                <div><i class="fa fa-download" id="icon"></i>Описание электронного
+                                                        документооборота через СЭДО в
+                                                        рамках проактивного процесса:
+                                                        <a
+                                                                href="/prab/Описание электронного документооборота через СЭДО в рамках проактива.docx">cкачать</a>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%;">
+                                <div id="cabinets-upper-next">Целевая схема работы с извещениями ПВСО</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px;" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <div>
+                                                        <i class="fa fa-download" id="icon"></i>Целевая схема работы с
+                                                        извещениями ПВСО:
+                                                        <a
+                                                                href="/prab/Целевая_схема_работы_с извещениями_ПВСО.PNG">cкачать</a>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+
+        </div>
+</body>
+
+</html>

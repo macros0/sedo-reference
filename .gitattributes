@@ -1,0 +1,3 @@
+
+# Content-addressed source objects must retain exact publisher bytes.
+/state/objects/* -text

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>СФР. МЧД</title>
+        <link rel="stylesheet" href="resources/css/style.css" />
+        <link rel="stylesheet" href="resources/fonts/font-awesome/css/font-awesome.min.css" />
+</head>
+
+<body link="#436B9D" alink="#284c7a" vlink="#436B9D" style="margin: 0px">
+        <div id="centered">
+                <div id="logoimg">
+                        <img src="resources/images/fsslogo.png" height="125px" width="145px" />
+                </div>
+                <div id="header-table">
+                        <div id="header">
+                                ФОНД ПЕНСИОННОГО И СОЦИАЛЬНОГО СТРАХОВАНИЯ <br />
+                                РОССИЙСКОЙ ФЕДЕРАЦИИ <br /><br />
+
+                                <div id="header2" style="color: red; font-size: 16px">
+                                        <div style="font-weight: bold;">Важная информация!</div>
+                                        <p>18.06.2026 г в целях обеспечения требований к информационной безопасности
+                                                информационных систем гос. органов в сервисах ЭЛН будет выполнен переход
+                                                на криптографический протокол TLS (Transport Layer Security) с
+                                                шифрованием по алгоритмам ГОСТ</p>
+                                        <!--      <p>08.06.2026 г в сервисах ЭЛН на тестовом контуре будет выполнен переход на криптографический протокол TLS (Transport Layer Security) с шифрованием по алгоритмам ГОСТ</p>  -->
+                                        <p>Для сервисов ПВСО, СЭДО переход на криптографический протокол TLS (Transport
+                                                Layer Security) с шифрованием по алгоритмам ГОСТ будет производиться
+                                                позднее.</p>
+                                </div>
+                                <div id="header2" style="color: black; font-size: 16px">
+                                        <p>
+                                                Внимание!<br /><br />
+
+                                                По умолчанию в АРМ МЧД во вкладке "Администрирование" - "Настройки
+                                                сервисов СФР" в поле
+                                                "Строка соединения" указан адрес <span
+                                                        style="color: red; font-size: 16px;">Тестового сервиса
+                                                        СФР</span><br /><br />
+
+                                                Примечание:<br />
+                                                Если вы используете подключение к базе данных, установленной на
+                                                удаленный сервер, то сначала нужно установить новую версию МЧД на
+                                                этот сервер с учетом условий выше.<br />
+                                        </p>
+                                </div>
+                                <div id="header3" style="color: red; font-size: 16px; width: 800px">
+                                        <p>
+                                                Сервис ЭЛН и СЭДО поддерживает работу с двумя действующими
+                                                сертификатами ФСС
+                                        </p>
+                                </div>
+
+                                <div id="hdtb-msb-vis">
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/">Кабинеты</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/eln.html">ЭЛН</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/ers.html">ЭРС</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/sedo.html">СЭДО</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/4fss.html">4-ФСС</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/oved.html">Подтверждение
+                                                        ОВЭД</a></div>
+                                        <div class="hdtb-mitem hdtb-msel hdtb-imb">Электронные доверенности (МЧД)</div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/prab.html">Проактивное
+                                                        назначение пособий</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/sv.html">Cпециальные
+                                                        социальные выплаты</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/cert.html">Сертификаты</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/FAQ.html">Часто
+                                                        задаваемые вопросы</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="https://lk.fss.ru/tls.html">TLS(ГОСТ)</a>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
+
+        <div style="text-align: center">
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%">
+                                <div id="cabinets-upper-next">
+                                        АРМ Доверенность для создания МЧД (электронной доверенности)
+                                </div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <div>
+                                                        <i class="fa fa-download" id="icon">
+                                                        </i>Скачать АРМ Доверенность.v.1.6.10.4 (12.08.2025) (<a
+                                                                href="/mchd/fss_mchd_setup_1_6_10_4_x86.exe">32bit</a>
+                                                        / <a href="/mchd/fss_mchd_setup_1_6_10_4_x64.exe">64bit</a>)
+                                                </div>
+                                                <div>
+                                                        <a
+                                                                href="/mchd/Инструкция_пользователя_АРМ_Доверенность_v8.docx"><i
+                                                                        class="fa fa-file-word-o"
+                                                                        id="icon"></i>Инструкция пользователя АРМ
+                                                                Доверенность
+                                                                v.1.6.10.4 (12.08.2025) для запроса извещений МО</a>
+                                                </div>
+
+                                                <div>
+                                                        <a
+                                                                href="/mchd/Руководство пользователя АРМ Доверенность v_2.11 (12.08.2025).docx"><i
+                                                                        class="fa fa-file-word-o" id="icon">
+                                                                </i>Руководство пользователя АРМ Доверенность
+                                                                (12.08.2025)</a>
+                                                </div>
+                                                <div>
+                                                        <a href="/mchd/Создание доверенности с нуля_.docx"><i
+                                                                        class="fa fa-file-word-o" id="icon">
+                                                                </i>Краткая инструкция создания доверенности с нуля</a>
+                                                </div>
+                                                <div>
+                                                        <a href="/mchd/Отзыв и выгрузка доверенности_.docx"><i
+                                                                        class="fa fa-file-word-o" id="icon">
+                                                                </i>Краткая инструкция отзыва и выгрузки
+                                                                доверенности</a>
+                                                </div>
+
+                                                <div id="cabinets-upper-next">
+                                                        Часто встречающиеся ошибки и их решение
+                                                </div>
+                                                <div>
+                                                        <a
+                                                                href="/mchd/МЧД_Решение_встречающихся_ошибок_14_10_2025.docx"><i
+                                                                        class="fa fa-file-word-o" id="icon"></i>Решение
+                                                                встречающихся ошибок
+                                                                (14.10.2025)</a>
+                                                </div>
+                                                <div>
+                                                        <a href="/mchd/Проверка полномочий МЧД.docx"><i
+                                                                        class="fa fa-file-word-o" id="icon"></i>Проверка
+                                                                полномочий МЧД (03.03.2025)</a>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
+
+        <div style="text-align: center">
+                <div id="services-header">
+                        ДЛЯ ДОРАБОТКИ ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ ВЕНДОРОВ
+                </div>
+
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%">
+                                <div id="cabinets-upper-next">XSD схемы и спецификация</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <div>
+                                                        <a href="/mchd/mchd-xsd-23-05-2023.zip"><i
+                                                                        class="fa fa-download" id="icon"></i>XSD схемы
+                                                                МЧД (23.05.2023)</a>
+                                                </div>
+                                                <div>
+                                                        <a
+                                                                href="/mchd/Спецификация функциональных требований к структуре МЧД v2.0 (15.05.23).doc"><i
+                                                                        class="fa fa-file-word-o"
+                                                                        id="icon"></i>Спецификация МЧД v2.0
+                                                                (15.05.2023)</a>
+                                                </div>
+                                                <div>
+                                                        <a
+                                                                href="/mchd/Проект Иерархический_Классификатор_полномочий 31.07.2026.xlsx">
+                                                                <i class="fa fa-file-excel-o"
+                                                                        id="icon"></i>Классификатор полномочий
+                                                                (31.07.2026)</a>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%">
+                                <div id="cabinets-upper-next">Сервисы</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <div>
+                                                        <i class="fa fa-file-code-o" id="icon"></i>Сервис с шифрованием
+                                                        (новый с 24.02.2025):
+                                                        <a href=" https://ecp.sfr.gov.ru/sedo/soap/SedoGateway?wsdl"
+                                                                target="_blank">
+                                                                https://ecp.sfr.gov.ru/sedo/soap/SedoGateway?wsdl</a>
+                                                </div>
+
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
+</body>
+
+</html>

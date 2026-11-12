@@ -9,16 +9,24 @@ import sys
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
+from urllib.parse import parse_qs, urlsplit, unquote
 
 XS = "http://www.w3.org/2001/XMLSchema"
 X = "{" + XS + "}"
 HERE = Path(__file__).resolve().parent
 FACETS = set("length minLength maxLength pattern enumeration maxInclusive minInclusive maxExclusive minExclusive totalDigits fractionDigits whiteSpace".split())
 
+def import_basename(location):
+    parsed=urlsplit(location)
+    resource=parse_qs(parsed.query).get("xsd",[parsed.path if parsed.scheme else location])[0]
+    return posixpath.basename(unquote(resource).replace("\\","/"))
+
 def resolve_import(files,origin,location,namespace=None):
     expected=posixpath.normpath(posixpath.join(posixpath.dirname(origin),location.replace("\\","/")))
-    if expected in files:return expected
-    candidates=[path for path,meta in files.items() if posixpath.basename(path)==posixpath.basename(location) and namespace and meta.get("namespace")==namespace]
+    if expected in files:
+        if namespace and files[expected].get("namespace")!=namespace:raise ValueError("Несовпадение namespace импорта "+location)
+        return expected
+    candidates=[path for path,meta in files.items() if posixpath.basename(path)==import_basename(location) and namespace and meta.get("namespace")==namespace]
     if len({files[p]["sha256"] for p in candidates})==1:return sorted(candidates)[0]
     raise ValueError(("Неоднозначный импорт " if candidates else "Не найден импорт ")+location+" в "+origin)
 
@@ -75,7 +83,7 @@ class Schema:
             if target not in archive.namelist():
                 if self.inventory is None:
                     self.inventory={name:dict(namespace=ET.fromstring(archive.read(name)).get("targetNamespace"),sha256=hashlib.sha256(archive.read(name)).hexdigest()) for name in archive.namelist() if name.lower().endswith(".xsd")}
-                target=resolve_import(self.inventory,path,location,imp.get("namespace"))
+                target=resolve_import(self.inventory,path,location,imp.get("namespace") if imp.tag==X+"import" else self.files[path][2])
             self.load(archive,target)
 
     def resolve(self, qname, source, kinds):
@@ -87,6 +95,39 @@ class Schema:
             if (uri,k,name) in self.symbol:
                 return self.symbol[(uri,k,name)]
         raise ValueError("Не удалось раскрыть тип или ссылку "+qname+" в "+self.owner[source])
+
+    def coalesce_choice_leaves(self):
+        """One XML path can be the same leaf in alternative choice branches.
+
+        Merge only identical leaf declarations with the same parent and distinct
+        branches of one choice. Different constraints or sequential repetitions
+        remain unsupported rather than being silently combined.
+        """
+        occurrences={}
+        for i,field in enumerate(self.fields):occurrences.setdefault(field["path"],[]).append(i)
+        aliases={}
+        for indices in occurrences.values():
+            if len(indices)<2:continue
+            leaves=[self.fields[i] for i in indices]
+            contexts=[re.fullmatch(r"(.*Выбор \d+), вариант (\d+)",f["group"]) for f in leaves]
+            rules=[{k:v for k,v in f.items() if k not in ("group","children")} for f in leaves]
+            if (any(f["children"] for f in leaves) or any(c is None for c in contexts) or
+                len({c[1] for c in contexts})!=1 or len({c[2] for c in contexts})!=len(leaves) or
+                any(rule!=rules[0] for rule in rules[1:])):
+                continue
+            leaves[0]["group"]=" ИЛИ ".join(f["group"] for f in leaves)
+            for i in indices[1:]:aliases[i]=indices[0]
+        if not aliases:return
+        kept=[i for i in range(len(self.fields)) if i not in aliases]
+        positions={old:new for new,old in enumerate(kept)}
+        for i in aliases:positions[i]=positions[aliases[i]]
+        compact=[]
+        for i in kept:
+            field=self.fields[i]
+            field["parent"]=positions[field["parent"]] if field["parent"]>=0 else -1
+            field["children"]=list(dict.fromkeys(positions[child] for child in field["children"]))
+            compact.append(field)
+        self.fields=compact
 
     def field(self, decl, parent=-1, group="", chain=()):
         if len(self.fields) >= 50000:
@@ -172,5 +213,6 @@ class Schema:
             expand_type(src.get("type"),src,chain)
         else:
             walk(src,"",chain)
+        if parent==-1:self.coalesce_choice_leaves()
         return idx
 

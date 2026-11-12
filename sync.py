@@ -49,7 +49,7 @@ class Links(HTMLParser):
             self.items.append((url,norm("".join(words))))
             self.anchor=None
 
-def get(url):
+def get(url, timeout=30, attempts=3):
     u=urlsplit(url)
     safe=urlunsplit((u.scheme,u.netloc,quote(unquote(u.path),safe="/"),u.query,""))
     context = ssl.create_default_context()
@@ -57,14 +57,14 @@ def get(url):
         bundle = Path(__file__).resolve().parent / "certs" / (u.hostname + ".pem")
         if bundle.exists():
             context.load_verify_locations(cafile=str(bundle))
-    for attempt in range(3):
+    for attempt in range(attempts):
         try:
-            with urlopen(Request(safe,headers={"User-Agent":"SEDO-reference/1.0"}),timeout=30,context=context) as r:
+            with urlopen(Request(safe,headers={"User-Agent":"SEDO-reference/1.0"}),timeout=timeout,context=context) as r:
                 b=r.read(MAX_BYTES+1)
                 if len(b)>MAX_BYTES: raise ValueError("file exceeds limit")
                 return b
         except OSError:
-            if attempt==2: raise
+            if attempt==attempts-1: raise
             time.sleep(1+attempt)
 
 def inspect_file(b,kind):
@@ -80,7 +80,7 @@ def inspect_file(b,kind):
                     r=xml(n)
                     result.append(dict(path=n,namespace=r.get("targetNamespace"),sha256=sha(z.read(n)),
                          dependencies=[e.get("schemaLocation") for e in r if e.tag in (XS+"import",XS+"include")],
-                         imports=[dict(location=e.get("schemaLocation"),namespace=e.get("namespace")) for e in r if e.tag in (XS+"import",XS+"include")],
+                         imports=[dict(location=e.get("schemaLocation"),namespace=e.get("namespace") if e.tag==XS+"import" else r.get("targetNamespace")) for e in r if e.tag in (XS+"import",XS+"include")],
                          roots=[dict(name=e.get("name"),description=norm(" ".join(t for a in e.findall(XS+"annotation/"+XS+"documentation") for t in a.itertext()))) for e in r.findall(XS+"element")]))
             return {"schemas":result}
         doc=xml("word/document.xml")
@@ -171,10 +171,42 @@ def sync(base):
                 for package in packages:blob(package["content"])
             except Exception as e:
                 r["error"]=str(e);errors.append([r["url"],str(e)])
+    # Only published, explicitly classified service hosts can provide a contour's
+    # transport library. A test URL on the production page remains a test URL.
+    from wsdl_sources import discover, collect, bridge
+    previous={}
+    pointer=base/"current.json"
+    if pointer.exists():
+        key=json.loads(pointer.read_bytes())["snapshot"]
+        previous=json.loads((base/"snapshots"/(key+".json")).read_bytes())
+    supports=[]
+    for env in SITES:
+        for seed in discover(entries,env):
+            try:
+                support=collect(seed,env,lambda url:get(url,timeout=10,attempts=1),blob)
+                entries.append(support);supports.append(support)
+                break
+            except Exception as exc:
+                entries.append(dict(environment=env,url=seed+"#wsdl-check",kind="wsdl_status",status="unavailable",error=str(exc)))
+        else:
+            # A transient service outage must not remove an earlier verified tree.
+            cached=next((r for r in previous.get("entries",[]) if r.get("source_type")=="wsdl" and r["environment"]==env),None)
+            if cached and (base/"objects"/cached["sha256"]).exists():
+                support=dict(cached,retrieval_status="cached")
+                entries.append(support);supports.append(support)
     from module_xsd import match_document
     for r in entries:
         if not r.get("module_bindings"):continue
-        matches,issues=match_document(r,entries,lambda h:(base/"objects"/h).read_bytes())
+        read_object=lambda h:(base/"objects"/h).read_bytes()
+        matches,issues=match_document(r,entries,read_object)
+        if {b["number"] for b in r["module_bindings"]}-{m["number"] for m in matches}:
+            archives=[]
+            for support in supports:
+                for archive in bridge(r,support,read_object):
+                    blob(archive.pop("content"));archives.append(archive)
+            if archives:
+                r["wsdl_archives"]=archives
+                matches,issues=match_document(r,entries,read_object)
         if matches:r["module_matches"]=matches
         if issues:r.setdefault("schema_diagnostics",[]).extend(issues)
     result=dict(format=1,pages=pages,entries=entries)
@@ -185,7 +217,7 @@ def sync(base):
     if previous:
         prior=json.loads((base/"snapshots"/(previous["snapshot"]+".json")).read_bytes())
         old={(r["environment"],r["url"]):r for r in prior["entries"]}
-    new={(r["environment"],r["url"]):r for r in entries}
+    new={(r["environment"],r["url"]):r for r in json.loads(payload)["entries"]}
     diff={key:[] for key in ("added","removed","changed")}
     for key in sorted(old.keys()|new.keys()):
         if old.get(key)!=new.get(key): diff["removed" if key not in new else "added" if key not in old else "changed"].append(list(key))

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sedo="http://www.fss.ru/integration/types/sedo/v01" xmlns="http://www.fss.ru/integration/ws/common/sedo/v01" targetNamespace="http://www.fss.ru/integration/ws/common/sedo/v01">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sedo="http://www.fss.ru/integration/types/sedo/v01" xmlns="http://www.fss.ru/integration/ws/common/sedo/v01">
+            
+  <xs:import namespace="http://www.fss.ru/integration/types/sedo/v01" schemaLocation="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd"/>
+        
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="GetCountMessagesOperatorParam">
+    <wsdl:part element="sedo:getCntMessageOperatorRequest" name="param">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetMessageParam">
+    <wsdl:part element="sedo:getMessageRequest" name="param">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetCountMessagesResponse">
+    <wsdl:part element="sedo:messageListResponse" name="result">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetMessageResponse">
+    <wsdl:part element="sedo:sedoMessageResponse" name="result">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="UuidResponse">
+    <wsdl:part element="sedo:sedoUuidResponse" name="uuid">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GetCountMessagesParam">
+    <wsdl:part element="sedo:getCntMessageRequest" name="param">
+    </wsdl:part>
+  </wsdl:message>
+</wsdl:definitions>

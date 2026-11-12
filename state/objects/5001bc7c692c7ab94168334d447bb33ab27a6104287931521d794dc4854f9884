@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sedo="http://www.fss.ru/integration/types/sedo/v01" xmlns:fs="http://www.fss.ru/integration/ws/fault/v01" xmlns:com="http://www.fss.ru/integration/ws/common/sedo/v01" xmlns="http://www.fss.ru/integration/ws/gateway/sedo/v01" name="SedoGateway" targetNamespace="http://www.fss.ru/integration/ws/gateway/sedo/v01">
+  <wsdl:import location="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl" namespace="http://www.fss.ru/integration/ws/fault/v01">
+    </wsdl:import>
+  <wsdl:import location="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl" namespace="http://www.fss.ru/integration/ws/common/sedo/v01">
+    </wsdl:import>
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:sedo="http://www.fss.ru/integration/types/sedo/v01" xmlns:fs="http://www.fss.ru/integration/ws/fault/v01" xmlns:com="http://www.fss.ru/integration/ws/common/sedo/v01" xmlns="http://www.fss.ru/integration/ws/gateway/sedo/v01">
+            
+  <xs:import namespace="http://www.fss.ru/integration/types/sedo/v01" schemaLocation="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd"/>
+        
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="PutMessageParam">
+    <wsdl:part element="sedo:putMessageRequest" name="param">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="SedoGateway">
+    <wsdl:operation name="PutMessage">
+<wsdl:documentation>
+                <xs:annotation>
+                    <xs:documentation>Отправить сообщение в СФР. Операция с отложенной обработкой запроса</xs:documentation>
+                </xs:annotation>
+            </wsdl:documentation>
+      <wsdl:input message="PutMessageParam" name="param">
+    </wsdl:input>
+      <wsdl:output message="com:UuidResponse" name="result">
+    </wsdl:output>
+      <wsdl:fault message="fs:DecryptException" name="decryptException">
+    </wsdl:fault>
+      <wsdl:fault message="fs:InternalException" name="internalException">
+    </wsdl:fault>
+      <wsdl:fault message="fs:DigitalSignException" name="digitalSignException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetMessage">
+<wsdl:documentation>
+                <xs:annotation>
+                    <xs:documentation>Получить сообщение в СФР. Операция с моментальной обработкой запроса</xs:documentation>
+                </xs:annotation>
+            </wsdl:documentation>
+      <wsdl:input message="com:GetMessageParam" name="param">
+    </wsdl:input>
+      <wsdl:output message="com:GetMessageResponse" name="result">
+    </wsdl:output>
+      <wsdl:fault message="fs:DecryptException" name="decryptException">
+    </wsdl:fault>
+      <wsdl:fault message="fs:InternalException" name="internalException">
+    </wsdl:fault>
+      <wsdl:fault message="fs:DigitalSignException" name="digitalSignException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetCountMessages">
+<wsdl:documentation>
+                <xs:annotation>
+                    <xs:documentation>Получить количество сообщений. Операция с моментальной обработкой запроса</xs:documentation>
+                </xs:annotation>
+            </wsdl:documentation>
+      <wsdl:input message="com:GetCountMessagesParam" name="param">
+    </wsdl:input>
+      <wsdl:output message="com:GetCountMessagesResponse" name="result">
+    </wsdl:output>
+      <wsdl:fault message="fs:DecryptException" name="decryptException">
+    </wsdl:fault>
+      <wsdl:fault message="fs:InternalException" name="internalException">
+    </wsdl:fault>
+      <wsdl:fault message="fs:DigitalSignException" name="digitalSignException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetCountMessagesOperator">
+<wsdl:documentation>
+                <xs:annotation>
+                    <xs:documentation>Получить количество сообщений (для оператора). Операция с моментальной обработкой запроса</xs:documentation>
+                </xs:annotation>
+            </wsdl:documentation>
+      <wsdl:input message="com:GetCountMessagesOperatorParam" name="param">
+    </wsdl:input>
+      <wsdl:output message="com:GetCountMessagesResponse" name="result">
+    </wsdl:output>
+      <wsdl:fault message="fs:DecryptException" name="decryptException">
+    </wsdl:fault>
+      <wsdl:fault message="fs:InternalException" name="internalException">
+    </wsdl:fault>
+      <wsdl:fault message="fs:DigitalSignException" name="digitalSignException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SedoGatewayBinding" type="SedoGateway">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="PutMessage">
+<wsdl:documentation>
+                <xs:annotation>
+                    <xs:documentation>Отправить сообщение в СФР. Операция с отложенной обработкой запроса</xs:documentation>
+                </xs:annotation>
+            </wsdl:documentation>
+      <soap:operation soapAction="http://www.fss.ru/integration/ws/gateway/sedo/PutMessage/v01" style="document"/>
+      <wsdl:input name="param">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="result">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="decryptException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="internalException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="digitalSignException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetMessage">
+<wsdl:documentation>
+                <xs:annotation>
+                    <xs:documentation>Получить сообщение в СФР. Операция с моментальной обработкой запроса.</xs:documentation>
+                </xs:annotation>
+            </wsdl:documentation>
+      <soap:operation soapAction="http://www.fss.ru/integration/ws/gateway/sedo/GetMessage/v01" style="document"/>
+      <wsdl:input name="param">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="result">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="decryptException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="internalException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="digitalSignException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetCountMessages">
+<wsdl:documentation>
+                <xs:annotation>
+                    <xs:documentation>Получить количество сообщений. Операция с моментальной обработкой запроса</xs:documentation>
+                </xs:annotation>
+            </wsdl:documentation>
+      <soap:operation soapAction="http://www.fss.ru/integration/ws/gateway/sedo/GetCountMessages/v01" style="document"/>
+      <wsdl:input name="param">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="result">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="decryptException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="internalException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="digitalSignException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetCountMessagesOperator">
+<wsdl:documentation>
+                <xs:annotation>
+                    <xs:documentation>Получить количество сообщений (для оператора). Операция с моментальной обработкой запроса</xs:documentation>
+                </xs:annotation>
+            </wsdl:documentation>
+      <soap:operation soapAction="http://www.fss.ru/integration/ws/gateway/sedo/GetCountMessagesOperator/v01" style="document"/>
+      <wsdl:input name="param">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="result">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="decryptException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="internalException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="digitalSignException">
+    <soap:body use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SedoGateway">
+    <wsdl:port binding="SedoGatewayBinding" name="SedoGatewayPort">
+      <soap:address location="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

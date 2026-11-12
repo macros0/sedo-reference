@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.fss.ru/integration/types/dic/fault/v01" elementFormDefault="qualified" targetNamespace="http://www.fss.ru/integration/types/dic/fault/v01" version="1.0">
+
+    <xs:simpleType name="FaultCodeType">
+        <xs:restriction base="xs:string">
+            <!-- Системные ошибки / внутренние 0000-0099 -->
+            <xs:enumeration value="E_0000"/>
+
+            <!-- Ошибки ЭЦП 0100-0199 -->
+            <xs:enumeration value="E_0100"/>
+
+            <!-- Ошибки ТМС 0200-0299 -->
+            <xs:enumeration value="E_0200"/>
+
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

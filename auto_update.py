@@ -93,6 +93,16 @@ def run(root):
             objects = {r["archive_sha256"] for r in current["revisions"] if r.get("archive_sha256")}
             objects.update(r["document_sha256"] for r in current["revisions"])
             objects.update(r["document_sha256"] for r in current["registry"] if r.get("document_sha256"))
+            snapshot=json.loads((stage/"state/snapshots"/(json.loads((stage/"state/current.json").read_bytes())["snapshot"]+".json")).read_bytes())
+            # Keep all inputs needed to replay the successful inventory, including
+            # raw WSDL/XSD bytes and schemas from supporting DOCX documents.
+            objects.update(snapshot["pages"].values())
+            for row in snapshot["entries"]:
+                if row.get("sha256"):objects.add(row["sha256"])
+                for archive in [*row.get("embedded_archives",[]),*row.get("wsdl_archives",[])]:
+                    objects.add(archive["sha256"])
+                    objects.update(source["sha256"] for source in archive.get("source_files",[]))
+                objects.update(source["sha256"] for source in row.get("source_files",[]))
             for name in ("current.json", "history.json", "last-run.json", "observations.json"):
                 shutil.copy2(stage / "state" / name, root / "state" / name)
             shutil.copytree(stage / "state/snapshots", root / "state/snapshots", dirs_exist_ok=True)
@@ -108,15 +118,19 @@ def run(root):
             new_messages = sorted({(r["environment"], r["number"]) for r in current["registry"]+current["revisions"]}-known)
             snapshot=json.loads((stage/"state/snapshots"/(json.loads((stage/"state/current.json").read_bytes())["snapshot"]+".json")).read_bytes())
             schema_diagnostics=[dict(environment=r["environment"],source=r["url"],issues=r["schema_diagnostics"]) for r in snapshot["entries"] if r.get("schema_diagnostics")]
+            wsdl_status=[dict(environment=r["environment"],source=r["url"],status=r.get("status",r.get("retrieval_status","ok")),error=r.get("error")) for r in snapshot["entries"] if r.get("source_type")=="wsdl" or r["kind"]=="wsdl_status"]
             ready_pairs={(r["environment"],r["number"]) for r in current["revisions"] if r["status"]=="matched"}
             registry_pairs={(r["environment"],r["number"]):r for r in current["registry"]}
             missing=[]
             for (env,number),row in sorted(registry_pairs.items(),key=lambda i:(i[0][0],int(i[0][1]))):
                 if (env,number) in ready_pairs:continue
                 reasons=list(dict.fromkeys(issue["reason"] for record in schema_diagnostics if record["environment"]==env for issue in record["issues"] if issue.get("number")==number))
+                for source in wsdl_status:
+                    if source["environment"]==env and source["status"]=="unavailable":
+                        reasons.append("WSDL недоступен: "+source["source"].split("#")[0]+" — "+source["error"])
                 missing.append(dict(environment=env,number=number,title=row["title"],reasons=reasons or ["В опубликованных источниках не найдена полная сопоставленная XSD."]))
-            write(root/"data/schema-coverage.json",encode(dict(checked_at=current["checked_at"],numbers_with_trees=len({n for e,n in ready_pairs}),missing=missing)))
-            result = dict(status="ok", checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics, missing_trees=missing,
+            write(root/"data/schema-coverage.json",encode(dict(checked_at=current["checked_at"],numbers_with_trees=len({n for e,n in ready_pairs}),source_checks=wsdl_status,missing=missing)))
+            result = dict(status="ok", checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics, wsdl_status=wsdl_status, missing_trees=missing,
                           new_messages=[dict(environment=e, number=n) for e,n in new_messages],
                           total_revisions=len(current["revisions"]))
             write(report, encode(result))

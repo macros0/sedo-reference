@@ -10,6 +10,8 @@ on:
       - 'schema.py'
       - 'sync.py'
       - 'module_xsd.py'
+      - 'wsdl_sources.py'
+      - 'tests/test_wsdl_sources.py'
       - 'requirements.txt'
       - 'build_site.py'
       - 'data/message-transitions.json'

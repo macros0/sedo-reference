@@ -1,0 +1,311 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>СФР. ЭЛН (Тестовый контур)</title>
+        <link rel="stylesheet" href="resources/css/style.css" />
+        <link rel="stylesheet" href="resources/fonts/font-awesome/css/font-awesome.min.css">
+</head>
+
+<body link="#436B9D" alink="#284c7a" vlink="#436B9D" style="margin: 0px">
+
+        <div id="centered">
+                <div id="logoimg"><img src="resources/images/fsslogo.png" height="125px" width="145px"></div>
+                <div id="header-table">
+                        <div id="header">ФОНД ПЕНСИОННОГО И СОЦИАЛЬНОГО
+                                <br> СТРАХОВАНИЯ РОССИЙСКОЙ ФЕДЕРАЦИИ
+                                <br><br>
+                                <div id="header2" ; font-size: 16px style="color: black;">
+                                        <div style="font-weight: bold;">Важная информация!</div>
+                                        <div style="color: red; font-weight: bold;">
+                                                <p>31.07.26 На тестовом контуре для сервисов ЭЛН был произведен переход
+                                                        на новый сертификат СФР <br>от НУЦ</p>
+                                                <p>Для Пользователей АРМ ЛПУ необходимо обновить настройки
+                                                        Маршрутизатора в соответствии <br>с инструкцией<br>
+                                                        <a
+                                                                href="eln/Инструкция по установке нового ГОСТ сертификата для АРМ.docx">Скачать
+                                                                инструкцию</a></p>
+                                                <p>Для Внешних пользователей сервисов ЭЛН необходимо выполнить установку
+                                                        сертификата <br>в соответствии с инструкцией <br>
+                                                        <a
+                                                                href="eln/TLS_НУЦ_инструкция_внешние_пользователи_ЭЛН_для_МО и для Страхователей.docx">Скачать
+                                                                инструкцию для внешних пользователей</a>
+                                                </p>
+                                        </div>
+                                        <br><br>
+                                        <p>18.06.2026 г в целях обеспечения требований к информационной безопасности
+                                                информационных систем гос. органов в сервисах ЭЛН будет выполнен переход
+                                                на криптографический протокол TLS (Transport Layer Security) с
+                                                шифрованием по алгоритмам ГОСТ</p>
+                                        <div style="color: black;">
+                                                <p style="font-weight: bold;">Подробнее можно узнать на: <a
+                                                                href="https://lk-test.fss.ru/tls.html"
+                                                                target="_blank">https://lk-test.fss.ru/tls.html</a></p>
+
+                                        </div>
+                                </div>
+                                <!-- <div id="header2" style="color: green;  font-size: 16px;">
+Обращаем внимание! 17.07.2025 планируется включение новой проверки при приеме сведений ЭЛН от МИС по методу prParseFilelnlpu. При отправке данных ЭЛН на сервис СФР не должны направляться подписи по ранее направленным сведениям ЭЛН. Данная проверка размещена на тестовом контуре и доступна для тестирования МИС.
+</div>-->
+
+                                <div id="hdtb-msb-vis">
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/">Кабинеты</a></div>
+                                        <div class="hdtb-mitem hdtb-msel hdtb-imb">ЭЛН</div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/ers.html">ЭРС</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/sedo.html">СЭДО</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/4fss.html">4-ФСС</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/oved.html">Подтверждение
+                                                        ОВЭД</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/mchd.html">Электронные
+                                                        доверенности
+                                                        (МЧД)</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/prab.html">Проактивное
+                                                        назначение
+                                                        пособий</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/sv.html">Cпециальные
+                                                        социальные
+                                                        выплаты</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/cert.html">Сертификаты</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/FAQ.html">Часто
+                                                        задаваемые
+                                                        вопросы</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/tls.html">TLS(ГОСТ)</a>
+                                        </div>
+                                </div>
+                        </div>
+
+                </div>
+        </div>
+
+        <div style="text-align: center;">
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%;">
+                                <div id="cabinets-upper-next">Для
+                                        медицинской организации</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px;" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+
+                                                <!-- <div><i class="fa fa-download" id="icon"></i>Скачать АРМ ЛПУ 2_0_31 (<a href="/fss_eln_setup_2_0_31_20201006_01_x32.exe" target="_blank">32bit</a> / <a href="/fss_eln_setup_2_0_31_20201006_01_x64.exe" target="_blank">64bit</a>) </div> -->
+                                                <div style="font-weight: bold;"><i class="fa fa-download"
+                                                                id="icon"></i>Скачать
+                                                        АРМ ЛПУ 2_01_27
+                                                        (<a href="/fss_eln_setup_2_01_27_20260525_01_x32.exe"
+                                                                target="_blank">32bit</a>
+                                                        / <a href="/fss_eln_setup_2_01_27_20260525_01_x64.exe"
+                                                                target="_blank">64bit</a>)
+                                                </div>
+
+                                                <div>
+                                                        <a
+                                                                href="/specs_sedo/Руководство администратора АРМ ЛПУ_2_01_27 (24.06.2026).docx"><i
+                                                                        class="fa fa-file-word-o"
+                                                                        id="icon"></i>Инструкция
+                                                                администратора АРМ ЛПУ 2_01_27</a>
+                                                </div>
+
+                                                <div>
+                                                        <a href="/eln/User_instruct.pdf"><i class="fa fa-file-pdf-o"
+                                                                        id="icon"></i>Инструкция
+                                                                пользователя</a>
+                                                </div>
+                                                <div>
+                                                        <a href="/Подписание и шифрование по ГОСТ 2012 в АРМ ЛПУ.docx"><i
+                                                                        class="fa fa-file-word-o" id="icon"></i>
+                                                                <font color="red"><b>Подписание
+                                                                                и
+                                                                                шифрование
+                                                                                по
+                                                                                ГОСТ
+                                                                                2012
+                                                                                в
+                                                                                АРМ
+                                                                                ЛПУ</b></font>
+                                                        </a>
+                                                </div>
+                                                <!--	<div>Для миграции данных из АРМ ЛПУ 1.хх версий в АРМ ЛПУ 2.хх версий</div> -->
+
+                                                <!--	<div><i class="fa fa-download" id="icon"></i>Скачать <a href="/datamigration.zip" target="_blank">Утилиту миграции данных с предыдущей версии АРМ ЛПУ</a></div> -->
+
+                                                <!--	<div><a href="/Миграция в АРМ ЛПУ.docx"><i class="fa fa-file-word-o" id="icon"></i>Инструкция по миграции данных</a></div> -->
+                                        </div>
+                                </div>
+                        </div>
+                        <div id="cabinets-next" style="width: 50%;">
+                                <div id="cabinets-upper-next">Для
+                                        страхователя</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px;" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next" style="width: 50%">
+                                                <div style="margin-left: 10px;"><b>АРМ
+                                                                Подготовки
+                                                                расчетов
+                                                                для СФР:
+                                                        </b></div>
+                                                <div>
+                                                        <i class="fa fa-download" id="icon"></i>
+                                                        - <a href="/eln/setup_arm_fss_single_2_0_4_113.zip"
+                                                                target="_blank">Локальная
+                                                                однопользовательская
+                                                                версия
+                                                                2.0.4.113</a>
+                                                </div>
+                                                <div>
+                                                        <i class="fa fa-download" id="icon"></i>
+                                                        - <a href="/eln/setup_arm_fss_net_2_0_4_111.zip"
+                                                                target="_blank">Сетевая
+                                                                многопользовательская
+                                                                версия
+                                                                2.0.4.111</a>
+                                                </div>
+                                                <div>
+                                                        <i class="fa fa-file-pdf-o" id="icon"></i>
+                                                        - <a href="/eln/instuct_fss.zip">Инструкция
+                                                                по
+                                                                установке</a>
+                                                </div>
+                                                <div>
+                                                        <i class="fa fa-download" id="icon"></i>
+                                                        - <a href="http://docs-test.fss.ru/KLADRMonitor/Home/LastFileInfoHtml"
+                                                                target="_blank">База
+                                                                адресов
+                                                                КЛАДР в
+                                                                архиве
+                                                                ZIP</a>
+                                                </div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
+
+        <div id="services-header">ДЛЯ ДОРАБОТКИ ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ
+                ВЕНДОРОВ</div>
+
+        <div style="text-align: center">
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%">
+                                <div id="cabinets-upper-next">ЭЛН ЕЦП с
+                                        новым URL</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <div id="cabinets-upper-next"><b>
+                                                                Сервисы
+                                                                для
+                                                                медицинских
+                                                                организаций</b></div>
+
+                                                <div style="font-weight: bold;"><i class="fa fa-file-code-o"
+                                                                id="icon"></i>Сервис
+                                                        с шифрованием:
+                                                        <a href="https://ecp-test-eln.sfr.gov.ru/ws-mo-crypto/FileOperationsLnService?wsdl"
+                                                                target="_blank">https://ecp-test-eln.sfr.gov.ru/ws-mo-crypto/FileOperationsLnService?wsdl</a>
+                                                </div>
+                                                <div style="font-weight: bold;"><i class="fa fa-file-code-o"
+                                                                id="icon"></i>Сервис
+                                                        без шифрования:
+                                                        <a href="https://ecp-test-eln.sfr.gov.ru/ws-mo/FileOperationsLnService?wsdl"
+                                                                target="_blank">https://ecp-test-eln.sfr.gov.ru/ws-mo/FileOperationsLnService?wsdl</a>
+                                                </div>
+                                                <div style="font-weight: bold;"><i class="fa fa-file-word-o" id="icon"></i>TLS НУЦ инструкция: <a
+                                                                href="/tls/TLS_НУЦ_инструкция_внешние_пользователи_ЭЛН_для_МО и для Страхователей.docx"
+                                                                target="_blank">TLS НУЦ
+                                                                инструкция внешние пользователи ЭЛН</a></div>
+
+                                                <div>
+                                                        <i class="fa fa-file-word-o" id="icon"></i>Спецификация:<a
+                                                                href="/eln/Спецификация_ЭЛН_МО_v_2.3.docx"
+                                                                target="_blank">Спецификация
+                                                                МО ЭЛН
+                                                                2.3
+                                                                (ЕЦП).docx</a>
+                                                </div>
+                                                <div>
+                                                        <i class="fa fa-file-word-o" id="icon"></i>Инструкция
+                                                        для создания ЭЛН
+                                                        на тестовом
+                                                        контуре:<a href="/eln/Инструкция ЭЛН (тест ЕЦП).docx"
+                                                                target="_blank">Инструкция
+                                                                ЭЛН
+                                                                (тест
+                                                                ЕЦП).docx</a>
+                                                </div>
+                                                <div>
+                                                        <i class="fa fa-file-word-o" id="icon"></i>Список
+                                                        СНИЛС для
+                                                        создания ЭЛН на
+                                                        тестовом
+                                                        контуре:<a href="/eln/Список СНИЛС.xlsx" target="_blank">Список
+                                                                СНИЛС.xlsx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>Правила
+                                                        заполнения
+                                                        ЭЛН:<a href="/eln/Правила заполнения ЭЛН.xlsx"
+                                                                target="_blank">Правила
+                                                                заполнения
+                                                                ЭЛН.xlsx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>ФЛК:<a
+                                                                href="/eln/ФЛК ЭЛН_2026.xlsx" target="_blank">ФЛК
+                                                                ЭЛН.xlsx</a></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>Статусная
+                                                        модель <a href="/eln/Статусная модель.png"
+                                                                target="_blank">Статусная
+                                                                модель.png</a></div>
+
+                                                <div id="cabinets-upper-next"><b>
+                                                                Сервисы
+                                                                для
+                                                                страхователей</b></div>
+
+                                                <div style="font-weight: bold;"><i class="fa fa-file-code-o"
+                                                                id="icon"></i>Сервис
+                                                        с шифрованием:
+                                                        <a href="https://ecp-test-eln.sfr.gov.ru/ws-insurer-crypto/FileOperationsLnService?wsdl"
+                                                                target="_blank">https://ecp-test-eln.sfr.gov.ru/ws-insurer-crypto/FileOperationsLnService?wsdl</a>
+                                                </div>
+                                                <div style="font-weight: bold;"><i class="fa fa-file-code-o"
+                                                                id="icon"></i>Сервис
+                                                        без шифрования:
+                                                        <a href="https://ecp-test-eln.sfr.gov.ru/ws-insurer/FileOperationsLnService?wsdl"
+                                                                target="_blank">https://ecp-test-eln.sfr.gov.ru/ws-insurer/FileOperationsLnService?wsdl</a>
+                                                </div>
+                                                <div style="font-weight: bold;"><i class="fa fa-file-word-o" id="icon"></i>TLS НУЦ инструкция: <a
+                                                                href="/tls/TLS_НУЦ_инструкция_внешние_пользователи_ЭЛН_для_МО и для Страхователей.docx"
+                                                                target="_blank">TLS НУЦ
+                                                                инструкция внешние пользователи ЭЛН</a></div>
+
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>Спецификация:<a
+                                                                href="/eln/Спецификация ЭЛН Страхователь 3.1 (МЧД).docx"
+                                                                target="_blank">Спецификация
+                                                                Страхователь
+                                                                ЭЛН
+                                                                3.1
+                                                                (ЕЦП).docx</a></div>
+
+                                        </div>
+                                </div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px" />
+
+                        </div>
+                </div>
+        </div>
+
+</body>
+
+</html>

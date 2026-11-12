@@ -1,0 +1,442 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>СФР. СЭДО (Тестовый контур)</title>
+        <link rel="stylesheet" href="resources/css/style.css" />
+        <link rel="stylesheet" href="resources/fonts/font-awesome/css/font-awesome.min.css" />
+</head>
+
+<body link="#436B9D" alink="#284c7a" vlink="#436B9D" style="margin: 0px">
+        <div id="centered">
+                <div id="logoimg">
+                        <img src="resources/images/fsslogo.png" height="125px" width="145px" />
+                </div>
+                <div id="header-table">
+                        <div id="header">
+                                ФОНД ПЕНСИОННОГО И СОЦИАЛЬНОГО СТРАХОВАНИЯ <br />
+                                РОССИЙСКОЙ ФЕДЕРАЦИИ <br /><br />
+                                <div id="header2" style="font-size: 16px; color:black">
+                                        <div style="font-weight: bold; ">Важная информация!</div>
+                                        <div style="color: red; font-weight: lighter;">
+                                                <p>На тестовом контуре для сервиса СЭДО запланирован переход
+                                                        на криптографический протокол TLS <br>(Transport Layer Security)
+                                                        с шифрованием по алгоритмам ГОСТ<br><br>с 20.08.2026 адреса:<br>
+                                                        <a
+                                                                href="https://ecp-test-sedo.sfr.gov.ru/sedo/fss/api/soap/SedoGateway?wsdl">https://ecp-test-sedo.sfr.gov.ru/sedo/fss/api/soap/SedoGateway?wsdl</a><br>
+                                                        <a
+                                                                href="https://ecp-test-sedo.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl">https://ecp-test-sedo.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl</a><br>
+                                                        будут осуществлять работу по протоколу TLS (ГОСТ) с использованием сертификата СФР от НУЦ (ГОСТ) <br>
+                                                </p>
+                                                <p>Для Пользователей сервиса СЭДО необходимо установить новый сертификат СФР от НУЦ (ГОСТ)<br>
+                                                        Для Пользователей АРМ МЧД обновить настройки Маршрутизатора в соответствии с инструкцией <br>
+                                                        Узнать подробнее:<a
+                                                                href="https://lk-test.fss.ru/tls.html">https://lk-test.fss.ru/tls.html</a><br>
+                                                </p>
+
+                                        </div>
+                                        <div style="font-weight: lighter;">
+                                                <p>Для сервисов ПВСО, СЭДО переход на криптографический протокол TLS
+                                                        (Transport
+                                                        Layer Security) с шифрованием по алгоритмам ГОСТ будет
+                                                        производиться
+                                                        позднее.</p>
+                                                <p>Для возможности продолжения работы АРМов МЧД, СВ-М, СВ-Г, СЗН, ПР с
+                                                        сервисами
+                                                        ПВСО и СЭДО необходимо осуществить дополнительные настройки
+                                                        АРМов и
+                                                        установить дополнительное ПО.<p>Узнать подбробнее: <a
+                                                                        href="https://lk-test.fss.ru/tls.html"
+                                                                        target="_blank">https://lk-test.fss.ru/tls.html</a>
+                                                        </p>
+                                                </p>
+                                        </div>
+
+                                </div>
+
+                                <div style="color: red; font-weight: lighter;">
+                                        <p style="font-weight: bold;"> Внимание!</p>
+                                        <p>Информируем о начале тестирования взаимодействия с ЕЦП СФР по сообщениям СЭДО
+                                                модуля Проактив (ВНиМ) №10910, 11210, 10010, 10110, 10510, 32210, 12410,
+                                                10710, 32010, 32110 по пособиям:</p>
+                                        <ul>
+                                                <li>Пособие по временной нетрудоспособности</li>
+                                                <li>Пособие по беременности и родам</li>
+                                                <li>Единовременное пособие при рождении ребенка</li>
+                                                <li>Пособие по уходу за ребенком до 1,5 лет</li>
+                                                <li>Пособие в связи с несчастным случаем на производстве или
+                                                        профессиональным заболеванием</li>
+                                        </ul>
+                                        <p>Дата начала тестирования по сообщениям СЭДО №10910, 11210, 10010, 10110,
+                                                10510 - 13 июля 2026 г.</p>
+                                        <p>Дата начала тестирования по сообщениям СЭДО № 32210, 12410, 10710, 32010,
+                                                32110 - 17 июля 2026 г.</p>
+                                        <p>Дата завершения тестирования по всем сообщениям модуля Проактив – 01 сентября
+                                                2026 г.</p>
+                                        <p style="font-weight: bold;"> Внимание!</p>
+                                        <p>С 19 по 21 сентября 2026 года в продуктивном контуре запланирован перенос
+                                                проактивных процессов по ВНиМ из ФГИС Соцстрах в ГИС ЕЦП по пособиям:
+                                        </p>
+                                        <ul>
+                                                <li>Пособие по временной нетрудоспособности</li>
+                                                <li>Пособие по беременности и родам</li>
+                                                <li>Единовременное пособие при рождении ребенка</li>
+                                                <li>Пособие по уходу за ребенком до 1,5 лет</li>
+                                                <li>Пособие в связи с несчастным случаем на производстве или
+                                                        профессиональным заболеванием</li>
+                                        </ul>
+                                        <p>Перечень типов сообщений СЭДО, планируемых к переводу: 10010, 10110, 32210,
+                                                10910, 11210, 10510, 12410, 10710, 32010, 32110.</p>
+                                        <p>В связи с переходом на новые типы сообщений СЭДО прием и отправка прежних
+                                                типов № 109, 112, 100, 101, 105, 124, 107, 320, 321, 322 будут
+                                                прекращены с 19.09.2026 в 10:00 по МСК.</p>
+                                        <p>19.09.2026 включение отправки сообщений № 10010, 32210.</p>
+                                        <p>21.09.2026 в 10:00 по МСК включение приема и отправки сообщений № 10110,
+                                                10910, 11210, 10510, 12410, 10710, 32010, 32110.</p>
+                                        <p> Страхователям настоятельно рекомендуется до 18 сентября 2026 года
+                                                (включительно) направить сообщения № 101, чтобы завершить обработку
+                                                проактивных процессов по страховым случаям.</p>
+                                </div>
+
+                                <div id="hdtb-msb-vis">
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/">Кабинеты</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/eln.html">ЭЛН</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/ers.html">ЭРС</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-msel hdtb-imb">СЭДО</div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/4fss.html">4-ФСС</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/oved.html">Подтверждение
+                                                        ОВЭД</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/mchd.html">Электронные
+                                                        доверенности (МЧД)</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/prab.html">Проактивное
+                                                        назначение пособий</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/sv.html">Cпециальные
+                                                        социальные выплаты</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/cert.html">Сертификаты</a>
+                                        </div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/FAQ.html">Часто
+                                                        задаваемые
+                                                        вопросы</a></div>
+                                        <div class="hdtb-mitem hdtb-imb" style="padding-left: 15px"><a class="q qs"
+                                                        href="/tls.html">TLS(ГОСТ)</a>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
+
+        <div style="text-align: center">
+                <div id="table-center">
+                        <div id="cabinets-next" style="width: 50%">
+                                <div id="cabinets-upper-next">СЭДО ЕЦП с новым URL</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <div id="cabinets-upper-next"><b> Сервисы</b></div>
+                                                <div><i class="fa fa-file-code-o" id="icon"></i>Сервис с шифрованием: <a
+                                                                href="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGateway?wsdl"
+                                                                target="_blank">https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGateway?wsdl</a>
+                                                </div>
+                                                <div><i class="fa fa-file-code-o" id="icon"></i>Сервис без шифрования:
+                                                        <a href="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl"
+                                                                target="_blank">https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl</a>
+                                                </div>
+
+                                                <br />
+
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>Настройки для
+                                                        тестирования: <a
+                                                                href="/specs_sedo/Тестирование СЭДО_ЕЦП для_операторов.docx"
+                                                                target="_blank">Тестирование
+                                                                СЭДО ЕЦП для
+                                                                операторов.docx</a></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>Коды ошибок и их
+                                                        решение: <a
+                                                                href="/specs_sedo/СЭДО Решение встречающихся ошибок.docx"
+                                                                target="_blank">Решение
+                                                                встречающихся ошибок в
+                                                                СЭДО</a></div>
+
+                                                <div id="cabinets-upper-next"><b>Спецификации</b></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>СЭДО основная: <a
+                                                                href="/specs_sedo/Спецификация сервис СЭДО v2.4_ЕЦП (27.05.2026).docx"
+                                                                target="_blank">Спецификация сервис СЭДО v2.4_ЕЦП
+                                                                (27.05.2026).docx</a></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>Список типов сообщений
+                                                        СЭДО: <a href="/specs_sedo/Спецификация типов документов СЭДО v2.21 (22.06.2026).docx"
+                                                                target="_blank">Спецификация типов документов СЭДО v2.21
+                                                                (22.06.2026).docx</a></div>
+
+                                                <br />
+                                                <div style="margin-left: 43px"><b> Спецификации типов документов:</b>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>02_Служебные типы
+                                                        сообщений: <a
+                                                                href="/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx"
+                                                                target="_blank">Спецификация типов документов СЭДО v3.1
+                                                                Пр_02_Служ_типы_СЭДО (12.12.2024).docx</a></div>
+
+                                                <div style="margin-left: 43px">6_Модуль возмещений (субсидий)
+                                                        страхователям:</div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_6_Возмещения_Том_1_Общие положения_v3.0.1_тест_01.09.25.docx"
+                                                                target="_blank">Приложение_6 ВОЗМ Том_1_Общие положения
+                                                                v3.0.1 (01.09.2025).docx</a></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_6_Возмещения_Том_2_Типовые_элементы_v3_0_1_тест_10_11.docx"
+                                                                target="_blank">Приложение_6_Возмещения_Том_2_Типовые_элементы_v3_0_1_тест_10_11.docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_6_Возмещения_Том_3_Тип_сообщения_12010_v3_3_0_тест_01.docx"
+                                                                target="_blank">Приложение_6_Возмещения_Том_3_Тип_сообщения_12010_v3_3_0_тест_01.docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_6_Возмещения_Том_4_Тип_сообщения_12110_v3.0.0_тест_21.08.25.docx"
+                                                                target="_blank">Приложение_6 ВОЗМ
+                                                                Том_4_Тип_сообщения_12110 v3.0.0 (21.08.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_6_Возмещения_Том_5_Тип_сообщения_12210_v3_1_0_тест_10.docx"
+                                                                target="_blank">Приложение_6_Возмещения_Том_5_Тип_сообщения_12210_v3_1_0_тест_10.docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_6_Возмещения_Том_6_Тип_сообщения_11010_v3.0.0_тест_21.08.25.docx"
+                                                                target="_blank">Приложение_6 ВОЗМ
+                                                                Том_6_Тип_сообщения_11010 v3.0.0 (21.08.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_6_Возмещения_Том_7_Тип_сообщения_7810_v3_1_0_тест_01.docx"
+                                                                target="_blank">Приложение_6_Возмещения_Том_7_Тип_сообщения_7810_v3_1_0_тест_01.docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_6_Возмещения_Том_8_Тип_сообщения_7910_v3.0.0_тест_01.09.25.docx"
+                                                                target="_blank">Приложение_6 ВОЗМ
+                                                                Том_8_Тип_сообщения_7910 v3.0.0 (01.09.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_6_Возмещения_Том_9_Тип_сообщения_8210_v3.0.0_тест_01.09.25.docx"
+                                                                target="_blank">Приложение_6 ВОЗМ
+                                                                Том_9_Тип_сообщения_8210 v3.0.0 (01.09.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_6_Возмещения_Том_10_Тип_сообщения_8310_v3.0.0_тест_01.09.25.docx"
+                                                                target="_blank">Приложение_6 ВОЗМ
+                                                                Том_10_Тип_сообщения_8310 v3.0.0 (01.09.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-download" id="icon"></i>Скачать: <a
+                                                                href="/specs_sedo/xsd_01_06_26.zip" target="_blank">XSD
+                                                                схемы.zip (01.06.2026)</a></div>
+
+                                                <!--ВНИМ-->
+                                                <div style="margin-left: 43px">10_Модуль назначения пособий по ВНиМ,
+                                                        ССВ:</div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_1_Общие_положения_v3_0_5_тест_16.02.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ Том_1_Общие
+                                                                положения v3.0.5 (16.02.2026).docx</a></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_2_Типовые_элементы_v3_0_7_тест_13.08.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ Том_2_Типовые
+                                                                элементы v3.0.7 (13.08.2026).docx</a></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_3_Тип_сообщения_1010_v3.1.0_тест_22.12.25.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_3_Тип_сообщения_1010 v3.1.0 (22.12.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_4_Тип_сообщения_32_v3.1.0_тест_22.12.25.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_4_Тип_сообщения_32 v3.1.0 (22.12.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение 10_ВНиМ_ССВ_Том_5_Тип_сообщения_33_v3.0.1_тест_05.03.25.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_5_Тип_сообщения_33 v3.0.1 (05.03.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение 10_ВНиМ_ССВ_Том_6_Тип_сообщения_34_v3.0.0_тест_20.01.25.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_6_Тип_сообщения_34 v3.0.0 (20.01.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_7_Тип_сообщения_11000_v3.0.0_тест_16.09.25.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_7_Тип_сообщения_11000 v3.0.0 (16.09.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_8_Тип_сообщения_8410_v3.0.0_тест_16.09.25.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_8_Тип_сообщения_8410 v3.0.0 (16.09.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_9_Тип_сообщения_8510_v3.0.0_тест_16.09.25.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_9_Тип_сообщения_8510 v3.0.0 (16.09.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_10_Тип_сообщения_125_v3.0.0_тест_22.12.25.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_10_Тип_сообщения_125 v3.0.0 (22.12.2025).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_11_Тип_сообщения_10410_v3.0.1_тест_30.03.26.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_11_Тип_сообщения_10410 v3.0.1
+                                                                (30.03.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_12_Тип_сообщения_10610_v3_0_0_тест_06.02.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_12_Тип_сообщения_10610 v3.0.0
+                                                                (06.02.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_13_Тип_сообщения_10910_v3_0_3_тест_30.06.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_13_Тип_сообщения_10910 v3.0.3
+                                                                (30.06.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_14_Тип_сообщения_11210_v3_0_0_тест_16.02.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_14_Тип_сообщения_11210 v3.0.0
+                                                                (16.02.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_15_Тип_сообщения_10010_v3_0_4_тест_13.08.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_15_Тип_сообщения_10010 v3.0.4
+                                                                (13.08.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_16_Тип_сообщения_10110_v3_0_4_тест_13.08.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_16_Тип_сообщения_10110 v3.0.4
+                                                                (13.08.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_17_Тип_сообщения_10510_v3_0_0_тест_16.02.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_17_Тип_сообщения_10510 v3.0.0
+                                                                (16.02.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_18_Тип_сообщения_32210_v3_0_1_тест_13.08.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_18_Тип_сообщения_32210 v3.0.1 (13.08.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_19_Тип_сообщения_32010_v3_0_1_тест_30.06.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_19_Тип_сообщения_32010 v3.0.1 (30.06.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_20_Тип_сообщения_32110_v3_0_1_тест_13.08.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_20_Тип_сообщения_32110 v3.0.1 (13.08.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_21_Тип_сообщения_12410_v3_0_0_тест_01.06.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_21_Тип_сообщения_12410 v3.0.0 (01.06.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i><a
+                                                                href="/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_22_Тип_сообщения_10710_v3_0_1_тест_22.07.2026.docx"
+                                                                target="_blank">Приложение_10 ВНиМ, ССВ
+                                                                Том_22_Тип_сообщения_10710 v3.0.1 (22.07.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-download" id="icon"></i>Скачать: <a
+                                                                href="/specs_sedo/XSD_13_08_2026.zip"
+                                                                target="_blank">XSD схемы.zip (13.08.2026)</a></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>14_ФК ЭЛН: <a
+                                                                href="/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_14_ЭЛН (31.10.2024).docx"
+                                                                target="_blank">Спецификация типов документов СЭДО
+                                                                v2.2_Пр_14_ЭЛН (31.10.2024).docx</a></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>16_ФК ИИС: <a
+                                                                href="/specs_sedo/Спецификация_типов_документов_СЭДО_v1_3_Пр_16_ИИС_ЕЦП_25_08_2025.docx"
+                                                                target="_blank">Спецификация типов документов СЭДО
+                                                                v1.3_Пр_16_ИИС_ЕЦП (25.08.2025).docx</a></div>
+
+                                        </div>
+                                </div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px" />
+
+                                <div id="cabinets-upper-next">СЭДО "СОЦСТРАХ"</div>
+                                <hr noshade color="#e0e0e0" size="0" style="margin: 0px" />
+                                <div id="cabinets-lower">
+                                        <div id="cabinets-inner-next">
+                                                <!--   <div id="cabinets-upper-next"><b> Сервисы</b></div>
+              <div><i class="fa fa-file-code-o" id="icon"></i>Сервис с шифрованием: <a href="https://docs-test.fss.ru/sedo-gateway/api/soap/SedoGateway?wsdl"  target="_blank">https://docs-test.fss.ru/sedo-gateway/api/soap/SedoGateway?wsdl</a></div>
+              <div><i class="fa fa-file-code-o" id="icon"></i>Сервис без шифрования: <a href="https://docs-test.fss.ru/sedo-gateway/api/soap/SedoGatewaySimple?wsdl" target="_blank">https://docs-test.fss.ru/sedo-gateway/api/soap/SedoGatewaySimple?wsdl</a></div>
+
+	-->
+                                                <div id="cabinets-upper-next"><b> Спецификации</b></div>
+                                                <!--    <div><i class="fa fa-file-word-o" id="icon"></i>СЭДО основная:<a href="/specs_sedo/Спецификация сервис СЭДО_v1.28 (28.08.2024).docx" target="_blank">Спецификация сервис СЭДО_v1.28 (28.08.2024)</a></div>
+		
+
+              <br />-->
+
+                                                <div style="margin-left: 43px"><b> Спецификации типов документов:</b>
+                                                </div>
+                                                <!--<div><i class="fa fa-file-word-o" id="icon"></i>ФК Управление взысканиями: <a href="/specs_sedo/Спецификация типов документов СЭДО v2.0_Пр_03_УВ.docx" target="_blank">Спецификация типов документов СЭДО v2.0_Пр_03_УВ.docx</a></div>-->
+                                                <!--<div><i class="fa fa-file-word-o" id="icon"></i>ФК ПВСО Специальные соц. выплаты: <a href="/specs_sedo/Спецификация типов документов СЭДО v2.1_Пр_04_Спец_соц_выплаты (17.05.2023).docx" target="_blank">Спецификация типов документов СЭДО v2.1_Пр_04_Спец_соц_выплаты (17.05.2023).docx</a></div>-->
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>05_ФК Реестр
+                                                        страхователей: <a
+                                                                href="/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (20.08.2025).docx"
+                                                                target="_blank">Спецификация типов документов СЭДО v5.5
+                                                                Пр_05_РУСТ (20.08.2025).docx</a></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>06_ФК ПВСО
+                                                        Субсидирование найма: <a
+                                                                href="/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx"
+                                                                target="_blank">Спецификация типов документов СЭДО
+                                                                v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx</a>
+                                                </div>
+                                                <!--div><i class="fa fa-file-word-o" id="icon"></i>10_ФК Проактив: <a href="/specs_sedo/Спецификация типов документов СЭДО v2.46 Пр_10_Проактив (12.09.2025).docx" target="_blank">Спецификация типов документов СЭДО v2.46 Пр_10_Проактив (12.09.2025).docx</a></div-->
+                                                <!--div><i class="fa fa-file-word-o" id="icon"></i>10_ФК Проактив: <a href="/specs_sedo/Спецификация_типов_документов_СЭДО_v2_47_Пр_10_Проактив (23.09.2025).docx" target="_blank">Спецификация_типов_документов_СЭДО_v2_47_Пр_10_Проактив (23.09.2025).docx</a></div-->
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>10_ФК Проактив: <a
+                                                                href="/specs_sedo/Спецификация_типов_документов_СЭДО_v2_49_Пр_10_Проактив_18_12_2025.docx"
+                                                                target="_blank">Спецификация типов документов СЭДО
+                                                                v2_49_Пр_10_Проактив (18.12.2025)</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>11_ФК Управление
+                                                        доверенностями (МЧД): <a
+                                                                href="/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx"
+                                                                target="_blank">Спецификация типов документов СЭДО
+                                                                v2.2_Пр_11_МЧД (18.08.2023).docx</a></div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>12_ФК Доходная часть: <a
+                                                                href="/specs_sedo/Спецификация типов документов СЭДО v2_22_Пр_12_Доходная часть (09.02.2026).docx"
+                                                                target="_blank">Спецификация типов документов СЭДО v2_22
+                                                                Пр_12_Доходная часть (09.02.2026).docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>13_ФК Возмещение вреда:
+                                                        <a href="/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx"
+                                                                target="_blank">Спецификация
+                                                                типов документов СЭДО v2.2_Пр_13_ВВ.docx</a>
+                                                </div>
+                                                <div><i class="fa fa-file-word-o" id="icon"></i>15_ФК Реестр получателей
+                                                        услуг: <a
+                                                                href="/specs_sedo/Спецификация_типов_документов_СЭДО_v1.12_Пр_15_РПУ (22.10.2024).docx"
+                                                                target="_blank">Спецификация типов документов СЭДО v1.12
+                                                                Пр_15_РПУ (22.10.2024).docx</a></div>
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
+</body>
+
+</html>

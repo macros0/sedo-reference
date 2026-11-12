@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:flt="http://www.fss.ru/integration/types/fault/v01" targetNamespace="http://www.fss.ru/integration/ws/fault/v01">
+  <wsdl:types>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:flt="http://www.fss.ru/integration/types/fault/v01">
+            
+  <xsd:import namespace="http://www.fss.ru/integration/types/fault/v01" schemaLocation="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd"/>
+        
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="DecryptException">
+    <wsdl:part element="flt:decryptFault" name="decryptFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InternalException">
+    <wsdl:part element="flt:internalFault" name="internalFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="DigitalSignException">
+    <wsdl:part element="flt:digitalSignFault" name="digitalSignFault">
+    </wsdl:part>
+  </wsdl:message>
+</wsdl:definitions>

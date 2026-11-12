@@ -226,9 +226,12 @@ def match_document(document,entries,read_object):
     matches=[];issues=[]
     own=[dict(a,environment=document["environment"],url=document["url"]+"#embedded="+a["container"],archive_name=a["filename"]+" (из DOCX)") for a in document.get("embedded_archives",[])]
     external=[a for a in entries if a["kind"]=="zip" and a["environment"]==document["environment"]]
+    bridged=document.get("wsdl_archives",[])
+    native=[a for a in bridged if "#schema-" not in a.get("document_container","")]
+    inline=[a for a in bridged if "#schema-" in a.get("document_container","")]
     for binding in document.get("module_bindings",[]):
         candidates=[]
-        for archives in (own,external):
+        for archives in (own,external,native,inline):
             for archive in archives:
                 for schema in archive.get("schemas",[]):
                     if binding.get("namespace") and binding["namespace"]!=schema["namespace"]:continue
@@ -244,6 +247,10 @@ def match_document(document,entries,read_object):
                         item=dict(binding,namespace=schema["namespace"],archive_sha256=archive["sha256"],archive_url=archive["url"],
                                   archive_name=archive.get("archive_name",archive["url"].rsplit("/",1)[-1]),schema_path=schema["path"],dependencies=dependencies,
                                   dependency_digest=digest(json.dumps(dependencies,ensure_ascii=False,indent=2).encode("utf8")))
+                        if archive.get("source_type") in ("wsdl","wsdl_bridge"):
+                            item["schema_source_type"]=archive["source_type"]
+                            item["schema_source_url"]=archive["source_url"]
+                            item["schema_sources"]=archive["source_files"]
                         candidates.append((signature,item))
                     except Exception as exc:issues.append(dict(number=binding["number"],root=binding["root"],reason=str(exc)))
             if candidates:break
