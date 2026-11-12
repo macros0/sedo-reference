@@ -35,6 +35,7 @@ jobs:
           python -m unittest discover -s tests -v
           node tests/test_compare.cjs
           node tests/test_update_summaries.cjs
+          node tests/test_journal_dates.cjs
       - name: Collect both contours and validate candidate
         run: python auto_update.py
       - name: Commit validated data and deploy
