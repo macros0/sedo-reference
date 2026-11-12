@@ -42,6 +42,8 @@ function renderMessages(){
 }
 function renderVersions(m,env){
  const section=$("versions");section.replaceChildren(node("h1","","Сообщение "+m.number),node("p","",title(m,env)));
+ const ready=m.revisions.filter(r=>r.ready);
+ if(ready.length>=2){const pair=comparisonDefaults(m);section.append(anchor("Сравнить редакции",comparisonRoute(m.number,pair.left,pair.right),"open"))}
  const grid=node("div","versions-grid");section.append(grid);
  for(const e of ["prod","test"]){
   const panel=node("div","version-panel");panel.append(node("h2","",envNames[e]+" контур"));grid.append(panel);
@@ -66,18 +68,22 @@ function renderVersions(m,env){
 let loadedRevision=null;
 function renderRoute(){
  const p=new URLSearchParams(location.hash.slice(1)),number=p.get("message"),env=p.get("env"),rev=p.get("rev"),field=p.get("field");
- for(const id of ["catalog","versions","viewer","error"])$(id).hidden=true;
+ for(const id of ["catalog","versions","viewer","comparison","error"])$(id).hidden=true;
  $("crumbs").replaceChildren(anchor("Все сообщения",""));
  if(!number){$("catalog").hidden=false;renderMessages();return}
  const m=messages.get(number);
  if(!m){$("error").hidden=false;$("error").replaceChildren(node("h1","","Сообщение не найдено"),node("p","","Выберите сообщение из каталога."));return}
  $("crumbs").append(node("span","","/"),anchor(number,route(number,env)));
+ if(p.has("compare")){$("comparison").hidden=false;$("crumbs").append(node("span","","/"),node("span","","Сравнение"));document.title="Сравнение СЭДО "+number;renderComparison(m,p);return}
  if(!rev){$("versions").hidden=false;renderVersions(m,env);return}
  const r=m.revisions.find(r=>r.revision_id===rev&&r.environment===env);
  if(!r||!r.ready){$("error").hidden=false;$("error").replaceChildren(node("h1","","Редакция недоступна"),anchor("Посмотреть доступные редакции",route(number,env)));return}
  $("viewer").hidden=false;$("crumbs").append(node("span","","/"),node("span","",label(r)));
  $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
  $("doc-source").href=r.document_url;
+ document.getElementById("compare-from-viewer")?.remove();
+ const pair=comparisonDefaults(m),other=m.revisions.find(x=>x.ready&&x.revision_id!==rev);
+ if(other){const link=anchor("Сравнить с другой редакцией",comparisonRoute(number,rev,pair.right===rev?other.revision_id:pair.right),"source");link.id="compare-from-viewer";$("doc-source").after(link)}
  const select=$("revision-switch");select.replaceChildren();
  for(const x of m.revisions.filter(r=>r.ready)){
   const duplicates=m.revisions.filter(y=>y.ready&&label(y)===label(x)).length>1;

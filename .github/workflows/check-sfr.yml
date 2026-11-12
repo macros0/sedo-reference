@@ -28,7 +28,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Test history preservation and update failures
-        run: python -m unittest discover -s tests -v
+        run: |
+          python -m unittest discover -s tests -v
+          node tests/test_compare.cjs
       - name: Collect both contours and validate candidate
         run: python auto_update.py
       - name: Commit validated data and deploy

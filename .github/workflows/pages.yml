@@ -18,6 +18,7 @@ jobs:
           python-version: "3.12"
       - name: Check catalog and build static reference
         run: |
+          node tests/test_compare.cjs
           python verify.py
           python build_site.py
           touch site/.nojekyll

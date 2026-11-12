@@ -9,6 +9,7 @@ def main():
     catalog=json.loads((HERE/"data/catalog.json").read_bytes())
     statuses={r["revision_id"]:r for r in json.loads((HERE/"data/fields/index.json").read_bytes())}
     site=HERE/"site";editions=site/"editions";editions.mkdir(parents=True,exist_ok=True)
+    comparison=site/"fields";comparison.mkdir(exist_ok=True)
     template=(HERE/"viewer-template.html").read_text("utf-8-sig")
     template=template.replace("<title>СЭДО · Справочник 10110</title>","<title>Справочник XML-полей</title>")
     # The containing catalog carries the selected message and revision.
@@ -28,10 +29,11 @@ restoreField();
         rid=r["revision_id"];ready=statuses.get(rid,{}).get("status")=="ready";r["ready"]=ready
         if not ready:continue
         fields=json.loads((HERE/"data/fields"/(rid+".json")).read_bytes())["fields"]
+        (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8")
         data=dict(fields=fields,revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
         (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
-    for file in ("index.html","app.js","app.css"):
+    for file in ("index.html","app.js","app.css","compare-core.js","compare.js"):
         (site/file).write_bytes((HERE/"web"/file).read_bytes())
     print(f"Built {len(catalog['revisions'])} revisions in {site}")
 if __name__=="__main__":main()
