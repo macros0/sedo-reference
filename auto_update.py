@@ -16,6 +16,19 @@ def validate_history(previous, current, directory):
     new_ids = {r["revision_id"] for r in current["revisions"]}
     if not old_ids <= new_ids:
         raise ValueError("Обновление потеряло сохраненные редакции")
+    events={e["revision_id"]:e for e in current["updates"]}
+    if len(events)!=len(current["updates"]) or set(events)!=new_ids:
+        raise ValueError("Журнал не соответствует сохранённым редакциям")
+    for event in previous.get("updates", []):
+        if events.get(event["revision_id"])!=event:
+            raise ValueError("Изменилось ранее сохранённое событие журнала")
+    revisions={r["revision_id"]:r for r in current["revisions"]}
+    for rid,event in events.items():
+        before=event["previous_revision_id"]
+        if before:
+            a,b=revisions.get(before),revisions[rid]
+            if not a or before==rid or (a["number"],a["environment"])!=(b["number"],b["environment"]):
+                raise ValueError("Некорректная ссылка сравнения в журнале")
     if current["review"]:
         raise ValueError("Новые схемы требуют проверки сопоставления")
     status = json.loads((directory / "data/fields/index.json").read_bytes())
@@ -73,7 +86,7 @@ def run(root):
             # Keep originals for all historical editions as well as their XSD archives.
             objects = {r["archive_sha256"] for r in current["revisions"] if r.get("archive_sha256")}
             objects.update(r["document_sha256"] for r in current["revisions"])
-            for name in ("current.json", "history.json", "last-run.json"):
+            for name in ("current.json", "history.json", "last-run.json", "observations.json"):
                 shutil.copy2(stage / "state" / name, root / "state" / name)
             shutil.copytree(stage / "state/snapshots", root / "state/snapshots", dirs_exist_ok=True)
             for digest in objects:

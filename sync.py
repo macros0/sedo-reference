@@ -29,6 +29,12 @@ def write(path,data):
     tmp=path.with_suffix(".partial")
     tmp.write_bytes(data)
     tmp.replace(path)
+def record_observation(base, digest, observed_at):
+    """Retain the first successful observation of content, even if it returns later."""
+    path = base / "observations.json"
+    observations = json.loads(path.read_bytes()) if path.exists() else dict(format=1, snapshots={})
+    observations["snapshots"].setdefault(digest, observed_at)
+    write(path, encode(observations))
 class Links(HTMLParser):
     def __init__(self):
         super().__init__(); self.items=[]; self.anchor=None
@@ -136,6 +142,7 @@ def sync(base):
     report=dict(observed_at=datetime.now(timezone.utc).isoformat(),snapshot=digest,previous=previous.get("snapshot"),files=len(tasks),errors=errors,diff=diff)
     write(base/"last-run.json",encode(report))
     if errors: raise ValueError(f"{len(errors)} file errors, see last-run.json")
+    record_observation(base, digest, report["observed_at"])
     history_file=base/"history.json"
     history=json.loads(history_file.read_bytes()) if history_file.exists() else []
     for key in (previous.get("snapshot"),digest):

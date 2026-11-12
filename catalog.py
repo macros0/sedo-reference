@@ -58,12 +58,24 @@ def derive(snapshot):
 def export(state,target):
     ptr=json.loads((state/"current.json").read_bytes())["snapshot"]
     history=json.loads((state/"history.json").read_bytes()) if (state/"history.json").exists() else [ptr]
+    observation_file=state/"observations.json"
+    observations=json.loads(observation_file.read_bytes())["snapshots"] if observation_file.exists() else {}
+    updates=[];previous_by_message={}
     versions={};current_ids=set();registry={};current_registry=set()
-    for key in dict.fromkeys([*history,ptr]):
+    for batch,key in enumerate(dict.fromkeys([*history,ptr])):
         d=derive(json.loads((state/"snapshots"/(key+".json")).read_bytes()))
+        added={}
         for row in d["revisions"]:
+            identity=(row["number"],row["environment"])
+            if row["revision_id"] not in versions:
+                updates.append(dict(revision_id=row["revision_id"],snapshot=key,
+                                    observed_at=observations.get(key),initial_import=batch==0,
+                                    previous_revision_id=previous_by_message.get(identity)))
+                added[identity]=row["revision_id"]
             versions[row["revision_id"]]=row
             if key==ptr:current_ids.add(row["revision_id"])
+        # Editions discovered in the same batch share a previous historical edition.
+        previous_by_message.update(added)
         for row in d["registry"]:
             identity=sha(encode(row))
             registry[identity]=row
@@ -71,6 +83,12 @@ def export(state,target):
         if key==ptr:latest=d
     latest["revisions"]=[dict(r,listed_now=i in current_ids) for i,r in versions.items()]
     latest["registry"]=[dict(row,listed_now=identity in current_registry) for identity,row in registry.items()]
+    latest["updates"]=updates
+    report_file=state/"last-run.json"
+    if report_file.exists():
+        report=json.loads(report_file.read_bytes())
+        if report.get("snapshot")==ptr and not report.get("errors"):
+            latest["checked_at"]=report["observed_at"]
     write(target,encode(latest))
     print(len(versions),"revisions;",len(latest["registry"]),"registry rows;",len(latest["review"]),"review items")
 

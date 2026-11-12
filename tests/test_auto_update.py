@@ -9,7 +9,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from auto_update import run
-from sync import encode, inspect_file, sha, write
+from sync import encode, inspect_file, record_observation, sha, write
 from verify import verify
 
 PROJECT = Path(__file__).resolve().parents[1]
@@ -28,6 +28,7 @@ class UpdateAcceptanceTests(unittest.TestCase):
         self.original = json.loads((self.root / "data/catalog.json").read_bytes())
         self.original_ids = {r["revision_id"] for r in self.original["revisions"]}
         self.pointer = (self.root / "state/current.json").read_bytes()
+        self.observations = (self.root / "state/observations.json").read_bytes()
 
     def collector(self, snapshot):
         def collect(state):
@@ -38,7 +39,9 @@ class UpdateAcceptanceTests(unittest.TestCase):
                 h.append(key)
             write(state / "history.json", encode(h))
             write(state / "current.json", encode({"snapshot": key}))
-            write(state / "last-run.json", encode({"observed_at": "2026-11-12T05:00:00+00:00", "errors": []}))
+            timestamp = "2026-11-13T04:17:00+00:00"
+            record_observation(state, key, timestamp)
+            write(state / "last-run.json", encode({"observed_at": timestamp, "snapshot": key, "errors": []}))
         return collect
 
     def execute(self, snapshot):
@@ -53,6 +56,7 @@ class UpdateAcceptanceTests(unittest.TestCase):
             self.assertEqual((PROJECT / "data/fields" / (rid + ".json")).read_bytes(),
                              (self.root / "data/fields" / (rid + ".json")).read_bytes())
         self.assertEqual(json.loads((self.root / "update-report.json").read_bytes())["new_revisions"], [])
+        self.assertEqual(current["updates"], self.original["updates"])
 
     def test_new_document_and_imported_schema_preserve_old_revisions(self):
         snapshot = copy.deepcopy(self.snapshot)
@@ -91,6 +95,9 @@ class UpdateAcceptanceTests(unittest.TestCase):
                          (PROJECT / "state/objects" / older["document_sha256"]).read_bytes())
         newest = next(r for r in current["revisions"] if r["number"] == "10110" and r["environment"] == "prod" and r["listed_now"])
         self.assertEqual(newest["document_version"], "3.1")
+        event = next(e for e in current["updates"] if e["revision_id"]==newest["revision_id"])
+        self.assertEqual(event["previous_revision_id"], older["revision_id"])
+        self.assertEqual(event["observed_at"], "2026-11-13T04:17:00+00:00")
         self.assertEqual((self.root / "state/objects" / newest["document_sha256"]).read_bytes(), content)
         self.assertEqual((self.root / "site/documents" / (newest["document_sha256"] + ".docx")).read_bytes(), content)
         # The Pages acceptance check must also accept more than one prod edition.
@@ -98,12 +105,14 @@ class UpdateAcceptanceTests(unittest.TestCase):
         # A second run of the same new sources keeps exactly the same edition set.
         repeat = self.execute(snapshot)
         self.assertEqual(ids, {r["revision_id"] for r in repeat["revisions"]})
+        self.assertEqual(repeat["updates"], current["updates"])
 
     def test_disappeared_link_keeps_previous_edition(self):
         snapshot = copy.deepcopy(self.snapshot)
         snapshot["entries"] = [r for r in snapshot["entries"] if not (r["environment"] == "prod" and "сообщения_10110_" in r["url"])]
         current = self.execute(snapshot)
         self.assertEqual(self.original_ids, {r["revision_id"] for r in current["revisions"]})
+        self.assertEqual(current["updates"], self.original["updates"])
         self.assertFalse(next(r for r in current["revisions"] if r["number"] == "10110" and r["environment"] == "prod")["listed_now"])
         published = json.loads((self.root / "site/catalog-data.js").read_text("utf8").removeprefix("window.SEDO_CATALOG=").removesuffix(";"))
         older = next(r for r in published["revisions"] if r["number"] == "10110" and r["environment"] == "prod")
@@ -117,6 +126,7 @@ class UpdateAcceptanceTests(unittest.TestCase):
         self.assertEqual(self.pointer, (self.root / "state/current.json").read_bytes())
         self.assertEqual(self.original, json.loads((self.root / "data/catalog.json").read_bytes()))
         self.assertEqual(json.loads((self.root / "update-report.json").read_bytes())["status"], "failed")
+        self.assertEqual(self.observations, (self.root / "state/observations.json").read_bytes())
 
     def test_corrupt_original_keeps_confirmed_state(self):
         snapshot = copy.deepcopy(self.snapshot)
@@ -128,6 +138,7 @@ class UpdateAcceptanceTests(unittest.TestCase):
             self.execute(snapshot)
         self.assertEqual(self.pointer, (self.root / "state/current.json").read_bytes())
         self.assertEqual(self.original, json.loads((self.root / "data/catalog.json").read_bytes()))
+        self.assertEqual(self.observations, (self.root / "state/observations.json").read_bytes())
 
     def test_unsupported_schema_keeps_confirmed_state(self):
         with patch("auto_update.sync", side_effect=self.collector(copy.deepcopy(self.snapshot))), patch("auto_update.build", side_effect=ValueError("Новая конструкция XSD")):

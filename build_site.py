@@ -62,7 +62,7 @@ restoreField();
         data=dict(fields=fields,revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
         (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
-    for file in ("index.html","app.js","app.css","compare-core.js","compare.js"):
+    for file in ("index.html","app.js","app.css","compare-core.js","compare.js","journal.js"):
         (site/file).write_bytes((HERE/"web"/file).read_bytes())
     print(f"Built {len(catalog['revisions'])} revisions in {site}")
 if __name__=="__main__":main()

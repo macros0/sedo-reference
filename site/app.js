@@ -45,6 +45,7 @@ function renderVersions(m,env){
  const section=$("versions");section.replaceChildren(node("h1","","Сообщение "+m.number),node("p","",title(m,env)));
  const ready=m.revisions.filter(r=>r.ready);
  if(ready.length>=2){const pair=comparisonDefaults(m);section.append(anchor("Сравнить редакции",comparisonRoute(m.number,pair.left,pair.right),"open"))}
+ section.append(anchor("Журнал сообщения",updatesRoute(m.number,env),"message-updates"));
  const grid=node("div","versions-grid");section.append(grid);
  for(const e of ["prod","test"]){
   const panel=node("div","version-panel");panel.append(node("h2","",envNames[e]+" контур"));grid.append(panel);
@@ -69,8 +70,9 @@ function renderVersions(m,env){
 let loadedRevision=null;
 function renderRoute(){
  const p=new URLSearchParams(location.hash.slice(1)),number=p.get("message"),env=p.get("env"),rev=p.get("rev"),field=p.get("field");
- for(const id of ["catalog","versions","viewer","comparison","error"])$(id).hidden=true;
+ for(const id of ["catalog","versions","viewer","comparison","updates","error"])$(id).hidden=true;
  $("crumbs").replaceChildren(anchor("Все сообщения",""));
+ if(p.has("updates")){$("updates").hidden=false;$("crumbs").append(node("span","","/"),node("span","","Журнал обновлений"));document.title="Журнал обновлений · СЭДО";renderUpdates(p);return}
  if(!number){$("catalog").hidden=false;renderMessages();return}
  const m=messages.get(number);
  if(!m){$("error").hidden=false;$("error").replaceChildren(node("h1","","Сообщение не найдено"),node("p","","Выберите сообщение из каталога."));return}
