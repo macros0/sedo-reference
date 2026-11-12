@@ -1,4 +1,4 @@
-"""Preview and confirm owner-supplied DOCX/XSD without changing official inventories."""
+"""Stage DOCX/XSD revisions for transactional incoming-folder imports."""
 import io
 import json
 import re

@@ -71,7 +71,7 @@ restoreField();
             raise ValueError("Не удалось посчитать изменения журнала (нужен Node.js 18+): "+detail[:1500]) from exc
         catalog["updates"]=json.loads(result.stdout)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
-    assets=("app.js","app.css","compare-core.js","compare.js","journal.js")
+    assets=("app.js","app.css","compare-core.js","compare.js","journal.js","favicon.svg")
     for file in assets:
         (site/file).write_bytes((HERE/"web"/file).read_bytes())
     # Content versions prevent cached old routing code from breaking new navigation.
