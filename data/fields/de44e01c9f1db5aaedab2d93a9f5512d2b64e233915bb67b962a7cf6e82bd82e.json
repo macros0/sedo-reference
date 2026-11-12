@@ -1,0 +1,23 @@
+{
+  "revision_id": "de44e01c9f1db5aaedab2d93a9f5512d2b64e233915bb67b962a7cf6e82bd82e",
+  "fields": [
+    {
+      "name": "dicAuthorityListRequest",
+      "path": "dicAuthorityListRequest",
+      "parent": -1,
+      "group": "",
+      "doc": "Запрос справочника полномочий",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    }
+  ]
+}

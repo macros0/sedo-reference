@@ -16,7 +16,26 @@ function loadComparisonData(revision){
  return comparisonData.get(revision);
 }
 function comparisonRoute(number,left,right){return new URLSearchParams({message:number,compare:"1",left,right}).toString()}
-function comparisonLabel(r){return label(r)+" · "+r.revision_id.slice(0,8)}
+function comparisonLabel(r){return "№ "+r.number+" · "+label(r)+" · "+r.revision_id.slice(0,8)}
+function canCompareTypes(a,b){return a===b||(catalog.message_transitions?.pairs||[]).some(p=>p.previous===a&&p.current===b||p.previous===b&&p.current===a)}
+function comparisonPool(m){
+ const numbers=new Set([m.number]);
+ for(const pair of catalog.message_transitions?.pairs||[]){if(pair.previous===m.number)numbers.add(pair.current);if(pair.current===m.number)numbers.add(pair.previous)}
+ return [...numbers].flatMap(number=>messages.get(number)?.revisions||[]).filter(r=>r.ready);
+}
+function crossTypePair(m,target,environment){
+ const pool=comparisonPool(m),latest=rows=>[...rows].sort((a,b)=>date(b.label_date).split(".").reverse().join("").localeCompare(date(a.label_date).split(".").reverse().join("")))[0];
+ for(const env of environment?[environment]:["prod","test"]){
+  const left=latest(pool.filter(r=>r.number===m.number&&r.environment===env)),right=latest(pool.filter(r=>r.number===target&&r.environment===env));
+  if(left&&right)return {left:left.revision_id,right:right.revision_id};
+ }
+ return null;
+}
+function appendRelatedComparisons(container,m,env){
+ const targets=[...new Set(comparisonPool(m).map(r=>r.number))].filter(n=>n!==m.number),links=node("div","related-comparisons");
+ for(const target of targets){const pair=crossTypePair(m,target,env);if(pair)links.append(anchor("Сравнить "+m.number+" → "+target,comparisonRoute(m.number,pair.left,pair.right),"source"))}
+ if(links.childNodes.length)container.append(links);
+}
 function comparisonDefaults(m){
  const ready=m.revisions.filter(r=>r.ready),prod=ready.filter(r=>r.environment==="prod"),test=ready.filter(r=>r.environment==="test");
  const latest=list=>[...list].sort((a,b)=>date(b.label_date).split(".").reverse().join("").localeCompare(date(a.label_date).split(".").reverse().join("")))[0];
@@ -25,15 +44,16 @@ function comparisonDefaults(m){
 }
 function formatDifference(value){
  if(value===undefined||value===null||value==="")return "Не указано";
- if(Array.isArray(value))return value.length?value.map(v=>Array.isArray(v)?v.join(" — "):String(v)).join("\n"):"Без ограничений в этом свойстве";
+ if(Array.isArray(value))return value.length?value.map(v=>Array.isArray(v)?v.join(" — "):v&&typeof v==="object"?JSON.stringify(v,null,2):String(v)).join("\n"):"Без ограничений в этом свойстве";
  if(typeof value==="object")return Object.keys(value).length?Object.entries(value).map(([k,v])=>k+" = "+v).join("\n"):"Без дополнительных свойств";
  return String(value);
 }
 async function renderComparison(m,params){
  const request=++comparisonRequest,section=$("comparison");section.replaceChildren(node("h1","","Сравнение сообщения "+m.number),node("p","",title(m)));
  const defaults=comparisonDefaults(m),leftId=params.get("left")||defaults.left,rightId=params.get("right")||defaults.right;
- const ready=m.revisions.filter(r=>r.ready),left=ready.find(r=>r.revision_id===leftId),right=ready.find(r=>r.revision_id===rightId);
+ const ready=comparisonPool(m),left=ready.find(r=>r.revision_id===leftId),right=ready.find(r=>r.revision_id===rightId);
  if(!left||!right){section.append(node("p","empty","Выбранная редакция недоступна для сравнения."));return}
+ if(left.number!==right.number){section.querySelector("h1").textContent="Сравнение сообщений "+left.number+" → "+right.number;section.append(node("p","meta","Сравниваются разные XML-форматы. Пути тегов сопоставляются полностью, включая имя корня."))}
  const controls=node("div","compare-controls"),selectors=[];
  for(const [caption,selected] of [["Было",left],["Стало",right]]){
   const wrap=node("label","",caption),select=node("select");
@@ -43,9 +63,10 @@ async function renderComparison(m,params){
  const switchSides=node("button","swap","Поменять местами");switchSides.type="button";
  switchSides.onclick=()=>{location.hash=comparisonRoute(m.number,rightId,leftId)};controls.append(switchSides);section.append(controls);
  selectors.forEach(select=>select.onchange=()=>{location.hash=comparisonRoute(m.number,selectors[0].value,selectors[1].value)});
+ if(!canCompareTypes(left.number,right.number)){section.append(node("p","empty","Для этих типов нет подтверждённого соответствия. Выберите прежний тип и его новый формат либо две редакции одного типа."));return}
  const sources=node("div","compare-sources");
  for(const [caption,r] of [["Было",left],["Стало",right]]){
-  const box=node("div");box.append(node("strong","",caption+" · "+comparisonLabel(r)),node("br"),documentDownload(r),document.createTextNode(" · "),revisionOrigin(r),document.createTextNode(" · "),anchor("Открыть дерево",route(m.number,r.environment,r.revision_id),"source"));sources.append(box)
+  const box=node("div");box.append(node("strong","",caption+" · "+comparisonLabel(r)),node("br"),documentDownload(r),document.createTextNode(" · "),revisionOrigin(r),document.createTextNode(" · "),anchor("Открыть дерево",route(r.number,r.environment,r.revision_id),"source"));sources.append(box)
  }
  section.append(sources);
  const state=node("p","empty","Сравниваем деревья…");section.append(state);
@@ -72,8 +93,8 @@ async function renderComparison(m,params){
      table.append(body);const scroll=node("div","table-scroll");scroll.append(table);card.append(scroll);
     }
     const links=node("div","difference-links");
-    if(r.before)links.append(anchor("Поле в «Было»",route(m.number,left.environment,leftId,r.path)));
-    if(r.after)links.append(anchor("Поле в «Стало»",route(m.number,right.environment,rightId,r.path)));
+    if(r.before)links.append(anchor("Поле в «Было»",route(left.number,left.environment,leftId,r.path)));
+    if(r.after)links.append(anchor("Поле в «Стало»",route(right.number,right.environment,rightId,r.path)));
     card.append(links);list.append(card);
    }
   }

@@ -1,0 +1,90 @@
+{
+  "revision_id": "bb2eb7eeedc6606f1ed1629caf41d5f1962994646c43685aaa16e0deaacb4b12",
+  "fields": [
+    {
+      "name": "revocationPowerOfAttorney",
+      "path": "revocationPowerOfAttorney",
+      "parent": -1,
+      "group": "",
+      "doc": "Корневой элемент запроса отзыва доверенности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "RevocationPowerOfAttorneyType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2,
+        3
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "uuid",
+      "path": "revocationPowerOfAttorney/uuid",
+      "parent": 0,
+      "group": "",
+      "doc": "UUID отзываемой электронной доверенности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "c:UuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "revokeChain",
+      "path": "revocationPowerOfAttorney/revokeChain",
+      "parent": 0,
+      "group": "",
+      "doc": "Признак, указывающий, что надо отозвать зависимые доверенности",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {
+        "fixed": "true"
+      }
+    },
+    {
+      "name": "reason",
+      "path": "revocationPowerOfAttorney/reason",
+      "parent": 0,
+      "group": "",
+      "doc": "Основание для отзыва",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    }
+  ]
+}

@@ -28,7 +28,9 @@ def archive_documents(catalog, state, site):
                 inspect_file(content, "docx")
             except Exception as exc:
                 raise ValueError("Повреждён DOCX " + digest) from exc
-            write(site / relative, content)
+            target=site/relative
+            if not target.is_file() or target.read_bytes()!=content:
+                write(target, content)
             checked.add(digest)
         version = r.get("document_version") or "unversioned"
         filename = f"sedo-{r['number']}-{r['environment']}-v{version}-{digest[:8]}.docx"

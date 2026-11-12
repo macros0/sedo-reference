@@ -9054,6 +9054,2694 @@
       "version_tables": [],
       "revision_id": "e52826b350b20449c87d5078bf4d5eb3c2083dc862160f2e969fc7c4d44e7988",
       "listed_now": true
+    },
+    {
+      "number": "111",
+      "title": "Уведомление об изменении ЭЛН",
+      "root": "changeElnNotice",
+      "namespace": "http://www.fss.ru/integration/types/eln/ins/notice/v01",
+      "archive_sha256": "d26e70ba2ec1e9b52bdf8c75835b5611d67fe2f25b1e0a5bb323e6d645430b01",
+      "archive_url": "https://lk.sfr.gov.ru/prab/eln-xsd.zip",
+      "archive_name": "eln-xsd.zip",
+      "schema_path": "eln-xsd/xsd/v01/eln/Notice.xsd",
+      "dependencies": [
+        [
+          "../type/Common.xsd",
+          "17f725069dc053ed45bb36e8b499e87042424365c7b872b66704db0eb0b49805"
+        ],
+        [
+          "../type/Eln.xsd",
+          "487a1cfc5db0764b87204e54de6e3fa6454dc26655ff7ca31ad31c935880215f"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "0d51a8faaac526038a23c3a82d971456acb6595694a1b47919a48efe9fdd0831"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "FileOperationsLnIns.xsd",
+          "6c4a32dd5a74c2883d5c512204e56c36932bea7e15e6fdbd484036db245d0443"
+        ],
+        [
+          "Notice.xsd",
+          "e3eec9f4e22892c05256386bfee6ad21d6f6fc9cee98f499b6face6139e4ac7a"
+        ],
+        [
+          "WsSecurity.xsd",
+          "f52a007141b6b41011ebfb9e65236390a359863a8a09e35fbd4af04701f66972"
+        ]
+      ],
+      "dependency_digest": "5a38d05f38ab5e927b4aaf7fdf89893923ea646789570f09a2d17e808e576b8a",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.1_Пр_14_ЭЛН (20.01.2025).docx",
+      "document_sha256": "02351821f5db70a37b231e91126681f5aefce017899f3cb1a33a6075eb9b6c1a",
+      "document_version": "2.1",
+      "label_date": "20.01.2025",
+      "module": "Сообщения ФК «Электронный листок нетрудоспособности»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "c617a9d4559a5e874d9f6fb0aca88334a0dc82fc7d4621e5a84e0142f96277a7",
+      "listed_now": true
+    },
+    {
+      "number": "15",
+      "title": "заявление на подтверждение основного вида экономической деятельности",
+      "root": "statementPovedRequest",
+      "namespace": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "archive_sha256": "fdd9fde6f0cc168e7d9bf9a25e1b1e2239b2b5d5282d60951bb70fe24f44306d",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (09.06.2026).docx#embedded=word/document.xml#combined",
+      "archive_name": "Схемы одного DOCX.zip (из DOCX)",
+      "schema_path": "package-1/Poved.xsd",
+      "dependencies": [
+        [
+          "../package-2/v01/type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../package-2/v01/type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../package-2/v01/type/WsClient.xsd",
+          "0c7ba28443fbf36efa54c57d4ba472d96b2cf5177a2c3352e26c677258d95e03"
+        ],
+        [
+          "Poved.xsd",
+          "38dccc3d1e7f89b7bdd439e63a684c0605357719f1be7c127a2f862fac12ebec"
+        ]
+      ],
+      "dependency_digest": "f03daf0e21fc2bf0f14f7e6968f966b5c17bc1436ad15d042b9419ed46ec9b57",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (09.06.2026).docx",
+      "document_sha256": "d048abee7679f5deddd69b07478859bb6d3ab3cd5dfd5fae2cad94fc8952fef7",
+      "document_version": "5.5",
+      "label_date": "09.06.2026",
+      "module": "Сообщения ФК «Реестр страхователей»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "da26c812d0ca671eb7dfa12e04964867fbd68b8b90da86252c71ccfffbba2563",
+      "listed_now": true
+    },
+    {
+      "number": "16",
+      "title": "уведомление об изменении статуса запроса на подтверждение основного вида экономической деятельности",
+      "root": "statusChangeNotification",
+      "namespace": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "archive_sha256": "fdd9fde6f0cc168e7d9bf9a25e1b1e2239b2b5d5282d60951bb70fe24f44306d",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (09.06.2026).docx#embedded=word/document.xml#combined",
+      "archive_name": "Схемы одного DOCX.zip (из DOCX)",
+      "schema_path": "package-1/Poved.xsd",
+      "dependencies": [
+        [
+          "../package-2/v01/type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../package-2/v01/type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../package-2/v01/type/WsClient.xsd",
+          "0c7ba28443fbf36efa54c57d4ba472d96b2cf5177a2c3352e26c677258d95e03"
+        ],
+        [
+          "Poved.xsd",
+          "38dccc3d1e7f89b7bdd439e63a684c0605357719f1be7c127a2f862fac12ebec"
+        ]
+      ],
+      "dependency_digest": "f03daf0e21fc2bf0f14f7e6968f966b5c17bc1436ad15d042b9419ed46ec9b57",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (09.06.2026).docx",
+      "document_sha256": "d048abee7679f5deddd69b07478859bb6d3ab3cd5dfd5fae2cad94fc8952fef7",
+      "document_version": "5.5",
+      "label_date": "09.06.2026",
+      "module": "Сообщения ФК «Реестр страхователей»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "c2e46d1d56915a52c5940594ef5b6099af68932d7c2900c41c19bf0e2047459b",
+      "listed_now": true
+    },
+    {
+      "number": "31",
+      "title": "уведомление о размере страховых взносов юридического лица",
+      "root": "signedNotice",
+      "namespace": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "archive_sha256": "fdd9fde6f0cc168e7d9bf9a25e1b1e2239b2b5d5282d60951bb70fe24f44306d",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (09.06.2026).docx#embedded=word/document.xml#combined",
+      "archive_name": "Схемы одного DOCX.zip (из DOCX)",
+      "schema_path": "package-1/Poved.xsd",
+      "dependencies": [
+        [
+          "../package-2/v01/type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../package-2/v01/type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../package-2/v01/type/WsClient.xsd",
+          "0c7ba28443fbf36efa54c57d4ba472d96b2cf5177a2c3352e26c677258d95e03"
+        ],
+        [
+          "Poved.xsd",
+          "38dccc3d1e7f89b7bdd439e63a684c0605357719f1be7c127a2f862fac12ebec"
+        ]
+      ],
+      "dependency_digest": "f03daf0e21fc2bf0f14f7e6968f966b5c17bc1436ad15d042b9419ed46ec9b57",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (09.06.2026).docx",
+      "document_sha256": "d048abee7679f5deddd69b07478859bb6d3ab3cd5dfd5fae2cad94fc8952fef7",
+      "document_version": "5.5",
+      "label_date": "09.06.2026",
+      "module": "Сообщения ФК «Реестр страхователей»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "e144364a7f5824250b1a74c329a819e5bb3d3fc74ebd9d05a1ef9b453e42e504",
+      "listed_now": true
+    },
+    {
+      "number": "79",
+      "title": "результат обработки заявления на предоставление субсидии",
+      "root": "sttmntRefundUnemplResult",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "03b300e9fd1ee44aba24b71c14b9b21b5ee707fbc6feccb2c709e4a6cb38e237",
+      "listed_now": true
+    },
+    {
+      "number": "80",
+      "title": "запрос статуса транша по заявлению на предоставление субсидии",
+      "root": "sttmntStatusRequest",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "0bd20c74167c1b1d487dfe9ef26967da860f75cb3f69408c9b1863b8fb0d8989",
+      "listed_now": true
+    },
+    {
+      "number": "81",
+      "title": "статус транша по заявлению на предоставление субсидии",
+      "root": "sttmntStatusResponse",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "c5b39c53c2baef277557f112d13e810fa44fc2cb36b18f9e1799702726fd05d1",
+      "listed_now": true
+    },
+    {
+      "number": "83",
+      "title": "результат обработки заявления об отказе от субсидии, предоставляемой для стимулирования найма безработных граждан",
+      "root": "sttmntRefuseRefundUnemplResult",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "784bedc6dab98350cc6ad8d33a75c1ef9d5bb8a2af0bd992a345a8eec8c3e0a6",
+      "listed_now": true
+    },
+    {
+      "number": "10",
+      "title": "извещение ПВСО",
+      "root": "notice",
+      "namespace": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "archive_sha256": "37a07a96bef34f8b7eb163161b5d7ff7848547519e28b099f7f05edafb8bc86a",
+      "archive_url": "https://lk.sfr.gov.ru/prab/proactive-xsd-1.50.0-SNAPSHOT-prod.zip",
+      "archive_name": "proactive-xsd-1.50.0-SNAPSHOT-prod.zip",
+      "schema_path": "proactive-xsd-1.50.0-SNAPSHOT-prod/proactive-xsd-1.50.0-SNAPSHOT-prod/v01/pvso/Notice.xsd",
+      "dependencies": [
+        [
+          "../type/Common.xsd",
+          "3d4ab51bcacf9534557d19e90aa66781c9735851bcfcd989fcef72d9bc089e88"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "34b04b9b64a0d843a8a90009f92be579a243687f55ecfca80abce89743929e70"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "Notice.xsd",
+          "2ce12f3d8d3c0f779b6c3d03b353fba04044965179a57dd151485a4b5c911e65"
+        ]
+      ],
+      "dependency_digest": "edd416b3d5bb2bec41f3d5a4d79c6f2f0f262317c8165827f5beb56d1dc3cd8d",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.28_Пр_10_Проактив (05.11.2025).docx",
+      "document_sha256": "b62acea93382df925714766770e07d01bb8e24758f20072eaa15f9173f61b64a",
+      "document_version": "2.28",
+      "label_date": "05.11.2025",
+      "module": "Сообщения модуля «Проактивное назначение страхового обеспеченияи прямые выплаты»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "cfb0b466680789f3ad39c53a1d5de6237cc2d6535e41325de59c85bde0dec4f5",
+      "listed_now": true
+    },
+    {
+      "number": "84",
+      "title": "запрос статуса выплаты пособия по временной нетрудоспособности и материнству",
+      "root": "paymentStatusRequest",
+      "namespace": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
+      "archive_sha256": "37a07a96bef34f8b7eb163161b5d7ff7848547519e28b099f7f05edafb8bc86a",
+      "archive_url": "https://lk.sfr.gov.ru/prab/proactive-xsd-1.50.0-SNAPSHOT-prod.zip",
+      "archive_name": "proactive-xsd-1.50.0-SNAPSHOT-prod.zip",
+      "schema_path": "proactive-xsd-1.50.0-SNAPSHOT-prod/proactive-xsd-1.50.0-SNAPSHOT-prod/v01/pvso/PaymentState.xsd",
+      "dependencies": [
+        [
+          "../type/Common.xsd",
+          "3d4ab51bcacf9534557d19e90aa66781c9735851bcfcd989fcef72d9bc089e88"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "PaymentState.xsd",
+          "d348f19e3e642f0cfbe77fe5c70ff3c6dddc5d285a3519241a8a916b9e9f3923"
+        ]
+      ],
+      "dependency_digest": "75f5773044bb30e0a11c63260c2e80fe8d6177a7dd3d224a323e5299abf2f556",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.28_Пр_10_Проактив (05.11.2025).docx",
+      "document_sha256": "b62acea93382df925714766770e07d01bb8e24758f20072eaa15f9173f61b64a",
+      "document_version": "2.28",
+      "label_date": "05.11.2025",
+      "module": "Сообщения модуля «Проактивное назначение страхового обеспеченияи прямые выплаты»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "231f487fd08a56a8cb29a804718b9c784d9e624f94a8466c34ae3f550e0c980b",
+      "listed_now": true
+    },
+    {
+      "number": "85",
+      "title": "статус выплаты пособия по временной нетрудоспособности и материнству",
+      "root": "paymentStatusResponse",
+      "namespace": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
+      "archive_sha256": "37a07a96bef34f8b7eb163161b5d7ff7848547519e28b099f7f05edafb8bc86a",
+      "archive_url": "https://lk.sfr.gov.ru/prab/proactive-xsd-1.50.0-SNAPSHOT-prod.zip",
+      "archive_name": "proactive-xsd-1.50.0-SNAPSHOT-prod.zip",
+      "schema_path": "proactive-xsd-1.50.0-SNAPSHOT-prod/proactive-xsd-1.50.0-SNAPSHOT-prod/v01/pvso/PaymentState.xsd",
+      "dependencies": [
+        [
+          "../type/Common.xsd",
+          "3d4ab51bcacf9534557d19e90aa66781c9735851bcfcd989fcef72d9bc089e88"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "PaymentState.xsd",
+          "d348f19e3e642f0cfbe77fe5c70ff3c6dddc5d285a3519241a8a916b9e9f3923"
+        ]
+      ],
+      "dependency_digest": "75f5773044bb30e0a11c63260c2e80fe8d6177a7dd3d224a323e5299abf2f556",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.28_Пр_10_Проактив (05.11.2025).docx",
+      "document_sha256": "b62acea93382df925714766770e07d01bb8e24758f20072eaa15f9173f61b64a",
+      "document_version": "2.28",
+      "label_date": "05.11.2025",
+      "module": "Сообщения модуля «Проактивное назначение страхового обеспеченияи прямые выплаты»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "6964bfe61efdc0b25068c6c4b50784eca91eddc9953cb6ff275b13c417bed64c",
+      "listed_now": true
+    },
+    {
+      "number": "104",
+      "title": "Уведомление о прекращении отпуска по уходу за ребенком до полутора лет",
+      "root": "noticeTerminationRequest",
+      "namespace": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "archive_sha256": "37a07a96bef34f8b7eb163161b5d7ff7848547519e28b099f7f05edafb8bc86a",
+      "archive_url": "https://lk.sfr.gov.ru/prab/proactive-xsd-1.50.0-SNAPSHOT-prod.zip",
+      "archive_name": "proactive-xsd-1.50.0-SNAPSHOT-prod.zip",
+      "schema_path": "proactive-xsd-1.50.0-SNAPSHOT-prod/proactive-xsd-1.50.0-SNAPSHOT-prod/v01/pvso/NoticeTerminationType_05.xsd",
+      "dependencies": [
+        [
+          "NoticeTerminationType_05.xsd",
+          "f0b6d0d5a67aaa4cd3d88fbacdd33bcf362deda51dbebba624284c39b205da81"
+        ]
+      ],
+      "dependency_digest": "2bd48a805a6e0eb9136906ee12d527cf9108626f8a51dc59f4ff8bae62839e66",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.28_Пр_10_Проактив (05.11.2025).docx",
+      "document_sha256": "b62acea93382df925714766770e07d01bb8e24758f20072eaa15f9173f61b64a",
+      "document_version": "2.28",
+      "label_date": "05.11.2025",
+      "module": "Сообщения модуля «Проактивное назначение страхового обеспеченияи прямые выплаты»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "7c5d484e0622ae59d2b2e5fc42136ef95e1940609eecddf42ca17ce88f7850bc",
+      "listed_now": true
+    },
+    {
+      "number": "94",
+      "title": "Сведения для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно",
+      "root": "additionalVacationStatement",
+      "namespace": "http://www.fss.ru/additionalVacationStatement",
+      "archive_sha256": "e6e356fededbf6ae8fa1481dee69e0986e8d2a5d75e2c763cc2b376c918bfc8f",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx#embedded=word/document.xml#schema-1",
+      "archive_name": "inline-1.xsd (из DOCX)",
+      "schema_path": "inline-1.xsd",
+      "dependencies": [
+        [
+          "inline-1.xsd",
+          "e2104ddc4c878c93ac5e4aeda0665cc145df49776a7cabcc28591f95f0573689"
+        ]
+      ],
+      "dependency_digest": "6215be47d9bdb9b2ea4741726943968bb0c131a101838aa622fd9d415f3471d6",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx",
+      "document_sha256": "7c48f79c9d36c34aad8ceb172d97078625df0337038dfe77ff06ffb5149ab6df",
+      "document_version": "2.2",
+      "label_date": "25.07.2023",
+      "module": "Сообщения ФК «Возмещение вреда»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "f19097fb0b88622f9eb8133531c50c146a82619ee90eb6857cb1b437ed629357",
+      "listed_now": true
+    },
+    {
+      "number": "95",
+      "title": "Результат обработки сведений для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно",
+      "root": "additionalVacationStatementResponse",
+      "namespace": "http://www.fss.ru/additionalVacationStatement",
+      "archive_sha256": "e6e356fededbf6ae8fa1481dee69e0986e8d2a5d75e2c763cc2b376c918bfc8f",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx#embedded=word/document.xml#schema-1",
+      "archive_name": "inline-1.xsd (из DOCX)",
+      "schema_path": "inline-1.xsd",
+      "dependencies": [
+        [
+          "inline-1.xsd",
+          "e2104ddc4c878c93ac5e4aeda0665cc145df49776a7cabcc28591f95f0573689"
+        ]
+      ],
+      "dependency_digest": "6215be47d9bdb9b2ea4741726943968bb0c131a101838aa622fd9d415f3471d6",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx",
+      "document_sha256": "7c48f79c9d36c34aad8ceb172d97078625df0337038dfe77ff06ffb5149ab6df",
+      "document_version": "2.2",
+      "label_date": "25.07.2023",
+      "module": "Сообщения ФК «Возмещение вреда»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "2defcc2cc95bdbe6439ddd32dc94095b2667a0724b4763aed5e985f8b3996424",
+      "listed_now": true
+    },
+    {
+      "number": "96",
+      "title": "Направление дополнительных документов по сведениям для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно",
+      "root": "additionalVacationStatementDocs",
+      "namespace": "http://www.fss.ru/additionalVacationStatement",
+      "archive_sha256": "e6e356fededbf6ae8fa1481dee69e0986e8d2a5d75e2c763cc2b376c918bfc8f",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx#embedded=word/document.xml#schema-1",
+      "archive_name": "inline-1.xsd (из DOCX)",
+      "schema_path": "inline-1.xsd",
+      "dependencies": [
+        [
+          "inline-1.xsd",
+          "e2104ddc4c878c93ac5e4aeda0665cc145df49776a7cabcc28591f95f0573689"
+        ]
+      ],
+      "dependency_digest": "6215be47d9bdb9b2ea4741726943968bb0c131a101838aa622fd9d415f3471d6",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx",
+      "document_sha256": "7c48f79c9d36c34aad8ceb172d97078625df0337038dfe77ff06ffb5149ab6df",
+      "document_version": "2.2",
+      "label_date": "25.07.2023",
+      "module": "Сообщения ФК «Возмещение вреда»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "35d2c142a53d12bfe99bbb7199d5f441579380f44e67ce3f36e9a0f4e2541c17",
+      "listed_now": true
+    },
+    {
+      "number": "97",
+      "title": "Результат рассмотрения сведений для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно",
+      "root": "resultAddVacationStatement",
+      "namespace": "http://www.fss.ru/additionalVacationStatement",
+      "archive_sha256": "e6e356fededbf6ae8fa1481dee69e0986e8d2a5d75e2c763cc2b376c918bfc8f",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx#embedded=word/document.xml#schema-1",
+      "archive_name": "inline-1.xsd (из DOCX)",
+      "schema_path": "inline-1.xsd",
+      "dependencies": [
+        [
+          "inline-1.xsd",
+          "e2104ddc4c878c93ac5e4aeda0665cc145df49776a7cabcc28591f95f0573689"
+        ]
+      ],
+      "dependency_digest": "6215be47d9bdb9b2ea4741726943968bb0c131a101838aa622fd9d415f3471d6",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx",
+      "document_sha256": "7c48f79c9d36c34aad8ceb172d97078625df0337038dfe77ff06ffb5149ab6df",
+      "document_version": "2.2",
+      "label_date": "25.07.2023",
+      "module": "Сообщения ФК «Возмещение вреда»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "5a6b5a3e7cbaf0087b2504fce53a9ce77c0e7e649c9fb38f977fe897bf03d35a",
+      "listed_now": true
+    },
+    {
+      "number": "111",
+      "title": "Уведомление об изменении ЭЛН",
+      "root": "changeElnNotice",
+      "namespace": "http://www.fss.ru/integration/types/eln/ins/notice/v01",
+      "archive_sha256": "d26e70ba2ec1e9b52bdf8c75835b5611d67fe2f25b1e0a5bb323e6d645430b01",
+      "archive_url": "https://lk-test.fss.ru/prab/eln-xsd.zip",
+      "archive_name": "eln-xsd.zip",
+      "schema_path": "eln-xsd/xsd/v01/eln/Notice.xsd",
+      "dependencies": [
+        [
+          "../type/Common.xsd",
+          "17f725069dc053ed45bb36e8b499e87042424365c7b872b66704db0eb0b49805"
+        ],
+        [
+          "../type/Eln.xsd",
+          "487a1cfc5db0764b87204e54de6e3fa6454dc26655ff7ca31ad31c935880215f"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "0d51a8faaac526038a23c3a82d971456acb6595694a1b47919a48efe9fdd0831"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "FileOperationsLnIns.xsd",
+          "6c4a32dd5a74c2883d5c512204e56c36932bea7e15e6fdbd484036db245d0443"
+        ],
+        [
+          "Notice.xsd",
+          "e3eec9f4e22892c05256386bfee6ad21d6f6fc9cee98f499b6face6139e4ac7a"
+        ],
+        [
+          "WsSecurity.xsd",
+          "f52a007141b6b41011ebfb9e65236390a359863a8a09e35fbd4af04701f66972"
+        ]
+      ],
+      "dependency_digest": "5a38d05f38ab5e927b4aaf7fdf89893923ea646789570f09a2d17e808e576b8a",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_14_ЭЛН (31.10.2024).docx",
+      "document_sha256": "496ff67a30218b2501c456abc237827059a2c0d34ee0aa6246a3a9daa9ebc276",
+      "document_version": "2.2",
+      "label_date": "31.10.2024",
+      "module": "Сообщения ФК «Электронный листок нетрудоспособности»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "625e438c007896c450e7f891b38c414ed8a66595f98372af0a64d7fcf8192c19",
+      "listed_now": true
+    },
+    {
+      "number": "15",
+      "title": "заявление на подтверждение основного вида экономической деятельности",
+      "root": "statementPovedRequest",
+      "namespace": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "archive_sha256": "fdd9fde6f0cc168e7d9bf9a25e1b1e2239b2b5d5282d60951bb70fe24f44306d",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (20.08.2025).docx#embedded=word/document.xml#combined",
+      "archive_name": "Схемы одного DOCX.zip (из DOCX)",
+      "schema_path": "package-1/Poved.xsd",
+      "dependencies": [
+        [
+          "../package-2/v01/type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../package-2/v01/type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../package-2/v01/type/WsClient.xsd",
+          "0c7ba28443fbf36efa54c57d4ba472d96b2cf5177a2c3352e26c677258d95e03"
+        ],
+        [
+          "Poved.xsd",
+          "38dccc3d1e7f89b7bdd439e63a684c0605357719f1be7c127a2f862fac12ebec"
+        ]
+      ],
+      "dependency_digest": "f03daf0e21fc2bf0f14f7e6968f966b5c17bc1436ad15d042b9419ed46ec9b57",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (20.08.2025).docx",
+      "document_sha256": "c02d1153d3bdd128ac9138af8bcf64bb6aacc9f172e7e211944d8632bc2df554",
+      "document_version": "5.5",
+      "label_date": "20.08.2025",
+      "module": "Сообщения ФК «Реестр страхователей»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "c19484d7a514e86a3e081b95924e627a8298cdad7629de3fb208a4ae13641cca",
+      "listed_now": true
+    },
+    {
+      "number": "16",
+      "title": "уведомление об изменении статуса запроса на подтверждение основного вида экономической деятельности",
+      "root": "statusChangeNotification",
+      "namespace": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "archive_sha256": "fdd9fde6f0cc168e7d9bf9a25e1b1e2239b2b5d5282d60951bb70fe24f44306d",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (20.08.2025).docx#embedded=word/document.xml#combined",
+      "archive_name": "Схемы одного DOCX.zip (из DOCX)",
+      "schema_path": "package-1/Poved.xsd",
+      "dependencies": [
+        [
+          "../package-2/v01/type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../package-2/v01/type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../package-2/v01/type/WsClient.xsd",
+          "0c7ba28443fbf36efa54c57d4ba472d96b2cf5177a2c3352e26c677258d95e03"
+        ],
+        [
+          "Poved.xsd",
+          "38dccc3d1e7f89b7bdd439e63a684c0605357719f1be7c127a2f862fac12ebec"
+        ]
+      ],
+      "dependency_digest": "f03daf0e21fc2bf0f14f7e6968f966b5c17bc1436ad15d042b9419ed46ec9b57",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (20.08.2025).docx",
+      "document_sha256": "c02d1153d3bdd128ac9138af8bcf64bb6aacc9f172e7e211944d8632bc2df554",
+      "document_version": "5.5",
+      "label_date": "20.08.2025",
+      "module": "Сообщения ФК «Реестр страхователей»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "2bec967668efb96a11d26d1f501251ea8a54de4689d1beb0b4272c2e39a9fa30",
+      "listed_now": true
+    },
+    {
+      "number": "31",
+      "title": "уведомление о размере страховых взносов юридического лица",
+      "root": "signedNotice",
+      "namespace": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "archive_sha256": "fdd9fde6f0cc168e7d9bf9a25e1b1e2239b2b5d5282d60951bb70fe24f44306d",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (20.08.2025).docx#embedded=word/document.xml#combined",
+      "archive_name": "Схемы одного DOCX.zip (из DOCX)",
+      "schema_path": "package-1/Poved.xsd",
+      "dependencies": [
+        [
+          "../package-2/v01/type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../package-2/v01/type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../package-2/v01/type/WsClient.xsd",
+          "0c7ba28443fbf36efa54c57d4ba472d96b2cf5177a2c3352e26c677258d95e03"
+        ],
+        [
+          "Poved.xsd",
+          "38dccc3d1e7f89b7bdd439e63a684c0605357719f1be7c127a2f862fac12ebec"
+        ]
+      ],
+      "dependency_digest": "f03daf0e21fc2bf0f14f7e6968f966b5c17bc1436ad15d042b9419ed46ec9b57",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v5.5 Пр_05_РУСТ (20.08.2025).docx",
+      "document_sha256": "c02d1153d3bdd128ac9138af8bcf64bb6aacc9f172e7e211944d8632bc2df554",
+      "document_version": "5.5",
+      "label_date": "20.08.2025",
+      "module": "Сообщения ФК «Реестр страхователей»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "0b59ff7e1092ea368f7e226692007a5b4773b0433c5368ddff2de29c85df4478",
+      "listed_now": true
+    },
+    {
+      "number": "79",
+      "title": "результат обработки заявления на предоставление субсидии",
+      "root": "sttmntRefundUnemplResult",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "912d36349ff07c4f58145d1058d2877bc8bf219ada5053620fda69e4bcd52b51",
+      "listed_now": true
+    },
+    {
+      "number": "80",
+      "title": "запрос статуса транша по заявлению на предоставление субсидии",
+      "root": "sttmntStatusRequest",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "576522e279aacb2a6f79638d86cf52a58b6fa678a566aa8ed404e18c73b36908",
+      "listed_now": true
+    },
+    {
+      "number": "81",
+      "title": "статус транша по заявлению на предоставление субсидии",
+      "root": "sttmntStatusResponse",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "9c1819b62e07fdbe320bab8a4d6d95c2c0c6eef89ef2f251929408948256f02b",
+      "listed_now": true
+    },
+    {
+      "number": "83",
+      "title": "результат обработки заявления об отказе от субсидии, предоставляемой для стимулирования найма безработных граждан",
+      "root": "sttmntRefuseRefundUnemplResult",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "8cfdfc3224b1aa14ce6a31fe7d4e8746249f2612e8d97126f4ca7b4fa74954e5",
+      "listed_now": true
+    },
+    {
+      "number": "10",
+      "title": "извещение ПВСО",
+      "root": "notice",
+      "namespace": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "archive_sha256": "100a224028b26509e5ec7c8846a0426e52be25c5abf0b0eee0a62606ff8d9b87",
+      "archive_url": "https://lk-test.fss.ru/prab/proactive-xsd-1.51.0-SNAPSHOT-test.zip",
+      "archive_name": "proactive-xsd-1.51.0-SNAPSHOT-test.zip",
+      "schema_path": "proactive-xsd-1.51.0-SNAPSHOT-test/proactive-xsd-test/xsd/v01/pvso/Notice.xsd",
+      "dependencies": [
+        [
+          "../type/Common.xsd",
+          "3d4ab51bcacf9534557d19e90aa66781c9735851bcfcd989fcef72d9bc089e88"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "34b04b9b64a0d843a8a90009f92be579a243687f55ecfca80abce89743929e70"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "Notice.xsd",
+          "2ce12f3d8d3c0f779b6c3d03b353fba04044965179a57dd151485a4b5c911e65"
+        ]
+      ],
+      "dependency_digest": "edd416b3d5bb2bec41f3d5a4d79c6f2f0f262317c8165827f5beb56d1dc3cd8d",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация_типов_документов_СЭДО_v2_49_Пр_10_Проактив_18_12_2025.docx",
+      "document_sha256": "af85e31615ca10269ca20027b3d7430ccbe1ce196d129bc18e49eef02d3139f8",
+      "document_version": "2.49",
+      "label_date": "18.12.2025",
+      "module": "Сообщения модуля «Проактивное назначение страхового обеспеченияи прямые выплаты»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "aaba147f9eb8802dfafcbfa85f636a5ece9d875bc4b2752610f394269d51757c",
+      "listed_now": true
+    },
+    {
+      "number": "84",
+      "title": "запрос статуса выплаты пособия по временной нетрудоспособности и материнству",
+      "root": "paymentStatusRequest",
+      "namespace": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
+      "archive_sha256": "100a224028b26509e5ec7c8846a0426e52be25c5abf0b0eee0a62606ff8d9b87",
+      "archive_url": "https://lk-test.fss.ru/prab/proactive-xsd-1.51.0-SNAPSHOT-test.zip",
+      "archive_name": "proactive-xsd-1.51.0-SNAPSHOT-test.zip",
+      "schema_path": "proactive-xsd-1.51.0-SNAPSHOT-test/proactive-xsd-test/xsd/v01/pvso/PaymentState.xsd",
+      "dependencies": [
+        [
+          "../type/Common.xsd",
+          "3d4ab51bcacf9534557d19e90aa66781c9735851bcfcd989fcef72d9bc089e88"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "PaymentState.xsd",
+          "d348f19e3e642f0cfbe77fe5c70ff3c6dddc5d285a3519241a8a916b9e9f3923"
+        ]
+      ],
+      "dependency_digest": "75f5773044bb30e0a11c63260c2e80fe8d6177a7dd3d224a323e5299abf2f556",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация_типов_документов_СЭДО_v2_49_Пр_10_Проактив_18_12_2025.docx",
+      "document_sha256": "af85e31615ca10269ca20027b3d7430ccbe1ce196d129bc18e49eef02d3139f8",
+      "document_version": "2.49",
+      "label_date": "18.12.2025",
+      "module": "Сообщения модуля «Проактивное назначение страхового обеспеченияи прямые выплаты»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "6babb31da2b6f28dca57db5f77032e1a5bb8c27b62cbb330a5203c2cafbe603a",
+      "listed_now": true
+    },
+    {
+      "number": "85",
+      "title": "статус выплаты пособия по временной нетрудоспособности и материнству",
+      "root": "paymentStatusResponse",
+      "namespace": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
+      "archive_sha256": "100a224028b26509e5ec7c8846a0426e52be25c5abf0b0eee0a62606ff8d9b87",
+      "archive_url": "https://lk-test.fss.ru/prab/proactive-xsd-1.51.0-SNAPSHOT-test.zip",
+      "archive_name": "proactive-xsd-1.51.0-SNAPSHOT-test.zip",
+      "schema_path": "proactive-xsd-1.51.0-SNAPSHOT-test/proactive-xsd-test/xsd/v01/pvso/PaymentState.xsd",
+      "dependencies": [
+        [
+          "../type/Common.xsd",
+          "3d4ab51bcacf9534557d19e90aa66781c9735851bcfcd989fcef72d9bc089e88"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "PaymentState.xsd",
+          "d348f19e3e642f0cfbe77fe5c70ff3c6dddc5d285a3519241a8a916b9e9f3923"
+        ]
+      ],
+      "dependency_digest": "75f5773044bb30e0a11c63260c2e80fe8d6177a7dd3d224a323e5299abf2f556",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация_типов_документов_СЭДО_v2_49_Пр_10_Проактив_18_12_2025.docx",
+      "document_sha256": "af85e31615ca10269ca20027b3d7430ccbe1ce196d129bc18e49eef02d3139f8",
+      "document_version": "2.49",
+      "label_date": "18.12.2025",
+      "module": "Сообщения модуля «Проактивное назначение страхового обеспеченияи прямые выплаты»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "bf725d54324f1e94aae2b9d926d5852c283374a098623a235a66d4a434896282",
+      "listed_now": true
+    },
+    {
+      "number": "104",
+      "title": "Уведомление о прекращении отпуска по уходу за ребенком до полутора лет",
+      "root": "noticeTerminationRequest",
+      "namespace": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "archive_sha256": "100a224028b26509e5ec7c8846a0426e52be25c5abf0b0eee0a62606ff8d9b87",
+      "archive_url": "https://lk-test.fss.ru/prab/proactive-xsd-1.51.0-SNAPSHOT-test.zip",
+      "archive_name": "proactive-xsd-1.51.0-SNAPSHOT-test.zip",
+      "schema_path": "proactive-xsd-1.51.0-SNAPSHOT-test/proactive-xsd-test/xsd/v01/pvso/NoticeTerminationType_05.xsd",
+      "dependencies": [
+        [
+          "NoticeTerminationType_05.xsd",
+          "f0b6d0d5a67aaa4cd3d88fbacdd33bcf362deda51dbebba624284c39b205da81"
+        ]
+      ],
+      "dependency_digest": "2bd48a805a6e0eb9136906ee12d527cf9108626f8a51dc59f4ff8bae62839e66",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация_типов_документов_СЭДО_v2_49_Пр_10_Проактив_18_12_2025.docx",
+      "document_sha256": "af85e31615ca10269ca20027b3d7430ccbe1ce196d129bc18e49eef02d3139f8",
+      "document_version": "2.49",
+      "label_date": "18.12.2025",
+      "module": "Сообщения модуля «Проактивное назначение страхового обеспеченияи прямые выплаты»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "647ff27496b599cb094d76f506ab62b63a9c32af0fb8ec86eacb7cda5374eb7d",
+      "listed_now": true
+    },
+    {
+      "number": "122",
+      "title": "Решение об отказе в возмещении расходов на оплату дополнительных выходных дней для ухода за детьми-инвалидами",
+      "root": "disabilityChildrenStatementReject",
+      "namespace": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "archive_sha256": "100a224028b26509e5ec7c8846a0426e52be25c5abf0b0eee0a62606ff8d9b87",
+      "archive_url": "https://lk-test.fss.ru/prab/proactive-xsd-1.51.0-SNAPSHOT-test.zip",
+      "archive_name": "proactive-xsd-1.51.0-SNAPSHOT-test.zip",
+      "schema_path": "proactive-xsd-1.51.0-SNAPSHOT-test/proactive-xsd-test/xsd/v01/pvso/disabilityChildrenStatement.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "09d2d4f59ad98c2e3f5a5d9af967a4839fbfe57fc274193f9d570b55ea39a828"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "923f5f9cd6c0d8fbc455bcb4912acd60537007b759ffe28262273a9366349069"
+        ],
+        [
+          "../type/Common.xsd",
+          "3d4ab51bcacf9534557d19e90aa66781c9735851bcfcd989fcef72d9bc089e88"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "34b04b9b64a0d843a8a90009f92be579a243687f55ecfca80abce89743929e70"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "disabilityChildrenStatement.xsd",
+          "d8151a503b180a0e6acfc91b508493a6eca3066a6024e3e058d138cf7c4dc84a"
+        ]
+      ],
+      "dependency_digest": "6460c0c0be33947581d18f921c4e0d116768843555a02811b3cc07efda79c2ea",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация_типов_документов_СЭДО_v2_49_Пр_10_Проактив_18_12_2025.docx",
+      "document_sha256": "af85e31615ca10269ca20027b3d7430ccbe1ce196d129bc18e49eef02d3139f8",
+      "document_version": "2.49",
+      "label_date": "18.12.2025",
+      "module": "Сообщения модуля «Проактивное назначение страхового обеспеченияи прямые выплаты»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "3186ba0a6aff64a3d852ffaa5f66d8ecb8bb4938ab88b30f1d6b7ce9cab4aa77",
+      "listed_now": true
+    },
+    {
+      "number": "200",
+      "title": "Создание доверености",
+      "root": "powerOfAttorney",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk-test.fss.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx",
+      "document_sha256": "483c914f0c9d6954982f3d15cd4ee302d59c5661225c8e14fb0f295824ca1845",
+      "document_version": "2.2",
+      "label_date": "18.08.2023",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "d6440e98e998d7fba962aa2f0c4003887179d69003969bfb2e306260682e630b",
+      "listed_now": true
+    },
+    {
+      "number": "201",
+      "title": "Запрос отзыва доверености",
+      "root": "revocationPowerOfAttorney",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk-test.fss.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx",
+      "document_sha256": "483c914f0c9d6954982f3d15cd4ee302d59c5661225c8e14fb0f295824ca1845",
+      "document_version": "2.2",
+      "label_date": "18.08.2023",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "bb2eb7eeedc6606f1ed1629caf41d5f1962994646c43685aaa16e0deaacb4b12",
+      "listed_now": true
+    },
+    {
+      "number": "202",
+      "title": "Запрос списка доворености",
+      "root": "powerOfAttorneyListRequest",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk-test.fss.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx",
+      "document_sha256": "483c914f0c9d6954982f3d15cd4ee302d59c5661225c8e14fb0f295824ca1845",
+      "document_version": "2.2",
+      "label_date": "18.08.2023",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "a53e06b600c0bd1fd0e3e688c3e4130476acbdd13f66e813340afec87a740aae",
+      "listed_now": true
+    },
+    {
+      "number": "203",
+      "title": "Запрос доверености",
+      "root": "powerOfAttorneyRequest",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk-test.fss.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx",
+      "document_sha256": "483c914f0c9d6954982f3d15cd4ee302d59c5661225c8e14fb0f295824ca1845",
+      "document_version": "2.2",
+      "label_date": "18.08.2023",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "af7711badc4843352b6df0705a8d116c57a47f2b427bdf39a4615c445a8f6b7a",
+      "listed_now": true
+    },
+    {
+      "number": "205",
+      "title": "Запрос справочника полномочий",
+      "root": "dicAuthorityListRequest",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk-test.fss.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx",
+      "document_sha256": "483c914f0c9d6954982f3d15cd4ee302d59c5661225c8e14fb0f295824ca1845",
+      "document_version": "2.2",
+      "label_date": "18.08.2023",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "66b90f9d1e74ed09dc00fc7d05fae6df87ff8b81735eb32d0220dd1f561cddfc",
+      "listed_now": true
+    },
+    {
+      "number": "206",
+      "title": "Ответ на запрос регистрации доверености",
+      "root": "registerPowerOfAttorneyResult",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk-test.fss.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx",
+      "document_sha256": "483c914f0c9d6954982f3d15cd4ee302d59c5661225c8e14fb0f295824ca1845",
+      "document_version": "2.2",
+      "label_date": "18.08.2023",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "d32fc7c7e487e49eb7a5ec86a8b1ecd24deae226cc6fa8b76d45903c5a796443",
+      "listed_now": true
+    },
+    {
+      "number": "207",
+      "title": "Ответ на запрос отзыва доверености",
+      "root": "revocationPowerOfAttorneyResult",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk-test.fss.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx",
+      "document_sha256": "483c914f0c9d6954982f3d15cd4ee302d59c5661225c8e14fb0f295824ca1845",
+      "document_version": "2.2",
+      "label_date": "18.08.2023",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "d65829a6a533fdddb6b629b59a1a3f58a2553e0b56f74f941a9019df2806bc5b",
+      "listed_now": true
+    },
+    {
+      "number": "208",
+      "title": "Ответ на запрос списка доверенностей",
+      "root": "powerOfAttorneyList",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk-test.fss.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx",
+      "document_sha256": "483c914f0c9d6954982f3d15cd4ee302d59c5661225c8e14fb0f295824ca1845",
+      "document_version": "2.2",
+      "label_date": "18.08.2023",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "60663b11065ac1affff8e2547b8a25157ad3a3e073610ed83af7d246cd0cd652",
+      "listed_now": true
+    },
+    {
+      "number": "209",
+      "title": "Ответ на запрос доверености",
+      "root": "powerOfAttorneyResponse",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk-test.fss.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx",
+      "document_sha256": "483c914f0c9d6954982f3d15cd4ee302d59c5661225c8e14fb0f295824ca1845",
+      "document_version": "2.2",
+      "label_date": "18.08.2023",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "e04188e1c4e7ddef59b06f640aa829faa6db369d8e87190d642c942a5d9ee0a1",
+      "listed_now": true
+    },
+    {
+      "number": "211",
+      "title": "Ответ на запрос справочника полномочий",
+      "root": "dicAuthorityListResponse",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk-test.fss.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx",
+      "document_sha256": "483c914f0c9d6954982f3d15cd4ee302d59c5661225c8e14fb0f295824ca1845",
+      "document_version": "2.2",
+      "label_date": "18.08.2023",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "390fb3e303c33d7730cb72021baca573fb471e2425dbecab062ed64418a5914a",
+      "listed_now": true
+    },
+    {
+      "number": "94",
+      "title": "Сведения для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно",
+      "root": "additionalVacationStatement",
+      "namespace": "http://www.fss.ru/additionalVacationStatement",
+      "archive_sha256": "e6e356fededbf6ae8fa1481dee69e0986e8d2a5d75e2c763cc2b376c918bfc8f",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx#embedded=word/document.xml#schema-1",
+      "archive_name": "inline-1.xsd (из DOCX)",
+      "schema_path": "inline-1.xsd",
+      "dependencies": [
+        [
+          "inline-1.xsd",
+          "e2104ddc4c878c93ac5e4aeda0665cc145df49776a7cabcc28591f95f0573689"
+        ]
+      ],
+      "dependency_digest": "6215be47d9bdb9b2ea4741726943968bb0c131a101838aa622fd9d415f3471d6",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx",
+      "document_sha256": "7c48f79c9d36c34aad8ceb172d97078625df0337038dfe77ff06ffb5149ab6df",
+      "document_version": "2.2",
+      "label_date": null,
+      "module": "Сообщения ФК «Возмещение вреда»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "fda9888ca96167555344dea8a0ddb99202c416d0da75110e6d29c6fb8e8835b2",
+      "listed_now": true
+    },
+    {
+      "number": "95",
+      "title": "Результат обработки сведений для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно",
+      "root": "additionalVacationStatementResponse",
+      "namespace": "http://www.fss.ru/additionalVacationStatement",
+      "archive_sha256": "e6e356fededbf6ae8fa1481dee69e0986e8d2a5d75e2c763cc2b376c918bfc8f",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx#embedded=word/document.xml#schema-1",
+      "archive_name": "inline-1.xsd (из DOCX)",
+      "schema_path": "inline-1.xsd",
+      "dependencies": [
+        [
+          "inline-1.xsd",
+          "e2104ddc4c878c93ac5e4aeda0665cc145df49776a7cabcc28591f95f0573689"
+        ]
+      ],
+      "dependency_digest": "6215be47d9bdb9b2ea4741726943968bb0c131a101838aa622fd9d415f3471d6",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx",
+      "document_sha256": "7c48f79c9d36c34aad8ceb172d97078625df0337038dfe77ff06ffb5149ab6df",
+      "document_version": "2.2",
+      "label_date": null,
+      "module": "Сообщения ФК «Возмещение вреда»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "b91902ff245f558977f596de48ddbd77829599c3b63533952628ed6b8ac15c36",
+      "listed_now": true
+    },
+    {
+      "number": "96",
+      "title": "Направление дополнительных документов по сведениям для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно",
+      "root": "additionalVacationStatementDocs",
+      "namespace": "http://www.fss.ru/additionalVacationStatement",
+      "archive_sha256": "e6e356fededbf6ae8fa1481dee69e0986e8d2a5d75e2c763cc2b376c918bfc8f",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx#embedded=word/document.xml#schema-1",
+      "archive_name": "inline-1.xsd (из DOCX)",
+      "schema_path": "inline-1.xsd",
+      "dependencies": [
+        [
+          "inline-1.xsd",
+          "e2104ddc4c878c93ac5e4aeda0665cc145df49776a7cabcc28591f95f0573689"
+        ]
+      ],
+      "dependency_digest": "6215be47d9bdb9b2ea4741726943968bb0c131a101838aa622fd9d415f3471d6",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx",
+      "document_sha256": "7c48f79c9d36c34aad8ceb172d97078625df0337038dfe77ff06ffb5149ab6df",
+      "document_version": "2.2",
+      "label_date": null,
+      "module": "Сообщения ФК «Возмещение вреда»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "5ba3272af375cc378313ee39e59e2a6dab3ae52a9ed3bf447099f006c9b5e921",
+      "listed_now": true
+    },
+    {
+      "number": "97",
+      "title": "Результат рассмотрения сведений для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно",
+      "root": "resultAddVacationStatement",
+      "namespace": "http://www.fss.ru/additionalVacationStatement",
+      "archive_sha256": "e6e356fededbf6ae8fa1481dee69e0986e8d2a5d75e2c763cc2b376c918bfc8f",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx#embedded=word/document.xml#schema-1",
+      "archive_name": "inline-1.xsd (из DOCX)",
+      "schema_path": "inline-1.xsd",
+      "dependencies": [
+        [
+          "inline-1.xsd",
+          "e2104ddc4c878c93ac5e4aeda0665cc145df49776a7cabcc28591f95f0573689"
+        ]
+      ],
+      "dependency_digest": "6215be47d9bdb9b2ea4741726943968bb0c131a101838aa622fd9d415f3471d6",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx",
+      "document_sha256": "7c48f79c9d36c34aad8ceb172d97078625df0337038dfe77ff06ffb5149ab6df",
+      "document_version": "2.2",
+      "label_date": null,
+      "module": "Сообщения ФК «Возмещение вреда»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "a15f5ced161525b938ec67baa49b7d542a5c0b769318a9355ed327c936a1e9b7",
+      "listed_now": true
+    },
+    {
+      "number": "115",
+      "title": "Уведомление в адрес медицинской организации о необходимости внесения исправлений в ЭЛН",
+      "root": "notice",
+      "namespace": null,
+      "archive_sha256": "68f13c1302022da4078f90ccffa6a24ec9e7ad48c832369e5d81b6ecaad6c740",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.1_Пр_14_ЭЛН (20.01.2025).docx#embedded=word/document.xml#schema-1",
+      "archive_name": "inline-1.xsd (из DOCX)",
+      "schema_path": "inline-1.xsd",
+      "dependencies": [
+        [
+          "inline-1.xsd",
+          "8290caad35a3b0683efbfce99e8af0b90fc6a81071a74a463af6579d69e3bfa2"
+        ]
+      ],
+      "dependency_digest": "d1eea2e0db8861d4e955bf7d219ed7866c84eef6e7fe96594e0b9d59ec60e51b",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.1_Пр_14_ЭЛН (20.01.2025).docx",
+      "document_sha256": "02351821f5db70a37b231e91126681f5aefce017899f3cb1a33a6075eb9b6c1a",
+      "document_version": "2.1",
+      "label_date": "20.01.2025",
+      "module": "Сообщения ФК «Электронный листок нетрудоспособности»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "8744f3bff2100c957a82516ffe0b24e4d7c6827677f432a57fde1643703a6dd1",
+      "listed_now": true
+    },
+    {
+      "number": "78",
+      "title": "заявление на предоставление субсидии",
+      "root": "sttmntRefundUnempl",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "def41714d016fad5783765db91f0d5e9d9509847e665aa8df7e1c21cc96451c3",
+      "listed_now": true
+    },
+    {
+      "number": "82",
+      "title": "заявление об отказе от субсидии, предоставляемой для стимулирования найма безработных граждан",
+      "root": "sttmntRefuseRefundUnempl",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "9608f15d761169d0854824198e87a53abb6c33ddb3d4ee96d2249c8ae23dfb43",
+      "listed_now": true
+    },
+    {
+      "number": "200",
+      "title": "Создание доверенности",
+      "root": "powerOfAttorney",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx",
+      "document_sha256": "dd43ec1268cc6fd463503b22737ba6e666473c50b058d0415ed9e7971a9da050",
+      "document_version": "2.2",
+      "label_date": "21.10.2025",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "95b21d794acce59415916cf11fe779d550e2544c99e2c01a75595e5ac3b7ef5a",
+      "listed_now": true
+    },
+    {
+      "number": "201",
+      "title": "Запрос отзыва доверенности",
+      "root": "revocationPowerOfAttorney",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx",
+      "document_sha256": "dd43ec1268cc6fd463503b22737ba6e666473c50b058d0415ed9e7971a9da050",
+      "document_version": "2.2",
+      "label_date": "21.10.2025",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "20431a721c78307ead21d97394c846d3e49f2df49c78f7168971c146f34d5721",
+      "listed_now": true
+    },
+    {
+      "number": "202",
+      "title": "Запрос списка доворености",
+      "root": "powerOfAttorneyListRequest",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx",
+      "document_sha256": "dd43ec1268cc6fd463503b22737ba6e666473c50b058d0415ed9e7971a9da050",
+      "document_version": "2.2",
+      "label_date": "21.10.2025",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "97c31ef81860da31323f70d96d11fd158a001974b905b9baff475a634b42adbe",
+      "listed_now": true
+    },
+    {
+      "number": "203",
+      "title": "Запрос доверенности",
+      "root": "powerOfAttorneyRequest",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx",
+      "document_sha256": "dd43ec1268cc6fd463503b22737ba6e666473c50b058d0415ed9e7971a9da050",
+      "document_version": "2.2",
+      "label_date": "21.10.2025",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "299e5ebddc9dd05ad657e28727e1b4ed1d308c87aff46d5546cf0551afbd52c3",
+      "listed_now": true
+    },
+    {
+      "number": "205",
+      "title": "Запрос справочника полномочий",
+      "root": "dicAuthorityListRequest",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx",
+      "document_sha256": "dd43ec1268cc6fd463503b22737ba6e666473c50b058d0415ed9e7971a9da050",
+      "document_version": "2.2",
+      "label_date": "21.10.2025",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "de44e01c9f1db5aaedab2d93a9f5512d2b64e233915bb67b962a7cf6e82bd82e",
+      "listed_now": true
+    },
+    {
+      "number": "206",
+      "title": "Ответ на запрос регистрации доверенности",
+      "root": "registerPowerOfAttorneyResult",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx",
+      "document_sha256": "dd43ec1268cc6fd463503b22737ba6e666473c50b058d0415ed9e7971a9da050",
+      "document_version": "2.2",
+      "label_date": "21.10.2025",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "c524b03c8597427b5798235cbc0cd37b082d79e5ab5a1cb6a6eb57fa8edea94f",
+      "listed_now": true
+    },
+    {
+      "number": "207",
+      "title": "Ответ на запрос отзыва доверенности",
+      "root": "revocationPowerOfAttorneyResult",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx",
+      "document_sha256": "dd43ec1268cc6fd463503b22737ba6e666473c50b058d0415ed9e7971a9da050",
+      "document_version": "2.2",
+      "label_date": "21.10.2025",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "6f6111495a5018f683b1bd5b18b1a88025b7cba49463b173693a113d2433e57f",
+      "listed_now": true
+    },
+    {
+      "number": "208",
+      "title": "Ответ на запрос списка доверенностей",
+      "root": "powerOfAttorneyList",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx",
+      "document_sha256": "dd43ec1268cc6fd463503b22737ba6e666473c50b058d0415ed9e7971a9da050",
+      "document_version": "2.2",
+      "label_date": "21.10.2025",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "5821b976fa8e47239cfe57c567ef935e7bb5119c402ebdb2e53395a440dde632",
+      "listed_now": true
+    },
+    {
+      "number": "209",
+      "title": "Ответ на запрос доверенности",
+      "root": "powerOfAttorneyResponse",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx",
+      "document_sha256": "dd43ec1268cc6fd463503b22737ba6e666473c50b058d0415ed9e7971a9da050",
+      "document_version": "2.2",
+      "label_date": "21.10.2025",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "17c533d63d5941987dd02892732f255f63ed376475a812008b90beb1d5a8590d",
+      "listed_now": true
+    },
+    {
+      "number": "211",
+      "title": "Ответ на запрос справочника полномочий",
+      "root": "dicAuthorityListResponse",
+      "namespace": "urn:ru:fss:integration:types:mchd:v01",
+      "archive_sha256": "afc97e5e77e3baaa1d80facf2bedcd8743e862dbe228794f0d981fcb55b9b225",
+      "archive_url": "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip",
+      "archive_name": "mchd-xsd-23-05-2023.zip",
+      "schema_path": "v01/mchd/PowerOfAttorney.xsd",
+      "dependencies": [
+        [
+          "../../v02/type/Person.xsd",
+          "41e1ce365a1bf32574b143238e61005cfa857e9470b011e8d7365a191e340274"
+        ],
+        [
+          "../dic/IdentityDocuments.xsd",
+          "8629d17d6969351f3da9eab9eaa67ad0f1cf880e24c5100aa44928f24378c7f1"
+        ],
+        [
+          "../type/Common.xsd",
+          "af79f68d08cd3079bd26edaa27030472309d02913e74e16e241cff85b33f0dc2"
+        ],
+        [
+          "../type/Errors.xsd",
+          "53f76615bbb92a7b1c2748a96c452459074a66eeb02209982dffd98f1f7e3bbe"
+        ],
+        [
+          "../type/Organization.xsd",
+          "cb3a114ce11df8ae4cf71e696d932b7fa229635777897982e0810242c8446720"
+        ],
+        [
+          "PowerOfAttorney.xsd",
+          "359b624ad48851938d5fb276387eee2b7d4e633e331b5c4702914eacdd01fd97"
+        ]
+      ],
+      "dependency_digest": "4a3c0974e23c8e287b50cc637c084091a280737bfda5fba0686596f5369322be",
+      "environment": "prod",
+      "document_url": "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (21.10.2025).docx",
+      "document_sha256": "dd43ec1268cc6fd463503b22737ba6e666473c50b058d0415ed9e7971a9da050",
+      "document_version": "2.2",
+      "label_date": "21.10.2025",
+      "module": "Сообщения ФК «Управление доверенностями»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "043ab52c83e7e3ba3a943769bfc282688036141ffa827aa46843b42336e00de6",
+      "listed_now": true
+    },
+    {
+      "number": "115",
+      "title": "Уведомление в адрес медицинской организации о необходимости внесения исправлений в ЭЛН",
+      "root": "notice",
+      "namespace": null,
+      "archive_sha256": "68f13c1302022da4078f90ccffa6a24ec9e7ad48c832369e5d81b6ecaad6c740",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_14_ЭЛН (31.10.2024).docx#embedded=word/document.xml#schema-1",
+      "archive_name": "inline-1.xsd (из DOCX)",
+      "schema_path": "inline-1.xsd",
+      "dependencies": [
+        [
+          "inline-1.xsd",
+          "8290caad35a3b0683efbfce99e8af0b90fc6a81071a74a463af6579d69e3bfa2"
+        ]
+      ],
+      "dependency_digest": "d1eea2e0db8861d4e955bf7d219ed7866c84eef6e7fe96594e0b9d59ec60e51b",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_14_ЭЛН (31.10.2024).docx",
+      "document_sha256": "496ff67a30218b2501c456abc237827059a2c0d34ee0aa6246a3a9daa9ebc276",
+      "document_version": "2.2",
+      "label_date": "31.10.2024",
+      "module": "Сообщения ФК «Электронный листок нетрудоспособности»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "c64e170493118910cf5f05d2dfb96dcf83cf9381e9753ae2c013962b1fa44aa2",
+      "listed_now": true
+    },
+    {
+      "number": "78",
+      "title": "заявление на предоставление субсидии",
+      "root": "sttmntRefundUnempl",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "2f25383fd691a2c4e898941bbb8965278ae0d98220508e2ed735f3a1f0576ff5",
+      "listed_now": true
+    },
+    {
+      "number": "82",
+      "title": "заявление об отказе от субсидии, предоставляемой для стимулирования найма безработных граждан",
+      "root": "sttmntRefuseRefundUnempl",
+      "namespace": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
+      "archive_sha256": "e6aad143f4b6ce5d078f731d3bc19200ee4515528e3529e3c40a9f1301aeeb4f",
+      "archive_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx#embedded=word/embeddings/oleObject1.bin",
+      "archive_name": "xsd.7z (из DOCX)",
+      "schema_path": "xsd/pvso/RefundUnempl.xsd",
+      "dependencies": [
+        [
+          "../dic/RegionRate.xsd",
+          "9786be70579bf3fb48eafa3da51f6b2ea7a37f98bdccbd301dd9badb3257688b"
+        ],
+        [
+          "../type/Common.xsd",
+          "77ad7e135db2534bd67a24cf0f1bd02c643c8833c2fb4bb40416b1d9446e061d"
+        ],
+        [
+          "../type/CommonUQ.xsd",
+          "57d47db70f28af924fbc6df344634300ab4193f981331dc5a47676c72c8b3f61"
+        ],
+        [
+          "../type/Errors.xsd",
+          "3f9f9e83043d2a5e74c1bb9d9c7684db4297d62c00f548400fccbde813ffb818"
+        ],
+        [
+          "../type/FssDepartment.xsd",
+          "2acafa7c9d234eb62b9a7bdea9ce8aaf75214d848d3a816d8387ed6df3a5fbb7"
+        ],
+        [
+          "../type/IdentityDocument.xsd",
+          "19326083a806511b37083a5bae98d419d76f17e6dff7e7c8cd1e0deb52aabceb"
+        ],
+        [
+          "../type/Organization.xsd",
+          "8fbc57a31783482a76227c9edc0449b47d38f3e11784a566fd353b9f509f6901"
+        ],
+        [
+          "../type/Person.xsd",
+          "59f7fa19b1b023429a3af3766406bac6c5354804623449607c57ac44e805d338"
+        ],
+        [
+          "RefundUnempl.xsd",
+          "a4913e369413f4b806566a540737bc020d5fa1aa54894b2303e6b4f5e27f91a9"
+        ]
+      ],
+      "dependency_digest": "aee2d50f0d37f8db28817c9c68b49b3f17d60809820875d2db53ef2c6fcf5fe6",
+      "environment": "test",
+      "document_url": "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx",
+      "document_sha256": "7c9ecc82fc783d3a3b6b0759b428266196b6a3b446691aa2e708d7aec2f8679b",
+      "document_version": "2.5",
+      "label_date": "05.03.2024",
+      "module": "Сообщения «Субсидирование найма»",
+      "source_type": "module",
+      "status": "matched",
+      "version_tables": [],
+      "revision_id": "5dba78da05ddce5b469bf56aa32d07456335ac0d0eb6e8a7b77cec6dd848f553",
+      "listed_now": true
     }
   ],
   "registry": [
@@ -12760,7 +15448,420 @@
       "observed_at": "2026-11-12T21:07:42.554861+00:00",
       "initial_import": false,
       "previous_revision_id": null
+    },
+    {
+      "revision_id": "c617a9d4559a5e874d9f6fb0aca88334a0dc82fc7d4621e5a84e0142f96277a7",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "da26c812d0ca671eb7dfa12e04964867fbd68b8b90da86252c71ccfffbba2563",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "c2e46d1d56915a52c5940594ef5b6099af68932d7c2900c41c19bf0e2047459b",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "e144364a7f5824250b1a74c329a819e5bb3d3fc74ebd9d05a1ef9b453e42e504",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "03b300e9fd1ee44aba24b71c14b9b21b5ee707fbc6feccb2c709e4a6cb38e237",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "0bd20c74167c1b1d487dfe9ef26967da860f75cb3f69408c9b1863b8fb0d8989",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "c5b39c53c2baef277557f112d13e810fa44fc2cb36b18f9e1799702726fd05d1",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "784bedc6dab98350cc6ad8d33a75c1ef9d5bb8a2af0bd992a345a8eec8c3e0a6",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "cfb0b466680789f3ad39c53a1d5de6237cc2d6535e41325de59c85bde0dec4f5",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "231f487fd08a56a8cb29a804718b9c784d9e624f94a8466c34ae3f550e0c980b",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "6964bfe61efdc0b25068c6c4b50784eca91eddc9953cb6ff275b13c417bed64c",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "7c5d484e0622ae59d2b2e5fc42136ef95e1940609eecddf42ca17ce88f7850bc",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "f19097fb0b88622f9eb8133531c50c146a82619ee90eb6857cb1b437ed629357",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "2defcc2cc95bdbe6439ddd32dc94095b2667a0724b4763aed5e985f8b3996424",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "35d2c142a53d12bfe99bbb7199d5f441579380f44e67ce3f36e9a0f4e2541c17",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "5a6b5a3e7cbaf0087b2504fce53a9ce77c0e7e649c9fb38f977fe897bf03d35a",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "625e438c007896c450e7f891b38c414ed8a66595f98372af0a64d7fcf8192c19",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "c19484d7a514e86a3e081b95924e627a8298cdad7629de3fb208a4ae13641cca",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "2bec967668efb96a11d26d1f501251ea8a54de4689d1beb0b4272c2e39a9fa30",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "0b59ff7e1092ea368f7e226692007a5b4773b0433c5368ddff2de29c85df4478",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "912d36349ff07c4f58145d1058d2877bc8bf219ada5053620fda69e4bcd52b51",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "576522e279aacb2a6f79638d86cf52a58b6fa678a566aa8ed404e18c73b36908",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "9c1819b62e07fdbe320bab8a4d6d95c2c0c6eef89ef2f251929408948256f02b",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "8cfdfc3224b1aa14ce6a31fe7d4e8746249f2612e8d97126f4ca7b4fa74954e5",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "aaba147f9eb8802dfafcbfa85f636a5ece9d875bc4b2752610f394269d51757c",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "6babb31da2b6f28dca57db5f77032e1a5bb8c27b62cbb330a5203c2cafbe603a",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "bf725d54324f1e94aae2b9d926d5852c283374a098623a235a66d4a434896282",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "647ff27496b599cb094d76f506ab62b63a9c32af0fb8ec86eacb7cda5374eb7d",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "3186ba0a6aff64a3d852ffaa5f66d8ecb8bb4938ab88b30f1d6b7ce9cab4aa77",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "d6440e98e998d7fba962aa2f0c4003887179d69003969bfb2e306260682e630b",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "bb2eb7eeedc6606f1ed1629caf41d5f1962994646c43685aaa16e0deaacb4b12",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "a53e06b600c0bd1fd0e3e688c3e4130476acbdd13f66e813340afec87a740aae",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "af7711badc4843352b6df0705a8d116c57a47f2b427bdf39a4615c445a8f6b7a",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "66b90f9d1e74ed09dc00fc7d05fae6df87ff8b81735eb32d0220dd1f561cddfc",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "d32fc7c7e487e49eb7a5ec86a8b1ecd24deae226cc6fa8b76d45903c5a796443",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "d65829a6a533fdddb6b629b59a1a3f58a2553e0b56f74f941a9019df2806bc5b",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "60663b11065ac1affff8e2547b8a25157ad3a3e073610ed83af7d246cd0cd652",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "e04188e1c4e7ddef59b06f640aa829faa6db369d8e87190d642c942a5d9ee0a1",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "390fb3e303c33d7730cb72021baca573fb471e2425dbecab062ed64418a5914a",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "fda9888ca96167555344dea8a0ddb99202c416d0da75110e6d29c6fb8e8835b2",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "b91902ff245f558977f596de48ddbd77829599c3b63533952628ed6b8ac15c36",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "5ba3272af375cc378313ee39e59e2a6dab3ae52a9ed3bf447099f006c9b5e921",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "a15f5ced161525b938ec67baa49b7d542a5c0b769318a9355ed327c936a1e9b7",
+      "snapshot": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+      "observed_at": "2026-11-12T21:53:00.546211+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "8744f3bff2100c957a82516ffe0b24e4d7c6827677f432a57fde1643703a6dd1",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "def41714d016fad5783765db91f0d5e9d9509847e665aa8df7e1c21cc96451c3",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "9608f15d761169d0854824198e87a53abb6c33ddb3d4ee96d2249c8ae23dfb43",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "95b21d794acce59415916cf11fe779d550e2544c99e2c01a75595e5ac3b7ef5a",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "20431a721c78307ead21d97394c846d3e49f2df49c78f7168971c146f34d5721",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "97c31ef81860da31323f70d96d11fd158a001974b905b9baff475a634b42adbe",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "299e5ebddc9dd05ad657e28727e1b4ed1d308c87aff46d5546cf0551afbd52c3",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "de44e01c9f1db5aaedab2d93a9f5512d2b64e233915bb67b962a7cf6e82bd82e",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "c524b03c8597427b5798235cbc0cd37b082d79e5ab5a1cb6a6eb57fa8edea94f",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "6f6111495a5018f683b1bd5b18b1a88025b7cba49463b173693a113d2433e57f",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "5821b976fa8e47239cfe57c567ef935e7bb5119c402ebdb2e53395a440dde632",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "17c533d63d5941987dd02892732f255f63ed376475a812008b90beb1d5a8590d",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "043ab52c83e7e3ba3a943769bfc282688036141ffa827aa46843b42336e00de6",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "c64e170493118910cf5f05d2dfb96dcf83cf9381e9753ae2c013962b1fa44aa2",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "2f25383fd691a2c4e898941bbb8965278ae0d98220508e2ed735f3a1f0576ff5",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
+    },
+    {
+      "revision_id": "5dba78da05ddce5b469bf56aa32d07456335ac0d0eb6e8a7b77cec6dd848f553",
+      "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+      "observed_at": "2026-11-12T21:57:57.688244+00:00",
+      "initial_import": false,
+      "previous_revision_id": null
     }
   ],
-  "checked_at": "2026-11-12T21:07:42.554861+00:00"
+  "checked_at": "2026-11-12T21:57:57.688244+00:00"
 }

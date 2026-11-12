@@ -1,0 +1,2147 @@
+{
+  "revision_id": "95b21d794acce59415916cf11fe779d550e2544c99e2c01a75595e5ac3b7ef5a",
+  "fields": [
+    {
+      "name": "powerOfAttorney",
+      "path": "powerOfAttorney",
+      "parent": -1,
+      "group": "",
+      "doc": "Корневой элемент электронной доверенности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PowerOfAttorneyType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        5,
+        10,
+        38,
+        48,
+        86
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "systemInfo",
+      "path": "powerOfAttorney/systemInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Информация о системе, в которой сформирована доверенность",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "c:SystemInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2,
+        3,
+        4
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "specVersion",
+      "path": "powerOfAttorney/systemInfo/specVersion",
+      "parent": 1,
+      "group": "",
+      "doc": "Версия спецификации, по которой происходит взаимодействие. Берется с титульного листа документации с описанием спецификации.",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "10"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/common/v01",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "software",
+      "path": "powerOfAttorney/systemInfo/software",
+      "parent": 1,
+      "group": "",
+      "doc": "Наименование используемого программного обеспечения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "50"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/common/v01",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "softwareVersion",
+      "path": "powerOfAttorney/systemInfo/softwareVersion",
+      "parent": 1,
+      "group": "",
+      "doc": "Версия используемого программного обеспечения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/common/v01",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "generalInfo",
+      "path": "powerOfAttorney/generalInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Основные реквизиты доверенности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "GeneralInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "uuid",
+      "path": "powerOfAttorney/generalInfo/uuid",
+      "parent": 5,
+      "group": "",
+      "doc": "UUID (type 4) электронной доверенности, сформированный системой доверителя доверенности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "c:UuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "startDate",
+      "path": "powerOfAttorney/generalInfo/startDate",
+      "parent": 5,
+      "group": "",
+      "doc": "Дата и время начала действия электронной доверенности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "endDate",
+      "path": "powerOfAttorney/generalInfo/endDate",
+      "parent": 5,
+      "group": "",
+      "doc": "Дата и время окончания действия электронной доверенности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "comment",
+      "path": "powerOfAttorney/generalInfo/comment",
+      "parent": 5,
+      "group": "",
+      "doc": "Комментарий к электронной доверенности",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "owner",
+      "path": "powerOfAttorney/owner",
+      "parent": 0,
+      "group": "",
+      "doc": "Владелец доверенности\nСубъект в рамках которого будет действовать доверенность",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "OwnerType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        11,
+        18,
+        26
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "legalOrganization",
+      "path": "powerOfAttorney/owner/legalOrganization",
+      "parent": 10,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Юридическое лицо",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "LegalOrganizationType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "fullName",
+      "path": "powerOfAttorney/owner/legalOrganization/fullName",
+      "parent": 11,
+      "group": "",
+      "doc": "Полное наименование юридического лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:fullName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "4000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "jurAddress",
+      "path": "powerOfAttorney/owner/legalOrganization/jurAddress",
+      "parent": 11,
+      "group": "",
+      "doc": "Юридический адрес",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "inn",
+      "path": "powerOfAttorney/owner/legalOrganization/inn",
+      "parent": 11,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "kpp",
+      "path": "powerOfAttorney/owner/legalOrganization/kpp",
+      "parent": 11,
+      "group": "",
+      "doc": "КПП",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "org:kpp",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{9}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "ogrn",
+      "path": "powerOfAttorney/owner/legalOrganization/ogrn",
+      "parent": 11,
+      "group": "Выбор 1, вариант 1",
+      "doc": "ОГРН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:ogrn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "13"
+        ],
+        [
+          "pattern",
+          "([0-9])*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "foreign",
+      "path": "powerOfAttorney/owner/legalOrganization/foreign",
+      "parent": 11,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Представительство иностранной организации",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {
+        "fixed": "true"
+      }
+    },
+    {
+      "name": "legalPerson",
+      "path": "powerOfAttorney/owner/legalPerson",
+      "parent": 10,
+      "group": "Выбор 1, вариант 2",
+      "doc": "ИП",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "LegalPersonType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "powerOfAttorney/owner/legalPerson/firstName",
+      "parent": 18,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "powerOfAttorney/owner/legalPerson/lastName",
+      "parent": 18,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "powerOfAttorney/owner/legalPerson/middleName",
+      "parent": 18,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "per:middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "powerOfAttorney/owner/legalPerson/birthDate",
+      "parent": 18,
+      "group": "",
+      "doc": "Дата рождения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:birthDate",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "powerOfAttorney/owner/legalPerson/snils",
+      "parent": 18,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "inn",
+      "path": "powerOfAttorney/owner/legalPerson/inn",
+      "parent": 18,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "12"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "ogrnip",
+      "path": "powerOfAttorney/owner/legalPerson/ogrnip",
+      "parent": 18,
+      "group": "",
+      "doc": "ОГРН индивидуального предпринимателя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:ogrnip",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "15"
+        ],
+        [
+          "pattern",
+          "([0-9])*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "person",
+      "path": "powerOfAttorney/owner/person",
+      "parent": 10,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Физическое лицо",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        35
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "powerOfAttorney/owner/person/firstName",
+      "parent": 26,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "powerOfAttorney/owner/person/lastName",
+      "parent": 26,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "powerOfAttorney/owner/person/middleName",
+      "parent": 26,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "per:middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "powerOfAttorney/owner/person/birthDate",
+      "parent": 26,
+      "group": "",
+      "doc": "Дата рождения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:birthDate",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "powerOfAttorney/owner/person/snils",
+      "parent": 26,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "inn",
+      "path": "powerOfAttorney/owner/person/inn",
+      "parent": 26,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "12"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "insurer",
+      "path": "powerOfAttorney/owner/person/insurer",
+      "parent": 26,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Заполняется если доверие полномочий осуществляется в рамках страхователя",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        34
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "regNum",
+      "path": "powerOfAttorney/owner/person/insurer/regNum",
+      "parent": 33,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          ".{1,20}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "volunteer",
+      "path": "powerOfAttorney/owner/person/volunteer",
+      "parent": 26,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Заполняется если доверие полномочий осуществляется в рамках добровольца",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        36,
+        37
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "regNum",
+      "path": "powerOfAttorney/owner/person/volunteer/regNum",
+      "parent": 35,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          ".{1,20}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "kpsNum",
+      "path": "powerOfAttorney/owner/person/volunteer/kpsNum",
+      "parent": 35,
+      "group": "",
+      "doc": "Код подчиненности к территориальному органу ФСС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:kpsNum",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "5"
+        ],
+        [
+          "pattern",
+          "([0-9])*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "principal",
+      "path": "powerOfAttorney/principal",
+      "parent": 0,
+      "group": "",
+      "doc": "Доверитель",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PrincipalType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        39,
+        46,
+        47
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "person",
+      "path": "powerOfAttorney/principal/person",
+      "parent": 38,
+      "group": "",
+      "doc": "Физическое лицо",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PersonType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "powerOfAttorney/principal/person/firstName",
+      "parent": 39,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "powerOfAttorney/principal/person/lastName",
+      "parent": 39,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "powerOfAttorney/principal/person/middleName",
+      "parent": 39,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "per:middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "powerOfAttorney/principal/person/birthDate",
+      "parent": 39,
+      "group": "",
+      "doc": "Дата рождения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:birthDate",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "powerOfAttorney/principal/person/snils",
+      "parent": 39,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "inn",
+      "path": "powerOfAttorney/principal/person/inn",
+      "parent": 39,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "12"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "signedByNotary",
+      "path": "powerOfAttorney/principal/signedByNotary",
+      "parent": 38,
+      "group": "",
+      "doc": "Признак подписания нотариусом",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {
+        "fixed": "true"
+      }
+    },
+    {
+      "name": "notaryBasedOn",
+      "path": "powerOfAttorney/principal/notaryBasedOn",
+      "parent": 38,
+      "group": "",
+      "doc": "Основание подписания нотариусом",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "representative",
+      "path": "powerOfAttorney/representative",
+      "parent": 0,
+      "group": "",
+      "doc": "Уполномоченный",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "RepresentativeType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        49,
+        56,
+        71,
+        85
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "legalOrganization",
+      "path": "powerOfAttorney/representative/legalOrganization",
+      "parent": 48,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Юридическое лицо",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "LegalOrganizationType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        50,
+        51,
+        52,
+        53,
+        54,
+        55
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "fullName",
+      "path": "powerOfAttorney/representative/legalOrganization/fullName",
+      "parent": 49,
+      "group": "",
+      "doc": "Полное наименование юридического лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:fullName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "4000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "jurAddress",
+      "path": "powerOfAttorney/representative/legalOrganization/jurAddress",
+      "parent": 49,
+      "group": "",
+      "doc": "Юридический адрес",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "inn",
+      "path": "powerOfAttorney/representative/legalOrganization/inn",
+      "parent": 49,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "kpp",
+      "path": "powerOfAttorney/representative/legalOrganization/kpp",
+      "parent": 49,
+      "group": "",
+      "doc": "КПП",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "org:kpp",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{9}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "ogrn",
+      "path": "powerOfAttorney/representative/legalOrganization/ogrn",
+      "parent": 49,
+      "group": "Выбор 1, вариант 1",
+      "doc": "ОГРН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:ogrn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "13"
+        ],
+        [
+          "pattern",
+          "([0-9])*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "foreign",
+      "path": "powerOfAttorney/representative/legalOrganization/foreign",
+      "parent": 49,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Представительство иностранной организации",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {
+        "fixed": "true"
+      }
+    },
+    {
+      "name": "legalPerson",
+      "path": "powerOfAttorney/representative/legalPerson",
+      "parent": 48,
+      "group": "Выбор 1, вариант 2",
+      "doc": "ИП",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "powerOfAttorney/representative/legalPerson/firstName",
+      "parent": 56,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "powerOfAttorney/representative/legalPerson/lastName",
+      "parent": 56,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "powerOfAttorney/representative/legalPerson/middleName",
+      "parent": 56,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "per:middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "powerOfAttorney/representative/legalPerson/birthDate",
+      "parent": 56,
+      "group": "",
+      "doc": "Дата рождения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:birthDate",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "powerOfAttorney/representative/legalPerson/snils",
+      "parent": 56,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "inn",
+      "path": "powerOfAttorney/representative/legalPerson/inn",
+      "parent": 56,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "12"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "ogrnip",
+      "path": "powerOfAttorney/representative/legalPerson/ogrnip",
+      "parent": 56,
+      "group": "",
+      "doc": "ОГРН индивидуального предпринимателя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:ogrnip",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "15"
+        ],
+        [
+          "pattern",
+          "([0-9])*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "personDocument",
+      "path": "powerOfAttorney/representative/legalPerson/personDocument",
+      "parent": 56,
+      "group": "",
+      "doc": "Документ удостоверяющий личность",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "PersonDocumentType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        65,
+        66,
+        67,
+        68,
+        69,
+        70
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "identityDocument",
+      "path": "powerOfAttorney/representative/legalPerson/personDocument/identityDocument",
+      "parent": 64,
+      "group": "",
+      "doc": "Вид документа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "series",
+      "path": "powerOfAttorney/representative/legalPerson/personDocument/series",
+      "parent": 64,
+      "group": "",
+      "doc": "Серия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "number",
+      "path": "powerOfAttorney/representative/legalPerson/personDocument/number",
+      "parent": 64,
+      "group": "",
+      "doc": "Номер",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "issuedDate",
+      "path": "powerOfAttorney/representative/legalPerson/personDocument/issuedDate",
+      "parent": 64,
+      "group": "",
+      "doc": "Дата выдачи",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "issuedBy",
+      "path": "powerOfAttorney/representative/legalPerson/personDocument/issuedBy",
+      "parent": 64,
+      "group": "",
+      "doc": "Наименование органа, выдавшего документ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "issuedByCode",
+      "path": "powerOfAttorney/representative/legalPerson/personDocument/issuedByCode",
+      "parent": 64,
+      "group": "",
+      "doc": "Код органа, выдавшего документ",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "person",
+      "path": "powerOfAttorney/representative/person",
+      "parent": 48,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Физическое лицо",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "powerOfAttorney/representative/person/firstName",
+      "parent": 71,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "powerOfAttorney/representative/person/lastName",
+      "parent": 71,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "powerOfAttorney/representative/person/middleName",
+      "parent": 71,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "per:middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "powerOfAttorney/representative/person/birthDate",
+      "parent": 71,
+      "group": "",
+      "doc": "Дата рождения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:birthDate",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "powerOfAttorney/representative/person/snils",
+      "parent": 71,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "inn",
+      "path": "powerOfAttorney/representative/person/inn",
+      "parent": 71,
+      "group": "",
+      "doc": "ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "per:inn",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "12"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "personDocument",
+      "path": "powerOfAttorney/representative/person/personDocument",
+      "parent": 71,
+      "group": "",
+      "doc": "Документ удостоверяющий личность",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "PersonDocumentType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        79,
+        80,
+        81,
+        82,
+        83,
+        84
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "identityDocument",
+      "path": "powerOfAttorney/representative/person/personDocument/identityDocument",
+      "parent": 78,
+      "group": "",
+      "doc": "Вид документа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "series",
+      "path": "powerOfAttorney/representative/person/personDocument/series",
+      "parent": 78,
+      "group": "",
+      "doc": "Серия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "number",
+      "path": "powerOfAttorney/representative/person/personDocument/number",
+      "parent": 78,
+      "group": "",
+      "doc": "Номер",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "issuedDate",
+      "path": "powerOfAttorney/representative/person/personDocument/issuedDate",
+      "parent": 78,
+      "group": "",
+      "doc": "Дата выдачи",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "issuedBy",
+      "path": "powerOfAttorney/representative/person/personDocument/issuedBy",
+      "parent": 78,
+      "group": "",
+      "doc": "Наименование органа, выдавшего документ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "issuedByCode",
+      "path": "powerOfAttorney/representative/person/personDocument/issuedByCode",
+      "parent": 78,
+      "group": "",
+      "doc": "Код органа, выдавшего документ",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "certificate",
+      "path": "powerOfAttorney/representative/certificate",
+      "parent": 48,
+      "group": "Выбор 1, вариант 4",
+      "doc": "Сертификат (base 64)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "authorities",
+      "path": "powerOfAttorney/authorities",
+      "parent": 0,
+      "group": "",
+      "doc": "Выданные полномочия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "AuthorityListType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        87
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "authority",
+      "path": "powerOfAttorney/authorities/authority",
+      "parent": 86,
+      "group": "",
+      "doc": "Полномочие",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "AuthorityType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        88
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "mnemonic",
+      "path": "powerOfAttorney/authorities/authority/mnemonic",
+      "parent": 87,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "200"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [
+        89
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "@entrustment",
+      "path": "powerOfAttorney/authorities/authority/mnemonic/@entrustment",
+      "parent": 88,
+      "group": "",
+      "doc": "true - Доверитель разрешил передоверие полномочия\nfalse - доверитель запретил передоверие полномочия",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "xs:boolean",
+      "base": "xs:boolean",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    }
+  ]
+}

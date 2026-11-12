@@ -1,0 +1,865 @@
+{
+  "revision_id": "647ff27496b599cb094d76f506ab62b63a9c32af0fb8ec86eacb7cda5374eb7d",
+  "fields": [
+    {
+      "name": "noticeTerminationRequest",
+      "path": "noticeTerminationRequest",
+      "parent": -1,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "NoticeTerminationRequestType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {},
+      "typeFile": "NoticeTerminationType_05.xsd"
+    },
+    {
+      "name": "row",
+      "path": "noticeTerminationRequest/row",
+      "parent": 0,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "notificationID",
+      "path": "noticeTerminationRequest/row/notificationID",
+      "parent": 1,
+      "group": "",
+      "doc": "notificationID формируется на стороне Страхователя. notificationID должен быть уникальным по каждому запросу. Так же, формат значения должен соответствовать маске «N_регномер страхователя поОСС_год_месяц_число_номер:субномер», например: N_1234567890_2022_03_01_0001:1. Дополнительные правила формирования номера не предусмотрены",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "NotificationNoType",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "pattern",
+          "[N]_\\d{10}_(19|20)[0-9]{2}_[0|1][0-9]_[0-3][0-9]_\\d{4}:\\d{1,2}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {},
+      "typeFile": "NoticeTerminationType_05.xsd"
+    },
+    {
+      "name": "batchNo",
+      "path": "noticeTerminationRequest/row/batchNo",
+      "parent": 1,
+      "group": "",
+      "doc": "Идентификатор (BATCH_NO) записи реестра выплаты",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "BatchNoType",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "pattern",
+          "[E|P]_\\d{10}_(19|20)[0-9]{2}_[0|1][0-9]_[0-3][0-9]_\\d{1,9}[\\S]{0,5}:\\d{1,3}|\\S{18}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {},
+      "typeFile": "NoticeTerminationType_05.xsd"
+    },
+    {
+      "name": "docDt1",
+      "path": "noticeTerminationRequest/row/docDt1",
+      "parent": 1,
+      "group": "",
+      "doc": "Дата предоставления документов Застрахованным лицом Страхователю",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xsd:date",
+      "base": "xsd:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "SNILS",
+      "path": "noticeTerminationRequest/row/SNILS",
+      "parent": 1,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "SnilsType",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {},
+      "typeFile": "NoticeTerminationType_05.xsd"
+    },
+    {
+      "name": "surname",
+      "path": "noticeTerminationRequest/row/surname",
+      "parent": 1,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "name",
+      "path": "noticeTerminationRequest/row/name",
+      "parent": 1,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "patronimic",
+      "path": "noticeTerminationRequest/row/patronimic",
+      "parent": 1,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {
+        "nillable": "true"
+      }
+    },
+    {
+      "name": "employer",
+      "path": "noticeTerminationRequest/row/employer",
+      "parent": 1,
+      "group": "",
+      "doc": "Страхователь: наименование",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "255"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "emplRegNo",
+      "path": "noticeTerminationRequest/row/emplRegNo",
+      "parent": 1,
+      "group": "",
+      "doc": "Регистрационный номер по ОСС. Так же см. документацию к полю regNumSFR",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "regNum",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {},
+      "typeFile": "NoticeTerminationType_05.xsd"
+    },
+    {
+      "name": "regNumSFR",
+      "path": "noticeTerminationRequest/row/regNumSFR",
+      "parent": 1,
+      "group": "",
+      "doc": "Регистрационный номер страхователя СФР. ~ До начала переходного периода на регистрационные номера СФР будет приниматься (принимается) 1 поле: emplRegNo. ~ В переходном периоде будет приниматься 1 из полей: emplRegNo/regNumSFR (если страхователь не перешел на новую схему взаимодействия, то будет направлять emplRegNo, а после перехода на новую схему должен направлять regNumSFR) ~ Если сообщение направляется добровольно застрахованным лицом, то поле emplRegNo всегда обязательно для заполнения - рег. номером, принадлежащим добровольно застрахованному лицу, а поле regNumSFR не обязательно для заполнения",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "regNumSFR",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {},
+      "typeFile": "NoticeTerminationType_05.xsd"
+    },
+    {
+      "name": "emplParentNo",
+      "path": "noticeTerminationRequest/row/emplParentNo",
+      "parent": 1,
+      "group": "",
+      "doc": "Страхователи: код подчиненности (социального страхования)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "10"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "emplKPP",
+      "path": "noticeTerminationRequest/row/emplKPP",
+      "parent": 1,
+      "group": "",
+      "doc": "Страхователь: КПП",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "kpp",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{9}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {
+        "nillable": "true"
+      },
+      "typeFile": "NoticeTerminationType_05.xsd"
+    },
+    {
+      "name": "emplINN",
+      "path": "noticeTerminationRequest/row/emplINN",
+      "parent": 1,
+      "group": "",
+      "doc": "Страхователь: ИНН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "inn",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}|\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {},
+      "typeFile": "NoticeTerminationType_05.xsd"
+    },
+    {
+      "name": "birthday",
+      "path": "noticeTerminationRequest/row/birthday",
+      "parent": 1,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xsd:date",
+      "base": "xsd:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "SNILSChild",
+      "path": "noticeTerminationRequest/row/SNILSChild",
+      "parent": 1,
+      "group": "",
+      "doc": "СНИЛС ребенка",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{11}"
+        ],
+        [
+          "maxLength",
+          "11"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {
+        "nillable": "true"
+      },
+      "typeFile": "NoticeTerminationType_05.xsd"
+    },
+    {
+      "name": "patronimicChild",
+      "path": "noticeTerminationRequest/row/patronimicChild",
+      "parent": 1,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {
+        "nillable": "true"
+      }
+    },
+    {
+      "name": "nameChild",
+      "path": "noticeTerminationRequest/row/nameChild",
+      "parent": 1,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "surnameChild",
+      "path": "noticeTerminationRequest/row/surnameChild",
+      "parent": 1,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "birthdayChild",
+      "path": "noticeTerminationRequest/row/birthdayChild",
+      "parent": 1,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xsd:date",
+      "base": "xsd:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "holidType",
+      "path": "noticeTerminationRequest/row/holidType",
+      "parent": 1,
+      "group": "",
+      "doc": "Признак типа приказа страхователя 1-о преждевременном выходе на работу; 2-о прекращении трудовых отношений; 3 – о смерти ребенка; 4 - о прекращении оснований для выплаты пособия 5 - иное",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "о преждевременном выходе на работу"
+        ],
+        [
+          "2",
+          "о прекращении трудовых отношений"
+        ],
+        [
+          "3",
+          "о смерти ребенка"
+        ],
+        [
+          "4",
+          "о прекращение оснований для выплаты пособия"
+        ],
+        [
+          "5",
+          "иное"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {
+        "nillable": "true"
+      },
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "alternatives": [
+        {
+          "type": "",
+          "base": "xsd:integer",
+          "facets": [
+            [
+              "totalDigits",
+              "1"
+            ]
+          ],
+          "values": [],
+          "flags": {}
+        },
+        {
+          "type": "",
+          "base": "xsd:string",
+          "facets": [],
+          "values": [
+            [
+              "",
+              ""
+            ]
+          ],
+          "flags": {}
+        }
+      ]
+    },
+    {
+      "name": "holidTypeInfo",
+      "path": "noticeTerminationRequest/row/holidTypeInfo",
+      "parent": 1,
+      "group": "",
+      "doc": "Пояснение для типа приказа \"Иное\" или \"О прекращении оснований для выплаты пособия\"",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "255"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "holidNo",
+      "path": "noticeTerminationRequest/row/holidNo",
+      "parent": 1,
+      "group": "",
+      "doc": "Номер приказа страхователя/документа основания для прекращения выплаты пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {
+        "nillable": "true"
+      }
+    },
+    {
+      "name": "holidDt",
+      "path": "noticeTerminationRequest/row/holidDt",
+      "parent": 1,
+      "group": "",
+      "doc": "Дата приказа страхователя/документа основания для прекращения выплаты пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xsd:date",
+      "base": "xsd:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {
+        "nillable": "true"
+      }
+    },
+    {
+      "name": "holidDtEx",
+      "path": "noticeTerminationRequest/row/holidDtEx",
+      "parent": 1,
+      "group": "",
+      "doc": "Дата прекращения действия основания для выплаты пособия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xsd:date",
+      "base": "xsd:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {
+        "nillable": "true"
+      }
+    },
+    {
+      "name": "holidDocNum",
+      "path": "noticeTerminationRequest/row/holidDocNum",
+      "parent": 1,
+      "group": "",
+      "doc": "Наименование документа, подтверждающего прекращение обязательств",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "150"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@software",
+      "path": "noticeTerminationRequest/@software",
+      "parent": 0,
+      "group": "",
+      "doc": "Наименование программного обеспечения",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "255"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@version_software",
+      "path": "noticeTerminationRequest/@version_software",
+      "parent": 0,
+      "group": "",
+      "doc": "Версия программного обеспечения",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "15"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@author",
+      "path": "noticeTerminationRequest/@author",
+      "parent": 0,
+      "group": "",
+      "doc": "ФИО лица предоставляющего сведения",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "120"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@phone",
+      "path": "noticeTerminationRequest/@phone",
+      "parent": 0,
+      "group": "",
+      "doc": "Контактный номер телефона (с указанием кода) страхователя (уполномоченного представителя)",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "30"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@email",
+      "path": "noticeTerminationRequest/@email",
+      "parent": 0,
+      "group": "",
+      "doc": "Адрес электронной почты страхователя (уполномоченного представителя)",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "40"
+        ],
+        [
+          "pattern",
+          "[0-9a-zA-Z_.\\-]{2,50}[@]{1}[0-9a-zA-Z_./-]{2,50}[.]{1}[a-zA-Z]{2,5}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@emplRegNo",
+      "path": "noticeTerminationRequest/@emplRegNo",
+      "parent": 0,
+      "group": "",
+      "doc": "Регистрационный номер по ОСС. Так же см. документацию к полю regNumSFR",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "regNum",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {},
+      "typeFile": "NoticeTerminationType_05.xsd"
+    },
+    {
+      "name": "@regNumSFR",
+      "path": "noticeTerminationRequest/@regNumSFR",
+      "parent": 0,
+      "group": "",
+      "doc": "Регистрационный номер страхователя СФР. ~ До начала переходного периода на регистрационные номера СФР будет приниматься (принимается) 1 поле: emplRegNo. ~ В переходном периоде будет приниматься 1 из полей: emplRegNo/regNumSFR (если страхователь не перешел на новую схему взаимодействия, то будет направлять emplRegNo, а после перехода на новую схему должен направлять regNumSFR) ~ Если сообщение направляется добровольно застрахованным лицом, то поле emplRegNo всегда обязательно для заполнения - рег. номером, принадлежащим добровольно застрахованному лицу, а поле regNumSFR не обязательно для заполнения",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "regNumSFR",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "NoticeTerminationType_05.xsd",
+      "flags": {},
+      "typeFile": "NoticeTerminationType_05.xsd"
+    }
+  ]
+}

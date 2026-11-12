@@ -1,46 +1,22 @@
 {
-  "observed_at": "2026-11-12T21:07:42.554861+00:00",
-  "snapshot": "654b4e13181889a1a1f6d6fc23d4ba6936264fe5d3e91d93043cd1c16b926d80",
-  "previous": "840c13cc06d385ea7eae6908a1671fbb56d7f683ba83427aed5488aab7f4b1ec",
-  "files": 106,
+  "observed_at": "2026-11-12T21:57:57.688244+00:00",
+  "snapshot": "41d0f9335bbec81053d6def59f42875559ae5bb653bdb638730b1e9ba21856e3",
+  "previous": "75c96b89f6046af37c00fbf480c561a9cf043115dcf53bf0d42aff7a3bb67890",
+  "files": 110,
   "errors": [],
   "diff": {
     "added": [
       [
         "prod",
-        "https://lk.sfr.gov.ru/prab.html"
+        "https://lk.sfr.gov.ru/mchd.html"
       ],
       [
         "prod",
-        "https://lk.sfr.gov.ru/prab/eln-xsd.zip"
-      ],
-      [
-        "prod",
-        "https://lk.sfr.gov.ru/prab/insured-card-xsd-1.22.0-SNAPSHOT.zip"
-      ],
-      [
-        "prod",
-        "https://lk.sfr.gov.ru/prab/proactive-xsd-1.50.0-SNAPSHOT-prod.zip"
-      ],
-      [
-        "test",
-        "https://lk-test.fss.ru/prab/eln-xsd.zip"
-      ],
-      [
-        "test",
-        "https://lk-test.fss.ru/prab/insured-card-xsd-1.22.0-SNAPSHOT.zip"
-      ],
-      [
-        "test",
-        "https://lk-test.fss.ru/prab/proactive-xsd-1.51.0-SNAPSHOT-test.zip"
+        "https://lk.sfr.gov.ru/mchd/mchd-xsd-23-05-2023.zip"
       ]
     ],
     "removed": [],
     "changed": [
-      [
-        "prod",
-        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.0_Пр_12_ЛС (23.06.2023).docx"
-      ],
       [
         "prod",
         "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.1_Пр_14_ЭЛН (20.01.2025).docx"
@@ -55,15 +31,15 @@
       ],
       [
         "prod",
+        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ (25.07.2023).docx"
+      ],
+      [
+        "prod",
         "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2.5_Пр_06_Субсидирование_найма (05.03.2024).docx"
       ],
       [
         "prod",
         "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v2_7_Пр_12_Доходная часть (09.06.2026).docx"
-      ],
-      [
-        "prod",
-        "https://lk.sfr.gov.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx"
       ],
       [
         "prod",
@@ -79,11 +55,11 @@
       ],
       [
         "test",
-        "https://lk-test.fss.ru/prab.html"
+        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx"
       ],
       [
         "test",
-        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_11_МЧД (18.08.2023).docx"
+        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2.2_Пр_13_ВВ.docx"
       ],
       [
         "test",
@@ -96,10 +72,6 @@
       [
         "test",
         "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v2_22_Пр_12_Доходная часть (09.02.2026).docx"
-      ],
-      [
-        "test",
-        "https://lk-test.fss.ru/specs_sedo/Спецификация типов документов СЭДО v3.1 Пр_02_Служ_типы_СЭДО (12.12.2024).docx"
       ],
       [
         "test",

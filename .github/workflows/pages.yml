@@ -35,6 +35,8 @@ jobs:
           node tests/test_update_summaries.cjs
           node tests/test_journal_dates.cjs
           node tests/test_transitions.cjs
+          node tests/test_viewer_sections.cjs
+          node tests/test_cross_message_compare.cjs
       - name: Import incoming specifications
         run: python import_inbox.py
       - name: Build the validated reference

@@ -38,6 +38,8 @@ jobs:
       - name: Preview incoming without saving or publishing
         run: |
           node tests/test_transitions.cjs
+          node tests/test_viewer_sections.cjs
+          node tests/test_cross_message_compare.cjs
           python import_inbox.py --check
       - name: Write validation report
         if: always()

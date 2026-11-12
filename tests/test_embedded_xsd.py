@@ -57,10 +57,12 @@ class EmbeddedSchemaTests(unittest.TestCase):
         with zipfile.ZipFile(empty,'w') as z:z.writestr('empty.xsd',b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"/>')
         for env,url in SITES.items():
             base=url.rsplit('/',1)[0]
-            sources[url]=b'<a href="/specs_sedo/source.zip">XSD</a><a href="prab.html">Process</a><a href="/specs_sedo/module.docx">v1.0 (01.11.2026)</a>'
+            sources[url]=b'<a href="/specs_sedo/source.zip">XSD</a><a href="prab.html">Process</a><a href="https://lk.fss.ru//mchd.html">MCHD</a><a href="/specs_sedo/module.docx">v1.0 (01.11.2026)</a>'
             sources[base+'/specs_sedo/source.zip']=empty.getvalue();sources[base+'/specs_sedo/module.docx']=raw
             sources[base+'/prab.html']=b'<a href="/prab/card.zip">Card</a><a href="https://other.example/prab/foreign.zip">Ignore</a>'
             sources[base+'/prab/card.zip']=empty.getvalue()
+            sources[base+'/mchd.html']=b'<a href="/mchd/mchd-xsd.zip">XSD</a>'
+            sources[base+'/mchd/mchd-xsd.zip']=empty.getvalue()
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)
             with patch('sync.get',side_effect=lambda u:sources[u]):sync(root)
@@ -71,7 +73,7 @@ class EmbeddedSchemaTests(unittest.TestCase):
             for doc in docs:
                 self.assertEqual(doc['module_matches'][0]['number'],'600')
                 self.assertTrue((root/'objects'/doc['module_matches'][0]['archive_sha256']).exists())
-            self.assertEqual(len([r for r in snapshot['entries'] if r.get('source_page')]),2)
+            self.assertEqual(len([r for r in snapshot['entries'] if r.get('source_page')]),4)
 
     def test_conflicting_rules_are_not_deduplicated(self):
         objects={};archives=[]

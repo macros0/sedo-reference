@@ -43,6 +43,14 @@ class DocumentArchiveTests(unittest.TestCase):
         self.build()
         self.assertEqual(len(list((self.root / "site/documents").glob("*.docx"))), 1)
 
+    def test_identical_original_is_not_replaced_when_open_elsewhere(self):
+        target=self.root/'site/documents'/(self.digest+'.docx')
+        write(target,self.document)
+        catalog=json.loads((self.root/'data/catalog.json').read_bytes())
+        with patch('build_site.write',side_effect=PermissionError('document is open')):
+            build_site.archive_documents(catalog,self.root/'state',self.root/'site')
+        self.assertEqual(target.read_bytes(),self.document)
+
     def test_missing_document_blocks_build(self):
         (self.root / "state/objects" / self.digest).unlink()
         with self.assertRaisesRegex(ValueError, "DOCX"):

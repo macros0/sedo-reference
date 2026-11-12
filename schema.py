@@ -15,17 +15,23 @@ X = "{" + XS + "}"
 HERE = Path(__file__).resolve().parent
 FACETS = set("length minLength maxLength pattern enumeration maxInclusive minInclusive maxExclusive minExclusive totalDigits fractionDigits whiteSpace".split())
 
+def resolve_import(files,origin,location,namespace=None):
+    expected=posixpath.normpath(posixpath.join(posixpath.dirname(origin),location.replace("\\","/")))
+    if expected in files:return expected
+    candidates=[path for path,meta in files.items() if posixpath.basename(path)==posixpath.basename(location) and namespace and meta.get("namespace")==namespace]
+    if len({files[p]["sha256"] for p in candidates})==1:return sorted(candidates)[0]
+    raise ValueError(("Неоднозначный импорт " if candidates else "Не найден импорт ")+location+" в "+origin)
+
 def dependency_set(schemas,entry):
-    files={s["path"]:s for s in schemas}
-    visited={}
+    files={s["path"]:s for s in schemas};visited={}
     def visit(path):
         if path in visited:return
         s=files[path];visited[path]=s["sha256"]
         for loc in s["dependencies"]:
-            if not loc: raise ValueError("Импорт без пути в "+path)
-            visit(posixpath.normpath(posixpath.join(posixpath.dirname(path),loc)))
+            if not loc:raise ValueError("Импорт без пути в "+path)
+            namespace=next((i.get("namespace") for i in s.get("imports",[]) if i.get("location")==loc),None)
+            visit(resolve_import(files,path,loc,namespace))
     visit(entry)
-    # Paths relative to the entry directory survive archive packaging changes.
     return sorted((posixpath.relpath(p,posixpath.dirname(entry)),h) for p,h in visited.items())
 
 def local(node):
@@ -41,6 +47,7 @@ class Schema:
         self.symbol = {}
         self.fields = []
         self.main = entry
+        self.inventory = None
         self.load(archive, self.main)
         self.root = self.files[self.main][0].find(X+f"element[@name='{root_name}']")
         if self.root is None:
@@ -63,7 +70,13 @@ class Schema:
                     raise ValueError("Повторное определение: "+str(key))
                 self.symbol[key] = e
         for imp in list(root.findall(X+"import")) + list(root.findall(X+"include")):
-            self.load(archive, posixpath.normpath(posixpath.join(posixpath.dirname(path), imp.attrib["schemaLocation"])))
+            location=imp.attrib["schemaLocation"]
+            target=posixpath.normpath(posixpath.join(posixpath.dirname(path),location))
+            if target not in archive.namelist():
+                if self.inventory is None:
+                    self.inventory={name:dict(namespace=ET.fromstring(archive.read(name)).get("targetNamespace"),sha256=hashlib.sha256(archive.read(name)).hexdigest()) for name in archive.namelist() if name.lower().endswith(".xsd")}
+                target=resolve_import(self.inventory,path,location,imp.get("namespace"))
+            self.load(archive,target)
 
     def resolve(self, qname, source, kinds):
         prefix, _, name = qname.rpartition(":")
@@ -126,6 +139,29 @@ class Schema:
                     self.field(c,idx,child_group,stack)
                 elif t in ("complexType","simpleType","complexContent","simpleContent","extension","restriction","sequence","choice","all"):
                     walk(c,child_group,stack)
+                elif t in ("attributeGroup","group"):
+                    obj=self.resolve(c.get("ref"),c,[t]) if c.get("ref") else c
+                    if obj in stack:raise ValueError("Рекурсивная группа в "+path)
+                    group_label=child_group
+                    if t=="group" and (c.get("minOccurs","1"),c.get("maxOccurs","1"))!=("1","1"):
+                        group_label+=(" / " if group_label else "")+"group ["+c.get("minOccurs","1")+".."+c.get("maxOccurs","1")+"]"
+                    walk(obj,group_label,stack+(obj,))
+                elif t=="union":
+                    alternatives=[]
+                    variants=[(q,None) for q in c.get("memberTypes","").split()]+[(None,n) for n in c.findall(X+"simpleType")]
+                    if not variants:raise ValueError("Пустое объединение типов в "+path)
+                    for q,obj in variants:
+                        temporary=ET.Element(X+"element",dict(name="unionOption",**({"type":q} if q else {})))
+                        self.owner[temporary]=self.owner[c]
+                        if obj is not None:temporary.append(obj)
+                        original=self.fields
+                        try:
+                            self.fields=[];self.field(temporary,chain=stack)
+                            if len(self.fields)!=1:raise ValueError("Нескалярный вариант union в "+path)
+                            option=self.fields[0]
+                            alternatives.append({k:option[k] for k in ("type","base","facets","values","flags")}|({"alternatives":option["alternatives"]} if option.get("alternatives") else {}))
+                        finally:self.fields=original
+                    d["alternatives"]=alternatives
                 elif t=="enumeration":
                     d["values"].append([c.get("value"),notes(c)])
                 elif t in FACETS:

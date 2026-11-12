@@ -66,6 +66,7 @@ function renderMessages(){
 function renderVersions(m,env){
  const section=$("versions");section.replaceChildren(node("h1","","Сообщение "+m.number),node("p","",title(m,env)));
  const replacement=replacementNotice(m,env);if(replacement)section.append(replacement);
+ appendRelatedComparisons(section,m,env);
  const ready=m.revisions.filter(r=>r.ready);
  if(ready.length>=2){const pair=comparisonDefaults(m);section.append(anchor("Сравнить редакции",comparisonRoute(m.number,pair.left,pair.right),"open"))}
  section.append(anchor("Журнал сообщения",updatesRoute(m.number,env),"message-updates"));
@@ -114,7 +115,7 @@ function renderRoute(){
  const r=m.revisions.find(r=>r.revision_id===rev&&r.environment===env);
  if(!r||!r.ready){$("error").hidden=false;$("error").replaceChildren(node("h1","","Редакция недоступна"),anchor("Посмотреть доступные редакции",route(number,env)));return}
  $("viewer").hidden=false;$("crumbs").append(node("span","","/"),node("span","",label(r)));
- const warning=$("viewer-replacement");if(warning){warning.replaceChildren();const replacement=replacementNotice(m,env);if(replacement)warning.append(replacement)}
+ const warning=$("viewer-replacement");if(warning){warning.replaceChildren();const replacement=replacementNotice(m,env);if(replacement)warning.append(replacement);appendRelatedComparisons(warning,m,env)}
  $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
  $("doc-source").hidden=!r.document_url;if(r.document_url)$("doc-source").href=r.document_url;
  $("manual-source").hidden=r.source_type!=="manual";$("manual-source").textContent="Ручная загрузка · "+(r.manual_source?.label||"Файл владельца");

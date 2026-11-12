@@ -1,0 +1,363 @@
+{
+  "revision_id": "390fb3e303c33d7730cb72021baca573fb471e2425dbecab062ed64418a5914a",
+  "fields": [
+    {
+      "name": "dicAuthorityListResponse",
+      "path": "dicAuthorityListResponse",
+      "parent": -1,
+      "group": "",
+      "doc": "Ответ на запрос справочника полномочий",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        9,
+        15
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "authorities",
+      "path": "dicAuthorityListResponse/authorities",
+      "parent": 0,
+      "group": "",
+      "doc": "Список полномочий",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "authority",
+      "path": "dicAuthorityListResponse/authorities/authority",
+      "parent": 1,
+      "group": "",
+      "doc": "Полномочие",
+      "kind": "element",
+      "min": "0",
+      "max": "unbounded",
+      "type": "AuthorityDicType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "mnemonic",
+      "path": "dicAuthorityListResponse/authorities/authority/mnemonic",
+      "parent": 2,
+      "group": "",
+      "doc": "Тип описывающий мнемонику полномочия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "AuthorityMnemonicType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "200"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "name",
+      "path": "dicAuthorityListResponse/authorities/authority/name",
+      "parent": 2,
+      "group": "",
+      "doc": "Название полномочия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "parentMnemonic",
+      "path": "dicAuthorityListResponse/authorities/authority/parentMnemonic",
+      "parent": 2,
+      "group": "",
+      "doc": "Родительское полномочие",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "AuthorityMnemonicType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "200"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "dateStart",
+      "path": "dicAuthorityListResponse/authorities/authority/dateStart",
+      "parent": 2,
+      "group": "",
+      "doc": "Дата начала действия полномочия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "dateEnd",
+      "path": "dicAuthorityListResponse/authorities/authority/dateEnd",
+      "parent": 2,
+      "group": "",
+      "doc": "Дата окончания действия полномочия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "description",
+      "path": "dicAuthorityListResponse/authorities/authority/description",
+      "parent": 2,
+      "group": "",
+      "doc": "Описание полномочия",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "protocol",
+      "path": "dicAuthorityListResponse/protocol",
+      "parent": 0,
+      "group": "",
+      "doc": "Протокол обработки сообщения",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "ProtocolType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        10
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "message",
+      "path": "dicAuthorityListResponse/protocol/message",
+      "parent": 9,
+      "group": "",
+      "doc": "Сообщение протокола",
+      "kind": "element",
+      "min": "0",
+      "max": "unbounded",
+      "type": "ProtocolMessageType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "mnemonic",
+      "path": "dicAuthorityListResponse/protocol/message/mnemonic",
+      "parent": 10,
+      "group": "",
+      "doc": "Тип сообщения протокола",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "ProtocolMessageMnemonicType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "10"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "level",
+      "path": "dicAuthorityListResponse/protocol/message/level",
+      "parent": 10,
+      "group": "",
+      "doc": "Тип сообщения протокола",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "ProtocolMessageLevelType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "INFO",
+          ""
+        ],
+        [
+          "WARN",
+          ""
+        ],
+        [
+          "ERROR",
+          ""
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "comment",
+      "path": "dicAuthorityListResponse/protocol/message/comment",
+      "parent": 10,
+      "group": "",
+      "doc": "Комментарий",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "recommendation",
+      "path": "dicAuthorityListResponse/protocol/message/recommendation",
+      "parent": 10,
+      "group": "",
+      "doc": "Рекомендации",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@responseOn",
+      "path": "dicAuthorityListResponse/@responseOn",
+      "parent": 0,
+      "group": "",
+      "doc": "",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "c:UuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    }
+  ]
+}

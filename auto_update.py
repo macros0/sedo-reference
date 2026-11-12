@@ -108,7 +108,15 @@ def run(root):
             new_messages = sorted({(r["environment"], r["number"]) for r in current["registry"]+current["revisions"]}-known)
             snapshot=json.loads((stage/"state/snapshots"/(json.loads((stage/"state/current.json").read_bytes())["snapshot"]+".json")).read_bytes())
             schema_diagnostics=[dict(environment=r["environment"],source=r["url"],issues=r["schema_diagnostics"]) for r in snapshot["entries"] if r.get("schema_diagnostics")]
-            result = dict(status="ok", checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics,
+            ready_pairs={(r["environment"],r["number"]) for r in current["revisions"] if r["status"]=="matched"}
+            registry_pairs={(r["environment"],r["number"]):r for r in current["registry"]}
+            missing=[]
+            for (env,number),row in sorted(registry_pairs.items(),key=lambda i:(i[0][0],int(i[0][1]))):
+                if (env,number) in ready_pairs:continue
+                reasons=list(dict.fromkeys(issue["reason"] for record in schema_diagnostics if record["environment"]==env for issue in record["issues"] if issue.get("number")==number))
+                missing.append(dict(environment=env,number=number,title=row["title"],reasons=reasons or ["В опубликованных источниках не найдена полная сопоставленная XSD."]))
+            write(root/"data/schema-coverage.json",encode(dict(checked_at=current["checked_at"],numbers_with_trees=len({n for e,n in ready_pairs}),missing=missing)))
+            result = dict(status="ok", checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics, missing_trees=missing,
                           new_messages=[dict(environment=e, number=n) for e,n in new_messages],
                           total_revisions=len(current["revisions"]))
             write(report, encode(result))

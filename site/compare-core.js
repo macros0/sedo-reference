@@ -8,6 +8,7 @@ const canonical=value=>{
 };
 const stable=value=>JSON.stringify(canonical(value));
 const sorted=rows=>[...(rows||[])].sort((a,b)=>stable(a).localeCompare(stable(b)));
+const alternatives=rows=>sorted((rows||[]).map(r=>({type:r.type||"",base:r.base||"",flags:r.flags||{},facets:sorted(r.facets),values:sorted(r.values),alternatives:alternatives(r.alternatives)})));
 const properties=[
  ["kind","Вид узла",f=>f.kind],
  ["type","Тип",f=>f.type||""],
@@ -19,6 +20,7 @@ const properties=[
  ["flags","Фиксированное значение, значение по умолчанию и другие свойства",f=>f.flags||{}],
  ["facets","Ограничения значения",f=>sorted(f.facets)],
  ["values","Допустимые значения",f=>sorted((f.values||[]).map(([v])=>v))],
+ ["alternatives","Альтернативы типа (union)",f=>alternatives(f.alternatives)],
  ["doc","Описание и условия заполнения",f=>f.doc||""],
  ["valueDescriptions","Описания допустимых значений",f=>sorted(f.values)]
 ];

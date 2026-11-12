@@ -1,0 +1,783 @@
+{
+  "revision_id": "3186ba0a6aff64a3d852ffaa5f66d8ecb8bb4938ab88b30f1d6b7ce9cab4aa77",
+  "fields": [
+    {
+      "name": "disabilityChildrenStatementReject",
+      "path": "disabilityChildrenStatementReject",
+      "parent": -1,
+      "group": "",
+      "doc": "Отказано в возмещении расходов по всему заявлению на возмещение",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DisabilityChildrenRejectType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2,
+        5,
+        6,
+        9,
+        23,
+        27,
+        33
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "disabilityChildrenStatement.xsd"
+    },
+    {
+      "name": "msgDateTime",
+      "path": "disabilityChildrenStatementReject/msgDateTime",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата и время направления отказа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:dateTime",
+      "base": "xs:dateTime",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "tof",
+      "path": "disabilityChildrenStatementReject/tof",
+      "parent": 0,
+      "group": "",
+      "doc": "Территориальный орган СФР РФ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "dpt:FssDepartmentType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        3,
+        4
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "FssDepartment.xsd"
+    },
+    {
+      "name": "code",
+      "path": "disabilityChildrenStatementReject/tof/code",
+      "parent": 2,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "4"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/fssDepartment/v01",
+      "file": "FssDepartment.xsd",
+      "flags": {},
+      "typeFile": "FssDepartment.xsd"
+    },
+    {
+      "name": "name",
+      "path": "disabilityChildrenStatementReject/tof/name",
+      "parent": 2,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "name",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "500"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/fssDepartment/v01",
+      "file": "FssDepartment.xsd",
+      "flags": {},
+      "typeFile": "FssDepartment.xsd"
+    },
+    {
+      "name": "batch_no",
+      "path": "disabilityChildrenStatementReject/batch_no",
+      "parent": 0,
+      "group": "",
+      "doc": "Идентификатор заявления",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "50"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "insurerInfo",
+      "path": "disabilityChildrenStatementReject/insurerInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Сведения о страхователе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        7,
+        8
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "regNum",
+      "path": "disabilityChildrenStatementReject/insurerInfo/regNum",
+      "parent": 6,
+      "group": "",
+      "doc": "Регистрационный номер по ОСС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNum",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "regNumSFR",
+      "path": "disabilityChildrenStatementReject/insurerInfo/regNumSFR",
+      "parent": 6,
+      "group": "",
+      "doc": "Регистрационный номер страхователя СФР. ~ До начала переходного периода на регистрационные номера СФР будет приниматься (принимается) 1 поле: regNum. ~ В переходном периоде будет приниматься 1 из полей: regNum/regNumSFR (если страхователь не перешел на новую схему взаимодействия, то будет направлять regNum, а после перехода на новую схему должен направлять regNumSFR)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNumSFR",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "Organization.xsd"
+    },
+    {
+      "name": "receiversRow",
+      "path": "disabilityChildrenStatementReject/receiversRow",
+      "parent": 0,
+      "group": "",
+      "doc": "Перечень получателей, в части сведений которых были обнаружены ошибки",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        10,
+        17,
+        20
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "parentInfo",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo",
+      "parent": 9,
+      "group": "",
+      "doc": "Сведения о родителе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "parentInfoType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        11,
+        15,
+        16
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "disabilityChildrenStatement.xsd"
+    },
+    {
+      "name": "fullName",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/fullName",
+      "parent": 10,
+      "group": "",
+      "doc": "ФИО",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:FullName",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        12,
+        13,
+        14
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "firstName",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/fullName/firstName",
+      "parent": 11,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/person/v02",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "lastName",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/fullName/lastName",
+      "parent": 11,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/person/v02",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "middleName",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/fullName/middleName",
+      "parent": 11,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/person/v02",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/snils",
+      "parent": 10,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "childRelType",
+      "path": "disabilityChildrenStatementReject/receiversRow/parentInfo/childRelType",
+      "parent": 10,
+      "group": "",
+      "doc": "Статус лица: мать, отец, опекун, попечитель 1- Мать 2-Отец 3-Опекун 4-Попечитель",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [
+        [
+          "1",
+          "Мать"
+        ],
+        [
+          "2",
+          "Отец"
+        ],
+        [
+          "3",
+          "Опекун"
+        ],
+        [
+          "4",
+          "Попечитель"
+        ]
+      ],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "childInfo",
+      "path": "disabilityChildrenStatementReject/receiversRow/childInfo",
+      "parent": 9,
+      "group": "",
+      "doc": "Сведения о ребенке",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "childInfoTypeReject",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        18,
+        19
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "disabilityChildrenStatement.xsd"
+    },
+    {
+      "name": "snils",
+      "path": "disabilityChildrenStatementReject/receiversRow/childInfo/snils",
+      "parent": 17,
+      "group": "",
+      "doc": "СНИЛС",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ],
+        [
+          "pattern",
+          "[0-9]*"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "birthDate",
+      "path": "disabilityChildrenStatementReject/receiversRow/childInfo/birthDate",
+      "parent": 17,
+      "group": "",
+      "doc": "Дата рождения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:birthDate",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "Person.xsd"
+    },
+    {
+      "name": "periods",
+      "path": "disabilityChildrenStatementReject/receiversRow/periods",
+      "parent": 9,
+      "group": "",
+      "doc": "Сведения о предоставленных выходных днях и количестве рабочих часов которые приходилилсь на доп.выходные",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        21,
+        22
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "daysAmount",
+      "path": "disabilityChildrenStatementReject/receiversRow/periods/daysAmount",
+      "parent": 20,
+      "group": "",
+      "doc": "Количество предоставленных дополнительных выходных дней",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "TotalHour",
+      "path": "disabilityChildrenStatementReject/receiversRow/periods/TotalHour",
+      "parent": 20,
+      "group": "",
+      "doc": "Суммарное количество рабочих часов, которые приходились на предоставленные дополнительные выходные дни:",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:integer",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "rejectionInfo",
+      "path": "disabilityChildrenStatementReject/rejectionInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Общие сведения об отказе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        24,
+        25,
+        26
+      ],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "number",
+      "path": "disabilityChildrenStatementReject/rejectionInfo/number",
+      "parent": 23,
+      "group": "",
+      "doc": "Номер решения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "date",
+      "path": "disabilityChildrenStatementReject/rejectionInfo/date",
+      "parent": 23,
+      "group": "",
+      "doc": "Дата решения",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "reason",
+      "path": "disabilityChildrenStatementReject/rejectionInfo/reason",
+      "parent": 23,
+      "group": "",
+      "doc": "Общая причина отказа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "4000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {}
+    },
+    {
+      "name": "attachment",
+      "path": "disabilityChildrenStatementReject/attachment",
+      "parent": 0,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "AttachmentType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "file": "CommonUQ.xsd",
+      "flags": {},
+      "typeFile": "CommonUQ.xsd"
+    },
+    {
+      "name": "content",
+      "path": "disabilityChildrenStatementReject/attachment/content",
+      "parent": 27,
+      "group": "",
+      "doc": "Содержимое файла",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:base64Binary",
+      "base": "xs:base64Binary",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "file": "CommonUQ.xsd",
+      "flags": {}
+    },
+    {
+      "name": "ext",
+      "path": "disabilityChildrenStatementReject/attachment/ext",
+      "parent": 27,
+      "group": "",
+      "doc": "Расширение файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "file": "CommonUQ.xsd",
+      "flags": {}
+    },
+    {
+      "name": "mimeType",
+      "path": "disabilityChildrenStatementReject/attachment/mimeType",
+      "parent": 27,
+      "group": "",
+      "doc": "Mime-тип файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "file": "CommonUQ.xsd",
+      "flags": {}
+    },
+    {
+      "name": "size",
+      "path": "disabilityChildrenStatementReject/attachment/size",
+      "parent": 27,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:integer",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "file": "CommonUQ.xsd",
+      "flags": {}
+    },
+    {
+      "name": "name",
+      "path": "disabilityChildrenStatementReject/attachment/name",
+      "parent": 27,
+      "group": "",
+      "doc": "Название файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "file": "CommonUQ.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@responseOn",
+      "path": "disabilityChildrenStatementReject/@responseOn",
+      "parent": 0,
+      "group": "",
+      "doc": "Ссылка на транспортный идентификатор Заявления",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "cmn:UuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "disabilityChildrenStatement.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    }
+  ]
+}

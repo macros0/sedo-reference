@@ -13,6 +13,7 @@ assert.deepEqual(compare([field("x",{values:[["1","Один"]]})],[field("x",{va
 assert.deepEqual(compare([field("x")],[field("x",{flags:{fixed:"true"},max:"unbounded",group:"choice [0..1]"})])[0].changes.map(c=>c.key),["max","group","flags"]);
 assert.equal(compare(right,left).find(x=>x.path==="root/added").status,"removed");
 assert.throws(()=>compare([field("x"),field("x")],[]),/Неоднозначный/);
+assert.equal(compare([field("u",{alternatives:[{base:"xs:string",facets:[["maxLength","5"]],values:[],flags:{}}]})],[field("u",{alternatives:[{base:"xs:string",facets:[["maxLength","6"]],values:[],flags:{}}]})])[0].changes[0].key,"alternatives");
 const root=path.resolve(__dirname,".."),catalog=JSON.parse(fs.readFileSync(path.join(root,"data/catalog.json"),"utf8"));
 const load=r=>JSON.parse(fs.readFileSync(path.join(root,"data/fields",r.revision_id+".json"),"utf8")).fields;
 const pair=n=>catalog.revisions.filter(r=>r.number===n&&r.status==='matched');

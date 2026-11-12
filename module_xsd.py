@@ -17,27 +17,49 @@ MAX_FILES=2048
 def digest(content):return hashlib.sha256(content).hexdigest()
 def text(node):return " ".join("".join(t.text or "" for t in node.iter(W+"t")).split())
 
+def word_text(node):
+    return "".join((n.text or "") if n.tag==W+"t" else "\n" if n.tag==W+"br" else "\t" if n.tag==W+"tab" else "" for n in node.iter())
+
 def document_bindings(doc):
     bindings=[];active=None
+    def finish():
+        if not active:return
+        examples=[];inline_roots=[]
+        source="\n".join(active["paragraphs"])
+        for match in re.finditer(r'<(?P<name>[A-Za-z_][\w.-]*(?::[A-Za-z_][\w.-]*)?)\b[^>]*>.*?</(?P=name)\s*>',source,re.S):
+            try:
+                element=ET.fromstring(match[0]);namespace,_,name=element.tag[1:].partition("}") if element.tag.startswith("{") else (None,"",element.tag)
+                if namespace=="http://www.w3.org/2001/XMLSchema":
+                    if name=="schema":inline_roots.extend((e.get("name"),element.get("targetNamespace")) for e in element.findall("{http://www.w3.org/2001/XMLSchema}element"))
+                    continue
+                if (name,namespace) not in examples:examples.append((name,namespace))
+            except ET.ParseError:continue
+        candidate=active.get("schema") or active.get("document_root") or (inline_roots[0] if len(set(inline_roots))==1 else None) or (examples[0] if len(examples)==1 else None) or active.get("table")
+        if candidate and re.fullmatch(r"[A-Za-z_][\w.-]*",candidate[0]):
+            bindings.append(dict(number=active["number"],title=active["title"],root=candidate[0],namespace=candidate[1]))
     for child in doc.find(W+"body"):
         if child.tag==W+"p":
             style=child.find(W+"pPr/"+W+"pStyle")
             if style is not None and re.search(r"toc|contents|оглав",style.get(W+"val",""),re.I):continue
             declaration=re.fullmatch(r"Тип сообщения\s+(?:СЭДО\s*)?(?:№\s*)?(\d{1,5})\s*[:—–-]\s*(.+)",text(child),re.I)
-            if declaration:active=dict(number=declaration[1],title=declaration[2])
-            elif text(child).startswith("Приложение"):active=None
+            if declaration:
+                finish();active=dict(number=declaration[1],title=declaration[2],paragraphs=[])
+            elif re.match(r"^(?:Приложение|Атрибуты\s+типов$|Атрибутивный/элементный\s+состав|В данном разделе.*всех элементов)",text(child),re.I):
+                finish();active=None
+            elif active:active["paragraphs"].append(word_text(child))
         elif active and child.tag==W+"tbl":
             rows=[[text(c) for c in tr.findall(W+"tc")] for tr in child.findall(W+"tr")]
-            root=None;namespace=None
-            if rows and rows[0][0]=="Элемент/Атрибут" and len(rows)>1:root=rows[1][0]
+            namespace=next((r[1] for r in rows if len(r)==2 and r[0]=="Пространство имен"),None)
+            for i,row in enumerate(rows[:-1]):
+                if row and re.sub(r"\s+","",row[0]).casefold() in ("элемент/атрибут","атрибут/элемент"):
+                    active.setdefault("table",(rows[i+1][0],namespace))
+                    if len(rows[i+1])>=5 and rows[i+1][1].split(":")[-1]=="DocumentType":active.setdefault("document_root",(rows[i+1][0],namespace))
+                    break
             for cells in rows:
-                if len(cells)!=2:continue
-                if cells[0]=="Пространство имен":namespace=cells[1]
-                if cells[0]=="Схема":
+                if len(cells)==2 and cells[0]=="Схема":
                     declaration=re.match(r'<(?:xs|xsd):element\s+[^>]*name="([^"]+)"',cells[1])
-                    if declaration:root=declaration[1]
-            if root and re.fullmatch(r"[A-Za-z_][\w.-]*",root):
-                bindings.append(dict(active,root=root,namespace=namespace));active=None
+                    if declaration:active.setdefault("schema",(declaration[1],namespace))
+    finish()
     return bindings
 
 def xml_contract(data):
@@ -172,6 +194,32 @@ def extract_archives(document):
                     for name,data in sorted(files.items()):archive.writestr(zipfile.ZipInfo(name,(1980,1,1,0,0,0)),data)
                 packages.append(dict(container=path,filename=filename,original_sha256=key,content=output.getvalue()))
             except Exception as exc:issues.append(dict(container=path,reason=str(exc)))
+    # Some modules publish the full XSD as paragraphs rather than OLE objects.
+    with zipfile.ZipFile(io.BytesIO(document)) as doc:
+        if "word/document.xml" not in doc.namelist():return packages,issues
+        if doc.getinfo("word/document.xml").file_size>MAX_TOTAL:raise ValueError("Слишком большой XML документа")
+        body=ET.fromstring(doc.read("word/document.xml"))
+        source="\n".join(word_text(p) for p in body.iter(W+"p"))
+    for index,match in enumerate(re.finditer(r'<(?P<p>xs|xsd):schema\b.*?</(?P=p):schema\s*>',source,re.S),1):
+        try:
+            payload=match[0].encode("utf8");ET.fromstring(payload)
+            key=digest(payload)
+            if key in seen:continue
+            seen.add(key);filename="inline-"+str(index)+".xsd"
+            files=unpack_schemas(filename,payload,budget);output=io.BytesIO()
+            with zipfile.ZipFile(output,"w",compression=zipfile.ZIP_STORED) as archive:
+                for name,data in files.items():archive.writestr(zipfile.ZipInfo(name,(1980,1,1,0,0,0)),data)
+            packages.append(dict(container="word/document.xml#schema-"+str(index),filename=filename,original_sha256=key,content=output.getvalue()))
+        except Exception as exc:issues.append(dict(container="word/document.xml#schema-"+str(index),reason=str(exc)))
+    if len(packages)>1:
+        combined={}
+        for index,package in enumerate(packages):
+            with zipfile.ZipFile(io.BytesIO(package["content"])) as archive:
+                for name in archive.namelist():combined["package-"+str(index)+"/"+name]=archive.read(name)
+        output=io.BytesIO()
+        with zipfile.ZipFile(output,"w",compression=zipfile.ZIP_STORED) as archive:
+            for name,data in sorted(combined.items()):archive.writestr(zipfile.ZipInfo(name,(1980,1,1,0,0,0)),data)
+        packages.append(dict(container="word/document.xml#combined",filename="Схемы одного DOCX.zip",original_sha256=digest(document),content=output.getvalue()))
     return packages,issues
 
 def match_document(document,entries,read_object):
@@ -200,7 +248,7 @@ def match_document(document,entries,read_object):
                     except Exception as exc:issues.append(dict(number=binding["number"],root=binding["root"],reason=str(exc)))
             if candidates:break
         unique={}
-        for signature,item in sorted(candidates,key=lambda c:c[1]["schema_path"].casefold()):unique.setdefault(signature,item)
+        for signature,item in candidates:unique.setdefault(signature,item)
         if len(unique)==1:matches.append(next(iter(unique.values())))
         else:issues.append(dict(number=binding["number"],root=binding["root"],reason="Не найдена полная схема" if not unique else "Неоднозначные схемы"))
     return matches,issues

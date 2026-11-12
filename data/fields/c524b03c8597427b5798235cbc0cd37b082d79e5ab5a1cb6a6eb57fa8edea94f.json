@@ -1,0 +1,265 @@
+{
+  "revision_id": "c524b03c8597427b5798235cbc0cd37b082d79e5ab5a1cb6a6eb57fa8edea94f",
+  "fields": [
+    {
+      "name": "registerPowerOfAttorneyResult",
+      "path": "registerPowerOfAttorneyResult",
+      "parent": -1,
+      "group": "",
+      "doc": "Корневой элемент ответа на запрос регистрации доверенности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2,
+        3,
+        4,
+        10
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "uuid",
+      "path": "registerPowerOfAttorneyResult/uuid",
+      "parent": 0,
+      "group": "",
+      "doc": "Идентификатор доверенности",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "c:UuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "status",
+      "path": "registerPowerOfAttorneyResult/status",
+      "parent": 0,
+      "group": "",
+      "doc": "Статус доверенности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "PAStatusType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "REGISTERED",
+          ""
+        ],
+        [
+          "REVOKED",
+          ""
+        ],
+        [
+          "ERROR",
+          ""
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "issued",
+      "path": "registerPowerOfAttorneyResult/issued",
+      "parent": 0,
+      "group": "",
+      "doc": "В случае успешной обработки сообщения - дата регистрации доверенности",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:dateTime",
+      "base": "xs:dateTime",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "protocol",
+      "path": "registerPowerOfAttorneyResult/protocol",
+      "parent": 0,
+      "group": "",
+      "doc": "Протокол обработки сообщения",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "ProtocolType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        5
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "message",
+      "path": "registerPowerOfAttorneyResult/protocol/message",
+      "parent": 4,
+      "group": "",
+      "doc": "Сообщение протокола",
+      "kind": "element",
+      "min": "0",
+      "max": "unbounded",
+      "type": "ProtocolMessageType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        6,
+        7,
+        8,
+        9
+      ],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "mnemonic",
+      "path": "registerPowerOfAttorneyResult/protocol/message/mnemonic",
+      "parent": 5,
+      "group": "",
+      "doc": "Тип сообщения протокола",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "ProtocolMessageMnemonicType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "10"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "level",
+      "path": "registerPowerOfAttorneyResult/protocol/message/level",
+      "parent": 5,
+      "group": "",
+      "doc": "Тип сообщения протокола",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "ProtocolMessageLevelType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "INFO",
+          ""
+        ],
+        [
+          "WARN",
+          ""
+        ],
+        [
+          "ERROR",
+          ""
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "PowerOfAttorney.xsd"
+    },
+    {
+      "name": "comment",
+      "path": "registerPowerOfAttorneyResult/protocol/message/comment",
+      "parent": 5,
+      "group": "",
+      "doc": "Комментарий",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "recommendation",
+      "path": "registerPowerOfAttorneyResult/protocol/message/recommendation",
+      "parent": 5,
+      "group": "",
+      "doc": "Рекомендации",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:fss:integration:types:mchd:v01",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {}
+    },
+    {
+      "name": "@responseOn",
+      "path": "registerPowerOfAttorneyResult/@responseOn",
+      "parent": 0,
+      "group": "",
+      "doc": "",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "c:UuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "PowerOfAttorney.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    }
+  ]
+}

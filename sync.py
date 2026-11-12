@@ -80,6 +80,7 @@ def inspect_file(b,kind):
                     r=xml(n)
                     result.append(dict(path=n,namespace=r.get("targetNamespace"),sha256=sha(z.read(n)),
                          dependencies=[e.get("schemaLocation") for e in r if e.tag in (XS+"import",XS+"include")],
+                         imports=[dict(location=e.get("schemaLocation"),namespace=e.get("namespace")) for e in r if e.tag in (XS+"import",XS+"include")],
                          roots=[dict(name=e.get("name"),description=norm(" ".join(t for a in e.findall(XS+"annotation/"+XS+"documentation") for t in a.itertext()))) for e in r.findall(XS+"element")]))
             return {"schemas":result}
         doc=xml("word/document.xml")
@@ -132,23 +133,24 @@ def sync(base):
             r=dict(environment=env,url=u,label=label,kind=ext or "link");lookup[u]=r;entries.append(r)
             if parts.hostname==urlsplit(url).hostname and parts.path.startswith("/specs_sedo/") and ext in ("docx","zip","pdf","crt","xsd","doc","xlsx"):
                 tasks.append(r)
-        # RPU and legacy process XSD are linked from the companion PRAB page.
-        # Resolve aliases to the same contour host; never mix test and prod.
-        if any(urlsplit(urljoin(url,href)).path=="/prab.html" for href,label in parser.items):
-            companion=urljoin(url,"/prab.html")
-            content=get(companion)
-            entries.append(dict(environment=env,url=companion,label="Проактивное назначение пособий",kind="html",sha256=blob(content),bytes=len(content)))
+        # Follow published schema pages, keeping their original contour host.
+        linked={re.sub(r"/+","/",urlsplit(urljoin(url,href)).path) for href,label in parser.items}
+        for path in ("/prab.html","/mchd.html","/eln.html"):
+            if path not in linked:continue
+            companion=urljoin(url,path);content=get(companion)
+            entries.append(dict(environment=env,url=companion,label=path[1:],kind="html",sha256=blob(content),bytes=len(content)))
             extra=Links();extra.feed(content.decode("utf-8-sig"))
             for href,label in extra.items:
                 resource=urljoin(companion,href.strip());parts=urlsplit(resource)
-                if parts.hostname!=urlsplit(url).hostname or not parts.path.startswith("/prab/") or not parts.path.lower().endswith(".zip"):continue
-                if resource in lookup:continue
+                if parts.hostname!=urlsplit(url).hostname or not parts.path.lower().endswith(".zip"):continue
+                is_schema=(path=="/prab.html" and parts.path.startswith("/prab/")) or (re.search(r"xsd|схем",label+" "+parts.path,re.I) and parts.path.startswith(("/prab/","/mchd/","/eln/")))
+                if not is_schema or resource in lookup:continue
                 row=dict(environment=env,url=resource,label=label,kind="zip",source_page=companion)
                 lookup[resource]=row;entries.append(row);tasks.append(row)
         if not any(r["environment"]==env and r["kind"]=="zip" for r in tasks): raise ValueError(env+": отсутствуют ожидаемые архивы")
     def fetch(r):
         b=get(r["url"]);meta=inspect_file(b,r["kind"]);packages=[]
-        if r["kind"]=="docx" and meta.get("module_bindings"):
+        if r["kind"]=="docx":
             from module_xsd import extract_archives
             packages,issues=extract_archives(b)
             if issues:meta["schema_diagnostics"]=issues
