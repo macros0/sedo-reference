@@ -40,7 +40,8 @@ function renderUpdates(params){
  for(const [value,text] of [["all","За всё время"],["week","За неделю (7 дней)"],["month","За месяц (30 дней)"],["custom","Выбранный период"]])period.add(new Option(text,value));period.value=["week","month","custom"].includes(params.get("period"))?params.get("period"):"all";periodLabel.append(period);
  const bounds=node("div","journal-bounds"),fromLabel=node("label","","С"),from=node("input"),toLabel=node("label","","По");from.type="date";from.id="updates-from";from.value=params.get("from")||"";fromLabel.append(from);const to=node("input");to.type="date";to.id="updates-to";to.value=params.get("to")||"";toLabel.append(to);bounds.append(fromLabel,toLabel);periodRow.append(periodLabel,bounds);
  const rangeHint=node("p","meta"),rangeError=node("p","journal-range-error");rangeError.id="updates-date-error";rangeError.setAttribute("role","alert");section.append(periodRow,rangeHint,rangeError);
- const changesLabel=node("label","journal-toggle"),onlyChanges=node("input");onlyChanges.type="checkbox";onlyChanges.id="updates-only-changes";onlyChanges.checked=params.get("changed")==="1";changesLabel.append(onlyChanges,document.createTextNode("Только с изменениями"));section.append(changesLabel);
+ const changesLabel=node("label","journal-toggle"),onlyChanges=node("input");onlyChanges.type="checkbox";onlyChanges.id="updates-only-changes";onlyChanges.checked=params.get("changed")==="1";changesLabel.append(onlyChanges,document.createTextNode("Только с изменениями"));
+ const actions=node("div","journal-actions"),reset=node("button","swap","Сбросить фильтры");reset.type="button";reset.id="updates-reset";actions.append(changesLabel,reset);section.append(actions);
  const count=node("p","meta");count.id="updates-count";count.setAttribute("role","status");const list=node("div","journal-list");section.append(count,list);
  function draw(){
   bounds.hidden=period.value!=="custom";const range=journalDateRange(period.value,from.value,to.value);
@@ -74,6 +75,7 @@ function renderUpdates(params){
   if(!visible.length)list.append(node("p","empty",entries.length?(onlyChanges.checked?"Нет записей с изменениями. Измените поиск, контур, период или отключите фильтр.":"Совпадений нет. Измените поиск, контур или период."):"Сохранённых событий пока нет."));
  }
  function change(){history.replaceState(null,"","#"+new URLSearchParams({updates:"1",q:query.value,env:env.value,...(onlyChanges.checked?{changed:"1"}:{}),...(period.value!=="all"?{period:period.value}:{}),...(period.value==="custom"&&from.value?{from:from.value}:{}),...(period.value==="custom"&&to.value?{to:to.value}:{})}));draw()}
+ reset.onclick=()=>{query.value="";env.value="";period.value="all";from.value="";to.value="";onlyChanges.checked=false;history.replaceState(null,"","#"+updatesRoute());draw()};
  query.oninput=change;env.onchange=change;onlyChanges.onchange=change;period.onchange=change;from.onchange=change;to.onchange=change;draw();
 }
 if(typeof module!=="undefined"&&module.exports)module.exports={journalDateRange,journalDateMatches};
