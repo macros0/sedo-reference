@@ -41,6 +41,42 @@
   const old=new Set(before.map(f=>f.path)),next=new Set(after.map(f=>f.path));
   for(const p of pairs)validatePair(p,old,next);
  }
+ function suggestDescendants(pairs,before,after){
+  validatePairs(pairs,before,after);
+  const oldParents=new Map(),newParents=new Map(),unique=new Map(),targets=new Set(after.map(f=>f.path));
+  for(const pair of pairs){const key=JSON.stringify([pair.beforePath,pair.afterPath]);if(!unique.has(key))unique.set(key,{...pair,key})}
+  const add=(map,path,pair)=>{if(!map.has(path))map.set(path,[]);map.get(path).push(pair)};
+  for(const pair of unique.values()){add(oldParents,pair.beforePath,pair);add(newParents,pair.afterPath,pair)}
+  const nearest=(path,parents)=>{
+   for(let slash=path.lastIndexOf("/");slash>=0;slash=path.lastIndexOf("/",slash-1)){
+    const found=parents.get(path.slice(0,slash));if(found)return found;if(slash===0)break;
+   }
+   return [];
+  };
+  const candidates=[],conflicts=[],seen=new Set();
+  for(const field of before){
+   if(oldParents.has(field.path))continue; // Explicit rows always take precedence.
+   for(const parent of nearest(field.path,oldParents)){
+    const suffix=field.path.slice(parent.beforePath.length),afterPath=parent.afterPath+suffix;
+    if(!targets.has(afterPath))continue;
+    const key=JSON.stringify([field.path,afterPath]);if(seen.has(key))continue;seen.add(key);
+    if(seen.size+unique.size>MAX_ROWS)throw Error("Слишком много предложений. Уточните родительские соответствия или разбейте книгу.");
+    const proposal={beforePath:field.path,afterPath,relativePath:suffix.slice(1),parentBeforePath:parent.beforePath,parentAfterPath:parent.afterPath,comment:"Сопоставлено по одинаковому относительному пути внутри родительского блока."};
+    if(newParents.has(afterPath)){conflicts.push({...proposal,reason:"Путь «Стало» уже сопоставлен вручную."});continue}
+    // Check both directions so a manually remapped target subtree remains intact.
+    if(!nearest(afterPath,newParents).some(p=>p.key===parent.key)){conflicts.push({...proposal,reason:"Ветка «Стало» вручную сопоставлена с другим блоком."});continue}
+    candidates.push(proposal);
+   }
+  }
+  const oldCounts=new Map(),newCounts=new Map();
+  for(const p of candidates){oldCounts.set(p.beforePath,(oldCounts.get(p.beforePath)||0)+1);newCounts.set(p.afterPath,(newCounts.get(p.afterPath)||0)+1)}
+  const suggestions=[];
+  for(const proposal of candidates){
+   if(oldCounts.get(proposal.beforePath)>1||newCounts.get(proposal.afterPath)>1)conflicts.push({...proposal,reason:"Несколько возможных соответствий при разделении или объединении блоков. Укажите эту пару вручную."});
+   else suggestions.push(proposal);
+  }
+  return {suggestions,conflicts};
+ }
  function parseWorkbook(workbook,options){
   const report={pairs:[],errors:[],ignored:0,duplicates:0,reversed:false};
   try{
@@ -115,32 +151,72 @@
  }
  function mount(container,options,saved,onChange){
   const el=(tag,cls,value)=>{const element=document.createElement(tag);if(cls)element.className=cls;if(value!==undefined)element.textContent=value;return element};
+  const button=(cls,value)=>{const control=el("button",cls,value);control.type="button";return control};
   const panel=el("section","mapping-panel"),status=el("p","meta"),preview=el("div","mapping-preview"),controls=el("div","mapping-controls");
-  panel.append(el("h2","","Ручные соответствия"),el("p","meta","Загрузите заполненный Excel. Применяются только строки «Подтверждено» для этой пары редакций. Файл обрабатывается в браузере."));
+  panel.append(el("h2","","Ручные соответствия"),el("p","meta","Загрузите заполненный Excel. По подтверждённым родительским блокам будут предложены вложенные теги с одинаковыми относительными путями. Файл обрабатывается в браузере."));
   status.setAttribute("role","status");status.textContent="Применено пар: "+saved.pairs.length+(saved.notice?". "+saved.notice:"");
   const fileInput=el("input","mapping-file");fileInput.type="file";fileInput.accept=".xlsx";fileInput.hidden=true;
-  const upload=el("button","swap","Загрузить сопоставления из Excel"),reset=el("button","swap","Сбросить сопоставления");upload.type=reset.type="button";reset.disabled=!saved.pairs.length&&!saved.notice;
+  const upload=button("swap","Загрузить сопоставления из Excel"),reset=button("swap","Сбросить сопоставления");reset.disabled=!saved.pairs.length&&!saved.notice;
   upload.onclick=()=>fileInput.click();reset.onclick=()=>{if(options.isCurrent()){store.clear(options);onChange()}};
+  function paginatedTable(host,rows,captions,makeRow){
+   const table=el("table","diff-table"),head=el("tr"),thead=el("thead"),body=el("tbody"),scroll=el("div","table-scroll"),nav=el("div","mapping-pages");
+   captions.forEach(text=>head.append(el("th","",text)));thead.append(head);table.append(thead,body);scroll.append(table);host.append(scroll);
+   const previous=button("swap mapping-prev","Назад"),next=button("swap mapping-next","Далее"),caption=el("span","meta");caption.setAttribute("role","status");nav.append(previous,caption,next);
+   let page=0;const size=50,pages=Math.ceil(rows.length/size);
+   function draw(){body.replaceChildren();rows.slice(page*size,(page+1)*size).forEach((row,i)=>body.append(makeRow(row,page*size+i)));previous.disabled=page===0;next.disabled=page===pages-1;caption.textContent="Строки "+(page*size+1)+"–"+Math.min((page+1)*size,rows.length)+" из "+rows.length+" · страница "+(page+1)+" из "+pages}
+   previous.onclick=()=>{page--;draw()};next.onclick=()=>{page++;draw()};if(pages>1)host.append(nav);draw();return draw;
+  }
+  function showPreview(report,manualLabel){
+   preview.replaceChildren();
+   const proposal=report.errors.length?{suggestions:[],conflicts:[]}:suggestDescendants(report.pairs,options.before,options.after),suggestions=proposal.suggestions;
+   status.textContent="Предпросмотр: ручных пар "+report.pairs.length+", предложено вложенных "+suggestions.length+", требуют решения "+proposal.conflicts.length+", пропущено неподтверждённых строк "+report.ignored+", повторов "+report.duplicates+", ошибок "+report.errors.length+(report.reversed?". Направление пар развёрнуто.":".");
+   const errors=el("ul","mapping-errors");for(const error of report.errors.slice(0,20))errors.append(el("li","",error));if(report.errors.length>20)errors.append(el("li","","Остальные ошибки: "+(report.errors.length-20)));if(report.errors.length)preview.append(errors);
+   const old=new Map(options.before.map(f=>[f.path,f])),next=new Map(options.after.map(f=>[f.path,f])),selected=new Set(suggestions.map((_,i)=>i));
+   const selection=el("p","meta mapping-selected"),apply=button("open mapping-apply","Применить сопоставления");selection.setAttribute("role","status");
+   function update(){selection.textContent="К применению: ручных пар "+report.pairs.length+", вложенных "+selected.size+" из "+suggestions.length;apply.textContent="Применить сопоставления ("+(report.pairs.length+selected.size)+")";apply.disabled=!!report.errors.length||!report.pairs.length&&!selected.size}
+   let redraw=()=>{};
+   if(suggestions.length){
+    const bulk=el("div","mapping-controls"),all=button("swap mapping-select-all","Выбрать все предложения"),none=button("swap mapping-select-none","Снять выбор предложений");
+    all.onclick=()=>{suggestions.forEach((_,i)=>selected.add(i));redraw();update()};none.onclick=()=>{selected.clear();redraw();update()};bulk.append(all,none);preview.append(bulk);
+   }
+   preview.append(selection);
+   const rows=[...report.pairs.map(pair=>({pair,suggestion:-1})),...suggestions.map((pair,i)=>({pair,suggestion:i}))];
+   if(rows.length)redraw=paginatedTable(preview,rows,["Применить","Источник","Путь и описание «Было»","Путь и описание «Стало»","Основание / комментарий"],({pair,suggestion})=>{
+    const row=el("tr"),input=el("input",suggestion>=0?"mapping-proposal":"mapping-explicit"),choice=el("td");input.type="checkbox";input.disabled=suggestion<0;input.checked=suggestion<0||selected.has(suggestion);input.setAttribute("aria-label","Сопоставить "+pair.beforePath+" → "+pair.afterPath);input.dataset.beforePath=pair.beforePath;input.dataset.afterPath=pair.afterPath;
+    input.onchange=()=>{input.checked?selected.add(suggestion):selected.delete(suggestion);update()};choice.append(input);
+    const reason=suggestion>=0?"Относительный путь: "+pair.relativePath+"\nРодитель: "+pair.parentBeforePath+" → "+pair.parentAfterPath:pair.comment;
+    row.append(choice,el("td","",suggestion>=0?"По относительному пути":manualLabel),el("td","",pair.beforePath+"\n"+(old.get(pair.beforePath)?.doc||"")),el("td","",pair.afterPath+"\n"+(next.get(pair.afterPath)?.doc||"")),el("td","",reason));return row;
+   });
+   if(proposal.conflicts.length){
+    const details=el("details","mapping-conflicts");details.append(el("summary","","Требуют ручного решения · "+proposal.conflicts.length),el("p","meta","Эти пары не выбраны автоматически. Уточните сопоставления в Excel и загрузите книгу снова."));
+    paginatedTable(details,proposal.conflicts,["Путь «Было»","Путь «Стало»","Причина"],pair=>{const row=el("tr");row.append(el("td","",pair.beforePath),el("td","",pair.afterPath),el("td","",pair.reason));return row});preview.append(details);
+   }
+   apply.onclick=()=>{if(options.isCurrent()){
+    const pairs=[...report.pairs,...suggestions.filter((_,i)=>selected.has(i))].map(({beforePath,afterPath,comment})=>({beforePath,afterPath,comment}));store.save(options,pairs);onChange();
+   }};
+   preview.append(apply,el("p","meta","Применение заменит сохранённый набор для этой пары редакций. Выбранные предложения будут подтверждены и сохранены в браузере. Сверьте описания: совпадение относительного пути не подтверждает одинаковый смысл. Ограничения берутся из схем справочника."));update();
+  }
+  controls.append(upload,reset,fileInput);panel.append(controls,status,preview);container.append(panel);
+  let savedSuggest=null;
+  if(saved.pairs.length){
+   try{
+    const available=suggestDescendants(saved.pairs,options.before,options.after);
+    if(available.suggestions.length||available.conflicts.length){
+     const suggest=button("swap mapping-suggest","Предпросмотр вложенных тегов ("+available.suggestions.length+")");suggest.onclick=()=>{if(options.isCurrent()){
+      try{showPreview({pairs:saved.pairs,errors:[],ignored:0,duplicates:0,reversed:false},"Ранее применено")}catch(error){status.textContent="Не удалось подготовить предложения. "+error.message}
+     }};savedSuggest=suggest;controls.append(suggest);
+    }
+   }catch(error){status.textContent+=" Не удалось подготовить предложения. "+error.message}
+  }
   let generation=0;
   fileInput.onchange=async()=>{
    const file=fileInput.files?.[0];if(!file)return;const token=++generation;
-   upload.disabled=true;status.textContent="Читаем Excel…";preview.replaceChildren();
+   upload.disabled=true;if(savedSuggest)savedSuggest.disabled=true;status.textContent="Читаем Excel…";preview.replaceChildren();
    try{
-    const report=await readFile(file,options);if(token!==generation||!options.isCurrent())return;
-    status.textContent="Предпросмотр: пар "+report.pairs.length+", пропущено неподтверждённых строк "+report.ignored+", повторов "+report.duplicates+", ошибок "+report.errors.length+(report.reversed?". Направление пар развёрнуто.":".");
-    const errors=el("ul","mapping-errors");for(const error of report.errors.slice(0,20))errors.append(el("li","",error));if(report.errors.length>20)errors.append(el("li","","Остальные ошибки: "+(report.errors.length-20)));if(report.errors.length)preview.append(errors);
-    const old=new Map(options.before.map(f=>[f.path,f])),next=new Map(options.after.map(f=>[f.path,f]));
-    if(report.pairs.length){
-     const table=el("table","diff-table"),head=el("tr");for(const caption of ["Путь и описание «Было»","Путь и описание «Стало»","Комментарий"])head.append(el("th","",caption));const thead=el("thead");thead.append(head);table.append(thead);const body=el("tbody");
-     for(const pair of report.pairs.slice(0,10)){const row=el("tr");row.append(el("td","",pair.beforePath+"\n"+(old.get(pair.beforePath)?.doc||"")),el("td","",pair.afterPath+"\n"+(next.get(pair.afterPath)?.doc||"")),el("td","",pair.comment));body.append(row)}table.append(body);const scroll=el("div","table-scroll");scroll.append(table);preview.append(scroll);
-     if(report.pairs.length>10)preview.append(el("p","meta","Показаны первые 10 пар из "+report.pairs.length+". После применения сравнение учитывает весь набор."));
-    }
-    const apply=el("button","open mapping-apply","Применить сопоставления");apply.type="button";apply.disabled=!!report.errors.length||!report.pairs.length;
-    apply.onclick=()=>{if(options.isCurrent()){store.save(options,report.pairs);onChange()}};preview.append(apply,el("p","meta","Применение заменит сохранённый набор для этой пары редакций. Ограничения берутся из схем справочника. Сопоставление блока не распространяется на вложенные поля."));
+    const report=await readFile(file,options);if(token!==generation||!options.isCurrent())return;showPreview(report,"Из Excel");
    }catch(error){if(token===generation&&options.isCurrent())status.textContent="Не удалось загрузить соответствия. "+error.message}
-   finally{if(token===generation){upload.disabled=false;fileInput.value=""}}
+   finally{if(token===generation){upload.disabled=false;if(savedSuggest)savedSuggest.disabled=false;fileInput.value=""}}
   };
-  controls.append(upload,reset,fileInput);panel.append(controls,status,preview);container.append(panel);
  }
- return {preflightArchive,parseWorkbook,storageKey,createStore,store,readFile,mount};
+ return {preflightArchive,suggestDescendants,parseWorkbook,storageKey,createStore,store,readFile,mount};
 });

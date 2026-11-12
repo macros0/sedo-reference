@@ -1,0 +1,69 @@
+"use strict";
+const assert=require("node:assert/strict"),mapping=require("../web/comparison-mapping.js"),compare=require("../web/compare-core.js");
+assert.equal(typeof mapping.suggestDescendants,"function","matching parent blocks should propose descendants");
+const f=path=>({path,name:path.split("/").at(-1),kind:path.includes("/@")?"attribute":"element",doc:"Описание",min:0,max:1,facets:[],values:[],flags:{}});
+const p=(beforePath,afterPath)=>({beforePath,afterPath,comment:"Проверено вручную"});
+const before=["old/block","old/block/code","old/block/sub","old/block/sub/value","old/block/@id","old/block/renamed","old/block/Case","old/blocker/value"].map(f);
+const after=["new/block","new/block/code","new/block/sub","new/block/sub/value","new/block/@id","new/block/anotherName","new/block/case","new/blocker/value"].map(f);
+const parents=[p("old/block","new/block")],key=r=>[r.beforePath,r.afterPath].join(" → "),snapshot=JSON.stringify({before,after,parents});
+const basic=mapping.suggestDescendants(parents,before,after);
+assert.deepEqual(basic.suggestions.map(r=>r.relativePath),["code","sub","sub/value","@id"]);
+assert.equal(basic.conflicts.length,0);assert.equal(JSON.stringify({before,after,parents}),snapshot,"source arrays must stay unchanged");
+assert.equal(basic.suggestions[2].parentBeforePath,"old/block");assert.equal(basic.suggestions[2].parentAfterPath,"new/block");assert.equal(typeof basic.suggestions[2].comment,"string");
+const b2=[...after,...["new/remapped","new/remapped/value","new/custom"].map(f)];
+const manual=[...parents,p("old/block/code","new/custom"),p("old/block/sub","new/remapped")];
+const specific=mapping.suggestDescendants(manual,before,b2);
+assert.ok(specific.suggestions.some(r=>key(r)==="old/block/sub/value → new/remapped/value"));
+assert.ok(!specific.suggestions.some(r=>r.beforePath==="old/block/code"||r.afterPath==="new/block/sub/value"));
+const boundary=mapping.suggestDescendants([...parents,p("other","new/block/sub")],[...before,...["other","other/value"].map(f)],after);
+assert.ok(!boundary.suggestions.some(r=>r.beforePath.startsWith("old/block/sub")));assert.ok(boundary.suggestions.some(r=>key(r)==="other/value → new/block/sub/value"));assert.ok(boundary.conflicts.length);
+const splitParents=[...parents,p("old/block","new/alternative")],splitTargets=[...after,...["new/alternative","new/alternative/code"].map(f)];
+const split=mapping.suggestDescendants(splitParents,before,splitTargets);
+assert.ok(!split.suggestions.some(r=>r.beforePath==="old/block/code"));assert.equal(split.conflicts.filter(r=>r.beforePath==="old/block/code").length,2);
+const reversed=mapping.suggestDescendants(splitParents.map(r=>p(r.afterPath,r.beforePath)),splitTargets,before);
+assert.deepEqual(new Set(reversed.suggestions.map(r=>[r.afterPath,r.beforePath].join(" → "))),new Set(split.suggestions.map(key)));
+const merge=mapping.suggestDescendants([...parents,p("other","new/block")],[...before,...["other","other/code"].map(f)],after);
+assert.ok(!merge.suggestions.some(r=>r.afterPath==="new/block/code"));assert.equal(merge.conflicts.filter(r=>r.afterPath==="new/block/code").length,2);
+const occupied=mapping.suggestDescendants([...parents,p("other","new/block/code")],[...before,f("other")],after);
+assert.ok(!occupied.suggestions.some(r=>r.beforePath==="old/block/code"));assert.ok(occupied.conflicts.some(r=>r.beforePath==="old/block/code"));
+assert.equal(mapping.suggestDescendants([...parents,...parents],before,after).suggestions.length,basic.suggestions.length);
+const explicit=p("old/block/sub/value","new/block/sub/value");assert.ok(!mapping.suggestDescendants([...parents,explicit],before,after).suggestions.some(r=>r.beforePath===explicit.beforePath));
+const mismatch=mapping.suggestDescendants([p("old","new")],["old","old/a/code"].map(f),["new","new/b/code"].map(f));assert.equal(mismatch.suggestions.length,0);
+assert.throws(()=>mapping.suggestDescendants([p("missing","new/block")],before,after),/путь/);
+const fs=require("node:fs"),path=require("node:path"),root=path.resolve(__dirname,".."),catalog=JSON.parse(fs.readFileSync(path.join(root,"data/catalog.json"),"utf8"));
+const rev=n=>catalog.revisions.find(r=>r.number===n&&r.environment==="prod"&&r.status==="matched");
+const fields=r=>JSON.parse(fs.readFileSync(path.join(root,"data/fields/"+r.revision_id+".json"),"utf8")).fields;
+const a=fields(rev("101")),b=fields(rev("10110")),actualParent=p("approveSocialAssist/benefit1Approve","benefitResponse/benefit1"),actual=mapping.suggestDescendants([actualParent],a,b);
+const leaf=actual.suggestions.find(r=>r.relativePath==="calculationData/downPeriodList/downPeriod/idleAverage");assert.ok(leaf);
+const result=compare.compare(a,b,[actualParent,...actual.suggestions]);
+const delta=result.find(r=>r.manual&&r.beforePath===leaf.beforePath).changes.find(c=>c.key==="facets");
+assert.ok(delta.before.some(([k,v])=>k==="totalDigits"&&v==="22"));assert.ok(delta.after.some(([k,v])=>k==="totalDigits"&&v==="11"));
+assert.ok(!result.some(r=>["added","removed"].includes(r.status)&&[leaf.beforePath,leaf.afterPath].includes(r.path)));
+console.log("Descendant suggestions: exact relative paths, nested overrides, reverse, split/merge ambiguity, occupied paths, attributes and real 101/10110 passed ("+actual.suggestions.length+" suggested).");
+
+// Exercise the real preview event handlers without a browser or real storage.
+const vm=require("node:vm");
+class Element{
+ constructor(tag){Object.assign(this,{tagName:tag,children:[],dataset:{},disabled:false,checked:false,textContent:"",className:""})}
+ append(...nodes){this.children.push(...nodes)}
+ replaceChildren(...nodes){this.children=[...nodes]}
+ setAttribute(){}
+}
+const storage=new Map(),context=vm.createContext({document:{createElement:tag=>new Element(tag)},localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)}});
+vm.runInContext(fs.readFileSync(path.join(root,"web/comparison-mapping.js"),"utf8"),context);
+const ui=context.SedoMapping,uiFields=prefix=>[{path:prefix,doc:"Блок"},...Array.from({length:52},(_,i)=>({path:prefix+"/x"+i,doc:"Поле "+i}))];
+const uiOptions={left:{revision_id:"ui-left"},right:{revision_id:"ui-right"},before:uiFields("a"),after:uiFields("b"),isCurrent:()=>true},uiParent={beforePath:"a",afterPath:"b",comment:""};
+const host=new Element("host"),walk=n=>[n,...n.children.flatMap(walk)],find=cls=>walk(host).filter(n=>n.className.split(" ").includes(cls));
+let updates=0;ui.store.save(uiOptions,[uiParent]);ui.mount(host,uiOptions,{pairs:[uiParent],notice:""},()=>updates++);
+find("mapping-suggest")[0].onclick();assert.equal(ui.store.load(uiOptions).pairs.length,1);assert.equal(updates,0,"opening preview must not apply suggestions");
+const uncheck=checkbox=>{checkbox.checked=false;checkbox.onchange()};
+uncheck(find("mapping-proposal")[0]);find("mapping-next")[0].onclick();uncheck(find("mapping-proposal").at(-1));find("mapping-prev")[0].onclick();
+assert.equal(find("mapping-proposal")[0].checked,false,"choice survives pagination");
+find("mapping-apply")[0].onclick();const approved=ui.store.load(uiOptions).pairs;
+assert.equal(updates,1);assert.equal(approved.length,51);assert.ok(approved.some(p=>p.beforePath==="a"));assert.ok(!approved.some(p=>["a/x0","a/x51"].includes(p.beforePath)));
+find("mapping-controls")[0].children[1].onclick();assert.equal(ui.store.load(uiOptions).pairs.length,0);
+host.replaceChildren();updates=0;ui.store.save(uiOptions,[uiParent]);ui.mount(host,uiOptions,{pairs:[uiParent],notice:""},()=>updates++);find("mapping-suggest")[0].onclick();
+find("mapping-select-none")[0].onclick();assert.ok(find("mapping-proposal").every(c=>!c.checked));assert.match(find("mapping-selected")[0].textContent,/вложенных 0 из 52/);assert.equal(ui.store.load(uiOptions).pairs.length,1);
+find("mapping-select-all")[0].onclick();assert.ok(find("mapping-proposal").every(c=>c.checked));find("mapping-next")[0].onclick();assert.ok(find("mapping-proposal").every(c=>c.checked));
+uiOptions.isCurrent=()=>false;find("mapping-apply")[0].onclick();assert.equal(updates,0,"stale preview must not apply to another comparison");assert.equal(ui.store.load(uiOptions).pairs.length,1);
+console.log("Preview UI: pages, individual exclusion, bulk selection, explicit approval, reset and stale-navigation guard passed.");
