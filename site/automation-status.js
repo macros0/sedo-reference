@@ -3,6 +3,10 @@
  const STALE=36*60*60*1000;
  const labels={success:'Успешно',failure:'Ошибка',processing:'Выполняется',waiting:'Ожидается',not_published:'Не опубликовано',cancelled:'Отменено',unknown:'Нет данных',stale:'Данные устарели'};
  function date(value){const n=Date.parse(value);return Number.isFinite(n)?new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',dateStyle:'short',timeStyle:'short'}).format(n)+' МСК':'время неизвестно'}
+ // Keep these UTC times aligned with SourceCraft .sourcecraft/ci.yaml and
+ // .github/workflows/check-sfr.yml. Moscow is UTC+3; visitor time zones do not apply.
+ const dailyRuns={sourcecraft:{hour:4,minute:0},github:{hour:4,minute:17}};
+ function nextRun(kind,now){const {hour,minute}=dailyRuns[kind],next=new Date(now);next.setUTCHours(hour,minute,0,0);if(next.getTime()<=now)next.setUTCDate(next.getUTCDate()+1);return date(next.toISOString())}
  function model(data,now=Date.now()){
   if(data?.format!==1||!data.github||!data.sourcecraft)return {tone:'unknown',summary:'Автообновление · статус недоступен',cards:[],updated:''};
   const sc=data.sourcecraft,gh=data.github,check=gh.check||{},pub=gh.publication||{},versions=gh.versions||{};
@@ -18,6 +22,7 @@
   if(sourceState==='stale'&&sc.state==='processing')sourceLines.push('Сбор не завершился за 30 минут. Проверьте журнал SourceCraft.');
   if(sc.state==='failure'&&sc.error)sourceLines.push(sc.error);
   if(sc.state!=='success'&&sc.last_success_at)sourceLines.push('Последний успешный сбор: '+date(sc.last_success_at));
+  sourceLines.push('Следующая проверка по расписанию: '+nextRun('sourcecraft',now));
   const count=Number.isInteger(versions.count)&&versions.count>=0?versions.count:null;
   const versionsText=check.state==='success'&&count!==null?(count?'Добавлено редакций: '+count:'Новых редакций нет'):check.state==='processing'?'Проверка справочника выполняется':check.state==='waiting'?'Ожидается обработка новых снимков SourceCraft':'Число новых редакций пока неизвестно';
   const publicationText={success:'Обновление опубликовано',failure:'Публикация завершилась ошибкой',processing:'Публикация выполняется',waiting:'Ожидает публикации',not_published:'Обновление не опубликовано',cancelled:'Публикация отменена',unknown:'Публикация не подтверждена'}[pub.state]||'Публикация не подтверждена';
@@ -30,9 +35,9 @@
    states.every(s=>s==='success')&&count!==null?'success':'unknown';
   if(!Number.isFinite(Date.parse(data.generated_at)))tone='unknown';
   const summary={success:'Автообновление · успешно · '+(count?'новых редакций: '+count:'новых редакций нет'),failure:'Автообновление · есть ошибка',stale:'Автообновление · данные статуса устарели',processing:'Автообновление · проверка или публикация ожидается',unknown:'Автообновление · не все этапы подтверждены'}[tone];
-  return {tone,summary,updated:'Статус получен '+date(data.generated_at),cards:[
+  return {tone,summary,updated:'Статус получен '+date(data.generated_at)+'. Фактический запуск может задержаться относительно расписания.',cards:[
    {title:'SourceCraft · '+(labels[sourceState]||labels.unknown),state:sourceState,lines:sourceLines,url:sc.url,link:sc.run_id?'SourceCraft · запуск № '+sc.run_id:'Открыть SourceCraft'},
-   {title:'Новые редакции · '+(labels[checkState]||labels.unknown),state:checkState,lines:[versionsText,...(versions.checked_at?['Проверено '+date(versions.checked_at)]:[])],url:check.url,link:'Открыть проверку GitHub'},
+   {title:'Новые редакции · '+(labels[checkState]||labels.unknown),state:checkState,lines:[versionsText,...(versions.checked_at?['Проверено '+date(versions.checked_at)]:[]),'Следующий забор по расписанию: '+nextRun('github',now)],url:check.url,link:'Открыть проверку GitHub'},
    {title:'GitHub Pages · '+(labels[pub.state]||labels.unknown),state:pub.state,lines:publicationLines,url:pub.url,link:'Открыть публикацию'}
   ]};
  }
