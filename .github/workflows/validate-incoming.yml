@@ -26,6 +26,9 @@ on:
       - 'tests/test_source_updates.py'
       - 'tests/test_edition_groups.cjs'
       - 'web/app.js'
+      - 'web/validation*.js'
+      - 'web/vendor/xmllint/**'
+      - 'tests/test_browser_validation.cjs'
       - 'web/journal.js'
       - 'data/message-transitions.json'
       - 'web/message-transitions.js'
@@ -74,6 +77,7 @@ jobs:
           node tests/test_mapping_editor.cjs
           node tests/test_mapping_apply.cjs
           node tests/test_edition_groups.cjs
+          node tests/test_browser_validation.cjs
           python -m unittest tests.test_xsd_bundle -q
           python import_inbox.py --check
       - name: Write validation report

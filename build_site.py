@@ -86,10 +86,15 @@ restoreField();
         catalog["schema_updates"]=display_updates(catalog)
         catalog["source_updates"]=source_updates(catalog)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
-    assets=("app.js","app.css","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg")
+    assets=("app.js","app.css","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg","validation.js","validation-core.js","validation-frame.js","validation-worker.js","vendor/xmllint/xmllint-browser.mjs","vendor/xmllint/xmllint.wasm","vendor/xmllint/COPYING","vendor/xmllint/README.md")
     for file in assets:
         (site/file).parent.mkdir(parents=True,exist_ok=True)
         (site/file).write_bytes((HERE/"web"/file).read_bytes())
+    validator_assets=[dict(key=key,path=name,sha=sha((site/name).read_bytes())) for key,name in (
+        ('engine','vendor/xmllint/xmllint-browser.mjs'),('wasm','vendor/xmllint/xmllint.wasm'),
+        ('core','validation-core.js'),('worker','validation-worker.js'),('frame','validation-frame.js'))]
+    loader=(site/'validation.js').read_text('utf8').replace('__VALIDATOR_ASSETS__',packed(validator_assets))
+    (site/'validation.js').write_text(loader,encoding='utf8')
     # Content versions prevent cached old routing code from breaking new navigation.
     html=(HERE/"web/index.html").read_text("utf8")
     for file in (*assets,"catalog-data.js"):

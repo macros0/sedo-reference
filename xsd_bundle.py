@@ -1,5 +1,7 @@
 """Publish exact-edition XSD closures with byte-identical originals and offline copies."""
 import io
+import base64
+import gzip
 import json
 import posixpath
 import re
@@ -156,7 +158,7 @@ def publish_bundles(catalog,state,site):
     archives={};prepared={}
     try:
         for row in catalog['revisions']:
-            for key in ('schema_download','schema_filename','schema_bundle_sha256','schema_file_count'):row.pop(key,None)
+            for key in ('schema_download','schema_filename','schema_bundle_sha256','schema_file_count','validation_download','validation_sha256'):row.pop(key,None)
             row['schema_export_status']='unavailable';row['schema_export_error']='Полный комплект XSD для этой редакции не сопоставлен.'
             if row.get('status')!='matched':continue
             rid=_digest(row['revision_id']);digest=_digest(row['archive_sha256'])
@@ -179,6 +181,13 @@ def publish_bundles(catalog,state,site):
             if not target.is_file() or target.read_bytes()!=content:write(target,content)
             version=row.get('document_version') or 'unversioned'
             row.update(schema_export_status='ready',schema_download=relative,schema_filename=re.sub('[^A-Za-z0-9._-]','_',f"sedo-{row['number']}-{row['environment']}-v{version}-{rid[:8]}-xsd.zip"),schema_bundle_sha256=sha(content),schema_file_count=len(records))
+            pack={k:row.get(k) for k in ('number','environment','revision_id','document_version','label_date','root','namespace')}
+            pack.update(format=1,entrypoint='message.xsd',files={f['local_path']:base64.b64encode(output[f['local_path']]).decode('ascii') for f in records})
+            browser=gzip.compress(json.dumps(pack,ensure_ascii=True,separators=(',',':'),sort_keys=True).encode('utf8'),compresslevel=9,mtime=0)
+            browser=browser[:9]+b'\xff'+browser[10:]  # Stable gzip OS marker across Python/platform versions.
+            relative='schemas/'+rid+'.validation.json.gz';target=Path(site)/relative
+            if not target.is_file() or target.read_bytes()!=browser:write(target,browser)
+            row.update(validation_download=relative,validation_sha256=sha(browser))
             row.pop('schema_export_error',None)
     finally:
         for archive in archives.values():archive.close()

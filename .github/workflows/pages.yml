@@ -44,6 +44,7 @@ jobs:
           node tests/test_mapping_editor.cjs
           node tests/test_mapping_apply.cjs
           node tests/test_edition_groups.cjs
+          node tests/test_browser_validation.cjs
       - name: Check live WSDL sources without changing the reference
         run: python wsdl_sources.py --probe
       - name: Validate and apply pending Russian collector snapshots
@@ -54,6 +55,7 @@ jobs:
         run: |
           python verify.py
           python build_site.py
+          node tests/test_browser_validation.cjs --all-editions
           touch site/.nojekyll
       - name: Save validated imports
         run: |

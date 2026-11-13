@@ -1,0 +1,77 @@
+"use strict";
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),{Worker}=require('node:worker_threads'),{webcrypto}=require('node:crypto');
+const root=path.resolve(__dirname,'..'),read=n=>fs.readFileSync(path.join(root,n),'utf8');
+assert.ok(fs.existsSync(path.join(root,'web/validation-worker.js')),'browser-local XSD worker is not implemented');
+const core=require('../web/validation-core.js');
+const main='<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:c="urn:codes"><xs:import namespace="urn:codes" schemaLocation="schemas/codes.xsd"/><xs:element name="request"><xs:complexType><xs:sequence><xs:element name="code" type="c:Code"/></xs:sequence></xs:complexType></xs:element><xs:element name="other" type="xs:string"/></xs:schema>';
+const dep='<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:codes"><xs:simpleType name="Code"><xs:restriction base="xs:string"><xs:length value="3"/><xs:pattern value="[А-ЯA-Z]+"/></xs:restriction></xs:simpleType></xs:schema>';
+const pack={format:1,number:'42',environment:'prod',revision_id:'a'.repeat(64),root:'request',namespace:'',entrypoint:'message.xsd',files:{'message.xsd':Buffer.from(main).toString('base64'),'schemas/codes.xsd':Buffer.from(dep).toString('base64')}};
+const engine=read('web/vendor/xmllint/xmllint-browser.mjs').split(';(function initWorker()')[0];
+const workerSource=`const {parentPort}=require('node:worker_threads');self=globalThis;self.postMessage=data=>parentPort.postMessage(data);parentPort.on('message',data=>self.onmessage({data}));self.SEDO_WASM=new Uint8Array(${JSON.stringify([...fs.readFileSync(path.join(root,'web/vendor/xmllint/xmllint.wasm'))])});\n${engine}\n${read('web/validation-core.js')}\n${read('web/validation-worker.js')}`;
+async function validate(xml,custom=pack){const w=new Worker(workerSource,{eval:true});try{return await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('worker timed out')),15000);w.on('message',x=>{clearTimeout(timer);resolve(x)});w.on('error',reject);w.postMessage({bytes:typeof xml==='string'?new TextEncoder().encode(xml):xml,pack:custom})})}finally{await w.terminate()}}
+(async()=>{
+ let r=await validate('<request><code>ABC</code></request>');assert.equal(r.valid,true,JSON.stringify(r));
+ r=await validate('<request>\n<code>ABCD</code>\n</request>');assert.equal(r.valid,false);assert.ok(r.errors.some(e=>e.line===2&&/length|pattern/i.test(e.message)),JSON.stringify(r));
+ r=await validate('<other>ABC</other>');assert.equal(r.valid,false);assert.match(r.errors[0].message,/корнев/,'other global roots in the same XSD must be rejected');
+ r=await validate('<request xmlns="urn:wrong"/>');assert.equal(r.valid,false);assert.match(r.errors[0].message,/корнев/);
+ for(const xml of ['<request><code>ABC</request>','<!DOCTYPE request SYSTEM "https://example.invalid/private"><request/>','<!DOCTYPE request [<!ENTITY secret SYSTEM "file:///etc/passwd">]><request>&secret;</request>']){r=await validate(xml);assert.equal(r.valid,false);assert.ok(r.errors.length)}
+ const utf16=Buffer.concat([Buffer.from([255,254]),Buffer.from('<?xml version="1.0" encoding="UTF-16"?><request><code>АБВ</code></request>','utf16le')]);assert.equal((await validate(utf16)).valid,true);
+ const cp1251=Buffer.concat([Buffer.from('<?xml version="1.0" encoding="windows-1251"?><request><code>'),Buffer.from([0xc0,0xc1,0xc2]),Buffer.from('</code></request>')]);const cpResult=await validate(cp1251);assert.equal(cpResult.valid,true,JSON.stringify(cpResult));
+ const arbitrary={...pack,files:{'message.xsd':Buffer.from('<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:element name="request" type="xs:string"/></xs:schema>').toString('base64')}};
+ const badAscii=Buffer.concat([Buffer.from('<?xml version="1.0" encoding="US-ASCII"?><request>'),Buffer.from([0xe9]),Buffer.from('</request>')]);assert.equal((await validate(badAscii,arbitrary)).valid,false,'invalid ASCII bytes must not be silently repaired');
+ assert.equal((await validate('<request><!-- ordinary <!DOCTYPE marker --><![CDATA[<!ENTITY marker]]></request>',arbitrary)).valid,true,'declaration-like text in comments/CDATA is ordinary content');
+ const latin=Buffer.concat([Buffer.from('<?xml version="1.0" encoding="ISO-8859-1"?><request>'),Buffer.from([128]),Buffer.from('</request>')]);assert.ok(core.inspectBytes(latin).includes(''),'ISO-8859-1 C1 byte must not become a Windows1252 character');
+ assert.throws(()=>core.inspectBytes(new Uint8Array(10*1024*1024+1)),/10/);
+ const bad={...pack,files:{...pack.files,'../escape.xsd':pack.files['message.xsd']}};assert.throws(()=>core.checkPack(bad,pack),/путь/);
+ assert.throws(()=>core.checkPack({...pack,revision_id:'b'.repeat(64)},pack),/редакц/);
+ const ctx=vm.createContext({window:{},TextEncoder,TextDecoder,Uint8Array,ArrayBuffer,crypto:webcrypto,btoa:s=>Buffer.from(s,'binary').toString('base64'),atob:s=>Buffer.from(s,'base64').toString('binary'),console,URL,Blob,AbortController,DecompressionStream,Response});
+ vm.runInContext(read('web/validation.js').replace('__VALIDATOR_ASSETS__','[]'),ctx);
+ const doc=await ctx.window.SedoValidator.createDocument({pack,engine:'/*engine*/',wasm:'AA==',worker:'/*worker*/',core:read('web/validation-core.js').replace(/\r?\n/g,'\r\n'),frame:read('web/validation-frame.js').replace(/\r?\n/g,'\r\n')});
+ const csp=doc.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)[1];assert.match(csp,/connect-src 'none'/);assert.match(csp,/default-src 'none'/);assert.match(csp,/form-action 'none'/);assert.match(csp,/worker-src blob:/);assert.doesNotMatch(csp,/script-src[^;]*unsafe-inline/);
+ const script=doc.match(/<script>([\s\S]*)<\/script>/)[1],hash=Buffer.from(await webcrypto.subtle.digest('SHA-256',new TextEncoder().encode(script.replace(/\r\n?/g,'\n')))).toString('base64');assert.ok(csp.includes("'sha256-"+hash+"'"),'CSP must authorize exactly the isolated controller');
+
+ // Run the actual isolated UI controller against real WASM workers. An outward
+ // message or persistent-storage access is a test failure, not a stubbed success.
+ const nodes=Object.fromEntries(['xml','xml-text','check','clear','status','errors'].map(id=>[id,{textContent:'',className:'',disabled:false,value:'',files:[],children:[],replaceChildren(){this.children=[]},append(x){this.children.push(x)}}]));
+ let uiDone,uiTimeout;
+ class UIWorker{postMessage(data){validate(data.bytes,data.pack).then(result=>{if(!this.stopped)this.onmessage({data:result});uiDone?.()})}terminate(){this.stopped=true}}
+ const frameContext=vm.createContext({self:{SedoValidationCore:core},document:{getElementById:id=>nodes[id],createElement:()=>({textContent:''})},SEDO_PACK:pack,SEDO_WORKER:'',SEDO_WASM64:'',Worker:UIWorker,URL:{createObjectURL:()=> 'blob:local',revokeObjectURL(){}},Blob,Uint8Array,TextEncoder,setTimeout:fn=>{uiTimeout=fn;return 1},clearTimeout:()=>{uiTimeout=null},addEventListener(){},postMessage(){throw Error('Private data escaped the frame')},localStorage:new Proxy({},{get(){throw Error('Private data persisted')}})});
+ vm.runInContext(read('web/validation-frame.js'),frameContext);
+ async function chooseAndRun(text){const bytes=Buffer.from(text);nodes.xml.files=[{size:bytes.length,arrayBuffer:async()=>Uint8Array.from(bytes).buffer}];nodes.xml.onchange();const done=new Promise(resolve=>{uiDone=resolve});await nodes.check.onclick();await done;uiDone=null}
+ await chooseAndRun('<request><code>ABC</code></request>');assert.match(nodes.status.textContent,/соответствует XSD/);assert.equal(nodes.check.disabled,false);
+ await chooseAndRun('<request>\n<code>ABCD</code></request>');assert.match(nodes.status.textContent,/не соответствует/);assert.ok(nodes.errors.children.some(x=>x.textContent.includes('Строка 2')));
+ nodes.clear.onclick();assert.equal(nodes.errors.children.length,0);assert.equal(nodes.xml.value,'');assert.equal(nodes.check.disabled,true);assert.match(nodes.status.textContent,/очищены/);
+ nodes['xml-text'].value='<request><code>ABC</code></request>';nodes.xml.files=[];nodes['xml-text'].oninput();const pasteDone=new Promise(resolve=>{uiDone=resolve});await nodes.check.onclick();await pasteDone;uiDone=null;assert.match(nodes.status.textContent,/соответствует XSD/);nodes.clear.onclick();assert.equal(nodes['xml-text'].value,'');
+ let releaseRead;nodes.xml.files=[{size:10,arrayBuffer:()=>new Promise(resolve=>{releaseRead=resolve})}];nodes.xml.onchange();const pending=nodes.check.onclick();nodes.clear.onclick();releaseRead(new Uint8Array([60,120,47,62]).buffer);await pending;assert.match(nodes.status.textContent,/очищены/,'cleared pending input must never reappear');
+ nodes.xml.files=[];nodes['xml-text'].value='<request><code>ABC</code></request>';nodes['xml-text'].oninput();await nodes.check.onclick();assert.equal(typeof uiTimeout,'function');uiTimeout();assert.match(nodes.status.textContent,/30 секунд/);assert.equal(nodes.check.disabled,false);await new Promise(resolve=>{uiDone=resolve});uiDone=null;assert.match(nodes.status.textContent,/30 секунд/,'late worker results must not overwrite timeout');
+ UIWorker.prototype.postMessage=function(){queueMicrotask(()=>this.onerror())};await nodes.check.onclick();await Promise.resolve();assert.match(nodes.status.textContent,/Ошибка запуска/);assert.equal(nodes.check.disabled,false);
+ // Exact identity must be checked before the file chooser exists.
+ await assert.rejects(()=>ctx.window.SedoValidator.createDocument({pack,expected:{...pack,environment:'test'},engine:'',wasm:'',worker:'',core:'',frame:''}),/редакц/);
+
+
+ // Exercise actual async loader with public assets. Delayed responses ignore abort
+ // deliberately, so only the real generation check can prevent stale insertion.
+ const crypto=require('node:crypto'),zlib=require('node:zlib'),events={};
+ const assetFiles=[['engine','vendor/xmllint/xmllint-browser.mjs'],['wasm','vendor/xmllint/xmllint.wasm'],['core','validation-core.js'],['worker','validation-worker.js'],['frame','validation-frame.js']];
+ const resources=new Map(assetFiles.map(([,name])=>[name,fs.readFileSync(path.join(root,'web',name))]));
+ const hashOf=x=>crypto.createHash('sha256').update(x).digest('hex');const assets=assetFiles.map(([key,name])=>({key,path:name,sha:hashOf(resources.get(name))}));
+ const compressed=zlib.gzipSync(JSON.stringify(pack));const row={...pack,validation_download:'schemas/'+pack.revision_id+'.validation.json.gz',validation_sha256:hashOf(compressed)};resources.set(row.validation_download,compressed);
+ class PanelNode{constructor(tag){this.tag=tag;this.children=[];this.textContent='';this.attrs={}}setAttribute(k,v){this.attrs[k]=v}append(...nodes){for(const n of nodes){n.parent=this;this.children.push(n)}}remove(){this.parent.children=this.parent.children.filter(x=>x!==this)}}
+ let release,gate=new Promise(resolve=>{release=resolve}),delay=true;
+ const parentContext=vm.createContext({window:{isSecureContext:true,addEventListener:(name,fn)=>{events[name]=fn}},document:{createElement:tag=>new PanelNode(tag)},TextEncoder,TextDecoder,Uint8Array,ArrayBuffer,crypto:webcrypto,btoa:s=>Buffer.from(s,'binary').toString('base64'),atob:s=>Buffer.from(s,'base64').toString('binary'),console,URL,Blob,AbortController,DecompressionStream,Response,fetch:async url=>{if(delay)await gate;return new Response(resources.get(url.split('?')[0]))}});
+ vm.runInContext(read('web/validation.js').replace('__VALIDATOR_ASSETS__',JSON.stringify(assets)),parentContext);const ui=parentContext.window.SedoValidator,host=new PanelNode('host');
+ const stale=ui.mount(row,host);ui.dispose();delay=false;release();await stale;assert.equal(host.children.length,0,'closing during preparation must not recreate the private window');
+ await ui.mount(row,host);assert.equal(host.children.length,1);const iframe=host.children[0].children.find(n=>n.tag==='iframe');assert.ok(iframe,'verified selected pack must create chooser frame');assert.equal(iframe.attrs.sandbox,'allow-scripts','parent must never get same-origin access to private file input');
+ assert.equal(typeof events.pagehide,'function','leaving the page must discard private state before BFCache');events.pagehide();assert.equal(host.children.length,0,'history cache must not retain a broken or private validation window');
+ await ui.mount({...row,validation_sha256:'0'.repeat(64)},host);assert.ok(host.children[0].children.some(n=>n.textContent.includes('Контрольная сумма')));assert.ok(!host.children[0].children.some(n=>n.tag==='iframe'),'hash mismatch must leave no private input');ui.dispose();
+ if(process.argv.includes('--all-editions')){
+  const zlib=require('node:zlib'),crypto=require('node:crypto');const catalog=JSON.parse(read('site/catalog-data.js').replace(/^window.SEDO_CATALOG=/,'').replace(/;$/,''));let count=0;const seen=new Set();
+  for(const row of catalog.revisions.filter(r=>r.validation_download)){
+   const bytes=fs.readFileSync(path.join(root,'site',row.validation_download));assert.equal(crypto.createHash('sha256').update(bytes).digest('hex'),row.validation_sha256);
+   const p=JSON.parse(zlib.gunzipSync(bytes));core.checkPack(p,row);const key=crypto.createHash('sha256').update(JSON.stringify([p.root,p.namespace,p.files])).digest('hex');if(seen.has(key))continue;seen.add(key);
+   const result=await validate(p.namespace?'<m:'+p.root+' xmlns:m="'+p.namespace+'"/>':'<'+p.root+'/>',p);assert.equal(result.runtime,undefined,'WASM schema compilation failed: '+row.number+' '+row.environment+' '+JSON.stringify(result));count++;
+  }
+  console.log('All published schema closures compiled in WASM:',count);
+ }
+ console.log('Browser validation: real WASM imports/facets/root/encoding/DTD and isolated document policy passed.');
+})().catch(e=>{console.error(e);process.exitCode=1});

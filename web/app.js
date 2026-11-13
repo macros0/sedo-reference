@@ -99,6 +99,7 @@ function renderVersions(m,env){
     if(r.ready)card.append(anchor("Открыть дерево",route(m.number,e,r.revision_id),"open"));
     else card.append(node("p","",r.status==="document_only"?"DOCX сохранён. Схема XSD не загружена.":"Дерево тегов ожидает проверки"));
     const schemaControl=schemaExportControl(r);if(schemaControl)card.append(schemaControl);
+    if(r.validation_download)card.append(anchor('Проверить XML локально',route(m.number,e,r.revision_id)+'&validate=1','open validation-link'));
     appendEditionSources(card,r);
     card.append(node("p","meta","Редакция "+r.revision_id.slice(0,8)));
     if(!r.listed_now&&r.source_type!=="manual")card.append(node("p","meta","Редакция сохранена в истории"));
@@ -121,6 +122,7 @@ function renderVersions(m,env){
 }
 let loadedRevision=null;
 function renderRoute(){
+ window.SedoValidator?.dispose();
  const p=new URLSearchParams(location.hash.slice(1)),number=p.get("message"),env=p.get("env"),rev=p.get("rev"),field=p.get("field");
  for(const id of ["catalog","versions","viewer","comparison","updates","import-help","error"])$(id).hidden=true;
  $("crumbs").replaceChildren(anchor("Все сообщения",""));
@@ -143,6 +145,9 @@ function renderRoute(){
  $("doc-download").href=r.document_download;$("doc-download").download=r.document_filename;
  $("doc-download").hidden=grouped;
  document.getElementById("xsd-from-viewer")?.remove();const schemaControl=schemaExportControl(r);if(schemaControl){schemaControl.id="xsd-from-viewer";$("doc-download").after(schemaControl)}
+ document.getElementById('validate-from-viewer')?.remove();
+ let validationHost=$('validation-host');if(!validationHost){validationHost=node('div','validation-host');validationHost.id='validation-host';$('frame').before(validationHost)}
+ if(r.validation_download){const button=node('button','open validation-open','Проверить XML локально');button.id='validate-from-viewer';button.type='button';button.onclick=()=>window.SedoValidator?.mount(r,validationHost);$('doc-download').after(button);if(p.has('validate'))button.onclick()}
  let sourceBox=$("viewer-sources");if(!sourceBox){sourceBox=node("div","viewer-sources");sourceBox.id="viewer-sources";$("frame").before(sourceBox)}
  sourceBox.replaceChildren();sourceBox.hidden=!grouped;if(grouped){sourceBox.append(node("h2","","Источники этой схемы"));appendEditionSources(sourceBox,r)}
  document.getElementById("compare-from-viewer")?.remove();

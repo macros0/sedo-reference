@@ -48,8 +48,11 @@ jobs:
           node tests/test_mapping_editor.cjs
           node tests/test_mapping_apply.cjs
           node tests/test_edition_groups.cjs
+          node tests/test_browser_validation.cjs
       - name: Collect both contours and validate candidate
-        run: python auto_update.py
+        run: |
+          python auto_update.py
+          node tests/test_browser_validation.cjs --all-editions
       - name: Commit validated data and deploy
         run: |
           git add state data site

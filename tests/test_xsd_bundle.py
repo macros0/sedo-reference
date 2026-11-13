@@ -147,10 +147,30 @@ class XsdBundleTests(unittest.TestCase):
         write(self.base/'data/fields/index.json',encode([dict(revision_id=row['revision_id'],status='ready')]))
         write(self.base/'data/fields'/(row['revision_id']+'.json'),encode(dict(fields=[dict(name='Request',path='Request',parent=-1,children=[])])))
         write(self.base/'viewer-template.html',b'<html></html>')
-        for name in ('index.html','app.js','app.css','compare-core.js','compare.js','comparison-export.js','mapping-draft.js','mapping-editor.js','comparison-mapping.js','vendor/exceljs.min.js','vendor/exceljs-LICENSE','vendor/README.md','journal.js','message-transitions.js','favicon.svg'):write(self.base/'web'/name,b'test')
+        for name in ('index.html','app.js','app.css','compare-core.js','compare.js','comparison-export.js','mapping-draft.js','mapping-editor.js','comparison-mapping.js','vendor/exceljs.min.js','vendor/exceljs-LICENSE','vendor/README.md','journal.js','message-transitions.js','favicon.svg','validation.js','validation-core.js','validation-frame.js','validation-worker.js','vendor/xmllint/xmllint-browser.mjs','vendor/xmllint/xmllint.wasm','vendor/xmllint/COPYING','vendor/xmllint/README.md'):write(self.base/'web'/name,b'test')
         with patch.object(build_site,'HERE',self.base):build_site.main()
         published=json.loads((self.site/'catalog-data.js').read_text('utf8').removeprefix('window.SEDO_CATALOG=').removesuffix(';'))['revisions'][0]
         self.assertTrue((self.site/published['schema_download']).is_file());self.assertEqual((self.site/published['document_download']).read_bytes(),doc.getvalue());self.assertEqual((self.base/'data/catalog.json').read_bytes(),source)
+
+    def test_browser_companion_is_exact_deterministic_and_does_not_change_zip(self):
+        import gzip
+        row,_=self.revision();self.bundle(row)
+        self.assertIn('validation_download',row,'selected edition needs an offline browser schema companion')
+        archive=(self.site/row['schema_download']).read_bytes()
+        raw=(self.site/row['validation_download']).read_bytes()
+        self.assertEqual(sha(raw),row['validation_sha256'])
+        pack=json.loads(gzip.decompress(raw))
+        self.assertEqual(pack['revision_id'],row['revision_id']);self.assertEqual(pack['number'],row['number'])
+        self.assertEqual(pack['environment'],row['environment']);self.assertEqual(pack['root'],'Request')
+        with zipfile.ZipFile(io.BytesIO(archive)) as z:
+            manifest=json.loads(z.read('manifest.json'))
+            self.assertEqual(set(pack['files']),{f['local_path'] for f in manifest['files']})
+            for name,value in pack['files'].items():
+                import base64
+                self.assertEqual(base64.b64decode(value),z.read(name))
+        self.bundle(row)
+        self.assertEqual(raw,(self.site/row['validation_download']).read_bytes())
+        self.assertEqual(archive,(self.site/row['schema_download']).read_bytes())
 
     def test_all_archived_editions_compile_and_keep_original_dependency_bytes(self):
         catalog=json.loads((PROJECT/'data/catalog.json').read_bytes());publish_bundles(catalog,PROJECT/'state',self.site)

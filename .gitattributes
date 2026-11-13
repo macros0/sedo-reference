@@ -7,3 +7,14 @@
 
 # Generated validation bundles are deterministic binary ZIP files.
 /site/schemas/*.zip -text
+
+*.wasm -text
+/site/schemas/*.validation.json.gz -text
+
+/web/vendor/xmllint/* -text
+/site/vendor/xmllint/* -text
+
+/web/vendor/xmllint/xmllint-browser.mjs -whitespace
+/web/vendor/xmllint/COPYING -whitespace
+/site/vendor/xmllint/xmllint-browser.mjs -whitespace
+/site/vendor/xmllint/COPYING -whitespace
