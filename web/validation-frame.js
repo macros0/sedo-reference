@@ -1,6 +1,7 @@
 "use strict";
 // XML and diagnostics stay in this opaque frame. Only a public field index
 // is posted to the page after the user explicitly clicks a navigation button.
+const messages=self.SedoValidationMessages;
 const core=self.SedoValidationCore,$=id=>document.getElementById(id),sourceView=self.SedoXmlSource.mount($('xml-preview'),document,{onChange:sourceChanged,onValidate:()=>check()});
 let worker=null,timer=null,generation=0;
 const workerSource='self.SEDO_WASM=Uint8Array.from(atob('+JSON.stringify(SEDO_WASM64)+'),c=>c.charCodeAt(0));\n'+SEDO_WORKER;
@@ -27,7 +28,10 @@ async function check(){
    for(const error of core.groupErrors(result.errors||[])){
     const item=document.createElement('li'),message=document.createElement('button');item.className='error-card';message.type='button';message.className='error-message';message.textContent=(error.line?'Строка '+error.line:'Диагностика XML')+' · Нарушений: '+error.diagnostics.length;message.title='Перейти к XML возле ошибки';message.disabled=!sourceView.canShow(error);message.onclick=()=>sourceView.showError(error);item.append(message);
     const reasons=document.createElement('ul');reasons.className='error-diagnostics';reasons.setAttribute('aria-label','Нарушенные ограничения и диагностики');
-    for(const diagnostic of error.diagnostics){const reason=document.createElement('li');reason.textContent=(diagnostic.line&&diagnostic.line!==error.line?'Строка '+diagnostic.line+': ':'')+diagnostic.message;reasons.append(reason)}item.append(reasons);
+    for(const diagnostic of error.diagnostics){
+     const reason=document.createElement('li'),explanation=document.createElement('span');explanation.className='error-explanation';explanation.textContent=(diagnostic.line&&diagnostic.line!==error.line?'Строка '+diagnostic.line+': ':'')+messages.explain(diagnostic.message);
+     const details=document.createElement('details'),summary=document.createElement('summary'),original=document.createElement('pre');details.className='error-details';details.open=false;summary.textContent='Подробнее';original.className='error-original';original.textContent=diagnostic.message;details.append(summary,original);reason.append(explanation,details);reasons.append(reason)
+    }item.append(reasons);
     if(error.ambiguous){const note=document.createElement('p');note.textContent='В этой строке несколько возможных путей'+(error.truncated?' (показаны первые 8)':'')+'. Выберите нужное поле.';item.append(note)}
     for(const location of error.locations||[]){
      const code=document.createElement('code');code.textContent=location.path;item.append(code);

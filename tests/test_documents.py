@@ -26,7 +26,7 @@ class DocumentArchiveTests(unittest.TestCase):
         write(self.root / "data/catalog.json", encode(dict(revisions=[revision, dict(revision, revision_id="edition2")])))
         write(self.root / "data/fields/index.json", b"[]")
         write(self.root / "viewer-template.html", b"<html></html>")
-        for name in ("index.html", "app.js", "app.css", "automation-status.js", "compare-core.js", "compare.js", "comparison-export.js", "mapping-draft.js", "mapping-editor.js", "comparison-mapping.js", "vendor/exceljs.min.js", "vendor/exceljs-LICENSE", "vendor/README.md", "journal.js", "message-transitions.js", "favicon.svg", "validation.js", "validation-core.js", "validation-frame.js", "validation-worker.js", "validation-paths.js", "validation-source.js", "vendor/xmllint/xmllint-browser.mjs", "vendor/xmllint/xmllint.wasm", "vendor/xmllint/COPYING", "vendor/xmllint/README.md"):
+        for name in ("index.html", "app.js", "app.css", "automation-status.js", "compare-core.js", "compare.js", "comparison-export.js", "mapping-draft.js", "mapping-editor.js", "comparison-mapping.js", "vendor/exceljs.min.js", "vendor/exceljs-LICENSE", "vendor/README.md", "journal.js", "message-transitions.js", "favicon.svg", "validation.js", "validation-core.js", "validation-frame.js", "validation-worker.js", "validation-paths.js", "validation-source.js", "validation-messages.js", "vendor/xmllint/xmllint-browser.mjs", "vendor/xmllint/xmllint.wasm", "vendor/xmllint/COPYING", "vendor/xmllint/README.md"):
             write(self.root / "web" / name, b"test")
 
     def build(self):

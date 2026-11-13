@@ -48,6 +48,7 @@ jobs:
           node tests/test_browser_validation.cjs
           node tests/test_validation_paths.cjs
           node tests/test_validation_source.cjs
+          node tests/test_validation_messages.cjs
           node tests/test_validation_navigation.cjs
       - name: Validate and apply pending Russian collector snapshots
         run: python collector_snapshots.py
