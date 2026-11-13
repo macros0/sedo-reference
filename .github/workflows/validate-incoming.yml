@@ -20,6 +20,7 @@ on:
       - 'build_site.py'
       - 'edition_groups.py'
       - 'tests/test_edition_groups.py'
+      - 'tests/test_source_updates.py'
       - 'tests/test_edition_groups.cjs'
       - 'web/app.js'
       - 'web/journal.js'

@@ -56,10 +56,12 @@ class DocumentArchiveTests(unittest.TestCase):
         fields=[dict(name='fault',path='fault',parent=-1,children=[],kind='element',min=1,max=1,facets=[],values=[],flags={})]
         for row in catalog['revisions']:
             row.update(root='fault',namespace='urn:fault',label_date=None,archive_url='https://example.test/schema.zip',
-                       archive_sha256='xsd-archive',dependencies=[['Fault.xsd','same-xsd']])
+                       archive_sha256='xsd-archive',dependencies=[['Fault.xsd','same-xsd']],
+                       document_url='https://example.test/'+row['revision_id']+'.docx')
             write(self.root/'data/fields'/(row['revision_id']+'.json'),encode(dict(fields=fields)))
         write(self.root/'data/fields/index.json',encode([dict(revision_id=r['revision_id'],status='ready') for r in catalog['revisions']]))
-        catalog['updates']=[dict(revision_id='edition1',previous_revision_id=None),dict(revision_id='edition2',previous_revision_id='edition1')]
+        catalog['updates']=[dict(revision_id='edition1',previous_revision_id=None,snapshot='initial',observed_at='2026-11-12T12:00:00Z'),
+                            dict(revision_id='edition2',previous_revision_id='edition1',snapshot='later',observed_at='2026-11-13T12:00:00Z')]
         write(self.root/'data/catalog.json',encode(catalog))
         self.build()
         published=json.loads((self.root/'site/catalog-data.js').read_text('utf8').removeprefix('window.SEDO_CATALOG=').removesuffix(';'))
@@ -68,6 +70,10 @@ class DocumentArchiveTests(unittest.TestCase):
         self.assertEqual(source_event['comparison']['status'],'ready')
         self.assertEqual(source_event['comparison']['counts'],dict(added=0,removed=0,changed=0))
         self.assertEqual(len(published['updates']),2)
+        self.assertEqual(len(published['source_updates']),1)
+        self.assertEqual(published['source_updates'][0]['revision_id'],'edition1')
+        self.assertEqual(published['source_updates'][0]['source']['document_url'],'https://example.test/edition2.docx')
+        self.assertEqual(len(published['schema_updates'][0]['event_sources']),1)
 
     def test_missing_document_blocks_build(self):
         (self.root / "state/objects" / self.digest).unlink()

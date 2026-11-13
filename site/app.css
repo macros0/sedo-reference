@@ -26,3 +26,4 @@
 .difference-links .mapping-undo{padding:4px 10px;margin:0}.difference .mapping-undo-error{color:#9b3333}.mapping-undo:disabled{opacity:.6;cursor:wait}
 
 .mapping-editor-feedback{color:var(--green);overflow-wrap:anywhere;margin:0 0 12px}
+.badge.source-added{background:#e7eefb;color:#244d88}.update-card[data-event-type="source_added"]{border-left:4px solid #7594c3}

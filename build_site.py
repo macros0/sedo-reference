@@ -5,7 +5,7 @@ import subprocess
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from sync import inspect_file, sha, write
-from edition_groups import group_editions, display_updates
+from edition_groups import group_editions, display_updates, source_updates
 HERE=Path(__file__).resolve().parent
 def packed(value):
     return json.dumps(value,ensure_ascii=False,separators=(",",":")).replace("<","\\u003c")
@@ -82,6 +82,7 @@ restoreField();
         # Keep complete source events for importer reports and old workbook IDs;
         # the browser journal consumes only the grouped schema events.
         catalog["schema_updates"]=display_updates(catalog)
+        catalog["source_updates"]=source_updates(catalog)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
     assets=("app.js","app.css","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg")
     for file in assets:
