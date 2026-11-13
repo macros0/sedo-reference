@@ -46,4 +46,3 @@ class PoliteFetch:
             raise
         finally:
             self.finished_at = time.monotonic()
-
