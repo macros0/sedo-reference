@@ -12,3 +12,5 @@ publication-target.json
 inbox-report.json
 
 .venv/
+.update-recovery/
+.update.lock

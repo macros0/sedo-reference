@@ -38,9 +38,10 @@ function appendRelatedComparisons(container,m,env){
  if(links.childNodes.length)container.append(links);
 }
 function comparisonDefaults(m){
- const ready=m.revisions.filter(r=>r.ready),prod=ready.filter(r=>r.environment==="prod"),test=ready.filter(r=>r.environment==="test");
- const latest=list=>[...list].sort((a,b)=>date(b.label_date).split(".").reverse().join("").localeCompare(date(a.label_date).split(".").reverse().join("")))[0];
- const left=latest(prod)||ready[0],right=latest(test)||ready.find(r=>r.revision_id!==left?.revision_id)||left;
+ const key=r=>r.label_date?date(r.label_date).split('.').reverse().join(''):'';
+ const ready=m.revisions.filter(r=>r.ready).sort((a,b)=>key(b).localeCompare(key(a))||a.revision_id.localeCompare(b.revision_id));
+ const prod=ready.find(r=>r.environment==='prod'),test=ready.find(r=>r.environment==='test');
+ const right=test||prod,left=prod&&test?prod:ready.find(r=>r.revision_id!==right?.revision_id)||right;
  return {left:left?.revision_id,right:right?.revision_id};
 }
 function formatDifference(value){

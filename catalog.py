@@ -47,6 +47,17 @@ def derive(snapshot):
         root=next((v for k,v in struct.items() if "корневой элемент" in k.lower()),None)
         ns=next((v for k,v in struct.items() if "пространство имен" in k.lower()),None)
         candidates=[(a,s) for a in rows if a["environment"]==e and a["kind"]=="zip" for s in a.get("schemas",[]) if ns==s["namespace"] and any(x["name"]==root for x in s["roots"])]
+        equivalent = {}
+        for archive, schema in sorted(candidates, key=lambda pair: (pair[0]["url"], pair[0]["sha256"], pair[1]["path"])):
+            try:
+                closure = dependency_set(archive["schemas"], schema["path"])
+            except (ValueError, KeyError):
+                # An unresolved candidate must still require review.
+                key = ("unresolved", archive["url"], schema["path"])
+            else:
+                key = ("resolved", tuple(closure))
+            equivalent.setdefault(key, (archive, schema))
+        candidates = list(equivalent.values())
         title=next((x["title"] for x in registry if x["number"]==number and x["environment"]==e),r["label"])
         version=re.search(r"[vв](\d+(?:[._]\d+)+)",r["label"],re.I)
         date=re.search(r"(\d{2}\.\d{2}\.(?:\d{4}|\d{2}))(?!\d)",r["label"])

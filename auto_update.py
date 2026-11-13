@@ -1,5 +1,6 @@
 """Stage, validate and promote a complete SFR update. Publication is done by Actions."""
 import json
+import os
 import shutil
 import tempfile
 from pathlib import Path
@@ -64,8 +65,68 @@ def validate_history(previous, current, directory):
             raise ValueError("Исчезли все актуальные тома контура " + env)
 
 
+def recover_promotion(root):
+    recovery = root / ".update-recovery"
+    if not recovery.exists():
+        return
+    journal = recovery / "journal.json"
+    if journal.exists() and not (recovery / "committed").exists():
+        existed = json.loads(journal.read_bytes())
+        for folder in ("state", "data", "site"):
+            backup, target = recovery / "previous" / folder, root / folder
+            if backup.exists():
+                if target.exists():
+                    shutil.rmtree(target)
+                backup.replace(target)
+            elif not existed[folder] and target.exists():
+                shutil.rmtree(target)
+    shutil.rmtree(recovery)
+
+
+def promote(root, stage):
+    """Keep a recoverable previous generation until every directory is installed."""
+    recover_promotion(root)
+    recovery = root / ".update-recovery"
+    recovery.mkdir()
+    try:
+        for folder in ("state", "data", "site"):
+            shutil.copytree(stage / folder, recovery / "candidate" / folder)
+        (recovery / "previous").mkdir()
+        existed = {folder: (root / folder).exists() for folder in ("state", "data", "site")}
+        temporary = recovery / "journal.tmp"
+        temporary.write_bytes(encode(existed))
+        temporary.replace(recovery / "journal.json")
+        for folder in existed:
+            if existed[folder]:
+                (root / folder).replace(recovery / "previous" / folder)
+            (recovery / "candidate" / folder).replace(root / folder)
+        (recovery / "committed").touch()
+    except Exception:
+        recover_promotion(root)
+        raise
+    recover_promotion(root)
+
+
 def run(root):
     root = Path(root).resolve()
+    # OS releases the lock even when the process terminates unexpectedly.
+    with (root / ".update.lock").open("a+b") as lock:
+        if os.name == "nt":
+            import msvcrt
+            if lock.tell() == 0:
+                lock.write(b"\0")
+                lock.flush()
+            lock.seek(0)
+            msvcrt.locking(lock.fileno(), msvcrt.LK_NBLCK, 1)
+        else:
+            import fcntl
+            fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        _run(root)
+
+
+def _run(root):
+    root = Path(root).resolve()
+    recover_promotion(root)
     report = root / "update-report.json"
     previous = json.loads((root / "data/catalog.json").read_bytes())
     try:
@@ -89,28 +150,6 @@ def run(root):
             with patch.object(build_site, "HERE", stage):
                 build_site.main()
             validate_history(previous, current, stage)
-            # Keep originals for all historical editions as well as their XSD archives.
-            objects = {r["archive_sha256"] for r in current["revisions"] if r.get("archive_sha256")}
-            objects.update(r["document_sha256"] for r in current["revisions"])
-            objects.update(r["document_sha256"] for r in current["registry"] if r.get("document_sha256"))
-            snapshot=json.loads((stage/"state/snapshots"/(json.loads((stage/"state/current.json").read_bytes())["snapshot"]+".json")).read_bytes())
-            # Keep all inputs needed to replay the successful inventory, including
-            # raw WSDL/XSD bytes and schemas from supporting DOCX documents.
-            objects.update(snapshot.get("pages",{}).values())
-            for row in snapshot["entries"]:
-                if row.get("sha256"):objects.add(row["sha256"])
-                for archive in [*row.get("embedded_archives",[]),*row.get("wsdl_archives",[])]:
-                    objects.add(archive["sha256"])
-                    objects.update(source["sha256"] for source in archive.get("source_files",[]))
-                objects.update(source["sha256"] for source in row.get("source_files",[]))
-            for name in ("current.json", "history.json", "last-run.json", "observations.json"):
-                shutil.copy2(stage / "state" / name, root / "state" / name)
-            shutil.copytree(stage / "state/snapshots", root / "state/snapshots", dirs_exist_ok=True)
-            for digest in objects:
-                source = stage / "state/objects" / digest
-                shutil.copy2(source, root / "state/objects" / digest)
-            for folder in ("data", "site"):
-                shutil.copytree(stage / folder, root / folder, dirs_exist_ok=True)
             old_ids = {r["revision_id"] for r in previous["revisions"]}
             added = [dict(number=r["number"], environment=r["environment"], version=r["document_version"], revision_id=r["revision_id"])
                      for r in current["revisions"] if r["revision_id"] not in old_ids]
@@ -129,7 +168,8 @@ def run(root):
                     if source["environment"]==env and source["status"]=="unavailable":
                         reasons.append("WSDL недоступен: "+source["source"].split("#")[0]+" — "+source["error"])
                 missing.append(dict(environment=env,number=number,title=row["title"],reasons=reasons or ["В опубликованных источниках не найдена полная сопоставленная XSD."]))
-            write(root/"data/schema-coverage.json",encode(dict(checked_at=current["checked_at"],numbers_with_trees=len({n for e,n in ready_pairs}),source_checks=wsdl_status,missing=missing)))
+            write(stage/"data/schema-coverage.json",encode(dict(checked_at=current["checked_at"],numbers_with_trees=len({n for e,n in ready_pairs}),source_checks=wsdl_status,missing=missing)))
+            promote(root, stage)
             result = dict(status="ok", checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics, wsdl_status=wsdl_status, missing_trees=missing,
                           new_messages=[dict(environment=e, number=n) for e,n in new_messages],
                           total_revisions=len(current["revisions"]))

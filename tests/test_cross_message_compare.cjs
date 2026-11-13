@@ -13,3 +13,19 @@ assert.equal(context.crossTypePair(messages.get('105'),'10010','prod'),null,'unr
 assert.equal(context.canCompareTypes('11000','11010'),false);assert.equal(context.canCompareTypes('105','10510'),true);assert.equal(context.canCompareTypes('10510','105'),true);
 assert.ok(!context.comparisonPool(messages.get('11000')).some(r=>r.number==='11010'),'avoid unrelated sibling process');
 console.log('Cross-type comparison verified: confirmed transitions, both directions, explicit contours and unrelated types excluded.');
+{
+ const vm=require('node:vm'),context={};vm.createContext(context);
+ vm.runInContext(fs.readFileSync(path.join(__dirname,'../web/app.js'),'utf8').match(/^function date\(s\).*$/m)[0]+'\n'+fs.readFileSync(path.join(__dirname,'../web/compare.js'),'utf8'),context);
+ const row=(id,environment,label_date)=>({revision_id:id,environment,label_date,ready:true});
+ for(const env of ['prod','test']){
+  const rows=[row('old',env,'01.01.2026'),row('new',env,'01.03.2026'),row('middle',env,'01.02.2026')];
+  for(const revisions of [rows,[...rows].reverse()]){
+   const pair=context.comparisonDefaults({revisions});
+   assert.equal(pair.left,'middle');assert.equal(pair.right,'new');
+  }
+  const pair=context.comparisonDefaults({revisions:[row('missing',env,null),row('dated',env,'01.03.2026')]});
+  assert.equal(pair.right,'dated');assert.notEqual(pair.left,pair.right);
+ }
+ const pair=context.comparisonDefaults({revisions:[row('prod','prod','01.03.2026'),row('test','test','01.04.2026')]});
+ assert.equal(pair.left,'prod');assert.equal(pair.right,'test');
+}

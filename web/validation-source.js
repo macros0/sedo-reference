@@ -65,7 +65,7 @@ function mount(host,document,{onChange=()=>{},onValidate=()=>{}}={}){
   }
   input.value=String(current);input.max=String(count);navigationState(currentLength,currentLeft);
   info.textContent='Строка '+current+' из '+count+'. Показаны строки '+first+'–'+last+'. '+(currentLength>2048?'Показан фрагмент длинной строки. ':'')+(ranges.length&&!visibleMarks?'Тег вне показанного фрагмента; нажмите «Показать тег в XML».':hint);
-  if(scroll&&editing){const begin=startOf(current),end=text.indexOf('\n',begin),range=ranges.find(r=>r.start<=focus&&focus<r.end);editor.focus?.({preventScroll:true});editor.setSelectionRange(range?range.start:begin,range?range.end:(end<0?text.length:end));editor.scrollTop=Math.max(0,(current-3)*20);editor.scrollLeft=Math.max(0,editorOffset(begin,focus)-(editor.clientWidth||512)/2);editor.scrollIntoView?.({block:'center'});}
+  if(scroll&&editing){const begin=startOf(current),range=ranges.find(r=>r.start<=focus&&focus<r.end);editor.focus?.({preventScroll:true});editor.setSelectionRange(range?range.start:focus,range?range.end:focus);editor.scrollTop=Math.max(0,(current-3)*20);editor.scrollLeft=Math.max(0,editorOffset(begin,focus)-(editor.clientWidth||512)/2);editor.scrollIntoView?.({block:'center'});}
   else if(scroll&&selected){selected.scrollIntoView?.({block:'center',inline:'center'});selected.focus?.({preventScroll:true})}
   if(editing){editorInfo();syncEditorGutter()}
  }

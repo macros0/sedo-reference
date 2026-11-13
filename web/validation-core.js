@@ -44,7 +44,19 @@ function checkPack(pack,expected){
  return pack;
 }
 function decode64(text){return Uint8Array.from(atob(text),c=>c.charCodeAt(0))}
-function errors(text){return String(text||'Ошибка проверки XML.').split('\n').filter(s=>s.trim()&&!/^input\.xml (?:validates|fails to validate)$/.test(s.trim())).slice(0,30).map(line=>{const m=line.match(/^input\.xml:(\d+):\s*(.*)/);return {line:m?Number(m[1]):null,message:(m?m[2]:line).slice(0,2000)}})}
+function errors(text){
+ const diagnostics=[];let current=null;
+ for(const line of String(text||'Ошибка проверки XML.').split('\n')){
+  if(!line.trim()||/^input\.xml (?:validates|fails to validate)$/.test(line.trim()))continue;
+  const header=line.match(/^input\.xml:(\d+):\s*(.*)/);
+  if(header||!current){
+   if(diagnostics.length===30)break;
+   current={line:header?Number(header[1]):null,message:(header?header[2]:line).slice(0,2000)};
+   diagnostics.push(current);
+  }else current.message=(current.message+'\n'+line).slice(0,2000);
+ }
+ return diagnostics;
+}
 // Group only proven source occurrences, never a path/line guess. All metadata
 // and diagnostic text remain inside the opaque frame and its private worker.
 function groupErrors(errors){

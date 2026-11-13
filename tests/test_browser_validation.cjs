@@ -10,6 +10,10 @@ const engine=read('web/vendor/xmllint/xmllint-browser.mjs').split(';(function in
 const workerSource=`const {parentPort}=require('node:worker_threads');self=globalThis;self.postMessage=data=>parentPort.postMessage(data);parentPort.on('message',data=>self.onmessage({data}));self.SEDO_WASM=new Uint8Array(${JSON.stringify([...fs.readFileSync(path.join(root,'web/vendor/xmllint/xmllint.wasm'))])});\n${engine}\n${read('web/validation-core.js')}\n${read('web/validation-paths.js')}\n${read('web/validation-worker.js')}`;
 async function validate(xml,custom=pack,source){const w=new Worker(workerSource,{eval:true});try{return await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('worker timed out')),15000);w.on('message',x=>{clearTimeout(timer);resolve(x)});w.on('error',reject);w.postMessage({bytes:typeof xml==='string'?new TextEncoder().encode(xml):xml,pack:custom,source})})}finally{await w.terminate()}}
 (async()=>{
+ const syntax=await validate('<request><code>ABC</request>');
+ assert.equal(syntax.errors.length,1,'source excerpt and caret belong to the parser diagnostic');
+ assert.match(syntax.errors[0].message,/\^/);
+ assert.equal(core.errors(Array.from({length:40},(_,i)=>'input.xml:'+i+': parser error : bad\n<r>\n^').join('\n')).length,30);
  let r=await validate('<request><code>ABC</code></request>');assert.equal(r.valid,true,JSON.stringify(r));
  r=await validate('<request>\n<code>ABCD</code>\n</request>');assert.equal(r.valid,false);assert.ok(r.errors.some(e=>e.locations?.some(l=>l.path==='/request/code'&&l.field===1)),'real WASM error needs exact field path');assert.ok(r.errors.some(e=>e.line===2&&/length|pattern/i.test(e.message)),JSON.stringify(r));
  for(const eol of ['\r','\r\n','\n']){const raw='<?xml version="1.0" encoding="UTF-8"?>'+eol+'<request>'+eol+'<code>BADCODE</code>'+eol+'</request>';const normalized=raw.replace(/\r\n?/g,'\n'),result=await validate(raw);assert.ok(result.errors.some(e=>e.line===3&&e.locations?.some(l=>l.ranges?.some(x=>normalized.slice(x.start,x.end)==='code'))),'real WASM line/ranges must agree for CR/CRLF/LF');}

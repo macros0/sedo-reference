@@ -96,6 +96,13 @@ def import_feed(base, fetch):
     """fetch takes a relative feed path; never executes remote code or follows paths from it."""
     base = Path(base)
     index = validate_index(json.loads(fetch("index.json")))
+    previous = base / "collector/feed.json"
+    if previous.exists():
+        old = validate_index(json.loads(previous.read_bytes()))
+        old_entries = {(e["environment"], e["content_id"]) for e in old["manifests"]}
+        new_entries = {(e["environment"], e["content_id"]) for e in index["manifests"]}
+        if not old_entries <= new_entries or not old["latest"].keys() <= index["latest"].keys():
+            raise ValueError("Feed lost previously confirmed history or contour pointers")
     files = {}
     count = 0
     for entry in index["manifests"]:

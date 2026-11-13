@@ -5,6 +5,21 @@ const api=require('../web/validation-source.js');
 let focused=0,scrolled=0;
 class Node{constructor(tag){this.tag=tag;this.children=[];this._text='';this.attrs={};this.style={};this.hidden=false;this.value=''}set textContent(v){this._text=String(v);this.children=[]}get textContent(){return this._text+this.children.map(x=>x.textContent).join('')}append(...xs){this.children.push(...xs)}replaceChildren(...xs){this._text='';this.children=[...xs]}setAttribute(k,v){this.attrs[k]=String(v)}getContext(){return {measureText:text=>({width:text.length*8.4})}}setSelectionRange(start,end){this.selectionStart=start;this.selectionEnd=end}focus(){focused++}scrollIntoView(){scrolled++}set innerHTML(_){throw Error('XML was interpreted as HTML')}}
 const doc={createElement:tag=>new Node(tag),createTextNode:text=>{const n=new Node('#text');n.textContent=text;return n}},walk=n=>[n,...n.children.flatMap(walk)],host=new Node('section'),view=api.mount(host,doc);
+{
+ const testHost=new Node('section'),testView=api.mount(testHost,doc);
+ testView.setSource('<r>'+'x'.repeat(5500)+'</r>');
+ const button=text=>walk(testHost).find(n=>n.tag==='button'&&n.textContent===text);
+ button('Редактировать XML').onclick();
+ const editor=walk(testHost).find(n=>n.tag==='textarea');
+ for(let step=1;step<=3;step++){
+  button('Далее в строке').onclick();
+  assert.equal(editor.selectionStart,step*1024);
+  assert.equal(editor.selectionEnd,editor.selectionStart);
+  editor.onselect();
+ }
+ button('Ранее в строке').onclick();assert.equal(editor.selectionStart,2048);
+ focused=0;scrolled=0;
+}
 const source='<r>\r\n  <x>BAD</x>\r\n</r>\r\n',text=source.replace(/\r\n?/g,'\n'),start=text.indexOf('<x>')+1,close=text.indexOf('</x>')+2;
 view.setSource(source);view.setErrors([{line:2,locations:[{ranges:[{start,end:start+1,kind:'tag'},{start:close,end:close+1,kind:'tag'}],occurrences:1}]}]);
 assert.equal(host.hidden,false);assert.deepEqual(walk(host).filter(n=>n.tag==='mark').map(n=>n.textContent),['x','x']);assert.equal(scrolled,0,'validation alone must not move user focus/scroll');
@@ -20,7 +35,7 @@ view.clear();assert.equal(host.hidden,true);assert.ok(!host.textContent.includes
 let edits=0,checks=0;const editHost=new Node('section'),editable=api.mount(editHost,doc,{onChange(){edits++},onValidate(){checks++}}),find=(tag,label)=>walk(editHost).find(n=>n.tag===tag&&(n.textContent===label||n.attrs['aria-label']===label));
 editable.setSource(source);editable.showError({line:2,locations:[]});
 const editButton=find('button','Редактировать XML');assert.ok(editButton,'source pane needs local edit mode');editButton.onclick();
-const editor=find('textarea','XML для редактирования');assert.ok(editor&&!editor.hidden);assert.equal(editor.value,text);assert.equal(editor.value.slice(editor.selectionStart,editor.selectionEnd).trim(),'<x>BAD</x>');
+const editor=find('textarea','XML для редактирования');assert.ok(editor&&!editor.hidden);assert.equal(editor.value,text);assert.equal(editor.selectionStart,text.indexOf('  <x>'));assert.equal(editor.selectionEnd,editor.selectionStart,'line navigation must not select the entire line');
 editor.value='<r>\n  <x>GOOD</x>\n</r>';editor.oninput();assert.equal(edits,1);assert.equal(editable.getEditedSource(),editor.value);assert.equal(walk(editHost).filter(n=>n.tag==='mark').length,0);
 find('button','Проверить исправленный XML').onclick();assert.equal(checks,1);
 editable.setSource(editor.value,{preserveEditor:true});assert.equal(editor.hidden,false,'recheck must keep editor open');assert.equal(editable.getEditedSource(),editor.value);
