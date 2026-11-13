@@ -58,7 +58,7 @@ def main():
 function restoreField(){
  const path=new URLSearchParams(location.hash.slice(1)).get('field');
  const idx=fields.findIndex(f=>f.path===path);
- if(idx>=0)select(idx,true)
+ if(idx>=0&&idx!==current)select(idx,true)
 }
 window.addEventListener('message',event=>{
  if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='sedo-select-field'||event.data.revision!==data.revision||typeof event.data.path!=='string')return;
@@ -75,6 +75,7 @@ restoreField();
         (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8")
         data=dict(fields=fields,revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=r.get("archive_name") or unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
         (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
+        r["viewer_sha256"]=sha((editions/(rid+".html")).read_bytes())
     catalog=group_editions(catalog,field_cache.__getitem__)
     if catalog.get("updates"):
         try:

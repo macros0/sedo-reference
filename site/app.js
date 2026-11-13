@@ -120,11 +120,12 @@ function renderVersions(m,env){
   }
  }
 }
+function editionUrl(revision,field){return 'editions/'+revision.revision_id+'.html'+(revision.viewer_sha256?'?v='+revision.viewer_sha256.slice(0,16):'')+(field?'#'+new URLSearchParams({field}):'')}
 function openValidationField(revision,path){
  const p=new URLSearchParams(location.hash.slice(1));
  if(p.get('message')!==revision.number||p.get('env')!==revision.environment||p.get('rev')!==revision.revision_id)return;
  p.set('field',path);history.replaceState(null,'','#'+p);
- const frame=$('frame');frame.src='editions/'+revision.revision_id+'.html#'+new URLSearchParams({field:path});
+ const frame=$('frame');frame.src=editionUrl(revision,path);
  frame.contentWindow.postMessage?.({type:'sedo-select-field',revision:revision.revision_id,path},new URL(location.href).origin);
  frame.setAttribute('data-field',path);frame.scrollIntoView?.({block:'start',behavior:'smooth'});
 }
@@ -167,7 +168,7 @@ function renderRoute(){
   select.add(new Option(label(x)+(duplicates?' · '+x.revision_id.slice(0,8):''),x.revision_id));
  }
  select.value=r.display_revision_id||rev;select.onchange=()=>{const x=m.revisions.find(r=>r.revision_id===select.value);go(number,x.environment,x.revision_id)};
- const src="editions/"+rev+".html"+(field?"#"+new URLSearchParams({field}):"");
+ const src=editionUrl(r,field);
  if(loadedRevision!==rev||$("frame").getAttribute("src")!==src){$("frame").src=src;loadedRevision=rev}
  document.title="СЭДО "+number+" · "+label(r);
 }

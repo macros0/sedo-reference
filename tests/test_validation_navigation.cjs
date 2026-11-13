@@ -17,5 +17,6 @@ handlers.message({...event,source:{}});assert.equal(nodes.get('query').value,'DO
 handlers.message(event);assert.equal(vm.runInContext('fields[current].path',context),target.path);assert.equal(nodes.get('query').value,'');assert.equal(nodes.get('scope').value,'');assert.ok(scrolled>0,'selected field is scrolled into view');assert.equal(new URLSearchParams(location.hash.slice(1)).get('field'),target.path);
 // Re-selecting the current field still removes a newly entered hiding filter.
 nodes.get('query').value='DOES_NOT_MATCH';handlers.message(event);assert.equal(nodes.get('query').value,'');
-nodes.get('query').value='DOES_NOT_MATCH';handlers.hashchange();assert.equal(nodes.get('query').value,'','hash restore also clears filters for the already-current field');
+nodes.get('query').value='DOES_NOT_MATCH';vm.runInContext('select(0)',context);handlers.hashchange();assert.equal(nodes.get('query').value,'DOES_NOT_MATCH','normal tree selection hash changes must retain search');handlers.message(event);assert.equal(nodes.get('query').value,'','explicit validation jump still clears a hiding search');
+location.hash=new URLSearchParams({field:fields[0].path}).toString();handlers.hashchange();assert.equal(vm.runInContext('fields[current].path',context),fields[0].path,'external new-field hash must still restore selection');
 console.log('Validation navigation: actual generated tree, source/revision guards, field selection, repeated jumps and filter reset passed.');
