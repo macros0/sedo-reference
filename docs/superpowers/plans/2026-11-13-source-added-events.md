@@ -9,4 +9,8 @@ The journal merges both event lists by discovery date. Added-source cards have t
 - [x] Add failing tests for initial batches, later sources, duplicate records, changed schema/contour, timestamps and stable event IDs.
 - [x] Implement derivation and integrate with site compilation without changing immutable records.
 - [x] Add journal rendering and filter regressions, including source-specific searches and date boundaries.
-- [ ] Update README, run focused and integration checks, publish and verify CI and public page.
+- [x] Update README, run focused and integration checks, publish and verify CI and public page.
+
+## Verified deployment
+
+[Pages run](https://github.com/macros0/sedo-reference/actions/runs/43387702557) passed 92 Python tests and all thirteen Node suites, verified archived revisions and deployed successfully. Browser checks against the published assets passed for the added-source badge, source-only document, canonical edition link, XML-only filter, reset and unchanged edition count. The example source existed only in the private browser QA page; production data contains no fabricated history. Current message 14 sources were found together in their initial snapshots, so no retrospective source additions are invented.
