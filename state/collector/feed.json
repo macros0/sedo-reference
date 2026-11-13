@@ -1,0 +1,17 @@
+{
+  "format": 1,
+  "manifests": [
+    {
+      "environment": "prod",
+      "content_id": "9b194ccd99775c37a0f925ce0436a44101040de33820daac069b945e54f38e68"
+    },
+    {
+      "environment": "test",
+      "content_id": "42e44b408e7edf8f9540e3758d727bd4944a1ddd5dfa1fbdd14d75f00f0cddc3"
+    }
+  ],
+  "latest": {
+    "prod": "9b194ccd99775c37a0f925ce0436a44101040de33820daac069b945e54f38e68",
+    "test": "42e44b408e7edf8f9540e3758d727bd4944a1ddd5dfa1fbdd14d75f00f0cddc3"
+  }
+}

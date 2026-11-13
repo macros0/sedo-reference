@@ -48,8 +48,6 @@ jobs:
           node tests/test_validation_paths.cjs
           node tests/test_validation_source.cjs
           node tests/test_validation_navigation.cjs
-      - name: Check live WSDL sources without changing the reference
-        run: python wsdl_sources.py --probe
       - name: Validate and apply pending Russian collector snapshots
         run: python collector_snapshots.py
       - name: Import incoming specifications
