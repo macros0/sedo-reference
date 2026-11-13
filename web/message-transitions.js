@@ -10,6 +10,11 @@ function replacements(number,catalog,environment){
   return {...pair,platform:config.platform,production_retired_at:source.production_retired_at,source_url:source.url,source_title:source.title};
  });
 }
-const api={replacements};root.SedoTransitions=api;
+function isSuperseded(number,catalog,environment){
+ const entries=[...(catalog.revisions||[]),...(catalog.registry||[])];
+ const contours=[...new Set(entries.filter(r=>r.number===String(number)&&(!environment||r.environment===environment)).map(r=>r.environment))];
+ return contours.length>0&&contours.every(env=>replacements(number,catalog,env).length>0);
+}
+const api={replacements,isSuperseded};root.SedoTransitions=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);

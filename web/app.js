@@ -64,12 +64,14 @@ function replacementNotice(m,env,compact=false){
 }
 function renderMessages(){
  const terms=normalize($("message-query").value.trim()).split(/\s+/).filter(Boolean),env=$("catalog-env").value;
- const matches=[...messages.values()].filter(m=>{
+ const candidates=[...messages.values()].filter(m=>{
   if(env&&![...m.rows,...m.revisions].some(r=>r.environment===env))return false;
   const text=normalize([m.number,...m.titles,...m.modules,...m.rows.map(r=>r.description)].join(" "));
   return terms.every(t=>text.includes(t));
- }).sort((a,b)=>Number(b.number===$("message-query").value.trim())-Number(a.number===$("message-query").value.trim())||Number(a.number)-Number(b.number));
- $("messages").replaceChildren();$("count").textContent="Найдено сообщений · "+matches.length;
+ });
+ const onlyCurrent=$('catalog-current-only').checked;
+ const matches=candidates.filter(m=>!onlyCurrent||!window.SedoTransitions?.isSuperseded(m.number,catalog,env)).sort((a,b)=>Number(b.number===$("message-query").value.trim())-Number(a.number===$("message-query").value.trim())||Number(a.number)-Number(b.number));
+ $("messages").replaceChildren();$("count").textContent="Найдено сообщений · "+matches.length+(onlyCurrent&&candidates.length>matches.length?" · Скрыто заменённых · "+(candidates.length-matches.length):"");
  for(const m of matches){
   const card=node("article","card message-card");card.dataset.number=m.number;
   const a=anchor("",route(m.number,env),"message-main");
@@ -80,7 +82,7 @@ function renderMessages(){
   a.append(badges,node("span","meta",m.revisions.some(r=>r.ready)?"Дерево тегов · "+m.revisions.filter(r=>r.ready).length+" редакции":"Документация"));
   card.append(a);const replacement=replacementNotice(m,env,true);if(replacement)card.append(replacement);$("messages").append(card)
  }
- if(!matches.length)$("messages").append(node("p","empty","Совпадений нет. Попробуйте часть номера или названия."));
+ if(!matches.length)$("messages").append(node("p","empty",onlyCurrent&&candidates.length?"Совпадений нет. Снимите флажок «Только актуальные», чтобы показать прежние типы сообщений.":"Совпадений нет. Попробуйте часть номера или названия."));
 }
 function renderVersions(m,env){
  const section=$("versions");section.replaceChildren(node("h1","","Сообщение "+m.number),node("p","",title(m,env)));
@@ -179,7 +181,7 @@ window.addEventListener("message",e=>{
  // Keep parent routing in sync without reloading the embedded field viewer.
  $("frame").setAttribute("data-field",e.data.path);
 });
-$("message-query").oninput=renderMessages;$("catalog-env").onchange=renderMessages;
+$("message-query").oninput=renderMessages;$("catalog-env").onchange=renderMessages;$("catalog-current-only").checked=true;$("catalog-current-only").onchange=renderMessages;
 window.addEventListener("hashchange",renderRoute);
 renderRoute();
 

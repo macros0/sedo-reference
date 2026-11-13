@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
-const {replacements}=require('../web/message-transitions.js');
+const {replacements,isSuperseded}=require('../web/message-transitions.js');
 const root=path.resolve(__dirname,'..');
 const catalog=JSON.parse(fs.readFileSync(path.join(root,'data/catalog.json'),'utf8'));
 catalog.message_transitions=JSON.parse(fs.readFileSync(path.join(root,'data/message-transitions.json'),'utf8'));
@@ -26,5 +26,11 @@ for(const pair of catalog.message_transitions.pairs){
  assert.notEqual(pair.previous,pair.current);
  for(const env of ['prod','test'])assert.ok(find(pair.previous,env).some(r=>r.current===pair.current),pair.previous+' -> '+pair.current+' in '+env);
 }
+assert.equal(isSuperseded('101',catalog,'prod'),true,'confirmed previous type is hidden');
+assert.equal(isSuperseded('105',catalog,'test'),true);
+for(const n of ['10110','86','125','999'])assert.equal(isSuperseded(n,catalog),false,'never infer retirement from code length or missing source');
+assert.equal(isSuperseded('109',without('10910')),false,'keep previous type when successor is missing');
+const testOnlySuccessor=without('10910','test');assert.equal(isSuperseded('109',testOnlySuccessor,'prod'),false);assert.equal(isSuperseded('109',testOnlySuccessor,'test'),true);assert.equal(isSuperseded('109',testOnlySuccessor),false,'all-contour view must retain type still needed in one contour');
+assert.equal(isSuperseded('109',{...catalog,message_transitions:undefined}),false);
 assert.equal(catalog.message_transitions.pairs.length,24);
 console.log('ECP transitions verified: 24 mappings, split 110, scoped cutoff and sources, contour scope, missing targets, unchanged codes.');
