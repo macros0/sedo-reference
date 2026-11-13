@@ -6,7 +6,7 @@
   const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
   const button=(cls,text)=>{const e=el("button",cls,text);e.type="button";return e};
   const old=new Map(options.before.map(f=>[f.path,f])),next=new Map(options.after.map(f=>[f.path,f]));
-  let editorOpen=false,busy=false,closed=false,redraw=()=>{};
+  let editorOpen=false,busy=false,closed=false,redraw=()=>{},formPending=()=>false;
   container.replaceChildren();notice.replaceChildren();
   const noticeText=el("span","mapping-draft-message"),topApply=button("open mapping-apply-top","Применить и обновить сравнение");notice.append(noticeText,topApply);notice.setAttribute("role","status");
   const sourceErrors=report.errors||[],warnings=report.warnings||[];
@@ -49,11 +49,11 @@
    selection.textContent="К применению: подтверждённых пар "+fixed+", предложений "+proposed.filter(r=>r.selected).length+" из "+proposed.length;
    validation.textContent=state.errors.join("\n");
    status.textContent="Сохранено пар: "+state.savedCount+". В предпросмотре выбрано: "+state.selectedCount+". Предложено из Excel "+rows.filter(r=>r.origin==="workbook").length+", предложено вложенных "+rows.filter(r=>r.origin==="relative").length+", ошибок "+sourceErrors.length+"."+(report.reversed?" Направление пар развёрнуто.":"");
-   const disabled=busy||editorOpen||!!sourceErrors.length||!!state.errors.length||(!rows.length&&!state.savedCount);
+   const unfinished=editorOpen&&formPending(),disabled=busy||unfinished||!!sourceErrors.length||!!state.errors.length||(!rows.length&&!state.savedCount);
    apply.disabled=topApply.disabled=disabled;apply.textContent="Применить и обновить сравнение ("+state.selectedCount+")";topApply.textContent=busy?"Обновляем сравнение…":"Применить ("+state.selectedCount+")";
    all.disabled=none.disabled=add.disabled=busy||editorOpen;cancel.disabled=busy;
-   notice.hidden=!state.dirty&&!editorOpen;
-   noticeText.textContent=editorOpen?"Редактирование пары ещё не завершено. Сохраните пару в черновик или отмените её правку.":"Черновик ещё не применён. Сравнение ниже использует "+state.savedCount+" сохранённых пар; в черновике выбрано "+state.selectedCount+". Нажмите «Применить», чтобы обновить результат.";
+   notice.hidden=!state.dirty&&!unfinished;
+   noticeText.textContent=unfinished?"Редактирование пары ещё не завершено. Сохраните пару в черновик или отмените её правку.":"Черновик ещё не применён. Сравнение ниже использует "+state.savedCount+" сохранённых пар; в черновике выбрано "+state.selectedCount+". Нажмите «Применить», чтобы обновить результат.";
   }
   function refresh(reset=false){
    redraw(reset);conflictsHost.replaceChildren();const conflicts=draft.conflicts;
@@ -66,33 +66,34 @@
    function describe(){path.textContent=chosen;description.textContent=index.get(chosen)?.doc||"Описание не указано"}
    function draw(){
     const terms=normalized(query.value).split(/\s+/).filter(Boolean),matches=fields.filter(f=>terms.every(t=>normalized(f.path+" "+(f.doc||"")).includes(t)));
-    filtered=[...matches];select.replaceChildren();const placeholder=el("option","","Выберите XML-тег");placeholder.value="";select.append(placeholder);
+    filtered=[...matches];select.replaceChildren();const placeholder=el("option","",fields.length?"Выберите XML-тег":"Свободных тегов нет");placeholder.value="";select.append(placeholder);
     if(chosen&&index.has(chosen)&&!matches.some(f=>f.path===chosen))matches.unshift(index.get(chosen));
     for(const f of matches){const option=el("option","",f.path+(f.doc?" — "+f.doc.replace(/\s+/g," ").slice(0,100):""));option.value=f.path;select.append(option)}select.value=chosen;describe();
    }
-   query.oninput=draw;query.onkeydown=event=>{if(event.key==="Enter"){event.preventDefault();if(filtered.length===1){chosen=filtered[0].path;draw()}select.focus?.()}};select.onchange=()=>{chosen=select.value;describe()};label.append(query,select);box.append(label,path,description);draw();return {box,query,value:()=>chosen};
+   query.oninput=draw;query.onkeydown=event=>{if(event.key==="Enter"){event.preventDefault();if(filtered.length===1){chosen=filtered[0].path;draw();update()}select.focus?.()}};select.onchange=()=>{chosen=select.value;describe();update()};label.append(query,select);box.append(label,path,description);draw();return {box,query,value:()=>chosen};
   }
   function closeEditor(){editorOpen=false;editor.hidden=true;editor.replaceChildren();refresh()}
-  function openEditor(id=null){
+  function openEditor(id=null,savedPair=null){
    if(editorOpen||busy||closed||!options.isCurrent())return;
    const row=id===null?null:draft.rows.find(r=>r.id===id);if(id!==null&&!row)return;
    editorOpen=true;editor.hidden=false;editor.replaceChildren();
-   const form=el("form","mapping-edit-form"),title=el("h3","",row?"Изменить соответствие":"Добавить соответствие"),columns=el("div","mapping-pickers"),before=picker("Было",options.before,row?.beforePath,"before"),after=picker("Стало",options.after,row?.afterPath,"after");columns.append(before.box,after.box);
-   const label=el("label","","Комментарий"),comment=el("textarea","mapping-edit-comment");comment.rows=3;comment.value=row?.comment||"";label.append(comment);
-   const error=el("p","mapping-errors mapping-editor-error"),save=button("open mapping-editor-save","Сохранить пару в черновик"),back=button("swap mapping-editor-cancel","Отмена"),actions=el("div","mapping-controls");error.setAttribute("role","alert");actions.append(save,back);
-   function commit(event){event?.preventDefault?.();try{const pair={beforePath:before.value(),afterPath:after.value(),comment:comment.value};row?draft.edit(row.id,pair):draft.add(pair);closeEditor()}catch(e){error.textContent=e.message}}
-   save.type="submit";form.onsubmit=commit;save.onclick=event=>commit(event);back.onclick=closeEditor;form.append(title,columns,label,error,actions);editor.append(form);refresh();editor.scrollIntoView?.({block:"nearest"});(row?after.query:before.query).focus?.();
+   const occupied=draft.rows.filter(r=>r.selected&&r.id!==id),available=(fields,key,current)=>{const used=new Set(occupied.map(r=>r[key]));return fields.filter(f=>f.path===current||!used.has(f.path))};
+   const form=el("form","mapping-edit-form"),title=el("h3","",row?"Изменить соответствие":"Добавить соответствие"),columns=el("div","mapping-pickers"),before=picker("Было",available(options.before,"beforePath",row?.beforePath),row?.beforePath,"before"),after=picker("Стало",available(options.after,"afterPath",row?.afterPath),row?.afterPath,"after");columns.append(before.box,after.box);
+   const label=el("label","","Комментарий"),comment=el("textarea","mapping-edit-comment");comment.rows=3;comment.value=row?.comment||"";comment.oninput=update;label.append(comment);formPending=()=>!!(before.value()||after.value()||comment.value);
+   const error=el("p","mapping-errors mapping-editor-error"),save=button("open mapping-editor-save","Сохранить пару в черновик"),back=button("swap mapping-editor-cancel",savedPair?"Закрыть форму":"Отмена"),actions=el("div","mapping-controls");error.setAttribute("role","alert");actions.append(save,back);
+   function commit(event){event?.preventDefault?.();try{const pair={beforePath:before.value(),afterPath:after.value(),comment:comment.value};row?draft.edit(row.id,pair):draft.add(pair);editorOpen=false;openEditor(null,pair)}catch(e){error.textContent=e.message}}
+   save.type="submit";form.onsubmit=commit;save.onclick=event=>commit(event);back.onclick=closeEditor;if(savedPair){const feedback=el("p","mapping-editor-feedback","Пара сохранена в черновик: "+savedPair.beforePath+" → "+savedPair.afterPath+". Выберите следующую пару или примените черновик.");feedback.setAttribute("role","status");form.append(feedback)}form.append(title,el("p","meta","Уже сопоставленные теги скрыты. При изменении пары доступны её текущие теги."),columns,label,error,actions);editor.append(form);refresh();editor.scrollIntoView?.({block:"nearest"});(row?after.query:before.query).focus?.();
   }
   all.onclick=()=>{draft.selectProposals(true);refresh()};none.onclick=()=>{draft.selectProposals(false);refresh()};add.onclick=()=>openEditor();
   search.oninput=()=>redraw(true);only.onchange=()=>redraw(true);
   async function applyDraft(){
-   if(busy||editorOpen||closed)return;if(!options.isCurrent()){validation.textContent="Выбранная пара редакций изменилась. Откройте предпросмотр снова.";return}
+   if(busy||(editorOpen&&formPending())||closed)return;if(!options.isCurrent()){validation.textContent="Выбранная пара редакций изменилась. Откройте предпросмотр снова.";return}
    const state=draft.summary();if(sourceErrors.length||state.errors.length)return;busy=true;refresh();
    try{await onApply(state.pairs);notice.hidden=true}catch(error){busy=false;refresh();validation.textContent="Не удалось обновить сравнение. "+error.message}
   }
   apply.onclick=topApply.onclick=applyDraft;
   cancel.onclick=()=>{if(!busy){closed=true;notice.hidden=true;onCancel()}};
-  refresh();return {openEditor,destroy(){closed=true;notice.hidden=true}};
+  refresh();return {openEditor,hasUnapplied:()=>editorOpen||draft.summary().dirty,destroy(){closed=true;notice.hidden=true}};
  }
  return {mount};
 });

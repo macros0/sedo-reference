@@ -49,7 +49,7 @@ function formatDifference(value){
  if(typeof value==="object")return Object.keys(value).length?Object.entries(value).map(([k,v])=>k+" = "+v).join("\n"):"Без дополнительных свойств";
  return String(value);
 }
-async function renderComparison(m,params,applied=false){
+async function renderComparison(m,params,applied=false,view=null){
  const comparisonHash=location.hash,request=++comparisonRequest,section=$("comparison");section.replaceChildren(node("h1","","Сравнение сообщения "+m.number),node("p","",title(m)));
  const defaults=comparisonDefaults(m),leftId=params.get("left")||defaults.left,rightId=params.get("right")||defaults.right;
  const ready=comparisonPool(m),left=comparisonRevision(ready,leftId),right=comparisonRevision(ready,rightId);
@@ -79,8 +79,8 @@ async function renderComparison(m,params,applied=false){
   const results=SedoCompare.compare(a,b,mappings);state.remove();
   const counts={added:0,removed:0,changed:0,mapped:0};results.forEach(r=>counts[r.status]++);
   const summaries=node("div","compare-counts");for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])summaries.append(node("span",key,text+" · "+counts[key]));if(mappings.length)summaries.append(node("span","mapped","Ручных соответствий · "+mappings.length));section.append(summaries);
-  if(applied){const feedback=node("p","mapping-applied-feedback","Сравнение обновлено. Применено пар: "+mappings.length);feedback.setAttribute("role","status");section.append(feedback)}
-  SedoMapping.mount(section,mappingOptions,saved,()=>renderComparison(m,params,true));
+  if(applied){const feedback=node("p","mapping-applied-feedback",(applied==="cancelled"?"Сопоставление отменено. Сохранено пар: ":"Сравнение обновлено. Применено пар: ")+mappings.length);feedback.setAttribute("role","status");section.append(feedback)}
+  const mappingPanel=SedoMapping.mount(section,mappingOptions,saved,()=>renderComparison(m,params,true));let cancelling=false;
   const exports=node("div","comparison-export"),exportButton=node("button","open","Выгрузить Excel для сопоставления"),exportState=node("span","meta");exportButton.type="button";exportState.setAttribute("role","status");
   exportButton.onclick=async()=>{
    exportButton.disabled=true;exportState.textContent="Готовим книгу…";
@@ -92,6 +92,7 @@ async function renderComparison(m,params,applied=false){
   if(!results.length){section.append(node("p","empty","Деревья совпадают. Изменений в тегах, ограничениях и описаниях не найдено."));if(applied)summaries.scrollIntoView?.({block:"start",behavior:"smooth"});return true}
   const filters=node("div","searchbar"),searchLabel=node("label","","Поиск по изменениям"),search=node("input");search.type="search";search.placeholder="Тег, путь, описание или ограничение";searchLabel.append(search);
   const kindLabel=node("label","","Вид изменения"),kind=node("select");for(const [value,text] of [["","Все изменения"],["added","Добавлено"],["removed","Удалено"],["changed","Изменено"],["mapped","Сопоставлено без изменений"]])kind.add(new Option(text,value));kindLabel.append(kind);filters.append(searchLabel,kindLabel);section.append(filters);
+  if(view){search.value=view.search;kind.value=view.kind}
   const count=node("p","meta");count.setAttribute("role","status");const list=node("div","differences");section.append(count,list);
   function draw(){
    const terms=normalize(search.value).split(/\s+/).filter(Boolean);
@@ -109,6 +110,23 @@ async function renderComparison(m,params,applied=false){
     const links=node("div","difference-links");
     if(r.before)links.append(anchor("Поле в «Было»",route(left.number,left.environment,leftId,r.before?.path||r.path)));
     if(r.after)links.append(anchor("Поле в «Стало»",route(right.number,right.environment,rightId,r.after?.path||r.path)));
+    if(r.manual){
+     const undo=node("button","swap mapping-undo","Отменить сопоставление"),error=node("p","mapping-undo-error");undo.type="button";error.setAttribute("role","alert");error.hidden=true;
+     undo.onclick=async()=>{
+      if(cancelling)return;error.hidden=false;error.textContent="";
+      if(!mappingOptions.isCurrent()){error.textContent="Выбранная пара редакций изменилась. Откройте сравнение снова.";return}
+      if(mappingPanel?.hasUnapplied()){error.textContent="Сначала примените или отмените черновик соответствий выше, чтобы не потерять правки.";return}
+      cancelling=true;undo.disabled=true;
+      try{
+       const current=SedoMapping.store.load(mappingOptions).pairs,remaining=current.filter(p=>p.beforePath!==r.beforePath||p.afterPath!==r.afterPath);
+       if(current.length===remaining.length)throw Error("Эта пара уже изменилась. Откройте сравнение снова.");
+       SedoMapping.store.save(mappingOptions,remaining);
+       const updated=await renderComparison(m,params,"cancelled",{search:search.value,kind:kind.value});
+       if(updated===false)throw Error("Пара отменена, но обновить сравнение не удалось. Откройте его снова.");
+      }catch(e){cancelling=false;undo.disabled=false;error.textContent="Не удалось отменить сопоставление. "+e.message}
+     };
+     links.append(undo);card.append(error);
+    }
     card.append(links);list.append(card);
    }
   }

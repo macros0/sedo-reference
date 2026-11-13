@@ -220,6 +220,7 @@
    catch(e){if(token===generation&&options.isCurrent())status.textContent="Не удалось загрузить соответствия. "+e.message}
    finally{if(token===generation){upload.disabled=add.disabled=false;if(savedSuggest)savedSuggest.disabled=false;input.value=""}}
   };
+  return {hasUnapplied:()=>active?.hasUnapplied()??false};
  }
  return {preflightArchive,suggestDescendants,parseWorkbook,preparePreview,storageKey,createStore,store,readFile,mount};
 });
