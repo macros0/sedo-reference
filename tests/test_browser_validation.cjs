@@ -65,7 +65,7 @@ async function validate(xml,custom=pack,source){const w=new Worker(workerSource,
 
  // Run the actual isolated UI controller against real WASM workers. An outward
  // message or persistent-storage access is a test failure, not a stubbed success.
- class PrivateNode{constructor(tag){Object.assign(this,{tag,_text:'',className:'',disabled:false,value:'',hidden:false,files:[],children:[],attrs:{}})}get textContent(){return this._text+this.children.map(x=>x.textContent).join('')}set textContent(v){this._text=String(v);this.children=[]}append(...xs){this.children.push(...xs)}replaceChildren(...xs){this._text='';this.children=[...xs]}setAttribute(k,v){this.attrs[k]=v}setSelectionRange(start,end){this.selectionStart=start;this.selectionEnd=end}focus(){}scrollIntoView(){}}
+ class PrivateNode{constructor(tag){Object.assign(this,{tag,_text:'',className:'',disabled:false,value:'',hidden:false,files:[],children:[],attrs:{},style:{}})}get textContent(){return this._text+this.children.map(x=>x.textContent).join('')}set textContent(v){this._text=String(v);this.children=[]}append(...xs){this.children.push(...xs)}replaceChildren(...xs){this._text='';this.children=[...xs]}setAttribute(k,v){this.attrs[k]=v}setSelectionRange(start,end){this.selectionStart=start;this.selectionEnd=end}focus(){}scrollIntoView(){}}
  const nodes=Object.fromEntries(['xml','xml-text','check','clear','status','errors','xml-preview','validation-results'].map(id=>[id,new PrivateNode(id)]));
  const privateWalk=n=>[n,...n.children.flatMap(privateWalk)];
  let uiDone,uiTimeout;const fieldMessages=[];
