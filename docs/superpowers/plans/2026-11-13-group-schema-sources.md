@@ -12,8 +12,12 @@ The site filters edition lists and comparison choices by display ID; old revisio
 - [x] Implement display grouping in edition_groups.py and integrate after field compilation in build_site.py; leave data/catalog.json and source history untouched.
 - [x] Render all sources consistently, filter canonical choices and preserve legacy routes/IDs. Add UI regression coverage for message 14 and legacy links.
 - [x] Verify workbook metadata includes all sources without changing its import contract.
-- [ ] Run focused checks, build and inspect the real browser, then publish and follow full CI/Pages to completion.
+- [x] Run focused checks, build and inspect the real browser, then publish and follow full CI/Pages to completion.
 
 ## Acceptance
 
 Message 14 has one visible schema in prod and one in test, each with three distinct source DOCX documents. Different constraints or root/namespace remain distinct editions. Old URLs open their original field data and Excel identity. New appearances of an unchanged schema add a source to its group. Archived bytes and original source events are retained.
+
+## Verification
+
+[Pages run](https://github.com/macros0/sedo-reference/actions/runs/43348841788) passed 86 Python tests and all thirteen Node suites, then deployed successfully. Both previously failing import scenarios passed independently. Public browser checks found exactly one message 14 card per contour, three source documents in each, two browser journal events, valid hashes for all six original DOCX downloads, and working legacy tree/comparison URLs. Immutable catalog, field and source history files were not changed by grouping.
