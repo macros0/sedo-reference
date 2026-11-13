@@ -10,8 +10,8 @@
 - [x] RED/GREEN private source ranges: namespaces, CRLF, multiline, attrs/missing attrs, repeats, bounds, original pasted encoding header. validation-paths.js/worker.js and real-WASM tests.
 - [x] RED/GREEN bounded safe source pane, error line/tag selection, long single-line XML, last line, clear and stale input. New validation-source.js/test_validation_source.cjs.
 - [x] Integrate error buttons/preview, runtime asset hash/CSP/build/CI and README; preserve reference navigation and ordinary search.
-- [ ] Full Node, focused Python, independent review, actual browser click/highlight/privacy QA.
-- [ ] Publish authorized main/Pages, wait full CI, verify public behavior/screenshot and close temporary state.
+- [x] Full Node, focused Python, independent review, actual browser click/highlight/privacy QA.
+- [x] Publish authorized main/Pages, wait full CI, verify public behavior/screenshot and close temporary state.
 
 ## Review focus
 Original versus transcoded offsets; same-line repeated instances and ambiguous errors; no unsafe HTML or unbounded large-file DOM; edit/clear/stale results cannot retain old text/highlights; private coordinates/source never reach parent/network, existing field jumps still work.
@@ -24,3 +24,5 @@ Independent review found3 issues before publication. Regression booting actual a
 Local verification: all17 Node suites and8 focused Python build tests pass. Actual browser highlighted both regNum names on line3; manual line1 then error click returned to3 and focused MARK; reference constraints jump retained XML/marks. With40-newline opening tag, header jumped41 and explicit tag button jumped1. Edit invalidated preview, clear removed text/marks. Request log has no XML marker/POST. Independent review findings all addressed with regressions; no deferred findings.
 
 Publication rebase: automatic SFR update12a8ab3 advanced main during development. Preserved all upstream state/data/objects; only generated site/catalog-data.js and site/index.html conflicted. Rebuilt site from combined sources/new inventory instead of choosing either side. Re-run all JS after this integration.
+
+Final publication: source commit4ab9dee; generated artifact7e394c1. GitHub Pages run43432031704 succeeded (105 Python tests,17 Node suites,142 published schema closures compiled in WASM;264 revisions built). All17 Node suites also passed after rebase onto12a8ab3. Public runtime SHA-256 verified for all7 assets. Actual public-browser synthetic XML confirmed line1 to error click to line3, focused MARK, both regNum names highlighted; reference constraints navigation retained source and marks. Screenshot: C:/Users/alexey/Documents/Codex/sedo-xml-source-highlighting-2026-11-13.png. Own QA tab closed; local server stopped; no private user XML used. No deferred review findings.
