@@ -20,6 +20,10 @@ const go=(number,env,rev,field)=>{location.hash=route(number,env,rev,field)};
 function anchor(text,hash,cls){const a=node("a",cls,text);a.href="#"+hash;return a}
 function external(text,url){const a=node("a","source",text);a.href=url;a.target="_blank";a.rel="noopener";return a}
 function documentDownload(r){const a=node("a","source","Скачать DOCX");a.href=r.document_download;a.download=r.document_filename;return a}
+function schemaExportControl(r){
+ if(r.schema_download){const a=node("a","source schema-download","Скачать XSD (ZIP)");a.href=r.schema_download;a.download=r.schema_filename;a.title="XSD сообщения и зависимости для локальной валидации XML";return a}
+ return r.schema_export_error?node("span","meta schema-export-unavailable",r.schema_export_error):null;
+}
 function documentName(r){return r.document_url?decodeURIComponent(new URL(r.document_url).pathname.split("/").pop()):(r.manual_source?.label||r.document_filename||"Файл владельца")}
 function editionSources(r){return r.edition_sources||[r]}
 function appendEditionSources(container,r){
@@ -93,7 +97,8 @@ function renderVersions(m,env){
    for(const r of revisions){
     const card=node("div","card");card.append(node("strong","",editionSources(r).length>1?"Редакция схемы · источников: "+editionSources(r).length:"Версия документа "+(r.document_version||"не указана")));
     if(r.ready)card.append(anchor("Открыть дерево",route(m.number,e,r.revision_id),"open"));
-    else card.append(node("p","",r.status==="document_only"?"DOCX сохранён. Схема XSD не загружена.":"Схема ожидает проверки"));
+    else card.append(node("p","",r.status==="document_only"?"DOCX сохранён. Схема XSD не загружена.":"Дерево тегов ожидает проверки"));
+    const schemaControl=schemaExportControl(r);if(schemaControl)card.append(schemaControl);
     appendEditionSources(card,r);
     card.append(node("p","meta","Редакция "+r.revision_id.slice(0,8)));
     if(!r.listed_now&&r.source_type!=="manual")card.append(node("p","meta","Редакция сохранена в истории"));
@@ -137,6 +142,7 @@ function renderRoute(){
  $("manual-source").hidden=r.source_type!=="manual";$("manual-source").textContent="Ручная загрузка · "+(r.manual_source?.label||"Файл владельца");
  $("doc-download").href=r.document_download;$("doc-download").download=r.document_filename;
  $("doc-download").hidden=grouped;
+ document.getElementById("xsd-from-viewer")?.remove();const schemaControl=schemaExportControl(r);if(schemaControl){schemaControl.id="xsd-from-viewer";$("doc-download").after(schemaControl)}
  let sourceBox=$("viewer-sources");if(!sourceBox){sourceBox=node("div","viewer-sources");sourceBox.id="viewer-sources";$("frame").before(sourceBox)}
  sourceBox.replaceChildren();sourceBox.hidden=!grouped;if(grouped){sourceBox.append(node("h2","","Источники этой схемы"));appendEditionSources(sourceBox,r)}
  document.getElementById("compare-from-viewer")?.remove();

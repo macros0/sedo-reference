@@ -18,6 +18,9 @@ on:
       - 'tests/test_wsdl_sources.py'
       - 'requirements.txt'
       - 'build_site.py'
+      - 'xsd_bundle.py'
+      - 'xsd_validate.py'
+      - 'tests/test_xsd_bundle.py'
       - 'edition_groups.py'
       - 'tests/test_edition_groups.py'
       - 'tests/test_source_updates.py'
@@ -71,6 +74,7 @@ jobs:
           node tests/test_mapping_editor.cjs
           node tests/test_mapping_apply.cjs
           node tests/test_edition_groups.cjs
+          python -m unittest tests.test_xsd_bundle -q
           python import_inbox.py --check
       - name: Write validation report
         if: always()

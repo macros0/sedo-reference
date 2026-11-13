@@ -6,6 +6,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from sync import inspect_file, sha, write
 from edition_groups import group_editions, display_updates, source_updates
+from xsd_bundle import publish_bundles
 HERE=Path(__file__).resolve().parent
 def packed(value):
     return json.dumps(value,ensure_ascii=False,separators=(",",":")).replace("<","\\u003c")
@@ -46,6 +47,7 @@ def main():
     site=HERE/"site";editions=site/"editions";editions.mkdir(parents=True,exist_ok=True)
     comparison=site/"fields";comparison.mkdir(exist_ok=True)
     archive_documents(catalog, HERE/"state", site)
+    publish_bundles(catalog, HERE/"state", site)
     template=(HERE/"viewer-template.html").read_text("utf-8-sig")
     template=template.replace("<title>СЭДО · Справочник 10110</title>","<title>Справочник XML-полей</title>")
     # The containing catalog carries the selected message and revision.

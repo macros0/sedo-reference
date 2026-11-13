@@ -67,7 +67,7 @@ async function renderComparison(m,params,applied=false,view=null){
  if(!canCompareTypes(left.number,right.number)){section.append(node("p","empty","Для этих типов нет подтверждённого соответствия. Выберите прежний тип и его новый формат либо две редакции одного типа."));return false}
  const sources=node("div","compare-sources");
  for(const [caption,r] of [["Было",left],["Стало",right]]){
-  const box=node("div");box.append(node("strong","",caption+" · "+comparisonLabel(r)),node("br"),anchor("Открыть дерево",route(r.number,r.environment,r.revision_id),"source"));appendEditionSources(box,r);sources.append(box)
+  const box=node("div");box.append(node("strong","",caption+" · "+comparisonLabel(r)),node("br"),anchor("Открыть дерево",route(r.number,r.environment,r.revision_id),"source"));if(r.schema_download||r.schema_export_error){const schemaControl=schemaExportControl(r);if(schemaControl)box.append(document.createTextNode(" · "),schemaControl)}appendEditionSources(box,r);sources.append(box)
  }
  section.append(sources);
  const state=node("p","empty","Сравниваем деревья…");section.append(state);

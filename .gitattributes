@@ -4,3 +4,6 @@
 
 # Field snapshots are immutable byte-for-byte, including on Windows.
 /data/fields/*.json -text
+
+# Generated validation bundles are deterministic binary ZIP files.
+/site/schemas/*.zip -text
