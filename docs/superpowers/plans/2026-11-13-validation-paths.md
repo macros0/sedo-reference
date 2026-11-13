@@ -13,8 +13,8 @@ Exact archived tree paths, no archive/history/ZIP changes. Canonical paths omit 
 - [x] RED/GREEN public paths companion and build cache: xsd_bundle.py/build_site.py/test_xsd_bundle.py.
 - [x] RED/GREEN real WASM errors: nested/repeated/same-line/namespaced paths, attributes, missing child, unknown tag, malformed XML, bounds. New web/validation-paths.js, worker and build assets.
 - [x] RED/GREEN rendering and checked numeric navigation, stale/source/revision/index guards, preserve validation state and clear filtered tree scope. validation-frame.js/validation.js/app.js/build_site.py and JS tests.
-- [ ] Full JS/focused Python/all-closure tests, independent review and browser privacy/navigation QA.
-- [ ] Publish main/Pages, wait full CI, verify public operation, close QA server/tabs, record results.
+- [x] Full JS/focused Python/all-closure tests, independent review and browser privacy/navigation QA.
+- [x] Publish main/Pages, wait full CI, verify public operation, close QA server/tabs, record results.
 
 ## Review focus
 Same-line homonyms must not be guessed; prefixes/default namespaces/attributes handled conservatively; syntax/unknown fields must not fabricate known leaves; spoofed/stale/out-of-range messages must not navigate; field navigation must not reroute or leak private data. Archive/history/schema ZIPs unchanged.
@@ -29,3 +29,6 @@ Local evidence:31 focused Python tests pass, all16 Node suites pass,142 real WAS
 Final integration regression caught before deployment: ordinary tree selects update their own hash; unconditional restore cleared a user search. A generated-tree test reproduced RED. Hash restore now acts only when the requested field differs, while explicit validation messages always select/show the target (including repeat clicks). Superseded CI43420213874 canceled before publication; a fresh full CI is required for the correction.
 
 Viewer HTML now has a content-hash cache key used for both initial loading and error jumps; otherwise old cached edition pages could miss the new navigation handler. Legacy IDs stay unchanged. Cache-key integration regression was RED-to-GREEN.
+
+## Final publication verification
+Source f6af3eb659e992159a33269b39343b1aef93be89 published successfully by CI/Pages43421278277; superseded43420213874 was canceled and never deployed. Full CI passed105 Python tests (487.941s), all16 Node suites and142 distinct real-WASM root/closure combinations. Generated publication commit0517a99 synchronized. Public hashes verified for all6 runtime assets, selected exact schema dictionary (field2 subscribeRequest/recipientList/regNum, unqualified namespace) and versioned viewer HTML. Live public validation showed the path, and its button opened regNum constraints with regex \d{10}; hiding section/query cleared and XML/error persisted. Screenshot: C:/Users/alexey/Documents/Codex/sedo-validation-paths-2026-11-13.jpg. Local actual-browser final check also confirmed ordinary inn search remains after selection, while explicit validation jump clears it; versioned viewer URL retained. All temporary tabs and local HTTP server closed. Only synthetic XML was used. No code-review findings deferred; namespace, multiline, echoed-value and resource issues have regressions. No original schema ZIPs, source data or history changed.
