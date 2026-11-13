@@ -1,6 +1,6 @@
 "use strict";
 window.SedoValidator=(()=>{
-const ASSETS=[{"key":"engine","path":"vendor/xmllint/xmllint-browser.mjs","sha":"5f5a2c17be12d398c640f3b494e7ded8cd8c9b0175d2c65e6f197a28b77fd01e"},{"key":"wasm","path":"vendor/xmllint/xmllint.wasm","sha":"4e3cc21a67e8dd40ccb59822e4193fd1923b4cda08b40fe8ff8973de5eed9515"},{"key":"core","path":"validation-core.js","sha":"5229cd06983de44716999564011c1d522cbaa2fadd5a3c71c17e136cb546c773"},{"key":"worker","path":"validation-worker.js","sha":"232473725197f5e014c3d81937d581e4514152a7a69a267f252cb1c6b9e05d4c"},{"key":"frame","path":"validation-frame.js","sha":"045f0efd4cac95aaddf316c40c08269fc1eca260c0e3172d0cdc61ced3d8fc6e"}];
+const ASSETS=[{"key":"engine","path":"vendor/xmllint/xmllint-browser.mjs","sha":"5f5a2c17be12d398c640f3b494e7ded8cd8c9b0175d2c65e6f197a28b77fd01e"},{"key":"wasm","path":"vendor/xmllint/xmllint.wasm","sha":"4e3cc21a67e8dd40ccb59822e4193fd1923b4cda08b40fe8ff8973de5eed9515"},{"key":"core","path":"validation-core.js","sha":"6843ec523fef1f6fac3c0881f1e19723451c37f3ba73e788c0b05a62bd63a680"},{"key":"worker","path":"validation-worker.js","sha":"495e2287051a609a357e0d6d361033e7b7ecc52655c33245caa23932161d0db7"},{"key":"frame","path":"validation-frame.js","sha":"a9b5a4bf1f8f6b5393b5478a1c78143ed4f108d5da0da911225ecc49ddbd0f1e"}];
 let serial=0,active=null;
 const encoder=new TextEncoder(),hex=bytes=>Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,'0')).join('');
 const digest=async bytes=>hex(await crypto.subtle.digest('SHA-256',bytes));
