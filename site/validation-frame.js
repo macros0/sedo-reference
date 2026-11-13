@@ -24,8 +24,10 @@ async function check(){
   worker.onmessage=event=>{if(token!==generation)return;const result=event.data;stop();checking(false);
    status(result.valid?'XML соответствует XSD выбранного сообщения и редакции.':result.runtime?'Проверку не удалось завершить.':'XML не соответствует выбранной схеме.',result.valid?'valid':'invalid');
    sourceView.setErrors(result.errors||[]);$('validation-results').className='validation-results'+(result.errors?.length?'':' source-only');
-   for(const error of result.errors||[]){
-    const item=document.createElement('li'),message=document.createElement('button');message.type='button';message.className='error-message';message.textContent=(error.line?'Строка '+error.line+': ':'')+error.message;message.title='Перейти к XML возле ошибки';message.disabled=!sourceView.canShow(error);message.onclick=()=>sourceView.showError(error);item.append(message);
+   for(const error of core.groupErrors(result.errors||[])){
+    const item=document.createElement('li'),message=document.createElement('button');item.className='error-card';message.type='button';message.className='error-message';message.textContent=(error.line?'Строка '+error.line:'Диагностика XML')+' · Нарушений: '+error.diagnostics.length;message.title='Перейти к XML возле ошибки';message.disabled=!sourceView.canShow(error);message.onclick=()=>sourceView.showError(error);item.append(message);
+    const reasons=document.createElement('ul');reasons.className='error-diagnostics';reasons.setAttribute('aria-label','Нарушенные ограничения и диагностики');
+    for(const diagnostic of error.diagnostics){const reason=document.createElement('li');reason.textContent=(diagnostic.line&&diagnostic.line!==error.line?'Строка '+diagnostic.line+': ':'')+diagnostic.message;reasons.append(reason)}item.append(reasons);
     if(error.ambiguous){const note=document.createElement('p');note.textContent='В этой строке несколько возможных путей'+(error.truncated?' (показаны первые 8)':'')+'. Выберите нужное поле.';item.append(note)}
     for(const location of error.locations||[]){
      const code=document.createElement('code');code.textContent=location.path;item.append(code);

@@ -45,5 +45,19 @@ function checkPack(pack,expected){
 }
 function decode64(text){return Uint8Array.from(atob(text),c=>c.charCodeAt(0))}
 function errors(text){return String(text||'Ошибка проверки XML.').split('\n').filter(s=>s.trim()&&!/^input\.xml (?:validates|fails to validate)$/.test(s.trim())).slice(0,30).map(line=>{const m=line.match(/^input\.xml:(\d+):\s*(.*)/);return {line:m?Number(m[1]):null,message:(m?m[2]:line).slice(0,2000)}})}
-const api={MAX_BYTES,inspectBytes,checkPack,decode64,errors};scope.SedoValidationCore=api;if(typeof module==='object'&&module.exports)module.exports=api;
+// Group only proven source occurrences, never a path/line guess. All metadata
+// and diagnostic text remain inside the opaque frame and its private worker.
+function groupErrors(errors){
+ const groups=[],bySource=new Map();
+ for(const error of errors){
+  const location=error.locations?.length===1?error.locations[0]:null,ranges=location?.ranges;
+  const exact=location&&typeof location.path==='string'&&!error.ambiguous&&!error.sourceAmbiguous&&!error.truncated&&location.occurrences===1&&!location.rangesTruncated&&Array.isArray(ranges)&&ranges.length>0&&ranges.some(r=>r.kind==='tag')&&(!location.path.includes('/@')||ranges.some(r=>r.kind==='attribute'))&&ranges.every(r=>Number.isInteger(r.start)&&Number.isInteger(r.end)&&r.start>=0&&r.end>r.start);
+  const key=exact?JSON.stringify([location.path,location.field??null,!!location.parent,ranges.map(r=>[r.kind,r.start,r.end]).sort((a,b)=>a[1]-b[1]||a[2]-b[2]||String(a[0]).localeCompare(String(b[0])))]):null;
+  const existing=key===null?null:bySource.get(key);
+  if(existing){existing.diagnostics.push(error);continue}
+  const group={...error,diagnostics:[error]};groups.push(group);if(key!==null)bySource.set(key,group);
+ }
+ return groups;
+}
+const api={MAX_BYTES,inspectBytes,checkPack,decode64,errors,groupErrors};scope.SedoValidationCore=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof self==='object'?self:globalThis);
