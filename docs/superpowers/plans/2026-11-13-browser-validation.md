@@ -21,8 +21,8 @@ Exact selected message/environment/revision, original archives/history unchanged
 - [x] RED/GREEN exact-edition companion integrity/determinism; publish metadata, leave ZIP bytes intact. Files: xsd_bundle.py, tests/test_xsd_bundle.py.
 - [x] RED/GREEN real WASM worker tests and private UI/controller tests; vendor fixed npm artifact/license/hash. Files: web/validation-worker.js, web/validation-frame.js, web/validation.js, web/vendor/xmllint/*, tests/test_browser_validation.cjs.
 - [x] Integrate controls, revision lifecycle, build assets and CI tests; update README. Files: web/app.js, web/index.html, web/app.css, build_site.py, workflow test lists, existing build fixtures.
-- [ ] Run full suites/build, browser synthetic valid/invalid/DTD/offline/CSP QA; independent final review.
-- [ ] Publish authorized main/Pages update, verify public operation, stop temporary server and record results.
+- [x] Run full suites/build, browser synthetic valid/invalid/DTD/offline/CSP QA; independent final review.
+- [x] Publish authorized main/Pages update, verify public operation, stop temporary server and record results.
 
 ## Ledger
 Existing isolated worktree codex/browser-excel-mapping verified; clean start7301d18. User requirement supplies the browser-local/no-transmission architecture; implementation choices are documented above. No additional user preferences are needed. Existing standing authorization covers GitHub publication. Execute inline to avoid implementation delegation.
@@ -35,3 +35,8 @@ Browser QA: actual isolated controller validated a synthetic schema-valid messag
 Full local Python run103 tests failed on11 history checks plus dependent inbox rollback: old worktree data/fields files had CRLF although their immutable HEAD blobs are LF (git ls-files --eol i/lf w/crlf attr/-text). JSON content was identical. Restored each affected local file to exact HEAD bytes after verifying LF-only difference; no source data/history diff. Repeat full suite after this workspace correction.
 
 Actual browser CSP enforcement probe used createDocument with a disposable synthetic controller: fetch, POST XMLHttpRequest and a blob-worker fetch all reported blocked. Server log contains only GETs for the probe page, program and favicon, none of the attempted endpoints. Probe page removed before commit.
+
+## Publication verification
+Published source1472aad02ee30a96f11355aabd5e1ee2b2559243; CI/Pages43413490486 succeeded. Linux CI passed103 Python tests in514.383s, all14 Node suites and the post-build WASM audit of142 distinct root/closure sets (all264 edition companions). Generated publication commit ae124a4 synchronized locally. Public engine/WASM/core/worker/frame SHA256 checks passed, as did exact identities/hashes for message1 prod3.1, 10110 prod3.0, 10110 test3.0.4 and86 prod1.12; gzip served correctly without Content-Encoding. The public opaque iframe sandbox remains allow-scripts only, and actual synthetic validation returned success on GitHub Pages. Public screenshot: C:/Users/alexey/Documents/Codex/sedo-browser-validation-2026-11-13.jpg. Temporary tabs, QA HTTP server and disposable probe page are closed/removed.
+
+Local Windows verification: all14 Node suites, all-edition WASM audit, focused build/bundle tests and the previously failing identical-history acceptance test pass after restoring exact HEAD bytes. The duplicate full Windows rerun was stopped after the complete Linux CI/Pages run succeeded; it had not produced a final result, so no local full-suite success is claimed. The first Windows full-run failure and its unchanged-JSON/CRLF checkout cause are recorded above. No source state/data/history or original XSD ZIP changed in this feature. No private user XML was read or transmitted; all live examples were synthetic.
