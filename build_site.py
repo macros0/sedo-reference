@@ -90,7 +90,7 @@ restoreField();
         catalog["schema_updates"]=display_updates(catalog)
         catalog["source_updates"]=source_updates(catalog)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
-    assets=("app.js","app.css","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg","validation.js","validation-core.js","validation-frame.js","validation-worker.js","validation-paths.js","validation-source.js","vendor/xmllint/xmllint-browser.mjs","vendor/xmllint/xmllint.wasm","vendor/xmllint/COPYING","vendor/xmllint/README.md")
+    assets=("app.js","app.css","automation-status.js","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg","validation.js","validation-core.js","validation-frame.js","validation-worker.js","validation-paths.js","validation-source.js","vendor/xmllint/xmllint-browser.mjs","vendor/xmllint/xmllint.wasm","vendor/xmllint/COPYING","vendor/xmllint/README.md")
     for file in assets:
         (site/file).parent.mkdir(parents=True,exist_ok=True)
         (site/file).write_bytes((HERE/"web"/file).read_bytes())

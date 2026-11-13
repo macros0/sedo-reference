@@ -7,6 +7,8 @@ LOCAL.md
 
 update-report.json
 sourcecraft-report.json
+automation-status-report.json
+publication-target.json
 inbox-report.json
 
 .venv/

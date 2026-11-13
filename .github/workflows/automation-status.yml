@@ -1,0 +1,39 @@
+name: Refresh automatic update status
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '5 4 * * *'
+  workflow_run:
+    workflows: [Check SFR catalogs, Publish reference]
+    types: [requested, in_progress, completed]
+    branches: [main]
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: automation-status
+  cancel-in-progress: false
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      # Only trusted default-branch code runs, never code or scripts from artifacts.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Publish independent public status
+        run: python automation_status.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: automation-status-report
+          path: automation-status-report.json
+          if-no-files-found: ignore
+          retention-days: 30

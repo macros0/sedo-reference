@@ -35,6 +35,7 @@ jobs:
       - name: Test history preservation and update failures
         run: |
           python -m unittest discover -s tests -v
+          node tests/test_automation_status.cjs
           node tests/test_compare.cjs
           node tests/test_update_summaries.cjs
           node tests/test_journal_dates.cjs
@@ -69,6 +70,12 @@ jobs:
           fi
           # GITHUB_TOKEN pushes do not trigger the Pages push workflow.
           # Explicit dispatch also retries deployment after a previous Pages failure.
+          python - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          head = subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()
+          Path('publication-target.json').write_text(json.dumps(dict(update_run_id=os.environ['GITHUB_RUN_ID'], head_sha=head)), encoding='utf-8')
+          PY
           gh workflow run pages.yml --repo "$GITHUB_REPOSITORY" --ref main
       - name: Write update summary
         if: always()
@@ -90,6 +97,7 @@ jobs:
           path: |
             update-report.json
             sourcecraft-report.json
+            publication-target.json
           if-no-files-found: ignore
           retention-days: 30
 
