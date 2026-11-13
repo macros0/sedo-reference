@@ -71,3 +71,9 @@ class AutomationStatusTests(unittest.TestCase):
     def test_sourcecraft_started_run_is_processing(self):
         result=build_status(dict(latest=dict(state='processing',complete=False,started_at='2026-11-13T09:00:00Z',contours={})),[],[],{}, {})
         self.assertEqual(result['sourcecraft']['state'],'processing')
+
+    def test_post_publication_check_failure_does_not_hide_actual_deployment(self):
+        result=self.result(checks=[run(1,conclusion='failure')],pages=[run(2)],
+                           target=dict(update_run_id='1',head_sha='a'*40))
+        self.assertEqual(result['github']['check']['state'],'failure')
+        self.assertEqual(result['github']['publication']['state'],'success')

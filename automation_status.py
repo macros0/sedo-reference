@@ -43,7 +43,8 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None):
     complete = check_info['state'] == 'success' and report.get('status') == 'ok'
     imported = (reports.get('sourcecraft-report.json') or {}).get('latest', {})
     expected_sources = {env:c['content_id'] for env,c in sc['contours'].items() if c.get('content_id')}
-    if latest.get('complete') and expected_sources and any(imported.get(env) != digest for env,digest in expected_sources.items()):
+    source_synced = not (latest.get('complete') and expected_sources and any(imported.get(env) != digest for env,digest in expected_sources.items()))
+    if not source_synced:
         complete = False
         if check_info['state'] == 'success':
             check_info['state'] = 'waiting'
@@ -51,8 +52,8 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None):
     versions = dict(count=len(revisions) if complete and isinstance(revisions, list) else None,
                     checked_at=report.get('checked_at') if complete else None)
     target = reports.get('publication-target.json') or {}
-    publication = dict(state='waiting' if check else 'unknown')
-    if complete:
+    publication = dict(state='not_published' if check_info['state'] in ('failure','cancelled') else 'waiting' if check else 'unknown')
+    if check and report.get('status') == 'ok' and source_synced:
         expected = target.get('head_sha') if str(target.get('update_run_id')) == str(check['id']) else None
         candidates = [p for p in pages if p.get('created_at', '') >= check.get('created_at', '')]
         matched = next((p for p in candidates if
@@ -61,8 +62,6 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None):
              legacy_catalogs.get(p.get('head_sha')) == report['checked_at'])), None)
         if matched:
             publication = run_info(matched)
-    elif check_info['state'] in ('failure', 'cancelled'):
-        publication = dict(state='not_published')
     previous = next((p for p in pages if run_info(p)['state'] == 'success'), None)
     return dict(format=1, generated_at=now or utcnow(), sourcecraft=sc,
                 github=dict(check=check_info, versions=versions, publication=publication,
