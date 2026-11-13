@@ -24,7 +24,7 @@
 - [x] RED/GREEN: модель, изменения/добавление/удаление, повторы, отмена ошибочной операции, смена родителя, неизменность исходников.
 - [x] Редактор, баннер и применение; регрессии поиска/страниц/сохранения и message=10510.
 - [x] Проверить интерфейс, документацию, рецензию и все необходимые тесты.
-- [ ] Commit/push, дождаться CI/Pages, проверить публичный результат.
+- [x] Commit/push, дождаться CI/Pages, проверить публичный результат.
 
 ## Validation
-12 Node suites and 6 focused Python tests passed. Real 105→10510 browser QA: add/edit/comment/duplicate/remove/reapply, immediate 1→0 removals at 16 mappings, persistence after reload. Reviewer P2 for duplicate relative row IDs fixed with RED/GREEN regression. Full Python suite and public Pages verification pending CI.
+12 Node suites and 6 focused Python tests passed. Real 105→10510 browser QA: add/edit/comment/duplicate/remove/reapply, immediate 1→0 removals at 16 mappings, persistence after reload. Reviewer P2 for duplicate relative row IDs fixed with RED/GREEN regression. GitHub run 43344446365 passed 80 Python tests and all 12 Node suites; verify/build/deploy succeeded. Public asset fingerprints match checked source; public editor form opened successfully. Source commit 6fc13eb; generated index synced from 1bdc47a. Reviewer confirmed P2 closed with no outstanding substantial findings.
