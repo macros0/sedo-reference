@@ -14,6 +14,19 @@ assert.equal(model(data,now+48*3600*1000).tone,'stale');
 d=structuredClone(data);d.generated_at='bad';assert.equal(model(d,now).tone,'unknown');assert.doesNotThrow(()=>date('bad'));
 assert.equal(safeLink('javascript:alert(1)'),null);assert.equal(safeLink('https://evil.test'),null);
 assert.equal(model(null,now).tone,'unknown');
+
+// The next scheduled run depends on the current time, never on a stale report
+// or the visitor's time zone. 04:00/04:17 UTC are 07:00/07:17 Moscow.
+let next=model(data,Date.parse('2026-11-13T03:59:59Z'));
+assert.match(next.cards[0].lines.at(-1),/Следующая проверка по расписанию: 13\.11\.2026, 07:00 МСК/);
+assert.match(next.cards[1].lines.at(-1),/Следующий забор по расписанию: 13\.11\.2026, 07:17 МСК/);
+next=model(data,Date.parse('2026-11-13T04:00:00Z'));
+assert.match(next.cards[0].lines.at(-1),/14\.11\.2026, 07:00 МСК/);
+assert.match(next.cards[1].lines.at(-1),/13\.11\.2026, 07:17 МСК/);
+next=model(data,Date.parse('2026-12-31T21:30:00Z'));
+assert.match(next.cards[0].lines.at(-1),/01\.01\.2027, 07:00 МСК/);
+assert.match(next.cards[1].lines.at(-1),/01\.01\.2027, 07:17 МСК/);
+assert.match(next.updated,/Фактический запуск может задержаться/);
 console.log('Automation status states and safe links passed.');
 
 (async()=>{
