@@ -22,6 +22,14 @@ const workbook=()=>exporter.createWorkbook(ExcelJS,{...options,results:core.comp
  sheet.getCell("E6").value=pair.afterPath;sheet.getCell("H6").value="Подтверждено";sheet.getCell("I6").value=pair.comment;
  sheet.getCell("E7").value="new/child";sheet.getCell("H7").value="Не проверено";
  sheet.getCell("F6").value="Изменённое описание не должно импортироваться";
+ const pendingBook=workbook(),pendingSheet=pendingBook.getWorksheet("Сопоставление");
+ pendingSheet.getCell("E6").value="new/code";pendingSheet.getCell("H6").value="Переработано";
+ pendingSheet.getCell("E7").value="new/child";pendingSheet.getCell("H7").value="Не проверено";
+ pendingSheet.getCell("H8").value="Требует уточнения";
+ const pendingParsed=mapping.parseWorkbook(pendingBook,options);
+ assert.equal(pendingParsed.pairs.length,0);assert.equal(pendingParsed.candidates.length,3);
+ pendingSheet.getCell("E7").value="not-found";
+ const warning=mapping.parseWorkbook(pendingBook,options);assert.equal(warning.errors.length,0);assert.match(warning.warnings.join(" "),/not-found/);assert.equal(warning.candidates.length,2);
  const bytes=await wb.xlsx.writeBuffer();mapping.preflightArchive(new Uint8Array(bytes));
  const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(bytes);
  const parsed=mapping.parseWorkbook(loaded,options);assert.deepEqual(parsed.pairs,[pair]);assert.equal(parsed.errors.length,0);assert.equal(parsed.ignored,2);
@@ -70,6 +78,23 @@ const workbook=()=>exporter.createWorkbook(ExcelJS,{...options,results:core.comp
  const actualDiff=core.compare(oldFields,newFields,actualReport.pairs).find(r=>r.manual),facets=actualDiff.changes.find(c=>c.key==="facets");
  assert.ok(facets.before.some(([k,v])=>k==="totalDigits"&&v==="22"));assert.ok(facets.after.some(([k,v])=>k==="totalDigits"&&v==="11"));
  assert.ok(!facets.before.some(([k,v])=>v==="999"),"constraints must come from catalog, not workbook");
+ // Public-source reproduction of the reported workbook; no user file is committed.
+ const old105=rev("105"),next105=rev("10510"),a105=fields(old105),b105=fields(next105),o105={left:old105,right:next105,before:a105,after:b105};
+ const book105=exporter.createWorkbook(ExcelJS,{...o105,results:core.compare(a105,b105),baseURL:"https://example.test/"}),sheet105=book105.getWorksheet("Сопоставление");
+ const checked=new Set(["","status","responseInfo","registryNum","errorList","errorList/error","errorList/error/code","errorList/error/message"]);
+ a105.forEach((f,i)=>{
+  const relative=f.path.replace(/^approveSocialAssistResult\/?/,""),nextRelative=relative==="socialAssistNum"?"processNum":relative==="registryNum"?"batchNo":relative;
+  sheet105.getCell(i+6,5).value="benefitResponseResult"+(nextRelative?"/"+nextRelative:"");
+  sheet105.getCell(i+6,8).value=checked.has(relative)?"Подтверждено":relative==="socialAssistNum"?"Переработано":"Не проверено";
+ });
+ const loaded105=new ExcelJS.Workbook();await loaded105.xlsx.load(await book105.xlsx.writeBuffer());
+ const parsed105=mapping.parseWorkbook(loaded105,o105),preview105=mapping.preparePreview(parsed105,a105,b105);
+ assert.equal(parsed105.pairs.length,8);assert.equal(parsed105.candidates.length,8);assert.equal(preview105.excelCount,8);assert.equal(preview105.descendantCount,0);
+ const beforeApproval=core.compare(a105,b105,parsed105.pairs);assert.equal(beforeApproval.filter(r=>r.status==="removed").length,8);
+ const all105=[...parsed105.pairs,...preview105.suggestions.filter(p=>p.defaultSelected)],fixed105=core.compare(a105,b105,all105);
+ assert.equal(all105.length,16);assert.equal(fixed105.filter(r=>r.status==="removed").length,0);
+ assert.deepEqual(new Set(fixed105.filter(r=>r.status==="added").map(r=>r.path)),new Set(["benefitResponseResult/@specVersion","benefitResponseResult/@messageDateTime","benefitResponseResult/@*"]));
+ console.log("Reported 105/10510 case: 8 confirmed + 8 filled proposals; approval yields 0 removed and 3 new attributes.");
  console.log("Real 101/10110 import: idleAverage totalDigits 22 → 11, workbook source edits ignored.");
  console.log("Manual mappings: confirmed XLSX import, pair IDs, reverse, constraints, split/merge, collisions, local persistence, reset and re-export passed.");
 })().catch(e=>{console.error(e);process.exitCode=1});

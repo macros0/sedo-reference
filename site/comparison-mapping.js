@@ -78,7 +78,7 @@
   return {suggestions,conflicts};
  }
  function parseWorkbook(workbook,options){
-  const report={pairs:[],errors:[],ignored:0,duplicates:0,reversed:false};
+  const report={pairs:[],candidates:[],warnings:[],errors:[],ignored:0,duplicates:0,reversed:false};
   try{
    const metadata=workbook.getWorksheet("О выгрузке"),sheet=workbook.getWorksheet("Сопоставление");
    if(!metadata||!sheet)throw Error("Нужна книга справочника с листами «Сопоставление» и «О выгрузке».");
@@ -103,7 +103,20 @@
    for(let row=headerRow+1;row<=sheet.rowCount;row++){
     try{
      const decision=cellText(sheet.getCell(row,columns.decision));
-     if(decision!=="Подтверждено"){report.ignored++;continue}
+     if(decision!=="Подтверждено"){
+      report.ignored++;
+      if(["","Не проверено","Переработано","Требует уточнения"].includes(decision)){
+       try{
+        const afterPath=cellText(sheet.getCell(row,columns.afterPath));
+        if(afterPath){
+         const candidate={beforePath:cellText(sheet.getCell(row,columns.beforePath)),afterPath,comment:cellText(sheet.getCell(row,columns.comment))};
+         if(report.reversed)[candidate.beforePath,candidate.afterPath]=[candidate.afterPath,candidate.beforePath];
+         validatePair(candidate,oldPaths,newPaths);report.candidates.push({...candidate,decision:decision||"Не проверено",row});
+        }
+       }catch(error){report.warnings.push("Строка "+row+": неподтверждённая пара не предложена. "+error.message)}
+      }
+      continue;
+     }
      const pair={beforePath:cellText(sheet.getCell(row,columns.beforePath)),afterPath:cellText(sheet.getCell(row,columns.afterPath)),comment:cellText(sheet.getCell(row,columns.comment))};
      if(report.reversed)[pair.beforePath,pair.afterPath]=[pair.afterPath,pair.beforePath];
      validatePair(pair,oldPaths,newPaths);
@@ -114,8 +127,32 @@
      seen.set(key,pair);report.pairs.push(pair);
     }catch(error){report.errors.push("Строка "+row+": "+error.message)}
    }
-  }catch(error){report.errors.push(error.message);report.pairs=[]}
+  }catch(error){report.errors.push(error.message);report.pairs=[];report.candidates=[]}
   return report;
+ }
+ function preparePreview(report,before,after){
+  if(report.errors?.length)return {suggestions:[],conflicts:[],excelCount:0,descendantCount:0};
+  const pairs=report.pairs||[],candidates=report.candidates||[];validatePairs(candidates,before,after);
+  const confirmed=new Set(pairs.map(p=>JSON.stringify([p.beforePath,p.afterPath]))),pending=new Map();
+  for(const candidate of candidates){
+   const key=JSON.stringify([candidate.beforePath,candidate.afterPath]);if(confirmed.has(key))continue;
+   const existing=pending.get(key);
+   if(existing){
+    if(candidate.comment&&candidate.comment!==existing.comment)existing.comment=[existing.comment,candidate.comment].filter(Boolean).join("\n");
+    if(candidate.decision==="Требует уточнения")existing.defaultSelected=false;
+   }else pending.set(key,{...candidate,origin:"workbook",defaultSelected:candidate.decision!=="Требует уточнения"});
+  }
+  // A filled manual branch should not acquire a different automatically guessed target.
+  const oldRoots=new Set([...pending.values()].map(p=>p.beforePath)),newRoots=new Set([...pending.values()].map(p=>p.afterPath));
+  const inside=(path,roots,minLength)=>{
+   if(path.length>=minLength&&roots.has(path))return true;
+   for(let slash=path.lastIndexOf("/");slash>=minLength;slash=path.lastIndexOf("/",slash-1)){if(roots.has(path.slice(0,slash)))return true;if(slash===0)break}
+   return false;
+  };
+  const available=p=>!inside(p.beforePath,oldRoots,p.parentBeforePath.length)&&!inside(p.afterPath,newRoots,p.parentAfterPath.length),relative=suggestDescendants(pairs,before,after);
+  const descendants=relative.suggestions.filter(available).map(p=>({...p,origin:"relative",defaultSelected:true}));
+  if(pairs.length+pending.size+descendants.length>MAX_ROWS)throw Error("Слишком много предложений. Разбейте книгу на несколько наборов.");
+  return {suggestions:[...pending.values(),...descendants],conflicts:relative.conflicts.filter(available),excelCount:pending.size,descendantCount:descendants.length};
  }
  const storageKey=(left,right)=>"sedo-field-mappings:v1:"+[left.revision_id,right.revision_id].sort().map(encodeURIComponent).join(":");
  function createStore(getStorage){
@@ -153,27 +190,34 @@
   const el=(tag,cls,value)=>{const element=document.createElement(tag);if(cls)element.className=cls;if(value!==undefined)element.textContent=value;return element};
   const button=(cls,value)=>{const control=el("button",cls,value);control.type="button";return control};
   const panel=el("section","mapping-panel"),status=el("p","meta"),preview=el("div","mapping-preview"),controls=el("div","mapping-controls");
-  panel.append(el("h2","","Ручные соответствия"),el("p","meta","Загрузите заполненный Excel. По подтверждённым родительским блокам будут предложены вложенные теги с одинаковыми относительными путями. Файл обрабатывается в браузере."));
+  panel.append(el("h2","","Ручные соответствия"),el("p","meta","Загрузите заполненный Excel. Заполненные, но неподтверждённые пары можно подтвердить в предпросмотре. По подтверждённым родительским блокам будут предложены вложенные теги с одинаковыми относительными путями. Файл обрабатывается в браузере."));
   status.setAttribute("role","status");status.textContent="Применено пар: "+saved.pairs.length+(saved.notice?". "+saved.notice:"");
   const fileInput=el("input","mapping-file");fileInput.type="file";fileInput.accept=".xlsx";fileInput.hidden=true;
   const upload=button("swap","Загрузить сопоставления из Excel"),reset=button("swap","Сбросить сопоставления");reset.disabled=!saved.pairs.length&&!saved.notice;
   upload.onclick=()=>fileInput.click();reset.onclick=()=>{if(options.isCurrent()){store.clear(options);onChange()}};
-  function paginatedTable(host,rows,captions,makeRow){
+  function paginatedTable(host,rows,captions,makeRow,predicate=()=>true){
    const table=el("table","diff-table"),head=el("tr"),thead=el("thead"),body=el("tbody"),scroll=el("div","table-scroll"),nav=el("div","mapping-pages");
    captions.forEach(text=>head.append(el("th","",text)));thead.append(head);table.append(thead,body);scroll.append(table);host.append(scroll);
-   const previous=button("swap mapping-prev","Назад"),next=button("swap mapping-next","Далее"),caption=el("span","meta");caption.setAttribute("role","status");nav.append(previous,caption,next);
-   let page=0;const size=50,pages=Math.ceil(rows.length/size);
-   function draw(){body.replaceChildren();rows.slice(page*size,(page+1)*size).forEach((row,i)=>body.append(makeRow(row,page*size+i)));previous.disabled=page===0;next.disabled=page===pages-1;caption.textContent="Строки "+(page*size+1)+"–"+Math.min((page+1)*size,rows.length)+" из "+rows.length+" · страница "+(page+1)+" из "+pages}
-   previous.onclick=()=>{page--;draw()};next.onclick=()=>{page++;draw()};if(pages>1)host.append(nav);draw();return draw;
+   const previous=button("swap mapping-prev","Назад"),next=button("swap mapping-next","Далее"),caption=el("span","meta mapping-visible-count");caption.setAttribute("role","status");nav.append(previous,caption,next);host.append(nav);
+   let page=0;const size=50;
+   function draw(reset=false){
+    if(reset)page=0;const visible=rows.filter(predicate),pages=Math.max(1,Math.ceil(visible.length/size));page=Math.min(Math.max(0,page),pages-1);
+    body.replaceChildren();visible.slice(page*size,(page+1)*size).forEach((row,i)=>body.append(makeRow(row,page*size+i)));
+    if(!visible.length){const row=el("tr"),cell=el("td","empty","По этому поиску и фильтру пар не найдено.");cell.colSpan=captions.length;row.append(cell);body.append(row)}
+    previous.disabled=page===0;next.disabled=page===pages-1;previous.hidden=next.hidden=pages===1;
+    caption.textContent=visible.length?"Строки "+(page*size+1)+"–"+Math.min((page+1)*size,visible.length)+" из "+visible.length+" · всего пар "+rows.length+" · страница "+(page+1)+" из "+pages:"Найдено пар: 0 из "+rows.length;
+   }
+   previous.onclick=()=>{page--;draw()};next.onclick=()=>{page++;draw()};draw();return draw;
   }
   function showPreview(report,manualLabel){
    preview.replaceChildren();
-   const proposal=report.errors.length?{suggestions:[],conflicts:[]}:suggestDescendants(report.pairs,options.before,options.after),suggestions=proposal.suggestions;
-   status.textContent="Предпросмотр: ручных пар "+report.pairs.length+", предложено вложенных "+suggestions.length+", требуют решения "+proposal.conflicts.length+", пропущено неподтверждённых строк "+report.ignored+", повторов "+report.duplicates+", ошибок "+report.errors.length+(report.reversed?". Направление пар развёрнуто.":".");
+   const proposal=preparePreview(report,options.before,options.after),suggestions=proposal.suggestions;
+   status.textContent="Предпросмотр: подтверждённых пар "+report.pairs.length+", предложено из Excel "+proposal.excelCount+", предложено вложенных "+proposal.descendantCount+", требуют решения "+proposal.conflicts.length+", остальных неподтверждённых строк "+Math.max(0,(report.ignored||0)-(report.candidates?.length||0))+", повторов "+report.duplicates+", ошибок "+report.errors.length+(report.reversed?". Направление пар развёрнуто.":".");
    const errors=el("ul","mapping-errors");for(const error of report.errors.slice(0,20))errors.append(el("li","",error));if(report.errors.length>20)errors.append(el("li","","Остальные ошибки: "+(report.errors.length-20)));if(report.errors.length)preview.append(errors);
-   const old=new Map(options.before.map(f=>[f.path,f])),next=new Map(options.after.map(f=>[f.path,f])),selected=new Set(suggestions.map((_,i)=>i));
+   if(report.warnings?.length){const warnings=el("ul","mapping-warnings");report.warnings.slice(0,20).forEach(text=>warnings.append(el("li","",text)));if(report.warnings.length>20)warnings.append(el("li","","Остальные предупреждения: "+(report.warnings.length-20)));preview.append(warnings)}
+   const old=new Map(options.before.map(f=>[f.path,f])),next=new Map(options.after.map(f=>[f.path,f])),selected=new Set(suggestions.flatMap((pair,i)=>pair.defaultSelected?[i]:[]));
    const selection=el("p","meta mapping-selected"),apply=button("open mapping-apply","Применить сопоставления");selection.setAttribute("role","status");
-   function update(){selection.textContent="К применению: ручных пар "+report.pairs.length+", вложенных "+selected.size+" из "+suggestions.length;apply.textContent="Применить сопоставления ("+(report.pairs.length+selected.size)+")";apply.disabled=!!report.errors.length||!report.pairs.length&&!selected.size}
+   function update(){selection.textContent="К применению: подтверждённых пар "+report.pairs.length+", предложений "+selected.size+" из "+suggestions.length;apply.textContent="Применить сопоставления ("+(report.pairs.length+selected.size)+")";apply.disabled=!!report.errors.length||!report.pairs.length&&!selected.size}
    let redraw=()=>{};
    if(suggestions.length){
     const bulk=el("div","mapping-controls"),all=button("swap mapping-select-all","Выбрать все предложения"),none=button("swap mapping-select-none","Снять выбор предложений");
@@ -181,12 +225,22 @@
    }
    preview.append(selection);
    const rows=[...report.pairs.map(pair=>({pair,suggestion:-1})),...suggestions.map((pair,i)=>({pair,suggestion:i}))];
+   const filters=el("div","mapping-preview-filters"),searchLabel=el("label","","Поиск по тегу и описанию"),search=el("input","mapping-preview-search"),onlyLabel=el("label","mapping-only-label"),only=el("input","mapping-only-proposed");
+   search.type="search";search.value="";search.placeholder="Тег, путь, описание или комментарий";only.type="checkbox";only.checked=false;searchLabel.append(search);onlyLabel.append(only,el("span","","Только предложенные"));filters.append(searchLabel,onlyLabel);if(rows.length)preview.append(filters);
+   const normalized=value=>String(value||"").normalize("NFKC").toLocaleLowerCase("ru").replace(/ё/g,"е");
+   const matches=({pair,suggestion})=>{
+    if(only.checked&&suggestion<0)return false;
+    const text=normalized([pair.beforePath,pair.afterPath,old.get(pair.beforePath)?.name,next.get(pair.afterPath)?.name,old.get(pair.beforePath)?.doc,next.get(pair.afterPath)?.doc,pair.relativePath,pair.parentBeforePath,pair.parentAfterPath,pair.comment,pair.decision].join(" "));
+    return normalized(search.value).split(/\s+/).filter(Boolean).every(term=>text.includes(term));
+   };
    if(rows.length)redraw=paginatedTable(preview,rows,["Применить","Источник","Путь и описание «Было»","Путь и описание «Стало»","Основание / комментарий"],({pair,suggestion})=>{
     const row=el("tr"),input=el("input",suggestion>=0?"mapping-proposal":"mapping-explicit"),choice=el("td");input.type="checkbox";input.disabled=suggestion<0;input.checked=suggestion<0||selected.has(suggestion);input.setAttribute("aria-label","Сопоставить "+pair.beforePath+" → "+pair.afterPath);input.dataset.beforePath=pair.beforePath;input.dataset.afterPath=pair.afterPath;
     input.onchange=()=>{input.checked?selected.add(suggestion):selected.delete(suggestion);update()};choice.append(input);
-    const reason=suggestion>=0?"Относительный путь: "+pair.relativePath+"\nРодитель: "+pair.parentBeforePath+" → "+pair.parentAfterPath:pair.comment;
-    row.append(choice,el("td","",suggestion>=0?"По относительному пути":manualLabel),el("td","",pair.beforePath+"\n"+(old.get(pair.beforePath)?.doc||"")),el("td","",pair.afterPath+"\n"+(next.get(pair.afterPath)?.doc||"")),el("td","",reason));return row;
-   });
+    const reason=suggestion>=0&&pair.origin==="workbook"?"Строка Excel "+pair.row+" · решение «"+pair.decision+"». Путь заполнен, но ещё не подтверждён.":suggestion>=0?"Относительный путь: "+pair.relativePath+"\nРодитель: "+pair.parentBeforePath+" → "+pair.parentAfterPath:pair.comment;
+    row.append(choice,el("td","",suggestion>=0?(pair.origin==="workbook"?"Из Excel — не подтверждено":"По относительному пути"):manualLabel),el("td","",pair.beforePath+"\n"+(old.get(pair.beforePath)?.doc||"")),el("td","",pair.afterPath+"\n"+(next.get(pair.afterPath)?.doc||"")),el("td","",reason));return row;
+   },matches);
+   search.oninput=()=>redraw(true);only.onchange=()=>redraw(true);
+   if(rows.length)preview.append(el("p","meta","Поиск и фильтр меняют только список. Применяются все отмеченные пары, включая скрытые фильтром."));
    if(proposal.conflicts.length){
     const details=el("details","mapping-conflicts");details.append(el("summary","","Требуют ручного решения · "+proposal.conflicts.length),el("p","meta","Эти пары не выбраны автоматически. Уточните сопоставления в Excel и загрузите книгу снова."));
     paginatedTable(details,proposal.conflicts,["Путь «Было»","Путь «Стало»","Причина"],pair=>{const row=el("tr");row.append(el("td","",pair.beforePath),el("td","",pair.afterPath),el("td","",pair.reason));return row});preview.append(details);
@@ -201,8 +255,8 @@
   if(saved.pairs.length){
    try{
     const available=suggestDescendants(saved.pairs,options.before,options.after);
-    if(available.suggestions.length||available.conflicts.length){
-     const suggest=button("swap mapping-suggest","Предпросмотр вложенных тегов ("+available.suggestions.length+")");suggest.onclick=()=>{if(options.isCurrent()){
+    {
+     const suggest=button("swap mapping-suggest",available.suggestions.length||available.conflicts.length?"Предпросмотр вложенных тегов ("+available.suggestions.length+")":"Просмотреть сопоставления");suggest.onclick=()=>{if(options.isCurrent()){
       try{showPreview({pairs:saved.pairs,errors:[],ignored:0,duplicates:0,reversed:false},"Ранее применено")}catch(error){status.textContent="Не удалось подготовить предложения. "+error.message}
      }};savedSuggest=suggest;controls.append(suggest);
     }
@@ -218,5 +272,5 @@
    finally{if(token===generation){upload.disabled=false;if(savedSuggest)savedSuggest.disabled=false;fileInput.value=""}}
   };
  }
- return {preflightArchive,suggestDescendants,parseWorkbook,storageKey,createStore,store,readFile,mount};
+ return {preflightArchive,suggestDescendants,parseWorkbook,preparePreview,storageKey,createStore,store,readFile,mount};
 });
