@@ -8,14 +8,18 @@
 
 ## Tasks
 
-- [ ] Add failing tests for manifest replay, tampering, contour isolation and unchanged-content deduplication.
-- [ ] Implement snapshot validation and loading from state/collector, preferring validated local inputs to live WSDL.
-- [ ] Add failing Git API publisher tests for allowed paths, atomic commit, no-op and concurrent branch updates; implement publisher and collector CLI.
-- [ ] Connect Pages to pending snapshots before build; keep historical snapshot records. Add systemd configuration and operator documentation.
-- [ ] Run focused and full checks, regenerate production trees, publish code and initial inputs.
-- [ ] Install isolated service in CT102, transfer newly created token without logging it, collect both contours and enable the daily timer.
-- [ ] Verify deployed Pages, missing-type coverage, remote timer and idempotent second collection.
+- [x] Add failing tests for manifest replay, tampering, contour isolation and unchanged-content deduplication.
+- [x] Implement snapshot validation and loading from state/collector, preferring validated local inputs to live WSDL.
+- [x] Add failing Git API publisher tests for allowed paths, atomic commit, no-op and concurrent branch updates; implement publisher and collector CLI.
+- [x] Connect Pages to pending snapshots before build; keep historical snapshot records. Add systemd configuration and operator documentation.
+- [x] Run focused and full checks, regenerate production trees, publish code and initial inputs.
+- [x] Install isolated service in CT102, transfer newly created token without logging it, collect both contours and enable the daily timer.
+- [x] Verify deployed Pages, missing-type coverage, remote timer and idempotent second collection.
 
 ## Review focus
 
 Reject changed raw bytes or metadata, cross-contour URLs and incomplete closures. Never force-push or overwrite concurrent changes. Do not log token headers or remote error bodies. Keep old manifests and editions on remote outages. A PAT authenticates its holder, not a particular physical server; revoke it if the server is compromised.
+
+## Verified outcome
+
+Container 102 publishes through its dedicated repository-scoped PAT. A repeated live collection reported `Unchanged; no commit needed.` The timer is enabled for 07:00 Moscow. [GitHub Actions run](https://github.com/macros0/sedo-reference/actions/runs/43343111502) passed 80 Python tests and all nine Node suites, verified history and deployed Pages. Public browser checks confirmed all previously missing production types, visible document-version sources for message 14 and original DOCX SHA-256.
