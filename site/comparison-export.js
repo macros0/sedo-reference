@@ -21,9 +21,9 @@
   if(f.alternatives?.length)parts.push("Варианты union (ИЛИ):\n"+f.alternatives.map((v,i)=>(i+1)+". "+constraints(v)).join("\nИЛИ\n"));
   return parts.join("\n");
  }
- function edition(r){return "№ "+r.number+" · "+({prod:"Продуктивный",test:"Тестовый"}[r.environment]||r.environment)+" · "+(r.document_version||"Версия не указана")+(r.label_date?" · "+r.label_date:"")}
+ function edition(r){return "№ "+r.number+" · "+({prod:"Продуктивный",test:"Тестовый"}[r.environment]||r.environment)+" · "+(r.edition_sources?.length>1?"схема · источников: "+r.edition_sources.length:(r.document_version||"Версия не указана")+(r.label_date?" · "+r.label_date:""))}
  function filename(left,right){
-  const side=r=>[r.number,r.environment,"v"+(r.document_version||"unknown"),r.revision_id.slice(0,8)].join("-");
+  const side=r=>[r.number,r.environment,r.edition_sources?.length>1?"schema":"v"+(r.document_version||"unknown"),r.revision_id.slice(0,8)].join("-");
   return ("sedo-"+side(left)+"__"+side(right)+".xlsx").replace(/[^\p{L}\p{N}._-]/gu,"_");
  }
  function createWorkbook(ExcelJS,{left,right,before,after,results,mappings=[],baseURL,createdAt=new Date()}){
@@ -110,8 +110,21 @@
    ["Чтение длинного текста","Расширьте столбец или высоту строки; полное значение можно читать в строке формул. Исходные листы рекомендуется сохранять без изменений.",""],
    ["Сохранение работы","Сохраните книгу и загрузите её кнопкой «Загрузить сопоставления из Excel» на сравнении этих редакций. Строки «Подтверждено» принимаются сразу. Заполненные пары «Не проверено» и «Переработано» предлагаются в предпросмотре и подтверждаются кнопкой применения. Вложенные пары по относительным путям предлагаются отдельно в предпросмотре и применяются после подтверждения. Пары сохраняются в вашем браузере. Повторная выгрузка сохраняет применённые соответствия; в общий справочник они не публикуются.",""]
   ];
+  const sourceLinks=[];
+  if(left.edition_sources?.length>1||right.edition_sources?.length>1){
+   const a=left.edition_sources||[left],b=right.edition_sources||[right];
+   for(let i=0;i<Math.max(a.length,b.length);i++){
+    const description=s=>s?"Версия документа "+(s.document_version||"не указана")+(s.label_date?" · "+s.label_date:""):"";
+    metaRows.push(["Источник схемы "+(i+1)+" · документ",description(a[i]),description(b[i])]);
+    for(const [caption,key] of [["СФР","document_url"],["DOCX","document_download"]]){
+     metaRows.push(["Источник схемы "+(i+1)+" · "+caption,absolute(a[i]?.[key]),absolute(b[i]?.[key])]);
+     sourceLinks.push(metaRows.length+1);
+    }
+   }
+  }
   const meta=sheet("О выгрузке",["Параметр / инструкция","Было / пояснение","Стало"],[32,95,95],metaRows);
   for(const n of [7,8,9])for(const c of [2,3]){const cell=meta.getCell(n,c);if(cell.value)cell.value={text:cell.value,hyperlink:cell.value}}
+  for(const n of sourceLinks)for(const c of [2,3]){const cell=meta.getCell(n,c);if(cell.value)cell.value={text:cell.value,hyperlink:cell.value}}
   mapping.properties.tabColor={argb:navy};
   return wb;
  }

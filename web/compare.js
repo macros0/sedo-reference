@@ -21,8 +21,9 @@ function canCompareTypes(a,b){return a===b||(catalog.message_transitions?.pairs|
 function comparisonPool(m){
  const numbers=new Set([m.number]);
  for(const pair of catalog.message_transitions?.pairs||[]){if(pair.previous===m.number)numbers.add(pair.current);if(pair.current===m.number)numbers.add(pair.previous)}
- return [...numbers].flatMap(number=>messages.get(number)?.revisions||[]).filter(r=>r.ready);
+ return [...numbers].flatMap(number=>messages.get(number)?.revisions||[]).filter(r=>r.ready&&(!r.display_revision_id||r.display_revision_id===r.revision_id));
 }
+function comparisonRevision(pool,id){return pool.find(r=>r.revision_id===id)||catalog.revisions.find(r=>r.revision_id===id&&r.ready&&pool.some(x=>x.number===r.number))}
 function crossTypePair(m,target,environment){
  const pool=comparisonPool(m),latest=rows=>[...rows].sort((a,b)=>date(b.label_date).split(".").reverse().join("").localeCompare(date(a.label_date).split(".").reverse().join("")))[0];
  for(const env of environment?[environment]:["prod","test"]){
@@ -51,14 +52,14 @@ function formatDifference(value){
 async function renderComparison(m,params,applied=false){
  const comparisonHash=location.hash,request=++comparisonRequest,section=$("comparison");section.replaceChildren(node("h1","","Сравнение сообщения "+m.number),node("p","",title(m)));
  const defaults=comparisonDefaults(m),leftId=params.get("left")||defaults.left,rightId=params.get("right")||defaults.right;
- const ready=comparisonPool(m),left=ready.find(r=>r.revision_id===leftId),right=ready.find(r=>r.revision_id===rightId);
+ const ready=comparisonPool(m),left=comparisonRevision(ready,leftId),right=comparisonRevision(ready,rightId);
  if(!left||!right){section.append(node("p","empty","Выбранная редакция недоступна для сравнения."));return false}
  if(left.number!==right.number){section.querySelector("h1").textContent="Сравнение сообщений "+left.number+" → "+right.number;section.append(node("p","meta","Сравниваются разные XML-форматы. Подтверждённые ручные пары учитываются отдельно; остальные теги сопоставляются по полным путям, включая имя корня."))}
  const controls=node("div","compare-controls"),selectors=[];
  for(const [caption,selected] of [["Было",left],["Стало",right]]){
   const wrap=node("label","",caption),select=node("select");
   for(const r of ready)select.add(new Option(comparisonLabel(r),r.revision_id));
-  select.value=selected.revision_id;wrap.append(select);controls.append(wrap);selectors.push(select);
+  select.value=selected.display_revision_id||selected.revision_id;wrap.append(select);controls.append(wrap);selectors.push(select);
  }
  const switchSides=node("button","swap","Поменять местами");switchSides.type="button";
  switchSides.onclick=()=>{location.hash=comparisonRoute(m.number,rightId,leftId)};controls.append(switchSides);section.append(controls);
@@ -66,7 +67,7 @@ async function renderComparison(m,params,applied=false){
  if(!canCompareTypes(left.number,right.number)){section.append(node("p","empty","Для этих типов нет подтверждённого соответствия. Выберите прежний тип и его новый формат либо две редакции одного типа."));return false}
  const sources=node("div","compare-sources");
  for(const [caption,r] of [["Было",left],["Стало",right]]){
-  const box=node("div");box.append(node("strong","",caption+" · "+comparisonLabel(r)),node("br"),documentDownload(r),document.createTextNode(" · "),revisionOrigin(r),document.createTextNode(" · "),anchor("Открыть дерево",route(r.number,r.environment,r.revision_id),"source"));sources.append(box)
+  const box=node("div");box.append(node("strong","",caption+" · "+comparisonLabel(r)),node("br"),anchor("Открыть дерево",route(r.number,r.environment,r.revision_id),"source"));appendEditionSources(box,r);sources.append(box)
  }
  section.append(sources);
  const state=node("p","empty","Сравниваем деревья…");section.append(state);

@@ -30,6 +30,14 @@ const right={number:"10110",environment:"test",revision_id:"right123456",documen
  assert.match(filename(left,right),/101-prod.*10110-test/);
  assert.equal(wb.getWorksheet("О выгрузке").getCell("B9").value.hyperlink,"https://example.com/reference/index.html#message=101&env=prod&rev=left123456");
  assert.equal(wb.getWorksheet("Было").getCell("H2").value,0);
+ const groupedLeft={...left,edition_sources:[{...left,document_version:"3.1",document_url:"https://example.com/service.docx",document_download:"documents/service.docx"},{...left,document_version:"5.5",document_url:"https://example.com/rust.docx",document_download:"documents/rust.docx"}]};
+ const grouped=createWorkbook(ExcelJS,{...options,left:groupedLeft}),meta=grouped.getWorksheet("О выгрузке");
+ const sourceRows=[];meta.eachRow(row=>{if(String(row.getCell(1).value).startsWith("Источник схемы"))sourceRows.push(row)});
+ assert.ok(sourceRows.some(row=>row.getCell(2).value?.hyperlink==="https://example.com/rust.docx"),"all source documents must be linked");
+ assert.ok(sourceRows.some(row=>row.getCell(2).value?.hyperlink==="https://example.com/reference/documents/rust.docx"),"all archived originals must be linked");
+ assert.ok(sourceRows.some(row=>String(row.getCell(2).value).includes("5.5")),"source document version is retained");
+ assert.match(meta.getCell("B2").value,/схема.*источников: 2/);
+ assert.equal(meta.getCell("B4").value,left.revision_id,"grouping preserves workbook edition IDs");
  const bytes=await wb.xlsx.writeBuffer();
  const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(bytes);
  assert.equal(loaded.getWorksheet("Было").rowCount,4);

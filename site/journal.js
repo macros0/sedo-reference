@@ -50,16 +50,16 @@ function renderUpdates(params){
   if(range.error){count.textContent="Проверьте выбранный период";list.replaceChildren();return}
   const terms=normalize(query.value).split(/\s+/).filter(Boolean);
   const exactNumber=/^\d+$/.test(query.value.trim())&&messages.has(query.value.trim())?query.value.trim():null;
-  const visible=entries.filter(({event,r})=>journalDateMatches(event.observed_at,range)&&(!onlyChanges.checked||(event.comparison?.status==="ready"&&["added","removed","changed"].some(key=>event.comparison.counts[key]>0)))&&(!exactNumber||r.number===exactNumber)&&(!env.value||r.environment===env.value)&&terms.every(t=>normalize([r.number,r.title,r.document_version,r.label_date,envNames[r.environment],observationDate(event.observed_at)].join(" ")).includes(t)));
+  const visible=entries.filter(({event,r})=>journalDateMatches(event.observed_at,range)&&(!onlyChanges.checked||(event.comparison?.status==="ready"&&["added","removed","changed"].some(key=>event.comparison.counts[key]>0)))&&(!exactNumber||r.number===exactNumber)&&(!env.value||r.environment===env.value)&&terms.every(t=>normalize([r.number,r.title,...editionSources(r).flatMap(s=>[s.document_version,s.label_date,documentName(s)]),envNames[r.environment],observationDate(event.observed_at)].join(" ")).includes(t)));
   count.textContent="Редакций в журнале · "+visible.length;list.replaceChildren();let day=null;
   for(const {event,r} of visible){
    const nextDay=observationDate(event.observed_at,true);
    if(nextDay!==day){list.append(node("h2","journal-day",nextDay));day=nextDay}
    const card=node("article","update-card");card.dataset.revision=r.revision_id;
    const badges=node("div","badges");badges.append(node("span","badge "+r.environment,envNames[r.environment]),node("span","badge",event.initial_import?"Первичное наполнение":event.previous_revision_id?"Новая редакция":"Первое появление"));card.append(badges);
-   const heading=node("h3");heading.append(anchor(r.number+" · Версия документа "+(r.document_version||"не указана"),route(r.number,r.environment,r.ready?r.revision_id:undefined)));card.append(heading,node("p","",r.title));
-   card.append(node("p","meta","Источник версии: "+documentName(r)));
-   const time=node("time","meta",event.observed_at?"Обнаружено: "+observationDate(event.observed_at):observationDate(null));if(event.observed_at)time.dateTime=event.observed_at;card.append(time,node("p","meta","Документ СФР: "+date(r.label_date)+" · Редакция "+r.revision_id.slice(0,8)));
+   const heading=node("h3");heading.append(anchor(r.number+" · "+(editionSources(r).length>1?"Редакция схемы · источников: "+editionSources(r).length:"Версия документа "+(r.document_version||"не указана")),route(r.number,r.environment,r.ready?r.revision_id:undefined)));card.append(heading,node("p","",r.title));
+   appendEditionSources(card,r);
+   const time=node("time","meta",event.observed_at?"Обнаружено: "+observationDate(event.observed_at):observationDate(null));if(event.observed_at)time.dateTime=event.observed_at;card.append(time,node("p","meta","Редакция "+r.revision_id.slice(0,8)));
    if(r.source_type==="manual")card.append(node("p","meta","Ручная загрузка · "+(r.manual_source?.label||"Файл владельца")));
    else if(r.manual_source)card.append(node("p","meta","Впервые загружено вручную · "+r.manual_source.label));
    else if(!r.listed_now)card.append(node("p","meta","Редакция сохранена в истории"));
@@ -71,7 +71,7 @@ function renderUpdates(params){
     for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])counts.append(node("span",key,text+" · "+summary.counts[key]));
     card.append(counts);
    }else card.append(node("p","meta",r.status==="document_only"?"DOCX сохранён. Схема XSD не загружена.":summary?.status==="no_baseline"?"Первая сохранённая редакция: подходящей редакции для сравнения пока нет.":"Подсчёт изменений недоступен: нет готового дерева для сравнения."));
-   const links=node("div","journal-links");if(r.ready)links.append(anchor("Открыть дерево",route(r.number,r.environment,r.revision_id)));links.append(documentDownload(r));
+   const links=node("div","journal-links");if(r.ready)links.append(anchor("Открыть дерево",route(r.number,r.environment,r.revision_id)));
    if(summary?.status==="ready")links.append(anchor("Открыть сравнение",comparisonRoute(r.number,summary.left,summary.right)));
    card.append(links);list.append(card);
   }

@@ -10,6 +10,7 @@ if(catalog.checked_at){
 }
 const messages=new Map();
 for(const r of [...catalog.revisions,...catalog.registry]){
+ if(r.revision_id&&r.display_revision_id&&r.display_revision_id!==r.revision_id)continue;
  if(!messages.has(r.number))messages.set(r.number,{number:r.number,titles:new Set(),modules:new Set(),rows:[],revisions:[]});
  const m=messages.get(r.number);m.titles.add(r.title);if(r.module)m.modules.add(r.module);
  if(r.revision_id)m.revisions.push(r);else m.rows.push(r);
@@ -20,10 +21,23 @@ function anchor(text,hash,cls){const a=node("a",cls,text);a.href="#"+hash;return
 function external(text,url){const a=node("a","source",text);a.href=url;a.target="_blank";a.rel="noopener";return a}
 function documentDownload(r){const a=node("a","source","Скачать DOCX");a.href=r.document_download;a.download=r.document_filename;return a}
 function documentName(r){return r.document_url?decodeURIComponent(new URL(r.document_url).pathname.split("/").pop()):(r.manual_source?.label||r.document_filename||"Файл владельца")}
+function editionSources(r){return r.edition_sources||[r]}
+function appendEditionSources(container,r){
+ const list=node("div","edition-sources");
+ for(const source of editionSources(r)){
+  const item=node("div","edition-source");
+  item.append(node("p","meta","Документ · версия "+(source.document_version||"не указана")+" · "+date(source.label_date)));
+  item.append(source.document_url?external(documentName(source),source.document_url):node("p","meta",documentName(source)));
+  if(source.document_download)item.append(node("br"),documentDownload(source));
+  if(source.listed_now===false)item.append(node("p","meta","Источник сохранён в истории"));
+  list.append(item);
+ }
+ container.append(list);return list;
+}
 function revisionOrigin(r){return r.document_url?external("Спецификация СФР ↗",r.document_url):node("span","source","Ручная загрузка · "+(r.manual_source?.label||"Файл владельца"))}
 function date(s){return s?s.replace(/\.(\d{2})$/,".20$1"):"Дата не указана"}
 function title(m,env){return m.revisions.find(r=>!env||r.environment===env)?.title||m.rows.find(r=>!env||r.environment===env)?.title||[...m.titles][0]}
-function label(r){return envNames[r.environment]+" · документ "+(r.document_version||"без версии")+" · "+date(r.label_date)+(r.source_type==="manual"?" · Ручная загрузка":"")}
+function label(r){return editionSources(r).length>1?envNames[r.environment]+" · схема · источников: "+editionSources(r).length:envNames[r.environment]+" · документ "+(r.document_version||"без версии")+" · "+date(r.label_date)+(r.source_type==="manual"?" · Ручная загрузка":"")}
 function replacementNotice(m,env,compact=false){
  const options=window.SedoTransitions?.replacements(m.number,catalog,env)||[];if(!options.length)return null;
  const dated=options.every(info=>info.production_retired_at);
@@ -77,11 +91,10 @@ function renderVersions(m,env){
   const revisions=m.revisions.filter(r=>r.environment===e).sort((a,b)=>date(b.label_date).split(".").reverse().join("").localeCompare(date(a.label_date).split(".").reverse().join("")));
   if(revisions.length){
    for(const r of revisions){
-    const card=node("div","card");card.append(node("strong","","Версия документа "+(r.document_version||"не указана")),node("p","",date(r.label_date)));
-    const origin=node("p","meta");origin.append(document.createTextNode("Источник версии: "),r.document_url?external(documentName(r),r.document_url):document.createTextNode(documentName(r)));card.append(origin);
+    const card=node("div","card");card.append(node("strong","",editionSources(r).length>1?"Редакция схемы · источников: "+editionSources(r).length:"Версия документа "+(r.document_version||"не указана")));
     if(r.ready)card.append(anchor("Открыть дерево",route(m.number,e,r.revision_id),"open"));
     else card.append(node("p","",r.status==="document_only"?"DOCX сохранён. Схема XSD не загружена.":"Схема ожидает проверки"));
-    card.append(node("br"),documentDownload(r),document.createTextNode(" · "),revisionOrigin(r));
+    appendEditionSources(card,r);
     card.append(node("p","meta","Редакция "+r.revision_id.slice(0,8)));
     if(!r.listed_now&&r.source_type!=="manual")card.append(node("p","meta","Редакция сохранена в истории"));
     panel.append(card)
@@ -114,23 +127,27 @@ function renderRoute(){
  $("crumbs").append(node("span","","/"),anchor(number,route(number,env)));
  if(p.has("compare")){$("comparison").hidden=false;$("crumbs").append(node("span","","/"),node("span","","Сравнение"));document.title="Сравнение СЭДО "+number;renderComparison(m,p);return}
  if(!rev){$("versions").hidden=false;renderVersions(m,env);return}
- const r=m.revisions.find(r=>r.revision_id===rev&&r.environment===env);
+ const r=catalog.revisions.find(r=>r.number===number&&r.revision_id===rev&&r.environment===env);
  if(!r||!r.ready){$("error").hidden=false;$("error").replaceChildren(node("h1","","Редакция недоступна"),anchor("Посмотреть доступные редакции",route(number,env)));return}
  $("viewer").hidden=false;$("crumbs").append(node("span","","/"),node("span","",label(r)));
  const warning=$("viewer-replacement");if(warning){warning.replaceChildren();const replacement=replacementNotice(m,env);if(replacement)warning.append(replacement);appendRelatedComparisons(warning,m,env)}
  $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
- $("doc-source").hidden=!r.document_url;if(r.document_url){$("doc-source").href=r.document_url;$("doc-source").textContent="Источник версии: "+documentName(r);}
+ const grouped=editionSources(r).length>1;
+ $("doc-source").hidden=!r.document_url||grouped;if(r.document_url){$("doc-source").href=r.document_url;$("doc-source").textContent="Источник версии: "+documentName(r);}
  $("manual-source").hidden=r.source_type!=="manual";$("manual-source").textContent="Ручная загрузка · "+(r.manual_source?.label||"Файл владельца");
  $("doc-download").href=r.document_download;$("doc-download").download=r.document_filename;
+ $("doc-download").hidden=grouped;
+ let sourceBox=$("viewer-sources");if(!sourceBox){sourceBox=node("div","viewer-sources");sourceBox.id="viewer-sources";$("frame").before(sourceBox)}
+ sourceBox.replaceChildren();sourceBox.hidden=!grouped;if(grouped){sourceBox.append(node("h2","","Источники этой схемы"));appendEditionSources(sourceBox,r)}
  document.getElementById("compare-from-viewer")?.remove();
- const pair=comparisonDefaults(m),other=m.revisions.find(x=>x.ready&&x.revision_id!==rev);
- if(other){const link=anchor("Сравнить с другой редакцией",comparisonRoute(number,rev,pair.right===rev?other.revision_id:pair.right),"source");link.id="compare-from-viewer";$("doc-source").after(link)}
+ const pair=comparisonDefaults(m),other=m.revisions.find(x=>x.ready&&x.revision_id!==(r.display_revision_id||rev));
+ if(other){const link=anchor("Сравнить с другой редакцией",comparisonRoute(number,rev,pair.right===(r.display_revision_id||rev)?other.revision_id:pair.right),"source");link.id="compare-from-viewer";$("doc-source").after(link)}
  const select=$("revision-switch");select.replaceChildren();
  for(const x of m.revisions.filter(r=>r.ready)){
   const duplicates=m.revisions.filter(y=>y.ready&&label(y)===label(x)).length>1;
   select.add(new Option(label(x)+(duplicates?' · '+x.revision_id.slice(0,8):''),x.revision_id));
  }
- select.value=rev;select.onchange=()=>{const x=m.revisions.find(r=>r.revision_id===select.value);go(number,x.environment,x.revision_id)};
+ select.value=r.display_revision_id||rev;select.onchange=()=>{const x=m.revisions.find(r=>r.revision_id===select.value);go(number,x.environment,x.revision_id)};
  const src="editions/"+rev+".html"+(field?"#"+new URLSearchParams({field}):"");
  if(loadedRevision!==rev||$("frame").getAttribute("src")!==src){$("frame").src=src;loadedRevision=rev}
  document.title="СЭДО "+number+" · "+label(r);

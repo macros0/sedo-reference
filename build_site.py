@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from sync import inspect_file, sha, write
+from edition_groups import group_editions, visible_editions, display_updates
 HERE=Path(__file__).resolve().parent
 def packed(value):
     return json.dumps(value,ensure_ascii=False,separators=(",",":")).replace("<","\\u003c")
@@ -60,17 +61,21 @@ window.addEventListener('hashchange',()=>{restoreField();if(parent!==window)pare
 restoreField();
 """
     template=template.replace("</script></html>",restore+"</script></html>")
+    field_cache={}
     for r in catalog["revisions"]:
         rid=r["revision_id"];ready=statuses.get(rid,{}).get("status")=="ready";r["ready"]=ready
         if not ready:continue
         fields=json.loads((HERE/"data/fields"/(rid+".json")).read_bytes())["fields"]
+        field_cache[rid]=fields
         (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8")
         data=dict(fields=fields,revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=r.get("archive_name") or unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
         (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
+    catalog=group_editions(catalog,field_cache.__getitem__)
     if catalog.get("updates"):
+        summary_catalog=dict(catalog,revisions=visible_editions(catalog),updates=display_updates(catalog))
         try:
             result=subprocess.run(["node",str(Path(__file__).with_name("summarize_updates.cjs")),str(HERE/"data/fields")],
-                                  input=packed(catalog),capture_output=True,text=True,encoding="utf8",check=True,timeout=120)
+                                  input=packed(summary_catalog),capture_output=True,text=True,encoding="utf8",check=True,timeout=120)
         except (OSError,subprocess.SubprocessError) as exc:
             detail=getattr(exc,"stderr",None) or str(exc)
             raise ValueError("Не удалось посчитать изменения журнала (нужен Node.js 18+): "+detail[:1500]) from exc
