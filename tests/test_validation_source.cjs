@@ -1,0 +1,19 @@
+"use strict";
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+assert.ok(fs.existsSync(path.join(__dirname,'../web/validation-source.js')),'local XML source pane is missing');
+const api=require('../web/validation-source.js');
+let focused=0,scrolled=0;
+class Node{constructor(tag){this.tag=tag;this.children=[];this._text='';this.attrs={};this.hidden=false;this.value=''}set textContent(v){this._text=String(v);this.children=[]}get textContent(){return this._text+this.children.map(x=>x.textContent).join('')}append(...xs){this.children.push(...xs)}replaceChildren(...xs){this._text='';this.children=[...xs]}setAttribute(k,v){this.attrs[k]=String(v)}focus(){focused++}scrollIntoView(){scrolled++}set innerHTML(_){throw Error('XML was interpreted as HTML')}}
+const doc={createElement:tag=>new Node(tag),createTextNode:text=>{const n=new Node('#text');n.textContent=text;return n}},walk=n=>[n,...n.children.flatMap(walk)],host=new Node('section'),view=api.mount(host,doc);
+const source='<r>\r\n  <x>BAD</x>\r\n</r>\r\n',text=source.replace(/\r\n?/g,'\n'),start=text.indexOf('<x>')+1,close=text.indexOf('</x>')+2;
+view.setSource(source);view.setErrors([{line:2,locations:[{ranges:[{start,end:start+1,kind:'tag'},{start:close,end:close+1,kind:'tag'}],occurrences:1}]}]);
+assert.equal(host.hidden,false);assert.deepEqual(walk(host).filter(n=>n.tag==='mark').map(n=>n.textContent),['x','x']);assert.equal(scrolled,0,'validation alone must not move user focus/scroll');
+view.showError({line:2,locations:[{ranges:[{start,end:start+1,kind:'tag'}],occurrences:1}]});assert.ok(focused&&scrolled,'error click must reveal and focus XML source');assert.ok(walk(host).some(n=>n.className==='source-row source-current'&&n.textContent.includes('2')));
+const multiline='<r><x'+'\n'.repeat(40)+'>BAD</x></r>',multiLocation={ranges:[{start:4,end:5,kind:'tag'},{start:multiline.indexOf('</x>')+2,end:multiline.indexOf('</x>')+3,kind:'tag'}],occurrences:1};view.setSource(multiline);view.showError({line:41,locations:[multiLocation]});assert.ok(host.textContent.includes('Строка 41 из'),'error-header jump must honor diagnostic line');view.showError({line:41,locations:[multiLocation]},multiLocation);assert.ok(host.textContent.includes('Строка 1 из'),'explicit tag jump can select the opening tag');
+view.setSource('<r>\nBROKEN\n</r>');view.showError({line:2,locations:[]});assert.equal(walk(host).filter(n=>n.tag==='mark').length,0,'syntax errors only select a line');assert.ok(host.textContent.includes('Точный тег не определён'));
+view.setSource('<r><img src="https://must-not-load.invalid/x"/></r>');assert.ok(host.textContent.includes('<img src='));assert.equal(walk(host).filter(n=>n.tag==='img').length,0);
+const big='<r>\n'+'\n'.repeat(200000)+'</r>';view.setSource(big);view.showError({line:200002,locations:[]});assert.ok(walk(host).filter(n=>n.className?.startsWith('source-row')).length<=25);assert.ok(host.textContent.includes('</r>'));assert.ok(walk(host).length<300,'large XML must not create unbounded DOM');
+const long='<r>'+('a'.repeat(100000))+'<x>BAD</x></r>',offset=long.indexOf('<x>')+1;view.setSource(long);view.showError({line:1,locations:[{ranges:[{start:offset,end:offset+1,kind:'tag'}],occurrences:1}]});assert.ok(walk(host).some(n=>n.tag==='mark'&&n.textContent==='x'));assert.ok(host.textContent.length<10000);assert.ok(host.textContent.includes('фрагмент'));
+view.showError({line:1,sourceAmbiguous:true,locations:[{ranges:[{start:offset,end:offset+1,kind:'tag'}],occurrences:2}]});assert.ok(host.textContent.includes('возможные'));
+view.clear();assert.equal(host.hidden,true);assert.ok(!host.textContent.includes('BAD'));assert.equal(walk(host).filter(n=>n.tag==='mark').length,0);
+console.log('XML source: safe marks, line jumps, original layout, ambiguity, long/large input bounds and clear passed.');

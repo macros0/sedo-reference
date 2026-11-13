@@ -31,3 +31,5 @@
 .schema-download{display:inline-block;margin:10px 0 4px}.viewerbar .schema-download,.compare-sources .schema-download{margin:0}.schema-export-unavailable{display:block;font-size:13px;color:var(--muted);margin:8px 0}
 
 .local-validator{background:#fff;border:2px solid #168577;border-radius:12px;padding:20px;margin:20px 0}.local-validator h2{margin-top:0}.validator-frame{width:100%;height:560px;border:1px solid #c5d4d3;border-radius:8px;margin-top:12px}.validation-open{font:inherit;cursor:pointer;border:0}.validation-link{margin-left:8px}@media(max-width:600px){.validator-frame{height:640px}.local-validator{padding:10px}.validation-link{margin-left:0}}
+
+.validator-frame{height:760px}@media(max-width:760px){.validator-frame{height:900px}}

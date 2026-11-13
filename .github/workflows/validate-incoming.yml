@@ -30,6 +30,7 @@ on:
       - 'web/vendor/xmllint/**'
       - 'tests/test_browser_validation.cjs'
       - 'tests/test_validation_paths.cjs'
+      - 'tests/test_validation_source.cjs'
       - 'tests/test_validation_navigation.cjs'
       - 'web/journal.js'
       - 'data/message-transitions.json'
@@ -81,6 +82,7 @@ jobs:
           node tests/test_edition_groups.cjs
           node tests/test_browser_validation.cjs
           node tests/test_validation_paths.cjs
+          node tests/test_validation_source.cjs
           node tests/test_validation_navigation.cjs
           python -m unittest tests.test_xsd_bundle -q
           python import_inbox.py --check

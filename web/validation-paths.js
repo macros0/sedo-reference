@@ -19,7 +19,7 @@ function index(source){
    if(end===text.length)return null;
    const raw=text.slice(at+1,end);
    if(raw[0]==='/'){
-    const node=stack.pop();if(!node||raw.slice(1).trim()!==node.qname)return null;advance(end+1);node.end=line;continue;
+    const node=stack.pop();if(!node||raw.slice(1).trim()!==node.qname)return null;advance(end+1);node.end=line;node.closeStart=at+2;continue;
    }
    const name=raw.match(/^([^\s/>]+)/)?.[1];if(!name)return null;
    const parent=stack.at(-1)||null,ns=Object.create(parent?.namespaces||base);
@@ -27,19 +27,33 @@ function index(source){
     if(a[1]==='xmlns')ns['']=entity(a[3]);else if(a[1].startsWith('xmlns:'))ns[a[1].slice(6)]=entity(a[3]);
    }
    const colon=name.indexOf(':'),prefix=colon<0?'':name.slice(0,colon),local=colon<0?name:name.slice(colon+1);
-   const node={qname:name,name:local,ns:ns[prefix]||'',namespaces:ns,parent,line:startLine,end:startLine};nodes.push(node);
+   const node={qname:name,name:local,ns:ns[prefix]||'',namespaces:ns,parent,line:startLine,end:startLine,nameStart:at+1,nameEnd:at+1+name.length,openEnd:end+1,closeStart:null};nodes.push(node);
    if(nodes.length>100000||stack.length>=256)return null;
    advance(end+1);node.end=line;if(!/\/\s*$/.test(raw))stack.push(node);
   }
-  return stack.length?null:nodes;
+  nodes.source=text;return stack.length?null:nodes;
  }catch{return null}
 }
 function expanded(qname){if(qname.startsWith('{')){const at=qname.lastIndexOf('}');return {name:qname.slice(at+1),ns:qname.slice(1,at)}}return {name:qname,ns:''}}
 function route(node){const parts=[];let length=0;for(let n=node;n;n=n.parent){length+=n.name.length+1;if(length>8192)return null;parts.push(n.name)}return parts.reverse().join('/')}
+function sourceRanges(node,attribute,source){
+ const result=[{start:node.nameStart,end:node.nameEnd,kind:'tag'}];
+ if(node.closeStart!==null)result.push({start:node.closeStart,end:node.closeStart+node.qname.length,kind:'tag'});
+ if(attribute&&node.openEnd-node.nameEnd<=65536){
+  const wanted=expanded(attribute),prefix=attribute.includes(':')&&!attribute.startsWith('{')?attribute.split(':')[0]:null;
+  if(prefix){wanted.name=attribute.split(':').at(-1);wanted.ns=node.namespaces[prefix]||'\u0000'}
+  let count=0;for(const a of source.slice(node.nameEnd,node.openEnd-1).matchAll(/([^\s=]+)\s*=\s*(['"])([\s\S]*?)\2/g)){
+   if(++count>512)break;
+   const parts=a[1].split(':'),name=parts.at(-1),ns=parts.length>1?node.namespaces[parts[0]]||'\u0000':'';
+   if(name===wanted.name&&ns===wanted.ns){const start=node.nameEnd+a.index;result.unshift({start,end:start+a[1].length,kind:'attribute'});break}
+  }
+ }
+ return result;
+}
 function locate(errors,nodes,fields=[],namespaces=[]){
  const known=new Map(fields.map((path,i)=>[path,i]));
  return errors.map(error=>{
-  const result={...error,locations:[],ambiguous:false,truncated:false};if(!nodes?.length)return result;
+  const result={...error,locations:[],ambiguous:false,truncated:false,sourceAmbiguous:false};if(!nodes?.length)return result;
   const subject=error.message.match(/^(?:(?:[^\n]*?:\s*)?Schemas validity error\s*:\s*)?Element '([^']+)'(?:, attribute '([^']+)')?:\s*([\s\S]*)$/);
   const element=subject?.[1],body=subject?.[3]||'',attribute=subject?.[2]||body.match(/^The attribute '([^']+)' is required but missing\.$/)?.[1];
   let candidates=[];
@@ -48,12 +62,14 @@ function locate(errors,nodes,fields=[],namespaces=[]){
    const wanted=expanded(element),same=n=>element.includes(':')&&!element.startsWith('{')?n.qname===element:n.name===wanted.name&&n.ns===wanted.ns;
    candidates=nodes.filter(n=>n.line<=error.line&&n.end>=error.line&&same(n));
   }
-  const seen=new Set();
+  const seen=new Set(),byPath=new Map();
   for(const node of candidates){
    const nodePath=route(node);if(nodePath===null)continue;
    const attr=attribute?expanded(attribute):null;
    if(attr&&attribute.includes(':')&&!attribute.startsWith('{')){const parts=attribute.split(':');attr.name=parts.at(-1);attr.ns=node.namespaces[parts[0]]||'\u0000'}
-   const path=nodePath+(attr?'/@'+attr.name.split(':').at(-1):'');if(path.length>8192||seen.has(path))continue;seen.add(path);
+   const path=nodePath+(attr?'/@'+attr.name.split(':').at(-1):'');if(path.length>8192)continue;
+   if(byPath.has(path)){const old=byPath.get(path);old.occurrences++;if(old.ranges.length<24){const extra=sourceRanges(node,attribute,nodes.source);if(extra.length>24-old.ranges.length)old.rangesTruncated=true;old.ranges.push(...extra.slice(0,24-old.ranges.length))}else old.rangesTruncated=true;continue}
+   seen.add(path);
    if(result.locations.length>=8){result.truncated=true;break}
    const matches=candidate=>{
     for(let n=candidate;n;n=n.parent){const key=route(n),i=known.get(key);if(i===undefined||!namespaces[i]?.includes(n.ns))return false}return true;
@@ -64,9 +80,10 @@ function locate(errors,nodes,fields=[],namespaces=[]){
     for(let n=node;!target&&n;n=n.parent){const key=route(n);if(matches(n))target=key}
    }
 
-   result.locations.push({path:'/'+path,field:target?known.get(target):null,parent:!!target&&target!==path});
+   const location={path:'/'+path,field:target?known.get(target):null,parent:!!target&&target!==path,ranges:sourceRanges(node,attribute,nodes.source),occurrences:1,rangesTruncated:false};
+   result.locations.push(location);byPath.set(path,location);
   }
-  result.ambiguous=seen.size>1;return result;
+  result.ambiguous=seen.size>1;result.sourceAmbiguous=result.ambiguous||result.locations.some(l=>l.occurrences>1);return result;
  });
 }
 const api={index,locate};scope.SedoValidationPaths=api;if(typeof module==='object'&&module.exports)module.exports=api;

@@ -13,12 +13,12 @@ self.onmessage=async event=>{
   const {bytes,pack}=event.data;const text=core.inspectBytes(bytes);core.checkPack(pack,pack);
   // The minimal libxml2 build lacks legacy iconv encodings. Decode strictly in
   // the browser and transcode an in-memory copy; source bytes are never edited.
-  const xml=new TextEncoder().encode(text.replace(/^(<\?xml\s[^?]*\bencoding\s*=\s*)(["'])[^"']*\2/, '$1"UTF-8"'));
+  const xml=new TextEncoder().encode(text.replace(/\r\n?/g,'\n').replace(/^(<\?xml\s[^?]*\bencoding\s*=\s*)(["'])[^"']*\2/, '$1"UTF-8"'));
   const files=[{fileName:'input.xml',contents:xml},...Object.entries(pack.files).map(([fileName,value])=>({fileName,contents:core.decode64(value)}))];
   const parsed=await runLint(['--nonet','--xpath','concat(local-name(/*), "|", namespace-uri(/*))','input.xml'],files);
   if(parsed.code!==0){self.postMessage({type:'result',valid:false,errors:core.errors(parsed.stderr)});return}
-  const locations=self.SedoValidationPaths,index=locations.index(text);
-  if(parsed.stdout.trim()!==pack.root+'|'+(pack.namespace||'')){self.postMessage({type:'result',valid:false,errors:locations.locate([{root:true,line:1,message:'Неверный корневой элемент или пространство имён. Ожидается {'+(pack.namespace||'')+'}'+pack.root+'.'}],index,pack.fields||[],pack.field_namespaces||[])});return}
+  const locations=self.SedoValidationPaths,index=locations.index(typeof event.data.source==='string'&&event.data.source.length<=core.MAX_BYTES?event.data.source:text);
+  if(parsed.stdout.trim()!==pack.root+'|'+(pack.namespace||'')){self.postMessage({type:'result',valid:false,errors:locations.locate([{root:true,line:index?.[0]?.line||1,message:'Неверный корневой элемент или пространство имён. Ожидается {'+(pack.namespace||'')+'}'+pack.root+'.'}],index,pack.fields||[],pack.field_namespaces||[])});return}
   const result=await runLint(['--nonet','--noout','--schema','message.xsd','input.xml'],files);
   if(![0,3,4].includes(result.code))throw Error('Не удалось выполнить XSD-проверку. '+result.stderr.slice(0,2000));
   self.postMessage({type:'result',valid:result.code===0,errors:result.code===0?[]:locations.locate(core.errors(result.stderr),index,pack.fields||[],pack.field_namespaces||[])});

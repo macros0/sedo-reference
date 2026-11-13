@@ -4,13 +4,13 @@ assert.ok(fs.existsSync(require('node:path').join(__dirname,'../web/validation-p
 const p=require('../web/validation-paths.js');
 const fields=['r','r/left','r/left/x','r/left/x/@id','r/right','r/right/x','r/left/x/@missing'];
 function locate(xml,message,line=1,ns=fields.map(()=>[''])){return p.locate([{line,message}],p.index(xml),fields,ns)[0]}
-let r=locate('<r>\n<left><x>BAD</x></left>\n</r>',"Element 'x': invalid value",2);assert.deepEqual(r.locations,[{path:'/r/left/x',field:2,parent:false}]);
+let r=locate('<r>\n<left><x>BAD</x></left>\n</r>',"Element 'x': invalid value",2);assert.deepEqual(r.locations.map(({path,field,parent})=>({path,field,parent})),[{path:'/r/left/x',field:2,parent:false}]);
 r=locate('<r><left><x/><x/></left></r>',"Element 'x': invalid value");assert.equal(r.locations.length,1,'structural path is independent of repeated instance index');
 r=locate('<r><left><x/></left><right><x/></right></r>',"Element 'x': invalid value");assert.equal(r.ambiguous,true);assert.deepEqual(r.locations.map(x=>x.path),['/r/left/x','/r/right/x']);
 r=locate('<a:r xmlns:a="urn:a" xmlns:b="urn:b"><a:left><b:x/></a:left><a:right><a:x/></a:right></a:r>',"Element '{urn:a}x': invalid value",1,fields.map(()=>['urn:a']));assert.equal(r.locations.length,1);assert.equal(r.locations[0].field,5,'namespace must disambiguate same-line homonyms');
 r=locate('<r><left><x xmlns:n="urn:b" n:id="bad"/></left></r>',"Element 'x', attribute '{urn:b}id': invalid value");assert.equal(r.locations[0].path,'/r/left/x/@id');assert.equal(r.locations[0].field,2);assert.equal(r.locations[0].parent,true,'qualified attributes without schema identity must target their element');
 r=locate('<r><left><x/></left></r>',"Element 'x': The attribute 'missing' is required but missing.");assert.equal(r.locations[0].field,6);
-r=locate('<r><left><unknown/></left></r>',"Element 'unknown': This element is not expected");assert.deepEqual(r.locations,[{path:'/r/left/unknown',field:1,parent:true}]);
+r=locate('<r><left><unknown/></left></r>',"Element 'unknown': This element is not expected");assert.deepEqual(r.locations.map(({path,field,parent})=>({path,field,parent})),[{path:'/r/left/unknown',field:1,parent:true}]);
 r=locate('<r><left><x/></left></r>',"Element 'x': Missing child element(s).");assert.equal(r.locations[0].field,2);
 r=locate('<r><left><x title=">"/></left><!-- <x/> --><![CDATA[<x/>]]><?qa <x/> ?></r>',"Element 'x': invalid value");assert.equal(r.locations.length,1);
 r=locate('<r xmlns="urn:a&amp;b"><left><x/></left></r>',"Element '{urn:a&b}x': invalid value",1,fields.map(()=>['urn:a&b']));assert.equal(r.locations[0].field,2);
@@ -26,4 +26,8 @@ assert.deepEqual(p.locate([{line:1,message:'parser error'}],null,fields)[0].loca
 const many='<r>'+Array.from({length:12},(_,i)=>'<b'+i+'><x/></b'+i+'>').join('')+'</r>';
 r=locate(many,"Element 'x': invalid value");assert.equal(r.locations.length,8);assert.equal(r.truncated,true);assert.equal(r.ambiguous,true);
 const longName='n'.repeat(8100),longAttr='a'.repeat(200);r=locate('<r><'+longName+'><x/></'+longName+'></r>',"Element 'x', attribute '"+longAttr+"': invalid value");assert.equal(r.locations.length,0,'oversized diagnostic paths must degrade to line-only output');
+const source='<r>\r\n<left><x\n id="bad">BAD</x></left></r>',normalized=source.replace(/\r\n?/g,'\n');
+r=locate(source,"Element 'x': invalid value",3);assert.ok(r.locations[0].ranges?.length,'XML errors need source ranges');assert.deepEqual(r.locations[0].ranges.map(x=>normalized.slice(x.start,x.end)),['x','x']);
+r=locate(source,"Element 'x', attribute 'id': invalid value",3);assert.ok(r.locations[0].ranges.some(x=>x.kind==='attribute'&&normalized.slice(x.start,x.end)==='id'));
+r=locate('<r><left><x/><x/></left></r>',"Element 'x': invalid value");assert.equal(r.locations[0].occurrences,2,'repeated same-path candidates must not be silently narrowed to the first');assert.equal(r.locations[0].ranges.length,2);assert.equal(r.sourceAmbiguous,true);
 console.log('Validation paths: namespaces, attrs, repeats, ambiguity, ancestors, lexical containers and bounds passed.');
