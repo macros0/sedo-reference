@@ -147,7 +147,7 @@ class XsdBundleTests(unittest.TestCase):
         write(self.base/'data/fields/index.json',encode([dict(revision_id=row['revision_id'],status='ready')]))
         write(self.base/'data/fields'/(row['revision_id']+'.json'),encode(dict(fields=[dict(name='Request',path='Request',parent=-1,children=[])])))
         write(self.base/'viewer-template.html',b'<html></html>')
-        for name in ('index.html','app.js','app.css','compare-core.js','compare.js','comparison-export.js','mapping-draft.js','mapping-editor.js','comparison-mapping.js','vendor/exceljs.min.js','vendor/exceljs-LICENSE','vendor/README.md','journal.js','message-transitions.js','favicon.svg','validation.js','validation-core.js','validation-frame.js','validation-worker.js','vendor/xmllint/xmllint-browser.mjs','vendor/xmllint/xmllint.wasm','vendor/xmllint/COPYING','vendor/xmllint/README.md'):write(self.base/'web'/name,b'test')
+        for name in ('index.html','app.js','app.css','compare-core.js','compare.js','comparison-export.js','mapping-draft.js','mapping-editor.js','comparison-mapping.js','vendor/exceljs.min.js','vendor/exceljs-LICENSE','vendor/README.md','journal.js','message-transitions.js','favicon.svg','validation.js','validation-core.js','validation-frame.js','validation-worker.js','validation-paths.js','vendor/xmllint/xmllint-browser.mjs','vendor/xmllint/xmllint.wasm','vendor/xmllint/COPYING','vendor/xmllint/README.md'):write(self.base/'web'/name,b'test')
         with patch.object(build_site,'HERE',self.base):build_site.main()
         published=json.loads((self.site/'catalog-data.js').read_text('utf8').removeprefix('window.SEDO_CATALOG=').removesuffix(';'))['revisions'][0]
         self.assertTrue((self.site/published['schema_download']).is_file());self.assertEqual((self.site/published['document_download']).read_bytes(),doc.getvalue());self.assertEqual((self.base/'data/catalog.json').read_bytes(),source)
@@ -171,6 +171,31 @@ class XsdBundleTests(unittest.TestCase):
         self.bundle(row)
         self.assertEqual(raw,(self.site/row['validation_download']).read_bytes())
         self.assertEqual(archive,(self.site/row['schema_download']).read_bytes())
+
+    def test_browser_navigation_paths_are_exact_public_tree_paths(self):
+        import gzip
+        row,_=self.revision()
+        paths=['Request','Request/code','Request/@id']
+        publish_bundles(dict(revisions=[row]),self.state,self.site,navigation={row['revision_id']:paths})
+        pack=json.loads(gzip.decompress((self.site/row['validation_download']).read_bytes()))
+        self.assertEqual(pack['fields'],paths)
+        self.assertEqual(pack['field_namespaces'],[['urn:main'],['urn:main'],[]])
+        paths.append('outside')
+        self.assertNotIn('outside',pack['fields'])
+
+    def test_navigation_namespaces_follow_forms_and_global_references(self):
+        from xsd_bundle import _field_namespaces
+        source=f'''<xs:schema xmlns:xs="{XS}" xmlns:m="urn:main" targetNamespace="urn:main" attributeFormDefault="qualified">
+<xs:attribute name="global" type="xs:string"/><xs:element name="Child" type="xs:string"/>
+<xs:element name="Request"><xs:complexType><xs:sequence>
+<xs:element name="local" type="xs:string"/><xs:element name="qualified" type="xs:string" form="qualified"/><xs:element ref="m:Child"/>
+</xs:sequence><xs:attribute name="plain" form="unqualified"/><xs:attribute name="qualified"/><xs:attribute ref="m:global"/>
+</xs:complexType></xs:element></xs:schema>'''
+        data=io.BytesIO()
+        with zipfile.ZipFile(data,'w') as z:z.writestr('main.xsd',source)
+        with zipfile.ZipFile(data) as z:
+            result=_field_namespaces(z,dict(schema_path='main.xsd',root='Request'),['Request','Request/local','Request/qualified','Request/Child','Request/@plain','Request/@qualified','Request/@global'])
+        self.assertEqual(result,[['urn:main'],[''],['urn:main'],['urn:main'],[''],['urn:main'],['urn:main']])
 
     def test_all_archived_editions_compile_and_keep_original_dependency_bytes(self):
         catalog=json.loads((PROJECT/'data/catalog.json').read_bytes());publish_bundles(catalog,PROJECT/'state',self.site)

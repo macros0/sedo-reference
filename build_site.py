@@ -47,7 +47,8 @@ def main():
     site=HERE/"site";editions=site/"editions";editions.mkdir(parents=True,exist_ok=True)
     comparison=site/"fields";comparison.mkdir(exist_ok=True)
     archive_documents(catalog, HERE/"state", site)
-    publish_bundles(catalog, HERE/"state", site)
+    field_cache={rid:json.loads((HERE/"data/fields"/(rid+".json")).read_bytes())["fields"] for rid,status in statuses.items() if status["status"]=="ready"}
+    publish_bundles(catalog, HERE/"state", site, navigation={rid:[f["path"] for f in fields] for rid,fields in field_cache.items()})
     template=(HERE/"viewer-template.html").read_text("utf-8-sig")
     template=template.replace("<title>СЭДО · Справочник 10110</title>","<title>Справочник XML-полей</title>")
     # The containing catalog carries the selected message and revision.
@@ -57,18 +58,20 @@ def main():
 function restoreField(){
  const path=new URLSearchParams(location.hash.slice(1)).get('field');
  const idx=fields.findIndex(f=>f.path===path);
- if(idx>=0 && idx!==current){current=idx;for(let p=fields[idx].parent;p>=0;p=fields[p].parent)expanded.add(p);render()}
+ if(idx>=0)select(idx,true)
 }
+window.addEventListener('message',event=>{
+ if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='sedo-select-field'||event.data.revision!==data.revision||typeof event.data.path!=='string')return;
+ const idx=fields.findIndex(f=>f.path===event.data.path);if(idx>=0)select(idx,true);
+});
 window.addEventListener('hashchange',()=>{restoreField();if(parent!==window)parent.postMessage({type:'sedo-field',revision:data.revision,path:fields[current].path},'*')});
 restoreField();
 """
     template=template.replace("</script></html>",restore+"</script></html>")
-    field_cache={}
     for r in catalog["revisions"]:
         rid=r["revision_id"];ready=statuses.get(rid,{}).get("status")=="ready";r["ready"]=ready
         if not ready:continue
-        fields=json.loads((HERE/"data/fields"/(rid+".json")).read_bytes())["fields"]
-        field_cache[rid]=fields
+        fields=field_cache[rid]
         (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8")
         data=dict(fields=fields,revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=r.get("archive_name") or unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
         (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
@@ -86,13 +89,13 @@ restoreField();
         catalog["schema_updates"]=display_updates(catalog)
         catalog["source_updates"]=source_updates(catalog)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
-    assets=("app.js","app.css","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg","validation.js","validation-core.js","validation-frame.js","validation-worker.js","vendor/xmllint/xmllint-browser.mjs","vendor/xmllint/xmllint.wasm","vendor/xmllint/COPYING","vendor/xmllint/README.md")
+    assets=("app.js","app.css","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg","validation.js","validation-core.js","validation-frame.js","validation-worker.js","validation-paths.js","vendor/xmllint/xmllint-browser.mjs","vendor/xmllint/xmllint.wasm","vendor/xmllint/COPYING","vendor/xmllint/README.md")
     for file in assets:
         (site/file).parent.mkdir(parents=True,exist_ok=True)
         (site/file).write_bytes((HERE/"web"/file).read_bytes())
     validator_assets=[dict(key=key,path=name,sha=sha((site/name).read_bytes())) for key,name in (
         ('engine','vendor/xmllint/xmllint-browser.mjs'),('wasm','vendor/xmllint/xmllint.wasm'),
-        ('core','validation-core.js'),('worker','validation-worker.js'),('frame','validation-frame.js'))]
+        ('core','validation-core.js'),('paths','validation-paths.js'),('worker','validation-worker.js'),('frame','validation-frame.js'))]
     loader=(site/'validation.js').read_text('utf8').replace('__VALIDATOR_ASSETS__',packed(validator_assets))
     (site/'validation.js').write_text(loader,encoding='utf8')
     # Content versions prevent cached old routing code from breaking new navigation.

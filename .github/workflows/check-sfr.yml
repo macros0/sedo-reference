@@ -49,6 +49,8 @@ jobs:
           node tests/test_mapping_apply.cjs
           node tests/test_edition_groups.cjs
           node tests/test_browser_validation.cjs
+          node tests/test_validation_paths.cjs
+          node tests/test_validation_navigation.cjs
       - name: Collect both contours and validate candidate
         run: |
           python auto_update.py

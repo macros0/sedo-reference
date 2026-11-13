@@ -68,8 +68,12 @@ $('reset').onclick=()=>{query.value='';scope.value='';expanded.clear();expanded.
 function restoreField(){
  const path=new URLSearchParams(location.hash.slice(1)).get('field');
  const idx=fields.findIndex(f=>f.path===path);
- if(idx>=0 && idx!==current){current=idx;for(let p=fields[idx].parent;p>=0;p=fields[p].parent)expanded.add(p);render()}
+ if(idx>=0)select(idx,true)
 }
+window.addEventListener('message',event=>{
+ if(event.source!==parent||event.origin!==location.origin||event.data?.type!=='sedo-select-field'||event.data.revision!==data.revision||typeof event.data.path!=='string')return;
+ const idx=fields.findIndex(f=>f.path===event.data.path);if(idx>=0)select(idx,true);
+});
 window.addEventListener('hashchange',()=>{restoreField();if(parent!==window)parent.postMessage({type:'sedo-field',revision:data.revision,path:fields[current].path},'*')});
 restoreField();
 </script></html>

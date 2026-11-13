@@ -9,7 +9,7 @@ import tempfile
 import zipfile
 from pathlib import Path, PurePosixPath
 from lxml import etree
-from schema import import_basename
+from schema import import_basename, Schema, local
 from sync import sha, write
 from xsd_validate import compile_schema
 
@@ -154,8 +154,29 @@ manifest.json содержит контрольные суммы и список
     return stream.getvalue()
 
 
-def publish_bundles(catalog,state,site):
-    archives={};prepared={}
+def _field_namespaces(archive, row, paths):
+    class NavigationSchema(Schema):
+        def __init__(self, *args):
+            self.addresses = {}
+            super().__init__(*args)
+
+        def field(self, decl, parent=-1, group="", chain=()):
+            tag = local(decl)
+            src = self.resolve(decl.get('ref'), decl, [tag]) if decl.get('ref') else decl
+            name = ('@' if tag in ('attribute', 'anyAttribute') else '') + src.get('name', '*')
+            path = (self.fields[parent]['path']+'/' if parent >= 0 else '')+name
+            owner = self.files[self.owner[src]]
+            qualified = src in list(owner[0]) or bool(decl.get('ref')) or src.get('form', owner[0].get(('attribute' if tag == 'attribute' else 'element')+'FormDefault', 'unqualified')) == 'qualified'
+            self.addresses.setdefault(path, set()).add(owner[2] if qualified else '')
+            return super().field(decl, parent, group, chain)
+
+    schema = NavigationSchema(archive, row['schema_path'], row['root'])
+    schema.field(schema.root)
+    return [sorted(schema.addresses.get(path, set())) for path in paths]
+
+
+def publish_bundles(catalog,state,site,navigation=None):
+    archives={};prepared={};namespace_cache={}
     try:
         for row in catalog['revisions']:
             for key in ('schema_download','schema_filename','schema_bundle_sha256','schema_file_count','validation_download','validation_sha256'):row.pop(key,None)
@@ -182,6 +203,11 @@ def publish_bundles(catalog,state,site):
             version=row.get('document_version') or 'unversioned'
             row.update(schema_export_status='ready',schema_download=relative,schema_filename=re.sub('[^A-Za-z0-9._-]','_',f"sedo-{row['number']}-{row['environment']}-v{version}-{rid[:8]}-xsd.zip"),schema_bundle_sha256=sha(content),schema_file_count=len(records))
             pack={k:row.get(k) for k in ('number','environment','revision_id','document_version','label_date','root','namespace')}
+            pack['fields']=list((navigation or {}).get(rid,[]))
+            if pack['fields']:
+                namespace_key=(key,tuple(pack['fields']))
+                if namespace_key not in namespace_cache:namespace_cache[namespace_key]=_field_namespaces(archives[digest],row,pack['fields'])
+                pack['field_namespaces']=namespace_cache[namespace_key]
             pack.update(format=1,entrypoint='message.xsd',files={f['local_path']:base64.b64encode(output[f['local_path']]).decode('ascii') for f in records})
             browser=gzip.compress(json.dumps(pack,ensure_ascii=True,separators=(',',':'),sort_keys=True).encode('utf8'),compresslevel=9,mtime=0)
             browser=browser[:9]+b'\xff'+browser[10:]  # Stable gzip OS marker across Python/platform versions.
