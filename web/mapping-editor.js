@@ -60,9 +60,9 @@
    if(conflicts.length){const details=el("details","mapping-conflicts");details.append(el("summary","","Требуют ручного решения · "+conflicts.length),el("p","meta","Эти пары автоматически не выбраны. Можно добавить нужную связь кнопкой «Добавить соответствие»."));paginated(details,()=>conflicts,["Путь «Было»","Путь «Стало»","Причина"],p=>{const row=el("tr");row.append(el("td","",p.beforePath),el("td","",p.afterPath),el("td","",p.reason));return row});conflictsHost.append(details)}
    update();
   }
-  function picker(caption,fields,current,side){
+  function picker(caption,fields,current,side,searchValue=""){
    const box=el("div","mapping-picker"),label=el("label","",caption),query=el("input","mapping-tag-search-"+side),select=el("select","mapping-tag-choice-"+side),path=el("code","mapping-picked-path"),description=el("p","meta mapping-picked-description"),index=new Map(fields.map(f=>[f.path,f]));
-   query.type="search";query.value="";query.placeholder="Поиск по пути или описанию";query.setAttribute("aria-label","Поиск тега «"+caption+"»");select.size=6;select.setAttribute("aria-label","Тег «"+caption+"»");let chosen=current||"",filtered=[];
+   query.type="search";query.value=searchValue;query.placeholder="Поиск по пути или описанию";query.setAttribute("aria-label","Поиск тега «"+caption+"»");select.size=6;select.setAttribute("aria-label","Тег «"+caption+"»");let chosen=current||"",filtered=[];
    function describe(){path.textContent=chosen;description.textContent=index.get(chosen)?.doc||"Описание не указано"}
    function draw(){
     const terms=normalized(query.value).split(/\s+/).filter(Boolean),matches=fields.filter(f=>terms.every(t=>normalized(f.path+" "+(f.doc||"")).includes(t)));
@@ -73,15 +73,15 @@
    query.oninput=draw;query.onkeydown=event=>{if(event.key==="Enter"){event.preventDefault();if(filtered.length===1){chosen=filtered[0].path;draw();update()}select.focus?.()}};select.onchange=()=>{chosen=select.value;describe();update()};label.append(query,select);box.append(label,path,description);draw();return {box,query,value:()=>chosen};
   }
   function closeEditor(){editorOpen=false;editor.hidden=true;editor.replaceChildren();refresh()}
-  function openEditor(id=null,savedPair=null){
+  function openEditor(id=null,savedPair=null,searches={}){
    if(editorOpen||busy||closed||!options.isCurrent())return;
    const row=id===null?null:draft.rows.find(r=>r.id===id);if(id!==null&&!row)return;
    editorOpen=true;editor.hidden=false;editor.replaceChildren();
    const occupied=draft.rows.filter(r=>r.selected&&r.id!==id),available=(fields,key,current)=>{const used=new Set(occupied.map(r=>r[key]));return fields.filter(f=>f.path===current||!used.has(f.path))};
-   const form=el("form","mapping-edit-form"),title=el("h3","",row?"Изменить соответствие":"Добавить соответствие"),columns=el("div","mapping-pickers"),before=picker("Было",available(options.before,"beforePath",row?.beforePath),row?.beforePath,"before"),after=picker("Стало",available(options.after,"afterPath",row?.afterPath),row?.afterPath,"after");columns.append(before.box,after.box);
+   const form=el("form","mapping-edit-form"),title=el("h3","",row?"Изменить соответствие":"Добавить соответствие"),columns=el("div","mapping-pickers"),before=picker("Было",available(options.before,"beforePath",row?.beforePath),row?.beforePath,"before",searches.before),after=picker("Стало",available(options.after,"afterPath",row?.afterPath),row?.afterPath,"after",searches.after);columns.append(before.box,after.box);
    const label=el("label","","Комментарий"),comment=el("textarea","mapping-edit-comment");comment.rows=3;comment.value=row?.comment||"";comment.oninput=update;label.append(comment);formPending=()=>!!(before.value()||after.value()||comment.value);
    const error=el("p","mapping-errors mapping-editor-error"),save=button("open mapping-editor-save","Сохранить пару в черновик"),back=button("swap mapping-editor-cancel",savedPair?"Закрыть форму":"Отмена"),actions=el("div","mapping-controls");error.setAttribute("role","alert");actions.append(save,back);
-   function commit(event){event?.preventDefault?.();try{const pair={beforePath:before.value(),afterPath:after.value(),comment:comment.value};row?draft.edit(row.id,pair):draft.add(pair);editorOpen=false;openEditor(null,pair)}catch(e){error.textContent=e.message}}
+   function commit(event){event?.preventDefault?.();try{const pair={beforePath:before.value(),afterPath:after.value(),comment:comment.value};row?draft.edit(row.id,pair):draft.add(pair);editorOpen=false;openEditor(null,pair,{before:before.query.value,after:after.query.value})}catch(e){error.textContent=e.message}}
    save.type="submit";form.onsubmit=commit;save.onclick=event=>commit(event);back.onclick=closeEditor;if(savedPair){const feedback=el("p","mapping-editor-feedback","Пара сохранена в черновик: "+savedPair.beforePath+" → "+savedPair.afterPath+". Выберите следующую пару или примените черновик.");feedback.setAttribute("role","status");form.append(feedback)}form.append(title,el("p","meta","Уже сопоставленные теги скрыты. При изменении пары доступны её текущие теги."),columns,label,error,actions);editor.append(form);refresh();editor.scrollIntoView?.({block:"nearest"});(row?after.query:before.query).focus?.();
   }
   all.onclick=()=>{draft.selectProposals(true);refresh()};none.onclick=()=>{draft.selectProposals(false);refresh()};add.onclick=()=>openEditor();
