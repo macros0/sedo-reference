@@ -40,6 +40,9 @@ jobs:
           node tests/test_comparison_export.cjs
           node tests/test_comparison_mapping.cjs
           node tests/test_mapping_suggestions.cjs
+          node tests/test_mapping_draft.cjs
+          node tests/test_mapping_editor.cjs
+          node tests/test_mapping_apply.cjs
       - name: Check live WSDL sources without changing the reference
         run: python wsdl_sources.py --probe
       - name: Validate and apply pending Russian collector snapshots

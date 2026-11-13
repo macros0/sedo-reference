@@ -66,6 +66,7 @@ class Element{
  setAttribute(){}
 }
 const storage=new Map(),context=vm.createContext({document:{createElement:tag=>new Element(tag)},localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)}});
+for(const name of ["mapping-draft.js","mapping-editor.js"])vm.runInContext(fs.readFileSync(path.join(root,"web",name),"utf8"),context);
 vm.runInContext(fs.readFileSync(path.join(root,"web/comparison-mapping.js"),"utf8"),context);
 const ui=context.SedoMapping,uiFields=prefix=>[{path:prefix,doc:"Уникальный раздел"},...Array.from({length:52},(_,i)=>({path:prefix+"/x"+i,doc:"Поле "+i}))];
 const uiOptions={left:{revision_id:"ui-left"},right:{revision_id:"ui-right"},before:uiFields("a"),after:uiFields("b"),isCurrent:()=>true},uiParent={beforePath:"a",afterPath:"b",comment:""};
