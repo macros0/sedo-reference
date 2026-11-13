@@ -67,3 +67,7 @@ class AutomationStatusTests(unittest.TestCase):
         with patch('automation_status.api',side_effect=[dict(artifacts=[dict(id=5,name='sfr-update-report',expired=False)]),out.getvalue()]):
             reports=run_reports(run(1))
         self.assertEqual(set(reports),{'update-report.json','sourcecraft-report.json'})
+
+    def test_sourcecraft_started_run_is_processing(self):
+        result=build_status(dict(latest=dict(state='processing',complete=False,started_at='2026-11-13T09:00:00Z',contours={})),[],[],{}, {})
+        self.assertEqual(result['sourcecraft']['state'],'processing')

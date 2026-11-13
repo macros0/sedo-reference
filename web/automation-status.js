@@ -11,9 +11,11 @@
   if(sourceState==='success'&&!contours.every(c=>Number.isFinite(Date.parse(c.observed_at))))sourceState='unknown';
   const sourceAge=now-Date.parse(sc.finished_at);
   if(sourceState==='success'&&sourceAge>STALE)sourceState='stale';
+  if(sourceState==='processing'&&now-Date.parse(sc.started_at)>30*60*1000)sourceState='stale';
   const checkState=['success','waiting'].includes(check.state)&&now-Date.parse(check.finished_at)>STALE?'stale':check.state;
   const changed=c=>c.changed===true?' · XSD изменились':c.changed===false?' · XSD без изменений':c.observed_at?' · первый снимок':'';
   const sourceLines=contours.map(c=>(c.env==='prod'?'Продуктивный':'Тестовый')+': '+(c.observed_at?date(c.observed_at)+changed(c):'не проверен в последнем запуске'));
+  if(sourceState==='stale'&&sc.state==='processing')sourceLines.push('Сбор не завершился за 30 минут. Проверьте журнал SourceCraft.');
   if(sc.state==='failure'&&sc.error)sourceLines.push(sc.error);
   if(sc.state!=='success'&&sc.last_success_at)sourceLines.push('Последний успешный сбор: '+date(sc.last_success_at));
   const count=Number.isInteger(versions.count)&&versions.count>=0?versions.count:null;

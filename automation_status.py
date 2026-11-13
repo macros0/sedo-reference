@@ -30,7 +30,7 @@ def run_info(run):
 
 def build_status(source, checks, pages, reports, legacy_catalogs, now=None):
     latest = (source or {}).get('latest') or {}
-    sc = dict(state='success' if latest.get('complete') else 'failure' if latest else 'unknown',
+    sc = dict(state=latest.get('state') if latest.get('state') in ('success','failure','processing') else 'success' if latest.get('complete') else 'failure' if latest else 'unknown',
               started_at=latest.get('started_at'), finished_at=latest.get('finished_at'),
               contours=latest.get('contours', {}), run_id=latest.get('run_id'),
               url='https://sourcecraft.dev/'+SOURCE,
