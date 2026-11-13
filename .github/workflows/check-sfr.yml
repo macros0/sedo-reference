@@ -52,7 +52,11 @@ jobs:
           node tests/test_validation_paths.cjs
           node tests/test_validation_source.cjs
           node tests/test_validation_navigation.cjs
+      - name: Import verified SourceCraft WSDL snapshots
+        run: python sourcecraft_pull.py
       - name: Collect both contours and validate candidate
+        env:
+          SEDO_SFR_POLITE: '1'
         run: |
           python auto_update.py
           node tests/test_browser_validation.cjs --all-editions
@@ -83,7 +87,9 @@ jobs:
         if: always()
         with:
           name: sfr-update-report
-          path: update-report.json
+          path: |
+            update-report.json
+            sourcecraft-report.json
           if-no-files-found: ignore
           retention-days: 30
 

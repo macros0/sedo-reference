@@ -50,6 +50,13 @@ class Links(HTMLParser):
             self.anchor=None
 
 def get(url, timeout=30, attempts=3):
+    import os
+    if os.environ.get("SEDO_SFR_POLITE") == "1":
+        return _polite_fetch(url)
+    return _get(url, timeout=timeout, attempts=attempts)
+
+
+def _get(url, timeout=30, attempts=3):
     u=urlsplit(url)
     safe=urlunsplit((u.scheme,u.netloc,quote(unquote(u.path),safe="/"),u.query,""))
     context = ssl.create_default_context()
@@ -66,6 +73,10 @@ def get(url, timeout=30, attempts=3):
         except OSError:
             if attempt==attempts-1: raise
             time.sleep(1+attempt)
+
+
+from collector_transport import PoliteFetch
+_polite_fetch = PoliteFetch(_get, max_requests=1000)
 
 def inspect_file(b,kind):
     if kind not in ("docx","zip"): return {}

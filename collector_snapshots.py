@@ -54,6 +54,15 @@ def validate_manifest(manifest, read_object):
 
 def load_library(base, environment):
     base = Path(base)
+    feed = base / "collector/feed.json"
+    if feed.exists():
+        from collector_feed import validate_index, manifest_path
+        pointer = validate_index(json.loads(feed.read_bytes()))["latest"].get(environment)
+        if pointer:
+            manifest = json.loads((base / manifest_path(environment, pointer)).read_bytes())
+            if manifest["content_id"] != pointer or manifest["environment"] != environment:
+                raise ValueError("Feed current manifest identity mismatch")
+            return validate_manifest(manifest, lambda h: (base / "objects" / h).read_bytes())
     manifests = []
     for path in (base / "collector" / environment).glob("*.json"):
         if path.stat().st_size > 1024 * 1024:
