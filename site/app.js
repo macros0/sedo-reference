@@ -6,7 +6,7 @@ const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.classNa
 const normalize=s=>String(s||"").toLocaleLowerCase("ru").replaceAll("ё","е");
 if(catalog.checked_at){
  const dateText=new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',dateStyle:'short',timeStyle:'short'}).format(new Date(catalog.checked_at));
- document.querySelector('header small').textContent='Проверено '+dateText+' МСК';
+ document.querySelector('header small').textContent='Каталог проверен '+dateText+' МСК';
 }
 const messages=new Map();
 for(const r of [...catalog.revisions,...catalog.registry]){
