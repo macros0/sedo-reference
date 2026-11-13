@@ -1,0 +1,243 @@
+{
+  "format": 1,
+  "environment": "test",
+  "observed_at": "2026-11-13T01:12:13.703626+00:00",
+  "content_id": "42e44b408e7edf8f9540e3758d727bd4944a1ddd5dfa1fbdd14d75f00f0cddc3",
+  "library": {
+    "environment": "test",
+    "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl#xsd-bundle",
+    "kind": "zip",
+    "label": "XSD по WSDL шлюза СФР",
+    "archive_name": "wsdl-schemas.zip",
+    "source_type": "wsdl",
+    "source_url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+    "source_files": [
+      {
+        "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl",
+        "sha256": "5001bc7c692c7ab94168334d447bb33ab27a6104287931521d794dc4854f9884",
+        "bytes": 9356,
+        "kind": "wsdl",
+        "namespace": "http://www.fss.ru/integration/ws/gateway/sedo/v01"
+      },
+      {
+        "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=Faults.wsdl",
+        "sha256": "a81009be084d5a4c6b9b7fdb7e2dc2619cd03908a7824e146b4488cbca6d7ad4",
+        "bytes": 1133,
+        "kind": "wsdl",
+        "namespace": "http://www.fss.ru/integration/ws/fault/v01"
+      },
+      {
+        "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl=SedoCommon.wsdl",
+        "sha256": "f467422085c7363b9b7966df42a7370c15ad182c5b37f990f55bbe0ba47b3210",
+        "bytes": 1683,
+        "kind": "wsdl",
+        "namespace": "http://www.fss.ru/integration/ws/common/sedo/v01"
+      },
+      {
+        "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+        "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+        "bytes": 39925,
+        "kind": "xsd",
+        "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+      },
+      {
+        "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Fault.xsd",
+        "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+        "bytes": 6011,
+        "kind": "xsd",
+        "namespace": "http://www.fss.ru/integration/types/fault/v01"
+      },
+      {
+        "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+        "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+        "bytes": 7173,
+        "kind": "xsd",
+        "namespace": "http://www.fss.ru/integration/types/organization/v01"
+      },
+      {
+        "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+        "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+        "bytes": 37988,
+        "kind": "xsd",
+        "namespace": "http://www.fss.ru/integration/types/common/v01"
+      },
+      {
+        "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+        "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+        "bytes": 735,
+        "kind": "xsd",
+        "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+      },
+      {
+        "url": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+        "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+        "bytes": 6427,
+        "kind": "xsd",
+        "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+      }
+    ],
+    "sha256": "bec1a07a7f1d55e0f47866a36660a45db5cec89ed3da821126d0d7d20a9ca1ca",
+    "bytes": 99013,
+    "schemas": [
+      {
+        "path": "schemas/004/Sedo.xsd",
+        "namespace": "http://www.fss.ru/integration/types/sedo/v01",
+        "sha256": "c58e7ee120d0d8c1dac61da8ab2d0653722c20565731bc8e5309eb17df291ff6",
+        "dependencies": [
+          "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+          "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd"
+        ],
+        "imports": [
+          {
+            "location": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+            "namespace": "http://www.fss.ru/integration/types/organization/v01"
+          },
+          {
+            "location": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Common.xsd",
+            "namespace": "http://www.fss.ru/integration/types/common/v01"
+          }
+        ],
+        "roots": [
+          {
+            "name": "getMessageRequest",
+            "description": "Родительский элемент запроса для получения исходящего сообщения"
+          },
+          {
+            "name": "getCntMessageRequest",
+            "description": "Для абонентов. Родительский элемент запроса для получения списка исходящих сообщений"
+          },
+          {
+            "name": "putMessageRequest",
+            "description": "Родительский элемент запроса для получения исходящего сообщения"
+          },
+          {
+            "name": "getCntMessageOperatorRequest",
+            "description": "Для операторов. Родительский элемент запроса для получения списка исходящих сообщений"
+          },
+          {
+            "name": "sedoUuidResponse",
+            "description": "Родительский элемент ответа."
+          },
+          {
+            "name": "sedoMessageResponse",
+            "description": "Родительский элемент ответа."
+          },
+          {
+            "name": "transportUuid",
+            "description": "Транспортный идентификатор запроса"
+          },
+          {
+            "name": "messageListResponse",
+            "description": "Родительский элемент ответа."
+          }
+        ]
+      },
+      {
+        "path": "schemas/005/Fault.xsd",
+        "namespace": "http://www.fss.ru/integration/types/fault/v01",
+        "sha256": "a3dae7cb0033ea801eb093b9e7f7335a77b3adfc304b6a66dbc97f325baa04a3",
+        "dependencies": [
+          "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+          "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd"
+        ],
+        "imports": [
+          {
+            "location": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/FaultCode.xsd",
+            "namespace": "http://www.fss.ru/integration/types/dic/fault/v01"
+          },
+          {
+            "location": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/sedo/Sedo.xsd",
+            "namespace": "http://www.fss.ru/integration/types/sedo/v01"
+          }
+        ],
+        "roots": [
+          {
+            "name": "internalFault",
+            "description": "Внутренняя ошибка. Если произошла не класифицируемая ошибка сервиса"
+          },
+          {
+            "name": "invalidDataFault",
+            "description": "Ошибка форматно-логического контроля"
+          },
+          {
+            "name": "digitalSignFault",
+            "description": "Ошибка при обработке ЭЦП"
+          },
+          {
+            "name": "decryptFault",
+            "description": "Ошибка при обработке ЭЦП"
+          },
+          {
+            "name": "tmsFault",
+            "description": "Ошибка в работе транспортного слоя"
+          },
+          {
+            "name": "povdBusinessFaultType",
+            "description": "Ошибка при обработке заявления на подтверждение видов экономической деятельности"
+          },
+          {
+            "name": "BusinessFault",
+            "description": "Ошибка валидации бизнеслогики. свой у каждого сервиса/арма/функции свой"
+          }
+        ]
+      },
+      {
+        "path": "schemas/006/Organization.xsd",
+        "namespace": "http://www.fss.ru/integration/types/organization/v01",
+        "sha256": "e45795c26ffe7bb2ff9aef51bd9772d9bc5b6eb395c4b84c2acb0325ebb1b760",
+        "dependencies": [],
+        "imports": [],
+        "roots": []
+      },
+      {
+        "path": "schemas/007/Common.xsd",
+        "namespace": "http://www.fss.ru/integration/types/common/v01",
+        "sha256": "63df20151a6d65ee95a5ee8692b4a0ab59581e9b86143e36670ca4fe6fe7a794",
+        "dependencies": [
+          "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+          "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd"
+        ],
+        "imports": [
+          {
+            "location": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd",
+            "namespace": "http://www.fss.ru/integration/types/dic/errors/v01"
+          },
+          {
+            "location": "https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd",
+            "namespace": "http://www.fss.ru/integration/types/organization/v01"
+          }
+        ],
+        "roots": [
+          {
+            "name": "errors",
+            "description": ""
+          },
+          {
+            "name": "dictionaryResponse",
+            "description": ""
+          },
+          {
+            "name": "dictionaryRequest",
+            "description": ""
+          }
+        ]
+      },
+      {
+        "path": "schemas/008/FaultCode.xsd",
+        "namespace": "http://www.fss.ru/integration/types/dic/fault/v01",
+        "sha256": "8044d43cbc4892c305e077502d525753fb4c627659edde143eb0108ea5023cbe",
+        "dependencies": [],
+        "imports": [],
+        "roots": []
+      },
+      {
+        "path": "schemas/009/Errors.xsd",
+        "namespace": "http://www.fss.ru/integration/types/dic/errors/v01",
+        "sha256": "2cb98f05397b7aaf911a1f9e2ecbb31a147eb294a7fcbd798a751d05a4fe2f29",
+        "dependencies": [],
+        "imports": [],
+        "roots": []
+      }
+    ]
+  }
+}
