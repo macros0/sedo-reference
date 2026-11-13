@@ -28,6 +28,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+      - name: Install browser test dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
       - name: Test reference and importer
         run: |
           python -m unittest discover -s tests -q
@@ -60,6 +65,18 @@ jobs:
           python build_site.py
           node tests/test_browser_validation.cjs --all-editions
           touch site/.nojekyll
+      - name: Test built reference in Chromium
+        run: npm run test:browser
+      - name: Save browser test report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: browser-test-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 30
       - name: Save validated imports
         run: |
           git add state data site
