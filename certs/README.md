@@ -10,5 +10,7 @@ SHA-256 файла 344f90d1e53f3dff90d44ce8aa85645e40d19a1e6f8304419c3c85ff6108b
 lk-test.fss.ru — Russian Trusted Sub CA → Russian Trusted Root CA.
 SHA-256 файла bd525da28a2af7c8140cadf5ba588060cc5a546d0075e067c704ad1e92a7ade1.
 
+ecp-test.sfr.gov.ru — такая же цепочка Russian Trusted Sub CA → Russian Trusted Root CA. Отдельный файл ecp-test.sfr.gov.ru.pem получен 13.11.2026 из проверенного TLS-соединения Windows; SHA-256 bd525da28a2af7c8140cadf5ba588060cc5a546d0075e067c704ad1e92a7ade1. Проверка сертификата конечного узла остаётся включённой; системное хранилище контейнера не меняется.
+
 При смене цепочки и ошибке валидации потребуется получить и проверить новую цепочку перед обновлением PEM. Публичный сайт в случае ошибки загрузчика продолжит показывать последний успешный набор данных.
 

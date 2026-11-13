@@ -42,6 +42,8 @@ jobs:
           node tests/test_mapping_suggestions.cjs
       - name: Check live WSDL sources without changing the reference
         run: python wsdl_sources.py --probe
+      - name: Validate and apply pending Russian collector snapshots
+        run: python collector_snapshots.py
       - name: Import incoming specifications
         run: python import_inbox.py
       - name: Build the validated reference
@@ -53,7 +55,7 @@ jobs:
         run: |
           git add state data site
           if ! git diff --cached --quiet; then
-            git commit -m "Import specifications from incoming"
+            git commit -m "Import specifications and validated collector snapshots"
             git push origin HEAD:main
           fi
           # The token push does not start another workflow. Publish this checked artifact below.

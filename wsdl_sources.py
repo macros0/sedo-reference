@@ -74,7 +74,12 @@ def _archive(files):
     output = io.BytesIO()
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_STORED) as z:
         for name, content in sorted(files.items()):
-            z.writestr(zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0)), content)
+            info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
+            # Freeze the ZIP creator OS too: Python defaults to the host OS.
+            # Match the already archived Windows bundles on Linux collectors.
+            info.create_system = 0
+            info.external_attr = 0o600 << 16
+            z.writestr(info, content)
     return output.getvalue()
 
 

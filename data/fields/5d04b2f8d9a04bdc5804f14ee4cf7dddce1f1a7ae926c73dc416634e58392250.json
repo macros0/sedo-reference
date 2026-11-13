@@ -1,0 +1,151 @@
+{
+  "revision_id": "5d04b2f8d9a04bdc5804f14ee4cf7dddce1f1a7ae926c73dc416634e58392250",
+  "fields": [
+    {
+      "name": "sedoAppealResponse",
+      "path": "sedoAppealResponse",
+      "parent": -1,
+      "group": "",
+      "doc": "Ответ страхователя на обращение",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "SedoAppealResponse",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {},
+      "typeFile": "SedoArm_ЕЦП.xsd"
+    },
+    {
+      "name": "appealUuid",
+      "path": "sedoAppealResponse/appealUuid",
+      "parent": 0,
+      "group": "",
+      "doc": "Uuid обращения к страхователю (Сообщение от СФР)",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xsd:string",
+      "base": "xsd:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {}
+    },
+    {
+      "name": "appealTitle",
+      "path": "sedoAppealResponse/appealTitle",
+      "parent": 0,
+      "group": "",
+      "doc": "Заголовок ответа на обращение",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "300"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {}
+    },
+    {
+      "name": "appealBody",
+      "path": "sedoAppealResponse/appealBody",
+      "parent": 0,
+      "group": "",
+      "doc": "Тело ответа на обращение",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xsd:string",
+      "facets": [
+        [
+          "maxLength",
+          "2000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {}
+    },
+    {
+      "name": "appealFile",
+      "path": "sedoAppealResponse/appealFile",
+      "parent": 0,
+      "group": "",
+      "doc": "Файлы ответа на обращение",
+      "kind": "element",
+      "min": "0",
+      "max": "10",
+      "type": "SedoAppealFile",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        5,
+        6
+      ],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {},
+      "typeFile": "SedoArm_ЕЦП.xsd"
+    },
+    {
+      "name": "content",
+      "path": "sedoAppealResponse/appealFile/content",
+      "parent": 4,
+      "group": "",
+      "doc": "Контент файла в base64",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xsd:string",
+      "base": "xsd:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {}
+    },
+    {
+      "name": "fileName",
+      "path": "sedoAppealResponse/appealFile/fileName",
+      "parent": 4,
+      "group": "",
+      "doc": "Название файла",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xsd:string",
+      "base": "xsd:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {}
+    }
+  ]
+}

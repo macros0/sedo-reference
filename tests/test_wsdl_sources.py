@@ -115,8 +115,9 @@ class WsdlSourcesTests(unittest.TestCase):
   root=Path(__file__).resolve().parents[1]
   catalog=json.loads((root/"data/catalog.json").read_bytes())
   numbers={"1","2","6","9","11","14","27","28","90","91","330","331","332","1000","1001","1002"}
-  selected=[r for r in catalog["revisions"] if r["environment"]=="test" and r["number"] in numbers and r.get("schema_source_type")]
+  selected=[r for r in catalog["revisions"] if r["number"] in numbers and r.get("schema_source_type")]
   self.assertEqual({r["number"] for r in selected},numbers)
+  self.assertEqual({(r["environment"],r["number"]) for r in selected},{(env,n) for env in ("prod","test") for n in numbers})
   for revision in selected:
    fields=json.loads((root/"data/fields"/(revision["revision_id"]+".json")).read_bytes())["fields"]
    self.assertEqual(len(fields),len({f["path"] for f in fields}))

@@ -1,3 +1,6 @@
 
 # Content-addressed source objects must retain exact publisher bytes.
 /state/objects/* -text
+
+# Field snapshots are immutable byte-for-byte, including on Windows.
+/data/fields/*.json -text

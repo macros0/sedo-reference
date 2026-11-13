@@ -53,7 +53,7 @@ def get(url, timeout=30, attempts=3):
     u=urlsplit(url)
     safe=urlunsplit((u.scheme,u.netloc,quote(unquote(u.path),safe="/"),u.query,""))
     context = ssl.create_default_context()
-    if u.hostname in {urlsplit(site).hostname for site in SITES.values()}:
+    if u.hostname in {urlsplit(site).hostname for site in SITES.values()} | {"ecp-test.sfr.gov.ru"}:
         bundle = Path(__file__).resolve().parent / "certs" / (u.hostname + ".pem")
         if bundle.exists():
             context.load_verify_locations(cafile=str(bundle))
@@ -181,6 +181,11 @@ def sync(base):
         previous=json.loads((base/"snapshots"/(key+".json")).read_bytes())
     supports=[]
     for env in SITES:
+        from collector_snapshots import load_library
+        captured = load_library(base, env)
+        if captured:
+            entries.append(captured); supports.append(captured)
+            continue
         for seed in discover(entries,env):
             try:
                 support=collect(seed,env,lambda url:get(url,timeout=10,attempts=1),blob)

@@ -19,10 +19,11 @@ const go=(number,env,rev,field)=>{location.hash=route(number,env,rev,field)};
 function anchor(text,hash,cls){const a=node("a",cls,text);a.href="#"+hash;return a}
 function external(text,url){const a=node("a","source",text);a.href=url;a.target="_blank";a.rel="noopener";return a}
 function documentDownload(r){const a=node("a","source","Скачать DOCX");a.href=r.document_download;a.download=r.document_filename;return a}
+function documentName(r){return r.document_url?decodeURIComponent(new URL(r.document_url).pathname.split("/").pop()):(r.manual_source?.label||r.document_filename||"Файл владельца")}
 function revisionOrigin(r){return r.document_url?external("Спецификация СФР ↗",r.document_url):node("span","source","Ручная загрузка · "+(r.manual_source?.label||"Файл владельца"))}
 function date(s){return s?s.replace(/\.(\d{2})$/,".20$1"):"Дата не указана"}
 function title(m,env){return m.revisions.find(r=>!env||r.environment===env)?.title||m.rows.find(r=>!env||r.environment===env)?.title||[...m.titles][0]}
-function label(r){return envNames[r.environment]+" · "+(r.document_version||"Версия не указана")+" · "+date(r.label_date)+(r.source_type==="manual"?" · Ручная загрузка":"")}
+function label(r){return envNames[r.environment]+" · документ "+(r.document_version||"без версии")+" · "+date(r.label_date)+(r.source_type==="manual"?" · Ручная загрузка":"")}
 function replacementNotice(m,env,compact=false){
  const options=window.SedoTransitions?.replacements(m.number,catalog,env)||[];if(!options.length)return null;
  const dated=options.every(info=>info.production_retired_at);
@@ -76,7 +77,8 @@ function renderVersions(m,env){
   const revisions=m.revisions.filter(r=>r.environment===e).sort((a,b)=>date(b.label_date).split(".").reverse().join("").localeCompare(date(a.label_date).split(".").reverse().join("")));
   if(revisions.length){
    for(const r of revisions){
-    const card=node("div","card");card.append(node("strong","","Версия "+(r.document_version||"не указана")),node("p","",date(r.label_date)));
+    const card=node("div","card");card.append(node("strong","","Версия документа "+(r.document_version||"не указана")),node("p","",date(r.label_date)));
+    const origin=node("p","meta");origin.append(document.createTextNode("Источник версии: "),r.document_url?external(documentName(r),r.document_url):document.createTextNode(documentName(r)));card.append(origin);
     if(r.ready)card.append(anchor("Открыть дерево",route(m.number,e,r.revision_id),"open"));
     else card.append(node("p","",r.status==="document_only"?"DOCX сохранён. Схема XSD не загружена.":"Схема ожидает проверки"));
     card.append(node("br"),documentDownload(r),document.createTextNode(" · "),revisionOrigin(r));
@@ -117,7 +119,7 @@ function renderRoute(){
  $("viewer").hidden=false;$("crumbs").append(node("span","","/"),node("span","",label(r)));
  const warning=$("viewer-replacement");if(warning){warning.replaceChildren();const replacement=replacementNotice(m,env);if(replacement)warning.append(replacement);appendRelatedComparisons(warning,m,env)}
  $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
- $("doc-source").hidden=!r.document_url;if(r.document_url)$("doc-source").href=r.document_url;
+ $("doc-source").hidden=!r.document_url;if(r.document_url){$("doc-source").href=r.document_url;$("doc-source").textContent="Источник версии: "+documentName(r);}
  $("manual-source").hidden=r.source_type!=="manual";$("manual-source").textContent="Ручная загрузка · "+(r.manual_source?.label||"Файл владельца");
  $("doc-download").href=r.document_download;$("doc-download").download=r.document_filename;
  document.getElementById("compare-from-viewer")?.remove();

@@ -57,7 +57,8 @@ function renderUpdates(params){
    if(nextDay!==day){list.append(node("h2","journal-day",nextDay));day=nextDay}
    const card=node("article","update-card");card.dataset.revision=r.revision_id;
    const badges=node("div","badges");badges.append(node("span","badge "+r.environment,envNames[r.environment]),node("span","badge",event.initial_import?"Первичное наполнение":event.previous_revision_id?"Новая редакция":"Первое появление"));card.append(badges);
-   const heading=node("h3");heading.append(anchor(r.number+" · Версия "+(r.document_version||"не указана"),route(r.number,r.environment,r.ready?r.revision_id:undefined)));card.append(heading,node("p","",r.title));
+   const heading=node("h3");heading.append(anchor(r.number+" · Версия документа "+(r.document_version||"не указана"),route(r.number,r.environment,r.ready?r.revision_id:undefined)));card.append(heading,node("p","",r.title));
+   card.append(node("p","meta","Источник версии: "+documentName(r)));
    const time=node("time","meta",event.observed_at?"Обнаружено: "+observationDate(event.observed_at):observationDate(null));if(event.observed_at)time.dateTime=event.observed_at;card.append(time,node("p","meta","Документ СФР: "+date(r.label_date)+" · Редакция "+r.revision_id.slice(0,8)));
    if(r.source_type==="manual")card.append(node("p","meta","Ручная загрузка · "+(r.manual_source?.label||"Файл владельца")));
    else if(r.manual_source)card.append(node("p","meta","Впервые загружено вручную · "+r.manual_source.label));

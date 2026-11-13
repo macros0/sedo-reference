@@ -1,0 +1,105 @@
+{
+  "revision_id": "88ec5ad1bfd7a43aa024192af46e14bc3bd4e89c447bfee7680ddea70bd3066e",
+  "fields": [
+    {
+      "name": "dicMessageTypeResponse",
+      "path": "dicMessageTypeResponse",
+      "parent": -1,
+      "group": "",
+      "doc": "Результат запроса справочника типов сообщений",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "DicMessageTypeResponseType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1
+      ],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {},
+      "typeFile": "SedoArm_ЕЦП.xsd"
+    },
+    {
+      "name": "dicList",
+      "path": "dicMessageTypeResponse/dicList",
+      "parent": 0,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "DicList",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2
+      ],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {},
+      "typeFile": "SedoArm_ЕЦП.xsd"
+    },
+    {
+      "name": "dic",
+      "path": "dicMessageTypeResponse/dicList/dic",
+      "parent": 1,
+      "group": "",
+      "doc": "Список значений словаря",
+      "kind": "element",
+      "min": "0",
+      "max": "unbounded",
+      "type": "com:dictionary",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        3,
+        4
+      ],
+      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "file": "SedoArm_ЕЦП.xsd",
+      "flags": {},
+      "typeFile": "Common.xsd"
+    },
+    {
+      "name": "code",
+      "path": "dicMessageTypeResponse/dicList/dic/code",
+      "parent": 2,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/common/v01",
+      "file": "Common.xsd",
+      "flags": {}
+    },
+    {
+      "name": "name",
+      "path": "dicMessageTypeResponse/dicList/dic/name",
+      "parent": 2,
+      "group": "",
+      "doc": "",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "http://www.fss.ru/integration/types/common/v01",
+      "file": "Common.xsd",
+      "flags": {}
+    }
+  ]
+}

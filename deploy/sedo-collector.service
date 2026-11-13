@@ -1,0 +1,27 @@
+[Unit]
+Description=Collect SFR WSDL snapshots from the Russian network
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=sedo-collector
+Group=sedo-collector
+WorkingDirectory=/opt/sedo-collector
+ExecStart=/usr/bin/python3 /opt/sedo-collector/collector.py --token-file /etc/sedo-collector/github-token
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+CapabilityBoundingSet=
+MemoryMax=192M
+Nice=10
+TimeoutStartSec=15min
+
