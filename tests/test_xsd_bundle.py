@@ -100,6 +100,18 @@ class XsdBundleTests(unittest.TestCase):
         rejected=self.run_validator(directory,dtd);self.assertEqual(rejected.returncode,1,rejected.stderr);self.assertNotIn('ABCD',rejected.stdout+rejected.stderr)
         self.assertEqual(self.run_validator(directory,b'<Request').returncode,1)
 
+    def test_native_local_filenames_are_supported_without_network_access(self):
+        from unittest.mock import patch
+        from urllib.parse import urlsplit
+        from urllib.request import url2pathname
+        from xsd_validate import compile_schema
+        row,_=self.revision();directory=self.extract(row,'native path со spaces');real_parse=etree.parse
+        def native_parse(source,parser):
+            return real_parse(str(Path(url2pathname(urlsplit(source).path))),parser)
+        # Linux XMLSchema loaders call resolvers with native absolute filenames.
+        with patch('lxml.etree.parse',side_effect=native_parse):validator=compile_schema(directory/'message.xsd',directory)
+        self.assertTrue(validator.validate(etree.fromstring(b'<Request xmlns="urn:main"><code>ABCD</code></Request>')))
+
     def test_validator_does_not_load_schema_files_outside_the_package(self):
         row,_=self.revision();directory=self.extract(row);outside=self.base/'Common.xsd'
         outside.write_text(f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:common"><xs:simpleType name="Code"><xs:restriction base="xs:string"/></xs:simpleType></xs:schema>','utf8')

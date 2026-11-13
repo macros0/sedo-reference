@@ -21,7 +21,7 @@ function anchor(text,hash,cls){const a=node("a",cls,text);a.href="#"+hash;return
 function external(text,url){const a=node("a","source",text);a.href=url;a.target="_blank";a.rel="noopener";return a}
 function documentDownload(r){const a=node("a","source","Скачать DOCX");a.href=r.document_download;a.download=r.document_filename;return a}
 function schemaExportControl(r){
- if(r.schema_download){const a=node("a","source schema-download","Скачать XSD (ZIP)");a.href=r.schema_download;a.download=r.schema_filename;a.title="XSD сообщения и зависимости для локальной валидации XML";return a}
+ if(r.schema_download){const a=node("a","source schema-download","Скачать XSD (ZIP)");a.href=r.schema_download+(r.schema_bundle_sha256?"?v="+r.schema_bundle_sha256.slice(0,16):"");a.download=r.schema_filename;a.title="XSD сообщения и зависимости для локальной валидации XML";return a}
  return r.schema_export_error?node("span","meta schema-export-unavailable",r.schema_export_error):null;
 }
 function documentName(r){return r.document_url?decodeURIComponent(new URL(r.document_url).pathname.split("/").pop()):(r.manual_source?.label||r.document_filename||"Файл владельца")}

@@ -18,12 +18,20 @@ def compile_schema(entry, package_root):
     class LocalOnly(etree.Resolver):
         def resolve(self, url, public_id, context):
             parts=urlsplit(url)
-            if parts.scheme!='file' or parts.netloc:
+            if parts.scheme=='file' and not parts.netloc:
+                candidates=[Path(url2pathname(parts.path))]
+            elif not parts.netloc and (not parts.scheme or (len(parts.scheme)==1 and url[1:3] in (':\\',':/'))):
+                # libxml2 uses native absolute filenames for schema imports on Linux.
+                if url.startswith(('//','\\\\')):raise OSError('Внешние ресурсы запрещены: '+url)
+                candidates=[Path(url),Path(url2pathname(url))]
+            else:
                 raise OSError('Внешние ресурсы запрещены: '+url)
-            target=Path(url2pathname(parts.path)).resolve()
-            if not target.is_relative_to(base) or not target.is_file():
-                raise OSError('XSD за пределами комплекта или отсутствует: '+url)
-            return self.resolve_filename(str(target),context)
+            for candidate in candidates:
+                if not candidate.is_absolute() or not candidate.is_relative_to(base):continue
+                target=candidate.resolve()
+                if target.is_relative_to(base) and target.is_file():
+                    return self.resolve_string(target.read_bytes(),context,base_url=target.as_uri())
+            raise OSError('XSD за пределами комплекта или отсутствует: '+url)
 
     parser=etree.XMLParser(no_network=True,resolve_entities=False,load_dtd=False)
     parser.resolvers.add(LocalOnly())
