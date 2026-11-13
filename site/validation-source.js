@@ -1,7 +1,7 @@
 (function(scope){
 "use strict";
 // The complete source stays in private memory; the DOM contains a small window.
-function mount(host,document){
+function mount(host,document,{onChange=()=>{},onValidate=()=>{}}={}){
  const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
  const title=node('h3','','XML — локальный просмотр'),info=node('p','source-info'),tools=node('div','source-tools'),lines=node('div','source-lines');
  lines.setAttribute('role','region');lines.setAttribute('aria-label','XML с номерами строк');
@@ -10,8 +10,23 @@ function mount(host,document){
  const previous=action('Предыдущие строки',()=>go(current-25,1,true));tools.append(input);const jump=action('К строке',()=>go(Number(input.value),1,true));const next=action('Следующие строки',()=>go(current+25,1,true));
  const left=action('Ранее в строке',()=>go(current,column-1024,true)),right=action('Далее в строке',()=>go(current,column+1024,true));
  input.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();jump.onclick()}};
- host.replaceChildren(title,info,tools,lines);host.hidden=true;
- let text='',count=0,current=1,column=1,ranges=[],hint='';
+ const editTools=node('div','source-tools'),editor=node('textarea','source-editor');editor.setAttribute('aria-label','XML для редактирования');editor.setAttribute('autocomplete','off');editor.setAttribute('spellcheck','false');editor.setAttribute('wrap','off');editor.rows=12;editor.hidden=true;
+ const edit=node('button','','Редактировать XML'),repeat=node('button','','Проверить исправленный XML');edit.type=repeat.type='button';repeat.hidden=true;repeat.disabled=true;editTools.append(edit,repeat);
+ const editNote=node('small','','Правки остаются в этом окне до очистки или закрытия валидатора. Исходный файл не меняется.');
+ host.replaceChildren(title,info,editTools,tools,editor,lines,editNote);host.hidden=true;
+ let text='',count=0,current=1,column=1,ranges=[],hint='',editing=false,hasDraft=false,busy=false;
+ function countLines(){count=1;for(let i=0;i<text.length;i++)if(text.charCodeAt(i)===10)count++}
+ function setBusy(value){busy=!!value;repeat.disabled=busy||!hasDraft||!editor.value.trim()}
+ const measureContext=document.createElement('canvas').getContext?.('2d');
+ function editorOffset(begin,end){
+  const style=document.defaultView?.getComputedStyle(editor);if(measureContext)measureContext.font=style?.font||'14px monospace';
+  const measure=value=>measureContext?measureContext.measureText(value).width:value.length*8.4,tabWidth=Math.max(1,measure(' ')*(Number.parseFloat(style?.tabSize)||8));
+  let width=0,start=begin;while(start<end){const tab=text.indexOf('\t',start),stop=tab<0||tab>=end?end:tab;if(stop>start)width+=measure(text.slice(start,stop));if(stop===end)break;width=(Math.floor(width/tabWidth+1e-7)+1)*tabWidth;start=stop+1}return width;
+ }
+
+ edit.onclick=()=>{editing=!editing;if(editing&&!hasDraft){editor.value=text;hasDraft=true}editor.hidden=!editing;lines.hidden=editing;edit.textContent=editing?'Показать подсветку':'Редактировать XML';repeat.hidden=!hasDraft;setBusy(busy);render(true)};
+ repeat.onclick=()=>{if(!repeat.disabled)return onValidate()};
+ editor.oninput=()=>{hasDraft=true;text=editor.value.replace(/\r\n?/g,'\n');countLines();ranges=[];hint='XML изменён — повторите проверку.';current=Math.min(current,count);setBusy(false);render(false);onChange()};
  const clamp=(x,a,b)=>Math.max(a,Math.min(b,Number.isFinite(x)?Math.trunc(x):a));
  function startOf(line){let at=0;for(let n=1;n<line;n++){const end=text.indexOf('\n',at);if(end<0)return text.length;at=end+1}return at}
  function point(offset){offset=clamp(offset,0,text.length);let line=1,start=0;for(let i=0;i<offset;i++)if(text.charCodeAt(i)===10){line++;start=i+1}return {line,column:offset-start+1}}
@@ -36,7 +51,8 @@ function mount(host,document){
   }
   input.value=String(current);input.max=String(count);previous.disabled=current===1;next.disabled=current===count;left.disabled=currentLeft===0;right.disabled=currentLeft+2048>=currentLength;
   info.textContent='Строка '+current+' из '+count+'. Показаны строки '+first+'–'+last+'. '+(currentLength>2048?'Показан фрагмент длинной строки. ':'')+(ranges.length&&!visibleMarks?'Тег вне показанного фрагмента; нажмите «Показать тег в XML».':hint);
-  if(scroll&&selected){selected.scrollIntoView?.({block:'center',inline:'center'});selected.focus?.({preventScroll:true})}
+  if(scroll&&editing){const begin=startOf(current),end=text.indexOf('\n',begin),range=ranges.find(r=>r.start<=focus&&focus<r.end);editor.focus?.({preventScroll:true});editor.setSelectionRange(range?range.start:begin,range?range.end:(end<0?text.length:end));editor.scrollTop=Math.max(0,(current-3)*20);editor.scrollLeft=Math.max(0,editorOffset(begin,focus)-(editor.clientWidth||512)/2);editor.scrollIntoView?.({block:'center'});}
+  else if(scroll&&selected){selected.scrollIntoView?.({block:'center',inline:'center'});selected.focus?.({preventScroll:true})}
  }
  function go(line,col,scroll){if(!count)return;current=clamp(line,1,count);const start=startOf(current),end=text.indexOf('\n',start);column=clamp(col,1,(end<0?text.length:end)-start+1);render(scroll)}
  function showError(error,location,scroll=true){
@@ -51,8 +67,8 @@ function mount(host,document){
   }
   go(line,col,scroll);return true;
  }
- function clear(){text='';count=0;current=1;column=1;ranges=[];hint='';lines.replaceChildren();info.textContent='';input.value='';input.max='1';previous.disabled=next.disabled=left.disabled=right.disabled=true;host.hidden=true}
- return {setSource(source){clear();text=String(source).replace(/\r\n?/g,'\n');if(!text)return;count=1;for(let i=0;i<text.length;i++)if(text.charCodeAt(i)===10)count++;host.hidden=false;render(false)},setErrors(errors){const first=(errors||[]).find(canShow);if(first)showError(first,null,false);else {ranges=[];hint='';render(false)}},showError,canShow,clear};
+ function clear(){text='';count=0;current=1;column=1;ranges=[];hint='';editing=hasDraft=busy=false;editor.value='';editor.hidden=true;lines.hidden=false;edit.textContent='Редактировать XML';repeat.hidden=true;repeat.disabled=true;lines.replaceChildren();info.textContent='';input.value='';input.max='1';previous.disabled=next.disabled=left.disabled=right.disabled=true;host.hidden=true}
+ return {getEditedSource(){return hasDraft?editor.value:null},setBusy,setSource(source,{preserveEditor=false}={}){if(!preserveEditor||!hasDraft)clear();text=String(source).replace(/\r\n?/g,'\n');if(!text)return;countLines();current=Math.min(current,count);ranges=[];hint='';host.hidden=false;render(false)},setErrors(errors){const first=(errors||[]).find(canShow);if(first)showError(first,null,false);else {ranges=[];hint='';render(false)}},showError,canShow,clear};
 }
 const api={mount};scope.SedoXmlSource=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof self==='object'?self:globalThis);

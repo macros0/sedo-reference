@@ -1,25 +1,27 @@
 "use strict";
 // XML and diagnostics stay in this opaque frame. Only a public field index
 // is posted to the page after the user explicitly clicks a navigation button.
-const core=self.SedoValidationCore,$=id=>document.getElementById(id),sourceView=self.SedoXmlSource.mount($('xml-preview'),document);
+const core=self.SedoValidationCore,$=id=>document.getElementById(id),sourceView=self.SedoXmlSource.mount($('xml-preview'),document,{onChange:sourceChanged,onValidate:()=>check()});
 let worker=null,timer=null,generation=0;
 const workerSource='self.SEDO_WASM=Uint8Array.from(atob('+JSON.stringify(SEDO_WASM64)+'),c=>c.charCodeAt(0));\n'+SEDO_WORKER;
 const workerUrl=URL.createObjectURL(new Blob([workerSource],{type:'text/javascript'}));
 function stop(){generation++;if(worker){worker.terminate();worker=null}clearTimeout(timer);timer=null}
 function status(text,cls=''){$('status').textContent=text;$('status').className=cls}
+function checking(value){$('check').disabled=value;sourceView.setBusy(value)}
+function sourceChanged(){stop();$('xml').value='';$('xml-text').value='';$('errors').replaceChildren();$('validation-results').className='validation-results source-only';checking(!sourceView.getEditedSource().trim());status('XML изменён. Нажмите «Проверить исправленный XML», чтобы обновить результат.')}
 function clear(){stop();sourceView.clear();$('xml').value='';$('xml-text').value='';$('check').disabled=true;$('errors').replaceChildren();status('Файл и результат очищены. Выберите следующий XML.')}
 $('clear').onclick=clear;
 $('xml').onchange=()=>{stop();sourceView.clear();$('xml-text').value='';$('errors').replaceChildren();$('check').disabled=!$('xml').files.length;status($('xml').files.length?'Файл выбран локально. Нажмите «Проверить XML».':'Выберите файл для проверки.')};
 $('xml-text').oninput=()=>{stop();sourceView.clear();$('xml').value='';$('errors').replaceChildren();$('check').disabled=!$('xml-text').value.trim();status('Текст остаётся только в этом окне. Нажмите «Проверить XML».')};
-$('check').onclick=async()=>{
- stop();const token=generation,file=$('xml').files[0],pasted=$('xml-text').value;if(!file&&!pasted.trim())return;
- sourceView.clear();$('validation-results').className='validation-results source-only';$('check').disabled=true;$('errors').replaceChildren();status('Проверяем XML на вашем компьютере…');
+async function check(){
+ stop();const token=generation,edited=sourceView.getEditedSource(),file=edited===null?$('xml').files[0]:null,pasted=edited===null?$('xml-text').value:edited;if(!file&&!pasted.trim())return;
+ sourceView.setErrors([]);$('validation-results').className='validation-results source-only';checking(true);$('errors').replaceChildren();status('Проверяем XML на вашем компьютере…');
  try{
   if((file?.size||pasted.length)>core.MAX_BYTES)throw Error('Размер XML превышает 10 МиБ. Используйте Python-валидатор из ZIP.');
   const bytes=file?new Uint8Array(await file.arrayBuffer()):new TextEncoder().encode(pasted.replace(/^(<\?xml\s[^?]*\bencoding\s*=\s*)(["'])[^"']*\2/, '$1"UTF-8"'));if(token!==generation)return;
-  core.checkPack(SEDO_PACK,SEDO_PACK);const decoded=core.inspectBytes(bytes);sourceView.setSource(file?decoded:pasted);
-  worker=new Worker(workerUrl);timer=setTimeout(()=>{if(token!==generation)return;stop();$('check').disabled=false;status('Проверка остановлена через 30 секунд. Можно повторить или использовать Python-валидатор из ZIP.','invalid')},30000);
-  worker.onmessage=event=>{if(token!==generation)return;const result=event.data;stop();$('check').disabled=false;
+  core.checkPack(SEDO_PACK,SEDO_PACK);const decoded=core.inspectBytes(bytes);sourceView.setSource(file?decoded:pasted,{preserveEditor:edited!==null});sourceView.setBusy(true);
+  worker=new Worker(workerUrl);timer=setTimeout(()=>{if(token!==generation)return;stop();checking(false);status('Проверка остановлена через 30 секунд. Можно повторить или использовать Python-валидатор из ZIP.','invalid')},30000);
+  worker.onmessage=event=>{if(token!==generation)return;const result=event.data;stop();checking(false);
    status(result.valid?'XML соответствует XSD выбранного сообщения и редакции.':result.runtime?'Проверку не удалось завершить.':'XML не соответствует выбранной схеме.',result.valid?'valid':'invalid');
    sourceView.setErrors(result.errors||[]);$('validation-results').className='validation-results'+(result.errors?.length?'':' source-only');
    for(const error of result.errors||[]){
@@ -39,8 +41,9 @@ $('check').onclick=async()=>{
     $('errors').append(item);
    }
   };
-  worker.onerror=()=>{if(token!==generation)return;stop();$('check').disabled=false;status('Ошибка запуска валидатора. Попробуйте снова или используйте Python-валидатор из ZIP.','invalid')};
+  worker.onerror=()=>{if(token!==generation)return;stop();checking(false);status('Ошибка запуска валидатора. Попробуйте снова или используйте Python-валидатор из ZIP.','invalid')};
   worker.postMessage({bytes,pack:SEDO_PACK,source:file?undefined:pasted},[bytes.buffer]);
- }catch(error){if(token!==generation)return;stop();$('check').disabled=false;status(String(error.message||error),'invalid')}
-};
+ }catch(error){if(token!==generation)return;stop();checking(false);status(String(error.message||error),'invalid')}
+}
+$('check').onclick=check;
 addEventListener('pagehide',()=>{stop();URL.revokeObjectURL(workerUrl)});
