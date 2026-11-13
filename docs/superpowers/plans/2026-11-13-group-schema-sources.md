@@ -4,7 +4,7 @@
 
 **Design:** Keep immutable source revisions, fields, source objects and historical events unchanged. During site compilation annotate equivalent ready revisions with a stable first-seen display revision ID and a combined source list. Equality requires the same message, contour, root, namespace, exact SHA-256 set of transitive XSD dependencies and the same field tree (excluding source file locations). Document-only records never merge. XML, constraint or description differences prevent merging. Thus document versions are source metadata, not competing schema editions.
 
-The site filters edition lists and comparison choices by display ID; old revision URLs, comparison IDs, saved field files and workbook IDs remain available. The compiled journal contains one discovery event per schema group and computes comparisons between distinct groups. Source lists are visible on cards, viewer, comparison, journal and exported workbook metadata. No snapshot migrations, discarded history or collector changes.
+The site filters edition lists and comparison choices by display ID; old revision URLs, comparison IDs, saved field files and workbook IDs remain available. The browser journal uses schema_updates with one discovery event per schema group and comparisons between distinct groups. Full updates with their original IDs and comparisons remain published for importer report compatibility. Source lists are visible on cards, viewer, comparison, journal and exported workbook metadata. No snapshot migrations, discarded history or collector changes.
 
 ## Implementation
 

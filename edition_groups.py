@@ -68,5 +68,10 @@ def display_updates(catalog):
                 raise ValueError("Cycle in source edition history")
             visited.add(previous)
             previous = events[previous].get("previous_revision_id")
-        result.append(dict(event, revision_id=rid, previous_revision_id=canonical[previous] if previous else None))
+        displayed = dict(event, revision_id=rid, previous_revision_id=canonical[previous] if previous else None)
+        if event.get("comparison"):
+            comparison = event["comparison"]
+            displayed["comparison"] = dict(comparison, left=canonical.get(comparison.get("left")),
+                                            right=canonical.get(comparison.get("right")))
+        result.append(displayed)
     return result

@@ -73,10 +73,14 @@ class EditionGroupsTests(unittest.TestCase):
                               dict(revision_id="second", previous_revision_id="first", observed_at="2026-11-13T00:00:00Z"),
                               dict(revision_id="third", previous_revision_id="second", observed_at="2026-11-14T00:00:00Z")]
         original = copy.deepcopy(catalog["updates"])
-        result = display_updates(group_editions(catalog, fields.__getitem__))
+        catalog["updates"][2]["comparison"] = dict(status="ready", left="second", right="third", counts=dict(added=0,removed=0,changed=0))
+        grouped = group_editions(catalog, fields.__getitem__)
+        result = display_updates(grouped)
         self.assertEqual([e["revision_id"] for e in result], ["first", "third"])
         self.assertEqual(result[1]["previous_revision_id"], "first")
-        self.assertEqual(catalog["updates"], original)
+        self.assertEqual(result[1]["comparison"]["left"], "first")
+        self.assertEqual(grouped["updates"][2]["comparison"]["left"], "second")
+        self.assertEqual(catalog["updates"][:2], original[:2])
 
     def test_real_message_14_is_one_edition_per_contour_with_three_sources(self):
         root = Path(__file__).resolve().parents[1]

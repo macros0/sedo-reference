@@ -5,7 +5,7 @@ import subprocess
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from sync import inspect_file, sha, write
-from edition_groups import group_editions, visible_editions, display_updates
+from edition_groups import group_editions, display_updates
 HERE=Path(__file__).resolve().parent
 def packed(value):
     return json.dumps(value,ensure_ascii=False,separators=(",",":")).replace("<","\\u003c")
@@ -72,14 +72,16 @@ restoreField();
         (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
     catalog=group_editions(catalog,field_cache.__getitem__)
     if catalog.get("updates"):
-        summary_catalog=dict(catalog,revisions=visible_editions(catalog),updates=display_updates(catalog))
         try:
             result=subprocess.run(["node",str(Path(__file__).with_name("summarize_updates.cjs")),str(HERE/"data/fields")],
-                                  input=packed(summary_catalog),capture_output=True,text=True,encoding="utf8",check=True,timeout=120)
+                                  input=packed(catalog),capture_output=True,text=True,encoding="utf8",check=True,timeout=120)
         except (OSError,subprocess.SubprocessError) as exc:
             detail=getattr(exc,"stderr",None) or str(exc)
             raise ValueError("Не удалось посчитать изменения журнала (нужен Node.js 18+): "+detail[:1500]) from exc
         catalog["updates"]=json.loads(result.stdout)
+        # Keep complete source events for importer reports and old workbook IDs;
+        # the browser journal consumes only the grouped schema events.
+        catalog["schema_updates"]=display_updates(catalog)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
     assets=("app.js","app.css","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg")
     for file in assets:

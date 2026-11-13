@@ -51,6 +51,24 @@ class DocumentArchiveTests(unittest.TestCase):
             build_site.archive_documents(catalog,self.root/'state',self.root/'site')
         self.assertEqual(target.read_bytes(),self.document)
 
+    def test_grouped_journal_keeps_original_events_for_import_reports(self):
+        catalog=json.loads((self.root/'data/catalog.json').read_bytes())
+        fields=[dict(name='fault',path='fault',parent=-1,children=[],kind='element',min=1,max=1,facets=[],values=[],flags={})]
+        for row in catalog['revisions']:
+            row.update(root='fault',namespace='urn:fault',label_date=None,archive_url='https://example.test/schema.zip',
+                       archive_sha256='xsd-archive',dependencies=[['Fault.xsd','same-xsd']])
+            write(self.root/'data/fields'/(row['revision_id']+'.json'),encode(dict(fields=fields)))
+        write(self.root/'data/fields/index.json',encode([dict(revision_id=r['revision_id'],status='ready') for r in catalog['revisions']]))
+        catalog['updates']=[dict(revision_id='edition1',previous_revision_id=None),dict(revision_id='edition2',previous_revision_id='edition1')]
+        write(self.root/'data/catalog.json',encode(catalog))
+        self.build()
+        published=json.loads((self.root/'site/catalog-data.js').read_text('utf8').removeprefix('window.SEDO_CATALOG=').removesuffix(';'))
+        self.assertEqual(len(published['schema_updates']),1)
+        source_event=next(e for e in published['updates'] if e['revision_id']=='edition2')
+        self.assertEqual(source_event['comparison']['status'],'ready')
+        self.assertEqual(source_event['comparison']['counts'],dict(added=0,removed=0,changed=0))
+        self.assertEqual(len(published['updates']),2)
+
     def test_missing_document_blocks_build(self):
         (self.root / "state/objects" / self.digest).unlink()
         with self.assertRaisesRegex(ValueError, "DOCX"):
