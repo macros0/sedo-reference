@@ -22,9 +22,25 @@
  function fieldLinks(revision,finding){
   return (finding.field_paths||[]).map(path=>({path,href:fieldLink(revision,path),text:(finding.field_link_scope==='parent'?'Открыть родительский блок':'Открыть поле XSD')+' · '+path}));
  }
- function filter(rows,number='',env=''){
+ function specificationKey(r){return r.document_url||r.document_download||r.document_sha256||r.revision_id}
+ function xsdKey(r,f){
+  const sources=schemaSources(r,f);
+  return JSON.stringify([sources.publication.url||r.archive_url||r.manual_source?.label||'',sources.file.text]);
+ }
+ function sourceOptions(rows){
+  const specifications=new Map(),schemas=new Map();
+  for(const {revision:r,finding:f} of rows){
+   specifications.set(specificationKey(r),documentName(r)+' · '+envNames[r.environment]);
+   const sources=schemaSources(r,f);
+   schemas.set(xsdKey(r,f),sources.file.text+' · '+sources.publication.text+' · '+envNames[r.environment]);
+  }
+  const sorted=map=>[...map].map(([value,text])=>({value,text})).sort((a,b)=>a.text.localeCompare(b.text,'ru'));
+  return {specifications:sorted(specifications),schemas:sorted(schemas)};
+ }
+ function filter(rows,number='',env='',specification='',xsd=''){
   const query=number.trim();
-  return rows.filter(({revision:r})=>(!query||r.number===query)&&(!env||r.environment===env));
+  return rows.filter(({revision:r,finding:f})=>(!query||r.number===query)&&(!env||r.environment===env)
+   &&(!specification||specificationKey(r)===specification)&&(!xsd||xsdKey(r,f)===xsd));
  }
  function link(text,url,baseURL){
   if(!url)return text;
@@ -58,7 +74,7 @@
    wsdl:r.schema_source_type==='wsdl_bridge'&&!remote?{text:service||'Источник зависимостей не указан',url:service}:null
   };
  }
- function createWorkbook(ExcelJS,rows,{number='',env='',baseURL,createdAt=new Date()}={}){
+ function createWorkbook(ExcelJS,rows,{number='',env='',specification='',xsd='',baseURL,createdAt=new Date()}={}){
   const workbook=new ExcelJS.Workbook();workbook.creator='Справочник СЭДО';workbook.created=createdAt;
   const sheet=workbook.addWorksheet('Замечания',{views:[{state:'frozen',ySplit:1}]});
   const columns=[
@@ -85,8 +101,11 @@
   sheet.getRow(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF165A56'}};
   sheet.getRow(1).alignment={wrapText:true};sheet.getRow(1).height=32;
   const info=workbook.addWorksheet('О журнале');info.columns=[{width:28},{width:110}];
+  const options=sourceOptions(rows);
   info.addRows([
    ['Номер сообщения',number||'Все сообщения'],['Контур',envNames[env]||'Все контуры'],['Записей',rows.length],
+   ['Спецификация',options.specifications.find(s=>s.value===specification)?.text||specification||'Все спецификации'],
+   ['Файл XSD',options.schemas.find(s=>s.value===xsd)?.text||xsd||'Все файлы XSD'],
    ['Охват','Все сохранённые редакции. Одна строка — замечание к определённой спецификации и её комплекту XSD своего контура.'],
    ['Обновление','Замечания пересчитываются при каждой сборке справочника по исходным DOCX и XSD.'],
    ['Объём проверки','Автоматически сопоставимые таблицы и XML-примеры. Подробности охвата доступны в карточке сообщения.'],
@@ -105,16 +124,32 @@
    const option=el('option',text);option.value=value;select.append(option);
   }
   select.value=params.get('env')||'';envLabel.append(select);controls.append(label,envLabel);
+  const all=collect(catalog),options=sourceOptions(all);
+  const sourceControls=el('div',undefined,'review-source-filters');
+  function sourceSelect(title,id,items,initial,empty){
+   const label=el('label',title),select=el('select');select.id=id;
+   for(const item of [{value:'',text:empty},...items]){
+    const option=el('option',item.text);option.value=item.value;select.append(option);
+   }
+   if(initial&&!items.some(s=>s.value===initial)){
+    const option=el('option','Источник отсутствует в текущем журнале');option.value=initial;select.append(option);
+   }
+   select.value=initial;label.append(select);sourceControls.append(label);return select;
+  }
+  const specification=sourceSelect('Спецификация','review-specification',options.specifications,params.get('specification')||'','Все спецификации');
+  const xsd=sourceSelect('Файл XSD','review-xsd',options.schemas,params.get('xsd')||'','Все файлы XSD');
   const button=el('button','Скачать Excel','open');button.type='button';button.id='review-export';
   const status=el('p','','meta');status.setAttribute('role','status');
-  const result=el('div',undefined,'review-results');container.append(controls,button,status,result);
-  const all=collect(catalog);let visible=[];
+  const result=el('div',undefined,'review-results');container.append(controls,sourceControls,button,status,result);
+  let visible=[];
   function render(){
-   visible=filter(all,input.value,select.value);result.replaceChildren();
+   visible=filter(all,input.value,select.value,specification.value,xsd.value);result.replaceChildren();
    status.textContent='Замечаний: '+visible.length;button.disabled=!visible.length;
    const route=new URLSearchParams({remarks:'1'});
    if(input.value.trim())route.set('number',input.value.trim());
    if(select.value)route.set('env',select.value);
+   if(specification.value)route.set('specification',specification.value);
+   if(xsd.value)route.set('xsd',xsd.value);
    history.replaceState(null,'','#'+route);
    if(!visible.length){result.append(el('p','По выбранным фильтрам замечаний нет. Объём выполненной сверки указан в карточках сообщений.'));return}
    const table=el('table'),head=el('thead'),header=el('tr');
@@ -150,12 +185,13 @@
    }
    table.append(body);result.append(table);
   }
-  input.oninput=render;select.onchange=render;
+  input.oninput=render;select.onchange=render;specification.onchange=render;xsd.onchange=render;
   button.onclick=async()=>{
-   const snapshot=visible.slice(),number=input.value.trim(),env=select.value;button.disabled=true;
+   const snapshot=visible.slice(),number=input.value.trim(),env=select.value;
+   const selectedSpecification=specification.value,selectedXsd=xsd.value;button.disabled=true;
    try{
     const ExcelJS=await root.SedoComparisonExport.loadLibrary();
-    const workbook=createWorkbook(ExcelJS,snapshot,{number,env,baseURL:location.href});
+    const workbook=createWorkbook(ExcelJS,snapshot,{number,env,specification:selectedSpecification,xsd:selectedXsd,baseURL:location.href});
     const buffer=await workbook.xlsx.writeBuffer(),url=URL.createObjectURL(new Blob([buffer],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
     const a=el('a');a.href=url;a.download='sedo-remarks-'+(number||'all')+'-'+(env||'all')+'.xlsx';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
     status.textContent='В Excel выгружено замечаний: '+snapshot.length;
@@ -164,7 +200,7 @@
   };
   render();
  }
- const api={collect,filter,createWorkbook,mount,schemaSources,fieldLinks};
+ const api={collect,filter,createWorkbook,mount,schemaSources,fieldLinks,specificationKey,xsdKey,sourceOptions};
  if(typeof module==='object'&&module.exports)module.exports=api;
  else root.SedoReviewJournal=api;
 })(typeof window==='undefined'?globalThis:window);

@@ -33,3 +33,29 @@ test('journal filters match the exported Excel and survive navigation',async({pa
  await expect(rows).toHaveCount(0);await expect(page.locator('#review-export')).toBeDisabled();
  await page.locator('.brand').click();await expect(page.locator('#review-journal')).toBeHidden();
 });
+
+test('specification and compared XSD filters persist and bound Excel rows',async({page})=>{
+ await page.goto('/site/#remarks=1&number=111&env=prod');
+ const rows=page.locator('.review-results tbody tr');
+ const specification=await rows.first().locator('td').nth(1).locator('a').getAttribute('href');
+ const xsdPath=await rows.first().locator('.review-source-chain a').nth(2).innerText();
+ await page.locator('#review-specification').selectOption(specification);
+ const fileValue=await page.locator('#review-xsd option').evaluateAll((options,path)=>options.find(o=>o.textContent.startsWith(path+' · ')&&o.textContent.endsWith(' · Продуктивный')).value,xsdPath);
+ await page.locator('#review-xsd').selectOption(fileValue);
+ await page.locator('#review-number').fill('');
+ const count=await rows.count();expect(count).toBeGreaterThan(0);
+ await page.reload();
+ await expect(page.locator('#review-specification')).toHaveValue(specification);
+ await expect(page.locator('#review-xsd')).toHaveValue(fileValue);
+ await expect(rows).toHaveCount(count);
+ const ready=page.waitForEvent('download');await page.locator('#review-export').click();
+ const file=await ready,workbook=new ExcelJS.Workbook();
+ await workbook.xlsx.load(require('node:fs').readFileSync(await file.path()));
+ const sheet=workbook.getWorksheet('Замечания');expect(sheet.rowCount).toBe(count+1);
+ for(let row=2;row<=sheet.rowCount;row++){
+  expect(sheet.getCell('D'+row).value.hyperlink).toBe(new URL(specification).href);
+  expect(sheet.getCell('M'+row).value.text).toBe(xsdPath);
+ }
+ await page.locator('#review-env').selectOption('test');await expect(rows).toHaveCount(0);
+ await expect(page.locator('#review-export')).toBeDisabled();
+});

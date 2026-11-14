@@ -55,3 +55,5 @@
 .review-results td p {margin:0}
 .review-results td .meta {margin-top:10px}
 #review-journal button:disabled {opacity:.5; cursor:default}
+
+.review-source-filters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0}.review-source-filters label{display:flex;flex-direction:column;gap:6px;min-width:0}.review-source-filters select{width:100%;min-width:0}@media(max-width:700px){.review-source-filters{grid-template-columns:1fr}}
