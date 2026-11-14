@@ -8,10 +8,15 @@
 .field-review h4{font-size:15px;margin:0}.field-review .quiet{margin:6px 0 12px}
 .field-review dl{margin:0;font-size:14px}.field-review dt{font-weight:600;margin-top:8px}
 .field-review dd{margin:0;white-space:pre-wrap}
+
+.controls .review-toggle{display:flex;align-items:center;gap:8px;font-size:14px;margin-top:12px;cursor:pointer}
+.controls .review-toggle input{width:auto;padding:0;margin:0;accent-color:var(--accent)}
+.review-mark{display:inline-block;flex-shrink:0;border-radius:5px;padding:2px 6px;margin-left:7px;background:#fff1cb;color:#674707;font:12px/1.5 "Segoe UI",Arial,sans-serif}
+.result .review-mark{margin:5px 0 0}.item .name{overflow:hidden;text-overflow:ellipsis}
 header,h1,.sub{display:none}.page{padding-top:0}.layout{margin-top:0}body{background:#f3f6f5}</style>
 <header><span class="logo" aria-hidden="true">&lt;/&gt;</span><b>Справочник СЭДО</b><small id="version"></small></header>
 <main class="page"><h1>Сообщение 10110</h1><p class="sub">Ответ на запрос недостающих сведений</p>
-<div class="layout"><aside class="panel"><div class="controls"><input id="query" type="search" aria-label="Поиск по тегу или описанию" placeholder="Поиск по тегу, пути или описанию"><select id="scope" aria-label="Раздел сообщения"></select><p class="label" style="margin:8px 0 0;font-weight:400">Выбор раздела открывает блок и ограничивает поиск его полями.</p></div><div class="rowhead"><span class="label" id="status" aria-live="polite"></span><button id="reset" class="bare quiet">Сбросить</button></div><div class="tree" id="tree" aria-label="Навигация по схеме"></div></aside>
+<div class="layout"><aside class="panel"><div class="controls"><input id="query" type="search" aria-label="Поиск по тегу или описанию" placeholder="Поиск по тегу, пути или описанию"><select id="scope" aria-label="Раздел сообщения"></select><label class="review-toggle"><input type="checkbox" id="review-only" autocomplete="off">Только с замечаниями</label><p class="label" style="margin:8px 0 0;font-weight:400">Выбор раздела открывает блок и ограничивает поиск его полями.</p></div><div class="rowhead"><span class="label" id="status" aria-live="polite"></span><button id="reset" class="bare quiet">Сбросить</button></div><div class="tree" id="tree" aria-label="Навигация по схеме"></div></aside>
 <section class="panel detail" id="detail" aria-label="Карточка поля"></section></div><footer id="meta"></footer></main>
 <script type="application/json" id="catalog">{"fields":[{"name":"sttmntRefundUnemplResult","path":"sttmntRefundUnemplResult","parent":-1,"group":"","doc":"Корневой элемент результата обработки заявления","kind":"element","min":"1","max":"1","type":"SttmntRefundUnemplResultType","base":"","facets":[],"values":[],"children":[1,4],"ns":"http://www.fss.ru/integration/types/pvso/refund/unempl/v01","file":"RefundUnempl.xsd","flags":{},"typeFile":"RefundUnempl.xsd"},{"name":"result","path":"sttmntRefundUnemplResult/result","parent":0,"group":"","doc":"Данные о принятом заявлении","kind":"element","min":"1","max":"1","type":"","base":"","facets":[],"values":[],"children":[2,3],"ns":"http://www.fss.ru/integration/types/pvso/refund/unempl/v01","file":"RefundUnempl.xsd","flags":{}},{"name":"sttmntNumber","path":"sttmntRefundUnemplResult/result/sttmntNumber","parent":1,"group":"","doc":"Номер заявления","kind":"element","min":"1","max":"1","type":"xs:string","base":"xs:string","facets":[],"values":[],"children":[],"ns":"http://www.fss.ru/integration/types/pvso/refund/unempl/v01","file":"RefundUnempl.xsd","flags":{}},{"name":"status","path":"sttmntRefundUnemplResult/result/status","parent":1,"group":"","doc":"Статус заявления","kind":"element","min":"1","max":"1","type":"xs:string","base":"xs:string","facets":[],"values":[],"children":[],"ns":"http://www.fss.ru/integration/types/pvso/refund/unempl/v01","file":"RefundUnempl.xsd","flags":{}},{"name":"errorList","path":"sttmntRefundUnemplResult/errorList","parent":0,"group":"","doc":"Список сообщений об ошибках","kind":"element","min":"0","max":"unbounded","type":"com:ErrorType","base":"","facets":[],"values":[],"children":[5,6,7],"ns":"http://www.fss.ru/integration/types/pvso/refund/unempl/v01","file":"RefundUnempl.xsd","flags":{},"typeFile":"Common.xsd"},{"name":"code","path":"sttmntRefundUnemplResult/errorList/code","parent":4,"group":"","doc":"Код ошибки. См. коды ошибок конкретного модуля","kind":"element","min":"0","max":"1","type":"xs:string","base":"xs:string","facets":[],"values":[],"children":[],"ns":"http://www.fss.ru/integration/types/common/v01","file":"Common.xsd","flags":{}},{"name":"message","path":"sttmntRefundUnemplResult/errorList/message","parent":4,"group":"","doc":"Сообщение ошибки","kind":"element","min":"0","max":"1","type":"xs:string","base":"xs:string","facets":[],"values":[],"children":[],"ns":"http://www.fss.ru/integration/types/common/v01","file":"Common.xsd","flags":{}},{"name":"details","path":"sttmntRefundUnemplResult/errorList/details","parent":4,"group":"","doc":"Детализация ошибки","kind":"element","min":"0","max":"1","type":"xs:string","base":"xs:string","facets":[],"values":[],"children":[],"ns":"http://www.fss.ru/integration/types/common/v01","file":"Common.xsd","flags":{}}],"review_sources":[],"revision":"912d36349ff07c4f58145d1058d2877bc8bf219ada5053620fda69e4bcd52b51","version":"2.5","date":"05.03.2024","archive":"xsd.7z (из DOCX)","files":9,"sha256":"e42ff4212911fb2fe2f1c58eab39d159d097bf80073238a959ed7ad3cdce3aa9"}</script>
 <script>
@@ -24,35 +29,56 @@ const normalize=s=>s.toLocaleLowerCase('ru').replaceAll('ё','е');
 const alternativeText=rows=>(rows||[]).flatMap(r=>[r.type||'',r.base||'',...(r.values||[]).flat(),...alternativeText(r.alternatives)]);
 const index=fields.map(f=>normalize([f.name,f.path,f.doc,...f.values.flat(),...alternativeText(f.alternatives)].join(' ')));
 const branches=fields.map((f,i)=>i).filter(i=>i>0&&fields[i].children.length);
+
+const reviewsByPath=new Map();
+for(const source of data.review_sources||[])for(const finding of source.findings||[]){
+ for(const path of new Set(finding.field_paths||[])){
+  if(!reviewsByPath.has(path))reviewsByPath.set(path,[]);
+  reviewsByPath.get(path).push({source,finding});
+ }
+}
+const reviewCounts=fields.map(field=>(reviewsByPath.get(field.path)||[]).length);
+const reviewTree=new Set(),reviewExpanded=new Set();
+for(let i=0;i<fields.length;i++)if(reviewCounts[i]){
+ for(let p=i;p>=0;p=fields[p].parent)reviewTree.add(p);
+}
+function reviewMark(i){
+ const count=reviewCounts[i];if(!count)return null;
+ const mark=el('span','review-mark','Замечания · '+count);
+ mark.setAttribute('aria-label','Замечаний '+count);return mark;
+}
 const expanded=new Set([0]);let current=0;
-const scope=$('scope'),query=$('query'),tree=$('tree'),detail=$('detail');
+const scope=$('scope'),query=$('query'),tree=$('tree'),detail=$('detail'),onlyReviews=$('review-only');
 scope.add(new Option('Все разделы',''));
 branches.forEach(i=>{const f=fields[i],description=f.doc||f.children.map(j=>fields[j].doc).filter(Boolean).slice(0,3).join(' / '),label=f.path.split('/').slice(1).join(' › ')+(description?' · '+description.replace(/\s+/g,' ').slice(0,90):'');scope.add(new Option(label,f.path))});
 scope.disabled=!branches.length;
 $('version').textContent=data.version+'  ·  '+(data.date||data.archive);
 $('meta').textContent=data.archive+'  ·  '+data.files+' XSD  ·  '+fields.length+' позиций в дереве';
 function inScope(i){return !scope.value||fields[i].path===scope.value||fields[i].path.startsWith(scope.value+'/')}
-function select(i,show=false){current=i;location.hash=new URLSearchParams({field:fields[i].path}).toString();if(show){if(!inScope(i))scope.value='';query.value='';for(let p=fields[i].parent;p>=0;p=fields[p].parent)expanded.add(p)}render();if(show)tree.querySelector('.active')?.scrollIntoView({block:'nearest'})}
+function select(i,show=false){current=i;location.hash=new URLSearchParams({field:fields[i].path}).toString();if(show){if(!inScope(i))scope.value='';query.value='';if(onlyReviews.checked&&!reviewTree.has(i))onlyReviews.checked=false;for(let p=fields[i].parent;p>=0;p=fields[p].parent){expanded.add(p);reviewExpanded.add(p)}}render();if(show)tree.querySelector('.active')?.scrollIntoView({block:'nearest'})}
 function renderTree(){
  tree.replaceChildren();const terms=normalize(query.value.trim()).split(/\s+/).filter(Boolean);
  if(terms.length){
- const hits=fields.map((f,i)=>i).filter(i=>inScope(i)&&terms.every(t=>index[i].includes(t)));
+ const hits=fields.map((f,i)=>i).filter(i=>inScope(i)&&(!onlyReviews.checked||reviewCounts[i])&&terms.every(t=>index[i].includes(t)));
  const score=i=>terms.reduce((s,t)=>s+(normalize(fields[i].name)===t?6:normalize(fields[i].name).includes(t)?3:normalize(fields[i].doc).includes(t)?1:0),0);
  hits.sort((a,b)=>score(b)-score(a));$('status').textContent='Найдено: '+hits.length;
- for(const i of hits){const f=fields[i],b=button('result'+(i===current?' active':''),'',()=>select(i));b.append(el('b','',f.name),el('small','',f.path),el('small','',f.doc.slice(0,140)));tree.append(b)}
+ for(const i of hits){const f=fields[i],b=button('result'+(i===current?' active':''),'',()=>select(i));b.append(el('b','',f.name),el('small','',f.path),el('small','',f.doc.slice(0,140)));const mark=reviewMark(i);if(mark)b.append(mark);tree.append(b)}
  if(!hits.length)tree.append(el('p','empty','Совпадений нет. Попробуйте часть названия или описания.'));return}
- $('status').textContent='Структура сообщения';
- function row(i,depth){const f=fields[i],r=el('div','item'+(current===i?' active':''));r.style.setProperty('--depth',depth);
- if(f.children.length){const c=button('caret',expanded.has(i)?'▾':'▸',()=>{expanded.has(i)?expanded.delete(i):expanded.add(i);renderTree()});c.setAttribute('aria-label',(expanded.has(i)?'Свернуть ':'Раскрыть ')+f.name);c.setAttribute('aria-expanded',expanded.has(i));r.append(c)}else r.append(el('span','leaf','·'));
- const b=button('name',f.name,()=>select(i));b.title=f.doc||f.path;r.append(b);tree.append(r);if(expanded.has(i))f.children.forEach(n=>row(n,depth+1))}
+ const reviewed=fields.map((f,i)=>i).filter(i=>reviewCounts[i]&&inScope(i));
+ $('status').textContent=onlyReviews.checked?'Полей с замечаниями · '+reviewed.length:'Структура сообщения';
+ if(onlyReviews.checked&&!reviewed.length){tree.append(el('p','empty','В выбранном разделе нет полей со связанными замечаниями.'));return}
+ const open=onlyReviews.checked?reviewExpanded:expanded;
+ function row(i,depth){if(onlyReviews.checked&&!reviewTree.has(i))return;const f=fields[i],r=el('div','item'+(current===i?' active':''));r.style.setProperty('--depth',depth);
+ const children=f.children.filter(n=>!onlyReviews.checked||reviewTree.has(n));
+ if(children.length){const c=button('caret',open.has(i)?'▾':'▸',()=>{open.has(i)?open.delete(i):open.add(i);renderTree()});c.setAttribute('aria-label',(open.has(i)?'Свернуть ':'Раскрыть ')+f.name);c.setAttribute('aria-expanded',open.has(i));r.append(c)}else r.append(el('span','leaf','·'));
+ const b=button('name',f.name,()=>select(i));b.title=f.doc||f.path;r.append(b);const mark=reviewMark(i);if(mark)r.append(mark);tree.append(r);if(open.has(i))children.forEach(n=>row(n,depth+1))}
  if(scope.value)row(branches.find(i=>fields[i].path===scope.value),0);else row(0,0);
 }
 const facets={pattern:'Регулярное выражение XSD',minLength:'Минимальная длина',maxLength:'Максимальная длина',length:'Точная длина',minInclusive:'Минимум включительно',maxInclusive:'Максимум включительно',minExclusive:'Больше',maxExclusive:'Меньше',fractionDigits:'Знаков после запятой, до',totalDigits:'Всего цифр, до',whiteSpace:'Обработка пробелов',fixed:'Фиксированное значение',default:'По умолчанию',nillable:'Допускает xsi:nil',processContents:'Проверка содержимого',namespace:'Пространства имён'};
 const builtins={boolean:'Логическое значение: true, false, 1 или 0.',date:'Дата XML Schema, например 2026-09-19.',long:'Целое число от −9223372036854775808 до 9223372036854775807.',integer:'Целое число.',decimal:'Десятичное число. Разделитель дробной части — точка.',int:'Целое число от −2147483648 до 2147483647.'};
 
 function renderFieldReviews(field){
- const matches=(data.review_sources||[]).flatMap(source=>(source.findings||[])
-  .filter(finding=>(finding.field_paths||[]).includes(field.path)).map(finding=>({source,finding})));
+ const matches=reviewsByPath.get(field.path)||[];
  if(!matches.length)return;
  const section=el('section','field-reviews');section.setAttribute('aria-label','Замечания к полю');
  section.append(el('h3','','Замечания к полю · '+matches.length));
@@ -90,8 +116,21 @@ function renderDetail(){const f=fields[current];detail.replaceChildren();const a
  if(query.value)detail.append(button('btn','Показать в дереве',()=>select(current,true)));
 }
 function render(){renderTree();renderDetail()}
+onlyReviews.onchange=()=>{
+ if(onlyReviews.checked){
+  reviewExpanded.clear();
+  for(const i of reviewTree)if(!reviewCounts[i]||fields[i].children.length)reviewExpanded.add(i);
+  const terms=normalize(query.value.trim()).split(/\s+/).filter(Boolean);
+  const matches=fields.map((f,i)=>i).filter(i=>reviewCounts[i]&&inScope(i)&&terms.every(t=>index[i].includes(t)));
+  if(matches.length&&!matches.includes(current))select(matches[0]);else render();
+ }else{
+  for(let p=fields[current].parent;p>=0;p=fields[p].parent)expanded.add(p);
+  render();
+ }
+ tree.scrollTop=0;
+};
 query.oninput=()=>{render();tree.scrollTop=0};scope.onchange=()=>{if(scope.value){const next=branches.find(i=>fields[i].path===scope.value);expanded.add(next);select(next)}else render();tree.scrollTop=0};
-$('reset').onclick=()=>{query.value='';scope.value='';expanded.clear();expanded.add(0);select(0);tree.scrollTop=0};render();
+$('reset').onclick=()=>{query.value='';scope.value='';onlyReviews.checked=false;reviewExpanded.clear();expanded.clear();expanded.add(0);select(0);tree.scrollTop=0};render();
 
 function restoreField(){
  const path=new URLSearchParams(location.hash.slice(1)).get('field');
