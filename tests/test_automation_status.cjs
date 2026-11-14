@@ -30,16 +30,53 @@ assert.match(next.updated,/Фактический запуск может зад
 console.log('Automation status states and safe links passed.');
 
 (async()=>{
- const {mount}=require('../web/automation-status.js');
+ const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+ let time=0,timerId=0;const timers=new Map(),events=new Map();
+ const flush=()=>new Promise(resolve=>setImmediate(resolve));
+ async function advance(milliseconds){
+  const target=time+milliseconds;
+  for(;;){
+   const next=[...timers].filter(([,t])=>t.at<=target).sort((a,b)=>a[1].at-b[1].at)[0];
+   if(!next)break;
+   time=next[1].at;timers.delete(next[0]);next[1].callback();await flush();
+  }
+  time=target;await flush();
+ }
+ const context={module:{exports:{}},AbortController,
+  setTimeout:(callback,delay)=>{timers.set(++timerId,{callback,at:time+delay});return timerId},
+  clearTimeout:id=>timers.delete(id)};
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../web/automation-status.js'),'utf8'),context);
+ const {mount}=context.module.exports;
  class Element{constructor(){this.dataset={};this.children=[];this.textContent=''}append(...items){this.children.push(...items)}replaceChildren(...items){this.children=[...items]}}
  const nodes=Object.fromEntries(['automation-status','automation-summary','automation-cards','automation-note','automation-refresh'].map(id=>[id,new Element()]));
- const doc={getElementById:id=>nodes[id],createElement:()=>new Element()};
- let fail=false;
+ const doc={visibilityState:'visible',getElementById:id=>nodes[id],createElement:()=>new Element(),addEventListener:(type,handler)=>events.set(type,handler)};
+ const visibility=state=>{doc.visibilityState=state;events.get('visibilitychange')()};
+ let fail=false,calls=0,pending;
  const current=structuredClone(data);current.generated_at=new Date().toISOString();current.sourcecraft.finished_at=current.generated_at;
  for(const value of Object.values(current.sourcecraft.contours))value.observed_at=current.generated_at;
- const app=mount(doc,async(url,options)=>{assert.equal(options.credentials,'omit');assert.match(url,/raw.githubuser/);if(fail)throw new Error('offline');return {ok:true,json:async()=>current}});
- await new Promise(resolve=>setImmediate(resolve));
+ const app=mount(doc,async(url,options)=>{calls++;assert.equal(options.credentials,'omit');assert.match(url,/raw.githubuser/);if(fail)throw new Error('offline');if(pending)await pending;return {ok:true,json:async()=>current}});
+ await flush();
  assert.equal(nodes['automation-status'].dataset.tone,'success');assert.equal(nodes['automation-cards'].children.length,3);
+ assert.equal(calls,1);
+ await advance(59999);assert.equal(calls,1);
+ await advance(1);assert.equal(calls,2,'visible tab refreshes at 60 seconds');
+ visibility('hidden');await advance(180000);assert.equal(calls,2,'hidden tab stops polling');
+ await app.refresh();assert.equal(calls,2,'hidden tab does not start requests');
+ visibility('visible');await flush();assert.equal(calls,3,'returning tab refreshes immediately');
+ await nodes['automation-refresh'].onclick();assert.equal(calls,4,'manual refresh remains available');
+ await advance(60000);assert.equal(calls,5,'manual refresh leaves one polling timer');
  fail=true;await app.refresh();assert.equal(nodes['automation-status'].dataset.tone,'unknown');assert.match(nodes['automation-summary'].textContent,/недоступен/);assert.equal(nodes['automation-refresh'].disabled,false);
- console.log('Automation status rendering and offline refresh passed.');
+ fail=false;await advance(60000);assert.equal(nodes['automation-status'].dataset.tone,'success','polling recovers after network failure');
+ let release;pending=new Promise(resolve=>{release=resolve});
+ const before=calls,inFlight=app.refresh();
+ visibility('hidden');visibility('visible');await app.refresh();assert.equal(calls,before+1,'visibility changes and manual clicks do not overlap requests');
+ pending=undefined;release();await inFlight;
+ await advance(60000);assert.equal(calls,before+2,'in-flight completion leaves one timer');
+ visibility('hidden');await advance(180000);assert.equal(calls,before+2);
+ const hiddenEvents=new Map(),hiddenDoc={...doc,visibilityState:'hidden',addEventListener:(type,handler)=>hiddenEvents.set(type,handler)};calls=0;
+ mount(hiddenDoc,async()=>{calls++;return {ok:true,json:async()=>current}});
+ await flush();await advance(120000);assert.equal(calls,0,'initially hidden tab waits');
+ hiddenDoc.visibilityState='visible';hiddenEvents.get('visibilitychange')();await flush();assert.equal(calls,1);
+ hiddenDoc.visibilityState='hidden';hiddenEvents.get('visibilitychange')();
+ console.log('Automation status rendering, 60-second polling, visibility pause, recovery and request concurrency passed.');
 })().catch(error=>{console.error(error);process.exitCode=1});
