@@ -52,14 +52,22 @@
     const url=safeLink(card.url);if(url){const a=document.createElement('a');a.textContent=card.link;a.href=url;a.target='_blank';a.rel='noopener';box.append(a)}cards.append(box)
    }
   }
-  let busy=false;
+  let busy=false,pollTimer;
   async function refresh(){
-   if(busy)return;busy=true;button.disabled=true;
+   if(busy||document.visibilityState==='hidden')return;
+   clearTimeout(pollTimer);busy=true;button.disabled=true;
    const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
    try{const response=await fetcher('https://raw.githubusercontent.com/macros0/sedo-reference/automation-status/status.json?t='+Date.now(),{cache:'no-store',credentials:'omit',referrerPolicy:'no-referrer',signal:controller.signal});if(!response.ok)throw new Error('status unavailable');render(model(await response.json()))}
    catch(_){render({tone:'unknown',summary:'Автообновление · статус временно недоступен',cards:[],updated:'Не удалось получить свежий статус. Данные справочника доступны; попробуйте обновить статус позже.'})}
-   finally{clearTimeout(timer);busy=false;button.disabled=false}
+   finally{
+    clearTimeout(timer);busy=false;button.disabled=false;
+    if(document.visibilityState!=='hidden')pollTimer=setTimeout(refresh,60000);
+   }
   }
+  document.addEventListener('visibilitychange',()=>{
+   clearTimeout(pollTimer);
+   if(document.visibilityState!=='hidden')refresh();
+  });
   button.onclick=refresh;refresh();return {refresh};
  }
  if(typeof module==='object'&&module.exports)module.exports={model,date,safeLink,mount};
