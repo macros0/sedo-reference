@@ -48,6 +48,9 @@ def _module_tables(objects, digest):
 
 
 def compare_revision(revision, fields, objects):
+    if revision.get("status") != "matched" or not revision.get("schema_path"):
+        return dict(tables=0, examples=0, findings=[],
+                    notes=["Для этой редакции не сопоставлен исходный комплект XSD."])
     body = _document_body(objects, revision["document_sha256"])
     archive = objects / revision["archive_sha256"]
     if revision.get("source_type") == "module":
