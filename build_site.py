@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from sync import inspect_file, sha, write
+from schema_review import compare_revision
 from edition_groups import group_editions, display_updates, source_updates
 from xsd_bundle import publish_bundles
 HERE=Path(__file__).resolve().parent
@@ -72,6 +73,7 @@ restoreField();
         rid=r["revision_id"];ready=statuses.get(rid,{}).get("status")=="ready";r["ready"]=ready
         if not ready:continue
         fields=field_cache[rid]
+        r["schema_review"]=compare_revision(r,fields,HERE/"state"/"objects")
         (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8")
         data=dict(fields=fields,revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=r.get("archive_name") or unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
         (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
