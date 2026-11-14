@@ -1,5 +1,6 @@
 """Preserve the publication page and exact XSD bytes for every built edition."""
 import json
+import posixpath
 import zipfile
 from urllib.parse import urlsplit
 from sync import SITES, sha, write
@@ -25,6 +26,7 @@ def publish_sources(catalog, state, site):
         row.pop("schema_publication_page", None)
         row.pop("schema_file_download", None)
         row.pop("schema_file_name", None)
+        row.pop("schema_files", None)
         if row.get("status") != "matched":
             continue
         origin = row.get("archive_url", "").split("#")[0]
@@ -39,6 +41,18 @@ def publish_sources(catalog, state, site):
             raise ValueError("Не совпадает контрольная сумма исходного комплекта XSD")
         with zipfile.ZipFile(source) as bundle:
             content = bundle.read(row["schema_path"])
+            paths = {row["schema_path"]}
+            paths.update(posixpath.normpath(posixpath.join(posixpath.dirname(row["schema_path"]),name))
+                         for name,digest in row.get("dependencies",[]))
+            files=[]
+            for path in sorted(paths):
+                raw=bundle.read(path)
+                relative="sources/"+sha(raw)+".xsd"
+                output=site/relative
+                if not output.is_file() or output.read_bytes()!=raw:
+                    write(output,raw)
+                files.append(dict(path=path,download=relative,sha256=sha(raw)))
+            row["schema_files"]=files
         filename = row["schema_path"].rsplit("/", 1)[-1]
         relative = "sources/" + sha(content) + ".xsd"
         output = site / relative

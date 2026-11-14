@@ -27,6 +27,12 @@ const revision={number:'6',environment:'prod',document_version:'3.1',label_date:
  const direct={...revision,schema_source_type:'wsdl',schema_source_url:bridged.schema_source_url,dependencies:[['main.xsd','hash']],schema_sources:[{kind:'xsd',sha256:'hash',url:'https://ecp.sfr.gov.ru/sedo/soap/SedoGateway?xsd=main.xsd'}]};
  assert.equal(journal.schemaSources(direct).file.url,direct.schema_sources[0].url);
  assert.equal(journal.schemaSources({...revision,archive_url:'manual:///uploaded.zip'}).publication.url,undefined);
+ const imported={...revision,schema_files:[{path:'main.xsd',download:'sources/main.xsd',sha256:'hash'},{path:'types/Common.xsd',download:'sources/common.xsd',sha256:'common'}]};
+ const importedSource=journal.schemaSources(imported,{xlocation:'types/Common.xsd · root/value'});
+ assert.equal(importedSource.file.text,'types/Common.xsd');assert.equal(importedSource.file.url,'sources/common.xsd');
+ const wsdlImport={...imported,schema_source_type:'wsdl_bridge',schema_source_url:bridged.schema_source_url,schema_sources:[{kind:'xsd',sha256:'common',url:'https://ecp.sfr.gov.ru/service?xsd=Common.xsd'}]};
+ const importedRemote=journal.schemaSources(wsdlImport,{xlocation:'types/Common.xsd · value'});
+ assert.equal(importedRemote.publication.url,bridged.schema_source_url);assert.equal(importedRemote.file.url,wsdlImport.schema_sources[0].url);
  assert.ok(sheet.autoFilter);assert.equal(sheet.views[0].ySplit,1);
  assert.equal(journal.collect({revisions:[{...revision,schema_review:{findings:[]}}]}).length,0,'updated source removes resolved notices');
  console.log('Journal filters, changed source results, deduplication and Excel roundtrip verified.');
