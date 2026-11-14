@@ -7,6 +7,7 @@ import audit_individual_tables
 import audit_module_tables
 import audit_xml_examples
 from module_xsd import W, text
+from review_field_links import attach_targets
 
 
 def compare_schema_location(body, schema_path):
@@ -64,4 +65,4 @@ def compare_revision(revision, fields, objects):
     examples, example_findings, notes = audit_xml_examples.audit(revision, body, archive)
     keys = ("kind", "location", "spec", "xlocation", "xsd", "impact")
     findings = [{key: finding[key] for key in keys} for finding in [*table_findings, *example_findings]]
-    return dict(tables=tables, examples=examples, findings=findings, notes=notes)
+    return dict(tables=tables, examples=examples, findings=[attach_targets(f, fields) for f in findings], notes=notes)

@@ -29,6 +29,8 @@ on:
       - 'requirements.txt'
       - 'build_site.py'
       - 'schema_review.py'
+      - 'review_field_links.py'
+      - 'tests/test_review_field_links.py'
       - 'source_provenance.py'
       - 'tests/test_source_provenance.py'
       - 'web/review-journal.js'

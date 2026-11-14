@@ -16,6 +16,12 @@
   }
   return rows.sort((a,b)=>Number(a.revision.number)-Number(b.revision.number)||a.revision.environment.localeCompare(b.revision.environment)||documentName(a.revision).localeCompare(documentName(b.revision),'ru'));
  }
+ function fieldLink(revision,path){
+  return '#'+new URLSearchParams({message:revision.number,env:revision.environment,rev:revision.revision_id,field:path});
+ }
+ function fieldLinks(revision,finding){
+  return (finding.field_paths||[]).map(path=>({path,href:fieldLink(revision,path),text:(finding.field_link_scope==='parent'?'Открыть родительский блок':'Открыть поле XSD')+' · '+path}));
+ }
  function filter(rows,number='',env=''){
   const query=number.trim();
   return rows.filter(({revision:r})=>(!query||r.number===query)&&(!env||r.environment===env));
@@ -130,6 +136,7 @@
      chain.append(item);
     }
     schema.append(chain);
+    for(const target of fieldLinks(r,f)){const a=el('a',target.text,'source');a.href=target.href;schema.append(el('br'),a)}
     row.append(identity,source,el('td',f.kind),spec,schema,el('td',f.impact));body.append(row);
    }
    table.append(body);result.append(table);
@@ -148,7 +155,7 @@
   };
   render();
  }
- const api={collect,filter,createWorkbook,mount,schemaSources};
+ const api={collect,filter,createWorkbook,mount,schemaSources,fieldLinks};
  if(typeof module==='object'&&module.exports)module.exports=api;
  else root.SedoReviewJournal=api;
 })(typeof window==='undefined'?globalThis:window);
