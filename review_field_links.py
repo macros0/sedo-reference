@@ -2,6 +2,37 @@
 import re
 
 
+def review_sources(catalog, revision):
+    """Collect each document's findings for the same displayed schema and contour."""
+    from urllib.parse import unquote, urlsplit
+    import json
+    group = revision.get("display_revision_id", revision["revision_id"])
+    sources, seen = {}, {}
+    for row in catalog["revisions"]:
+        if (not row.get("ready") or row["environment"] != revision["environment"]
+                or row["number"] != revision["number"]
+                or row.get("display_revision_id", row["revision_id"]) != group):
+            continue
+        findings = [f for f in row.get("schema_review", {}).get("findings", []) if f.get("field_paths")]
+        if not findings:
+            continue
+        key = (row.get("document_sha256"), row.get("document_url"))
+        if key not in sources:
+            url = row.get("document_url")
+            name = (unquote(urlsplit(url).path.split("/")[-1]) if url
+                    else row.get("manual_source", {}).get("filename") or row.get("document_filename") or "Загруженная спецификация")
+            sources[key] = dict(name=name, version=row.get("document_version"), date=row.get("label_date"),
+                                url=url, download=row.get("document_download"), findings=[])
+            seen[key] = set()
+        for finding in findings:
+            identity = json.dumps(finding, ensure_ascii=False, sort_keys=True)
+            if identity not in seen[key]:
+                seen[key].add(identity)
+                sources[key]["findings"].append(finding)
+    return list(sources.values())
+
+
+
 def _local_path(path):
     path = re.sub(r"\[[^]]*\]", "", path).strip("/")
     return "/".join(re.sub(r"^(@?)[\w.-]+:", r"\1", part) for part in path.split("/"))

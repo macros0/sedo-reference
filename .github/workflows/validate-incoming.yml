@@ -31,6 +31,7 @@ on:
       - 'schema_review.py'
       - 'review_field_links.py'
       - 'tests/test_review_field_links.py'
+      - 'tests/test_field_review_sources.py'
       - 'source_provenance.py'
       - 'tests/test_source_provenance.py'
       - 'web/review-journal.js'
