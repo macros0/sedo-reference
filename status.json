@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generated_at": "2026-11-14T12:01:58.181451+00:00",
+  "generated_at": "2026-11-14T12:04:07.244456+00:00",
   "sourcecraft": {
     "state": "success",
     "started_at": "2026-11-14T04:01:11.804100+00:00",
@@ -25,18 +25,18 @@
   },
   "github": {
     "check": {
-      "state": "processing",
+      "state": "failure",
       "run_id": 43590790114,
       "url": "https://github.com/macros0/sedo-reference/actions/runs/43590790114",
       "started_at": "2026-11-14T11:35:53Z",
-      "finished_at": null
+      "finished_at": "2026-11-14T12:03:55Z"
     },
     "versions": {
       "count": null,
       "checked_at": null
     },
     "publication": {
-      "state": "waiting"
+      "state": "not_published"
     },
     "last_successful_publication": {
       "state": "success",
