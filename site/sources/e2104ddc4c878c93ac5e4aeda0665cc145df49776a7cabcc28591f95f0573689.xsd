@@ -1,0 +1,611 @@
+<xs:schema targetNamespace="http://www.fss.ru/additionalVacationStatement" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.fss.ru/additionalVacationStatement" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="additionalVacationStatement" type="tns:additionalVacationStatementType">
+		<xs:annotation>
+			<xs:documentation>Сообщение типа 94 - Сведения для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="additionalVacationStatementType">
+		<xs:sequence>
+			<xs:element name="vacationStatementCalc" type="tns:vacationStatementCalcType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Тип расчета: PRIMARYCALC - Первичный расчет, RECALC - Перерасчет</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="primaryStatementUuid" type="tns:UuidV1Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Для сведений с типом Перерасчет: идентификатор первчиных сведений, по которым производится перерасчет</xs:documentation>
+				</xs:annotation>
+			</xs:element>						
+			<xs:element name="insurerInfo" type="tns:insurerInfoType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сведения о страхователе</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="insuredInfo" type="tns:insuredInfoType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сведения о застрахованном лице</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="orderInfo" type="tns:orderInfoType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сведения о приказе о предоставлении отпуска</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="calculationData" type="tns:calculationDataType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сведения для расчета размера оплаты отпуска</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="receivePayment" type="tns:receivePaymentType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сведения о способе получения выплат</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="documents" type="tns:documentsType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Вложения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="insurerInfoType">
+		<xs:sequence>
+			<xs:element name="insurerName" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Наименование страхователя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="regNum" type="tns:regNumType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Регистрационный номер</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="regNumMain" type="tns:regNumType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Регистрационный номер (основной страхователь) - заполняется, если сведения подает Филиал</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="inn" type="tns:innType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>ИНН</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="documentsSendPerson" type="tns:documentsSendPersonType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Лицо, предоставившее документы</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="documentsSendPersonType">
+		<xs:sequence>
+			<xs:element name="rank" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Должность уполномоченного лица</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fullName" type="tns:fullNameType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>ФИО уполномоченного лица</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="insuredInfoType">
+		<xs:sequence>
+			<xs:element name="fullNamePU" type="tns:fullNameType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>ФИО застрахованного</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="snils" type="tns:snilsType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>СНИЛС застрахованного</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="orderInfoType">
+		<xs:sequence>
+			<xs:element name="orderNum" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер приказа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="orderDate" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дата приказа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="orderBeginDate" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дата начала отпуска</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="orderEndDate" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дата окончания отпуска</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="daysAmount" type="xs:integer" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Количество дней отпуска</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="calculationDataType">
+		<xs:sequence>
+			<xs:element name="periodsData" type="tns:periodsDataType" minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Сведения о заработке по периодам</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="totalSum" type="xs:decimal" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Итого (сумма заработка)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="totalDays" type="xs:decimal" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Итого (количество дней)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="premiumSum" type="xs:decimal" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Премия (с учетом отработанного времени), всего (руб., коп.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="totalIncomeSum" type="xs:decimal" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сумма заработка всего (включая премию) (руб., коп.) (= Итого (сумма заработка))</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dailyAverageSum" type="xs:decimal" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Средний дневной заработок (руб., коп.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="totalDaysAmount" type="xs:integer" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Количество дней отпуска</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="vacationSum" type="xs:decimal" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сумма, подлежащая выплате за отпуск (руб., коп.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="periodsDataType">
+		<xs:sequence>
+			<xs:element name="period" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Расчетный период, учитываемый для исчисления отпуска в формате ГГГГ-ММ-01</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="periodSumm" type="xs:decimal" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сумма выплат, учитываемая для расчета среднего заработка за месяц (руб., коп.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="countDays" type="xs:decimal" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Среднемесячное число календарных дней в полном календарном месяце /Расчетное число календарных дней в неполном календарном месяце для расчета среднего заработка</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="receivePaymentType">
+		<xs:annotation>
+			<xs:documentation>Способ получения выплаты</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="bankInfo" type="tns:BankInfoType">
+					<xs:annotation>
+						<xs:documentation>Банковский перевод</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="cardMir" type="tns:CardMirType">
+					<xs:annotation>
+						<xs:documentation>Карта МИР</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="postalTransfer" type="tns:postalTransferType">
+					<xs:annotation>
+						<xs:documentation>Почтовый перевод</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BankInfoType">
+		<xs:annotation>
+			<xs:documentation>Реквизиты для перечисления на банковский счет получателя услуг</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="accountNum" type="tns:AccountNumType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер расчетного счета</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="bik" type="tns:BikType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>БИК банка</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="bankName" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Наименование банка</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="CardMirType">
+		<xs:annotation>
+			<xs:documentation>Номер банковской карты МИР</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{16,19}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="postalTransferType">
+		<xs:annotation>
+			<xs:documentation>Данные для почтового перевода</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="postIndex" type="tns:postIndexType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Почтовый индекс</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="region" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Регион</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="district" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Район</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="city" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Город/ населенный пункт</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="street" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Улица</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="house" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дом</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="block" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Корпус</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="building" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Строение</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="flat" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Квартира/офис</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="additionalVacationStatementResponse" type="tns:additionalVacationStatementResponseType">
+		<xs:annotation>
+			<xs:documentation>Сообщение типа 95 - Результат обработки сведений для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="additionalVacationStatementResponseType">
+		<xs:sequence>
+			<xs:element name="statementID" type="tns:UuidV1Type" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ссылка на транспортный идентификатор Заявления на оплату дополнительного отпуска</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="msgDate" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дата потупления входящего сообщения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="status" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Статус обработки заявления:
+RECEIVED - Данные получены. Выполняется обработка
+ERROR - Обнаружены ошибки форматно-логического контроля сообщения
+				</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="errors" type="tns:errorType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Ошибка при обработке входящего сообщения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="errorType">
+		<xs:sequence>
+			<xs:element name="errorCode" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Код ошибки</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="errorMessage" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сообщение об ошибке</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="resultAddVacationStatement" type="tns:resultVacationStatementType">
+		<xs:annotation>
+			<xs:documentation>Сообщение типа 97 - Результат рассмотрения сведений для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="resultVacationStatementType">
+		<xs:sequence>
+			<xs:element name="statementID" type="tns:UuidV1Type" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ссылка на транспортный идентификатор сведений для оплаты дополнительного отпуска</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="msgDate" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дата потупления сообщения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="notification" type="tns:notificationType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Уведомление</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="notificationType">
+		<xs:sequence>
+			<xs:element name="number" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер уведомления</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ntfCode" type="tns:ntfCodeType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Тип уведомления: VACATIONPAY - решение об оплате/пересчете, VACATIONRETURN - возврат сведений, VACATIONNEEDDOC - о предоставлении документов</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="comment" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Сообщение</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="additionalVacationStatementDocs" type="tns:additionalVacationStatementDocsType">
+		<xs:annotation>
+			<xs:documentation>Сообщение типа 96 - Направление дополнительных документов по сведениями для оплаты отпуска застрахованного лица (сверх ежегодного оплачиваемого отпуска, установленного законодательством Российской Федерации) на весь период лечения и проезда к месту лечения и обратно</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="additionalVacationStatementDocsType">
+		<xs:sequence>
+			<xs:element name="addDocument" type="tns:documentsType" minOccurs="1" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Направляемый документ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="statementUuid" type="tns:UuidV1Type" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Ссылка на транспортный идентификатор сведений для оплаты дополнительного отпуска, по которому направляются дополнительные документы</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="documentsType">
+		<xs:sequence>
+			<xs:element name="docNmber" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Номер документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="docDate" type="xs:date" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Дата документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="docComment" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Комментарий</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="attachment" type="tns:AttachmentType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Вложение</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AttachmentType">
+		<xs:sequence>
+			<xs:element name="content" type="xs:base64Binary" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Содержимое файла</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ext" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Расширение файла</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mimeType" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Mime-тип файла</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="size" type="xs:integer" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Размер файла</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="name" type="xs:string" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>Название файла</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ========================================================== -->
+	<!-- Типы -->
+	<!-- ========================================================== -->
+	<xs:simpleType name="regNumType">
+		<xs:annotation>
+			<xs:documentation>Регистрационный номер страхователя</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="10"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="innType">
+		<xs:annotation>
+			<xs:documentation>Идентификационный номер налогоплательщика (ИНН)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{10}">
+				<xs:annotation>
+					<xs:documentation>ИНН для иридических лиц</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
+			<xs:pattern value="\d{12}">
+				<xs:annotation>
+					<xs:documentation>ИНН для ИП</xs:documentation>
+				</xs:annotation>
+			</xs:pattern>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="fullNameType">
+		<xs:annotation>
+			<xs:documentation>Полное имя физлица</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="lastName" type="tns:lastNameType">
+				<xs:annotation>
+					<xs:documentation>Фамилия</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="firstName" type="tns:firstNameType">
+				<xs:annotation>
+					<xs:documentation>Имя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="middleName" type="tns:middleNameType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Отчество</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="lastNameType">
+		<xs:annotation>
+			<xs:documentation> Фамилия</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="firstNameType">
+		<xs:annotation>
+			<xs:documentation>Имя</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="middleNameType">
+		<xs:annotation>
+			<xs:documentation> Отчество</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="snilsType">
+		<xs:annotation>
+			<xs:documentation>Страховой номер индивидуального лицевого счёта (СНИЛС)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="11"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="AccountNumType">
+		<xs:annotation>
+			<xs:documentation>Номер расчетного счета. Цифровой, 20 значный</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="20"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BikType">
+		<xs:annotation>
+			<xs:documentation>Банковский идентификационный код (БИК). Цифровой, 9 значный</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{9}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="postIndexType">
+		<xs:restriction base="xs:string">
+			<xs:length value="6"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UuidV1Type">
+		<xs:annotation>
+			<xs:documentation>Уникальный идентификатор с разделителями</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="vacationStatementCalcType">
+		<xs:annotation>
+			<xs:documentation>Тип расчета:
+			PRIMARYCALC - Первичный расчет;
+			RECALC - Перерасчет
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		    <xs:enumeration value="PRIMARYCALC"/>
+		    <xs:enumeration value="RECALC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ntfCodeType">
+		<xs:annotation>
+			<xs:documentation>Тип уведомления:
+			VACATIONPAY - решение об оплате/перерасчете отпуска, 
+			VACATIONRETURN - возврат сведений, 
+			VACATIONNEEDDOC - о предоставлении документов
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+		    <xs:enumeration value="VACATIONPAY"/>
+		    <xs:enumeration value="VACATIONRETURN"/>
+		    <xs:enumeration value="VACATIONNEEDDOC"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

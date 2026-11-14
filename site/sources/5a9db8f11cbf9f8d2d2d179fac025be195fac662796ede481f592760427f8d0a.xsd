@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="urn://iis.ecp.ru/judicial_restriction_info/1.0.2" xmlns:iis="urn://iis.ecp.ru/judicial_restriction_info/1.0.2" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<!-- Main Request -->
+	<xsd:element name="restrictionRequest" type="iis:requestDataType">
+		<!-- Главный запрос -->
+	</xsd:element>
+	<!-- Main Response -->
+	<xsd:element name="restrictionResponse" type="iis:responseDataType">
+		<!-- Ответ на запрос-->
+	</xsd:element>
+	<xsd:complexType name="requestDataType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="ru">Отправка запроса на получение информации о судебном ограничении</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="lastName" type="iis:string-256">
+				<xsd:annotation>
+					<xsd:documentation>Фамилия</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="firstName" type="iis:string-256">
+				<xsd:annotation>
+					<xsd:documentation>Имя</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="middleName" type="iis:string-256">
+				<xsd:annotation>
+					<xsd:documentation>Отчество</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:choice>
+				<xsd:element name="birthDate" type="xsd:date">
+					<xsd:annotation>
+						<xsd:documentation>Дата рождения</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="birthDateSpecial" type="iis:dateSpecial">
+					<xsd:annotation>
+						<xsd:documentation>Дата рождения без указания месяца и/или дня месяца рождения</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:element minOccurs="1" name="snils" type="iis:snilsType">
+				<xsd:annotation>
+					<xsd:documentation>Номер СНИЛС</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="identificationDocument" type="iis:identificationDocumentType">
+				<xsd:annotation>
+					<xsd:documentation>Документ удостоверяющий личность</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="inn" type="iis:innType">
+				<xsd:annotation>
+					<xsd:documentation>ИНН гражданина</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="bic" type="iis:bicType">
+				<xsd:annotation>
+					<xsd:documentation>БИК. Используется для маршрутизации запроса в кредитные организации.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="bankAccount" type="iis:bankAccountType">
+				<xsd:annotation>
+					<xsd:documentation>Номер счёта</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="executionPresented" type="xsd:boolean">
+				<xsd:annotation>
+					<xsd:documentation>Факт предъявления исполнительного документа (true - да, false - нет)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="executionDuration" type="iis:executionType">
+				<xsd:annotation>
+					<xsd:documentation>Признак исполнительного производства (Год – 1, Семь лет – 2)</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="applicationDate" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Дата подачи гражданином заявления о признании его банкротом</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="responseDataType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="ru">Ответ на запрос информации о судебном ограничении</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element minOccurs="1" name="responseOn" type="iis:UuidV1Type">
+				<xsd:annotation>
+					<xsd:documentation>Идентификатор транспортного сообщения, в рамках которого направлен ответ</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:choice>
+				<xsd:sequence>
+					<xsd:element minOccurs="0" name="lastName" type="iis:string-256">
+						<xsd:annotation>
+							<xsd:documentation>Фамилия</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="firstName" type="iis:string-256">
+						<xsd:annotation>
+							<xsd:documentation>Имя</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="middleName" type="iis:string-256">
+						<xsd:annotation>
+							<xsd:documentation>Отчество</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:choice>
+						<xsd:element name="birthDate" type="xsd:date">
+							<xsd:annotation>
+								<xsd:documentation>Дата рождения</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="birthDateSpecial" type="iis:dateSpecial">
+							<xsd:annotation>
+								<xsd:documentation>Дата рождения без указания месяца и/или дня месяца рождения</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:choice>
+					<xsd:element minOccurs="0" name="snils" type="iis:snilsType">
+						<xsd:annotation>
+							<xsd:documentation>Номер СНИЛС</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="identificationDocument" type="iis:identificationDocumentType">
+						<xsd:annotation>
+							<xsd:documentation>Документ удостоверяющий личность</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element minOccurs="0" name="inn" type="iis:innType">
+						<xsd:annotation>
+							<xsd:documentation>ИНН гражданина</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="executionFact" type="xsd:boolean">
+						<xsd:annotation>
+							<xsd:documentation>Факт наличия исполнительного производства (true - да, false - нет)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="executionDuration" type="iis:executionType">
+						<xsd:annotation>
+							<xsd:documentation>Признак исполнительного производства (Год – 1, Семь лет – 2)</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:element fixed="true" name="notIdentified" type="xsd:boolean">
+					<xsd:annotation>
+						<xsd:documentation>Гражданин не идентифицирован (Заполняется true)</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- Common Types -->
+	<xsd:simpleType name="string-256">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="256"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="string-20">
+		<xsd:restriction base="xsd:string">
+			<xsd:minLength value="1"/>
+			<xsd:maxLength value="20"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="string-10">
+		<xsd:restriction base="xsd:string">
+			<xsd:maxLength value="10"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="dateSpecial">
+		<xsd:annotation>
+			<xsd:documentation>Тип даты для особых случаев когда: 1) известен только год; 2)известны только месяц и год; 3) указанные день, месяц и год при объединении не могут давать правильной даты</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element minOccurs="0" name="day" type="iis:dayType">
+				<xsd:annotation>
+					<xsd:documentation>День</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="month" type="iis:monthType">
+				<xsd:annotation>
+					<xsd:documentation>Месяц</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="year" type="xsd:gYear">
+				<xsd:annotation>
+					<xsd:documentation>Год</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="dayType">
+		<xsd:annotation>
+			<xsd:documentation>Тип день</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:integer">
+			<xsd:minInclusive value="1"/>
+			<xsd:maxInclusive value="31"/>
+			<xsd:totalDigits value="2"/>
+			<xsd:pattern value="\d+"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="monthType">
+		<xsd:annotation>
+			<xsd:documentation>Тип месяц</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:integer">
+			<xsd:maxInclusive value="12"/>
+			<xsd:minInclusive value="1"/>
+			<xsd:pattern value="\d+"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="identificationDocumentType">
+		<xsd:annotation>
+			<xsd:documentation>Тип, используемый для представления содержания документа, удостоверяющего личность</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="Code" type="xsd:integer">
+				<xsd:annotation>
+					<xsd:documentation>Код документа, удостоверяющего личность</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="Series" type="iis:string-10">
+				<xsd:annotation>
+					<xsd:documentation>Серия документа</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="Number" type="iis:string-20">
+				<xsd:annotation>
+					<xsd:documentation>Номер документа</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="issueDate" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Дата выдачи документа</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="issuedBy" type="iis:string-256">
+				<xsd:annotation>
+					<xsd:documentation>Кем выдан документ</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="unitCode" type="iis:string-10">
+				<xsd:annotation>
+					<xsd:documentation>Код подразделения, выдавшего документ, удостоверяющий личность заявителя</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element minOccurs="0" name="expiredOn" type="xsd:date">
+				<xsd:annotation>
+					<xsd:documentation>Срок действия документа</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="UuidV1Type">
+		<xsd:annotation>
+			<xsd:documentation>Тип, идентификатор сообщения</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="innType">
+		<xsd:annotation>
+			<xsd:documentation>Тип, используемый для представления 12-значного ИНН физического лица</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="\d{12}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="bicType">
+		<xsd:annotation>
+			<xsd:documentation>Тип, используемый для представления Банковского идентификационного кода (БИК)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:pattern value="\d{9}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="bankAccountType">
+		<xsd:annotation>
+			<xsd:documentation>Тип для представления банковских счетов</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:normalizedString">
+			<xsd:pattern value="\d{20}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="executionType">
+		<xsd:annotation>
+			<xsd:documentation>Тип признака исполнительного производства (Год – 1, Семь лет – 2)</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:integer">
+			<xsd:enumeration value="1"/>
+			<xsd:enumeration value="2"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="snilsType">
+		<xsd:annotation>
+			<xsd:documentation>Тип номера СНИЛС</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:string">
+			<xsd:length value="11"/>
+			<xsd:pattern value="\d{11}"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

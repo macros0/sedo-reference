@@ -1,0 +1,1081 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:fss:integration:types:mchd:v01" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:c="http://www.fss.ru/integration/types/common/v01"
+           xmlns:org="http://www.fss.ru/integration/types/organization/v01"
+           xmlns:per="http://www.fss.ru/integration/types/person/v02"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           targetNamespace="urn:ru:fss:integration:types:mchd:v01" elementFormDefault="qualified" vc:minVersion="1.1">
+    <xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="../type/Common.xsd" id="c"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/person/v02" schemaLocation="../../v02/type/Person.xsd"
+               id="per"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/organization/v01"
+               schemaLocation="../type/Organization.xsd" id="org"/>
+
+    <xs:element name="powerOfAttorney" type="PowerOfAttorneyType">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент электронной доверенности</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="powerOfAttorneyLink" type="PowerOfAttorneyLinkType">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент электронной доверенности в виде указание ссылки</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="registerPowerOfAttorneyResult">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент ответа на запрос регистрации доверенности</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RegisterPowerOfAttorneyResultType">
+                    <xs:attribute name="responseOn" type="c:UuidV1Type"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="revocationPowerOfAttorney" type="RevocationPowerOfAttorneyType">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент запроса отзыва доверенности</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="revocationPowerOfAttorneyResult">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент ответа на запрос отзыва доверенности</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RevocationPowerOfAttorneyResultType">
+                    <xs:attribute name="responseOn" type="c:UuidV1Type"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="powerOfAttorneyListRequest" type="PowerOfAttorneyListRequestType">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент запроса списка доверенностей</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="powerOfAttorneyList">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент ответа на запрос списка доверенностей</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="PowerOfAttorneyListType">
+                    <xs:attribute name="responseOn" type="c:UuidV1Type"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="powerOfAttorneyRequest" type="PowerOfAttorneyRequestType">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент запроса доверенности</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="powerOfAttorneyResponse">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент ответа на запрос доверенности</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="PowerOfAttorneyResponseType">
+                    <xs:attribute name="responseOn" type="c:UuidV1Type"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="representativeAuthorityListRequest" type="RepresentativeAuthorityListRequestType">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент запроса списка полномочий уполномоченного</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="representativeAuthorityList">
+        <xs:annotation>
+            <xs:documentation>Корневой элемент ответа на запрос списка полномочий уполномоченного</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="RepresentativeAuthorityListType">
+                    <xs:attribute name="responseOn" type="c:UuidV1Type"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dicAuthorityListRequest">
+        <xs:annotation>
+            <xs:documentation>Запрос справочника полномочий</xs:documentation>
+        </xs:annotation>
+        <xs:complexType/>
+    </xs:element>
+    <xs:element name="dicAuthorityListResponse">
+        <xs:annotation>
+            <xs:documentation>Ответ на запрос справочника полномочий</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="DicAuthorityListResponseType">
+                    <xs:attribute name="responseOn" type="c:UuidV1Type"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="notificationAuthorityChanged" type="NotificationAuthorityChangedType">
+        <xs:annotation>
+            <xs:documentation>Уведомление об изменениях в справочнике полномочий</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="notificationPowerOfAttorneyExpired" type="NotificationPowerOfAttorneyExpiredType">
+        <xs:annotation>
+            <xs:documentation>Уведомление об истечении срока действия доверенности</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:complexType name="PowerOfAttorneyType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий информацию о электронной доверенности</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="systemInfo" type="c:SystemInfoType">
+                <xs:annotation>
+                    <xs:documentation>Информация о системе, в которой сформирована доверенность</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="generalInfo" type="GeneralInfoType">
+                <xs:annotation>
+                    <xs:documentation>Основные реквизиты доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="owner" type="OwnerType">
+                <xs:annotation>
+                    <xs:documentation>Владелец доверенности</xs:documentation>
+                    <xs:documentation>Субъект в рамках которого будет действовать доверенность</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="principal" type="PrincipalType">
+                <xs:annotation>
+                    <xs:documentation>Доверитель</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="representative" type="RepresentativeType">
+                <xs:annotation>
+                    <xs:documentation>Уполномоченный</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="authorities" type="AuthorityListType">
+                <xs:annotation>
+                    <xs:documentation>Выданные полномочия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RegisterPowerOfAttorneyResultType">
+        <xs:annotation>
+            <xs:documentation>Тип, описывающий информацию о результате обработки запроса регистрации электронной
+                доверенности
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="uuid" type="c:UuidV1Type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="status" type="PAStatusType">
+                <xs:annotation>
+                    <xs:documentation>Статус доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="issued" type="xs:dateTime" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>В случае успешной обработки сообщения - дата регистрации доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="protocol" type="ProtocolType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Протокол обработки сообщения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RevocationPowerOfAttorneyType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий информацию о отзыве электронной доверенности</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="uuid" type="c:UuidV1Type">
+                <xs:annotation>
+                    <xs:documentation>UUID отзываемой электронной доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="revokeChain" type="xs:boolean" fixed="true" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Признак, указывающий, что надо отозвать зависимые доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="reason" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Основание для отзыва</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RevocationPowerOfAttorneyResultType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий информацию о результате обработки отзыва электронной доверенности
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="uuid" type="c:UuidV1Type" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>UUID электронной доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="cancelStatus" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Статус обработки отзыва</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="paStatus" type="PAStatusType">
+                <xs:annotation>
+                    <xs:documentation>Статус доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="revocationDate" type="xs:dateTime" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>В случае успешной обработки сообщения - дата отзыва доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="protocol" type="ProtocolType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Протокол обработки сообщения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PowerOfAttorneyListRequestType">
+        <xs:annotation>
+            <xs:documentation>Запрос списка доверенностей</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:sequence>
+                <xs:element name="owner" type="OwnerType">
+                    <xs:annotation>
+                        <xs:documentation>Владелец процесса</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="principal" type="PrincipalType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Доверитель</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="representative" type="RepresentativeType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Уполномоченный</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="startDate" type="xs:date" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Дата и время начала действия электронной доверенности</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="endDate" type="xs:date" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Дата и время окончания действия электронной доверенности</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="anyState" type="xs:boolean" fixed="true" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Вернуть все ранее зарегистрированные доверенности без ограничения по
+                            активности
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="authority" type="AuthorityType" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Полномочие</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PowerOfAttorneyListType">
+        <xs:annotation>
+            <xs:documentation>Ответ на запрос списка доверенностей</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="owner" type="OwnerType">
+                <xs:annotation>
+                    <xs:documentation>Владелец доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="list">
+                <xs:annotation>
+                    <xs:documentation>Список доверенностей (основные сведения)</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="powerOfAttorney" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="createDate" type="xs:dateTime">
+                                        <xs:annotation>
+                                            <xs:documentation>Дата и время создания электронной доверенности
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="uuid" type="c:UuidV1Type">
+                                        <xs:annotation>
+                                            <xs:documentation>Идентификатор доверенности</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="parentUuid" type="c:UuidV1Type" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>Идентификатор доверенности на основании которой выдана
+                                                данная
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="paStatus" type="PAStatusType">
+                                        <xs:annotation>
+                                            <xs:documentation>Статус доверенности</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="startDate" type="xs:date">
+                                        <xs:annotation>
+                                            <xs:documentation>Дата и время начала действия электронной доверенности
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="endDate" type="xs:date">
+                                        <xs:annotation>
+                                            <xs:documentation>Дата и время окончания действия электронной доверенности
+                                            </xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="principal" type="xs:string">
+                                        <xs:annotation>
+                                            <xs:documentation>Доверитель</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="representative" type="xs:string">
+                                        <xs:annotation>
+                                            <xs:documentation>Уполномоченный</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="protocol" type="ProtocolType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Протокол обработки сообщения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PowerOfAttorneyRequestType">
+        <xs:annotation>
+            <xs:documentation>Запрос доверенности</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="uuid" type="c:UuidV1Type">
+                <xs:annotation>
+                    <xs:documentation>UUID номер Доверенности, сформированный системой подписанта доверенности
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PowerOfAttorneyResponseType">
+        <xs:annotation>
+            <xs:documentation>Ответ на запрос доверенности</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="powerOfAttorneyInfo" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Тип описывающий информацию о электронной доверенности</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="content" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>Доверенность в base64</xs:documentation>
+                                <xs:documentation>В том виде в котором она пришла на регистрацию</xs:documentation>
+                                <xs:documentation>С подписью и вложенными доверенностями</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="status" type="PAStatusType">
+                            <xs:annotation>
+                                <xs:documentation>Текущий статус</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="issued" type="xs:dateTime">
+                            <xs:annotation>
+                                <xs:documentation>Дата регистрации доверенности в модуле МЧД</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="revocationReason" type="xs:string" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>Основание для отзыва доверенности</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="revocationDate" type="xs:dateTime" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>Дата и время отзыва доверенности</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="protocol" type="ProtocolType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Протокол обработки сообщения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RepresentativeAuthorityListRequestType">
+        <xs:annotation>
+            <xs:documentation>Запрос списка полномочий уполномоченного</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="owner" type="OwnerType">
+                <xs:annotation>
+                    <xs:documentation>Владелец процесса</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="representative" type="RepresentativeType">
+                <xs:annotation>
+                    <xs:documentation>Уполномоченный</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RepresentativeAuthorityListType">
+        <xs:annotation>
+            <xs:documentation>Ответ на запрос списка полномочий уполномоченного</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="powerOfAttorney" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="uuid" type="c:UuidV1Type">
+                            <xs:annotation>
+                                <xs:documentation>Идентификатор доверенности</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="startDate" type="xs:date">
+                            <xs:annotation>
+                                <xs:documentation>Дата и время начала действия электронной доверенности
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="endDate" type="xs:date">
+                            <xs:annotation>
+                                <xs:documentation>Дата и время окончания действия электронной доверенности
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="authorities">
+                            <xs:annotation>
+                                <xs:documentation>Список полномочий</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="authority" type="AuthorityType" minOccurs="0"
+                                                maxOccurs="unbounded">
+                                        <xs:annotation>
+                                            <xs:documentation>Полномочие</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="protocol" type="ProtocolType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Протокол обработки сообщения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DicAuthorityListResponseType">
+        <xs:annotation>
+            <xs:documentation>Ответ на запрос списка полномочий</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="authorities">
+                <xs:annotation>
+                    <xs:documentation>Список полномочий</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="authority" type="AuthorityDicType" minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:documentation>Полномочие</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="protocol" type="ProtocolType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Протокол обработки сообщения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="NotificationAuthorityChangedType">
+        <xs:annotation>
+            <xs:documentation>Уведомление об изменениях в справочнике полномочий</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="changeDate" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>Дата/время с которого изменения вступили в действие</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="NotificationPowerOfAttorneyExpiredType">
+        <xs:annotation>
+            <xs:documentation>Уведомление об истечении срока действия доверенности</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="owner" type="OwnerType">
+                <xs:annotation>
+                    <xs:documentation>Владелец процесса</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="uuid" type="c:UuidV1Type">
+                <xs:annotation>
+                    <xs:documentation>UUID номер Доверенности, сформированный системой подписанта доверенности
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="startDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата и время начала действия электронной доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="endDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата и время окончания действия электронной доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PowerOfAttorneyLinkType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий информацию о ссылке на электронную доверенность зарегистрированную в ИС
+                ФСС
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="uuid" type="c:UuidV1Type">
+                <xs:annotation>
+                    <xs:documentation>UUID электронной доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GeneralInfoType">
+        <xs:annotation>
+            <xs:documentation>Основные реквизиты доверенности</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="uuid" type="c:UuidV1Type">
+                <xs:annotation>
+                    <xs:documentation>UUID (type 4) электронной доверенности, сформированный системой доверителя
+                        доверенности
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="startDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата и время начала действия электронной доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="endDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата и время окончания действия электронной доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="comment" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Комментарий к электронной доверенности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="OwnerType">
+        <xs:annotation>
+            <xs:documentation>Владелец доверенности</xs:documentation>
+            <xs:documentation>Субъект в рамках которого будет действовать доверенность</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="legalOrganization" type="LegalOrganizationType">
+                <xs:annotation>
+                    <xs:documentation>Юридическое лицо</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="legalPerson" type="LegalPersonType">
+                <xs:annotation>
+                    <xs:documentation>ИП</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="person">
+                <xs:annotation>
+                    <xs:documentation>Физическое лицо</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:complexContent>
+                        <xs:extension base="PersonType">
+                            <xs:choice>
+                                <xs:element name="insurer" minOccurs="0">
+                                    <xs:annotation>
+                                        <xs:documentation>Заполняется если доверие полномочий осуществляется в рамках страхователя</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="regNum">
+                                                <xs:simpleType>
+                                                    <xs:annotation>
+                                                        <xs:documentation>Регистрационный номер страхователя</xs:documentation>
+                                                    </xs:annotation>
+                                                    <xs:restriction base="xs:string">
+                                                        <xs:pattern value=".{1,20}"/>
+                                                    </xs:restriction>
+                                                </xs:simpleType>
+                                            </xs:element>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                                <xs:element name="volunteer" minOccurs="0">
+                                    <xs:annotation>
+                                        <xs:documentation>Заполняется если доверие полномочий осуществляется в рамках добровольца</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:complexType>
+                                        <xs:sequence>
+                                            <xs:element name="regNum">
+                                                <xs:simpleType>
+                                                    <xs:annotation>
+                                                        <xs:documentation>Регистрационный номер страхователя</xs:documentation>
+                                                    </xs:annotation>
+                                                    <xs:restriction base="xs:string">
+                                                        <xs:pattern value=".{1,20}"/>
+                                                    </xs:restriction>
+                                                </xs:simpleType>
+                                            </xs:element>
+                                            <xs:element name="kpsNum" type="org:kpsNum">
+                                                <xs:annotation>
+                                                    <xs:documentation>Код подчиненности к территориальному органу ФСС</xs:documentation>
+                                                </xs:annotation>
+                                            </xs:element>
+                                        </xs:sequence>
+                                    </xs:complexType>
+                                </xs:element>
+                            </xs:choice>
+                        </xs:extension>
+                    </xs:complexContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="PrincipalType">
+        <xs:annotation>
+            <xs:documentation>Доверитель</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="person" type="PersonType">
+                <xs:annotation>
+                    <xs:documentation>Физическое лицо</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="signedByNotary" type="xs:boolean" fixed="true" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Признак подписания нотариусом</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="notaryBasedOn" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Основание подписания нотариусом</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RepresentativeType">
+        <xs:annotation>
+            <xs:documentation>Представитель</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:choice>
+                <xs:element name="legalOrganization" type="LegalOrganizationType">
+                    <xs:annotation>
+                        <xs:documentation>Юридическое лицо</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="legalPerson">
+                    <xs:annotation>
+                        <xs:documentation>ИП</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="LegalPersonType">
+                                <xs:sequence>
+                                    <xs:element name="personDocument" type="PersonDocumentType" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>Документ удостоверяющий личность</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="person">
+                    <xs:annotation>
+                        <xs:documentation>Физическое лицо</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:complexContent>
+                            <xs:extension base="PersonType">
+                                <xs:sequence>
+                                    <xs:element name="personDocument" type="PersonDocumentType" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>Документ удостоверяющий личность</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:extension>
+                        </xs:complexContent>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="certificate" type="xs:string">
+                    <xs:annotation>
+                        <xs:documentation>Сертификат (base 64)</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="LegalOrganizationType">
+        <xs:annotation>
+            <xs:documentation>Организация / Юридическое лицо</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="fullName" type="org:fullName">
+                <xs:annotation>
+                    <xs:documentation>Полное наименование юридического лица</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="jurAddress" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Юридический адрес</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="inn" type="org:inn">
+                <xs:annotation>
+                    <xs:documentation>ИНН</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="kpp" type="org:kpp" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>КПП</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice>
+                <xs:element name="ogrn" type="org:ogrn">
+                    <xs:annotation>
+                        <xs:documentation>ОГРН</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="foreign" type="xs:boolean" fixed="true">
+                    <xs:annotation>
+                        <xs:documentation>Представительство иностранной организации</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="LegalPersonType">
+        <xs:annotation>
+            <xs:documentation>Физ.лицо зарегестрированное как предприниматель</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="firstName" type="per:firstName">
+                <xs:annotation>
+                    <xs:documentation>Имя</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="lastName" type="per:lastName">
+                <xs:annotation>
+                    <xs:documentation>Фамилия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="middleName" type="per:middleName" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Отчество</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="birthDate" type="per:birthDate">
+                <xs:annotation>
+                    <xs:documentation>Дата рождения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="snils" type="per:snils">
+                <xs:annotation>
+                    <xs:documentation>СНИЛС</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="inn" type="per:inn">
+                <xs:annotation>
+                    <xs:documentation>ИНН</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ogrnip" type="org:ogrnip">
+                <xs:annotation>
+                    <xs:documentation>ОГРН индивидуального предпринимателя</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PersonType">
+        <xs:annotation>
+            <xs:documentation>Физ. лицо</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="firstName" type="per:firstName">
+                <xs:annotation>
+                    <xs:documentation>Имя</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="lastName" type="per:lastName">
+                <xs:annotation>
+                    <xs:documentation>Фамилия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="middleName" type="per:middleName" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Отчество</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="birthDate" type="per:birthDate">
+                <xs:annotation>
+                    <xs:documentation>Дата рождения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="snils" type="per:snils">
+                <xs:annotation>
+                    <xs:documentation>СНИЛС</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="inn" type="per:inn">
+                <xs:annotation>
+                    <xs:documentation>ИНН</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AuthorityListType">
+        <xs:annotation>
+            <xs:documentation>Выданные полномочия</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="authority" type="AuthorityType" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Полномочие</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AuthorityType">
+        <xs:annotation>
+            <xs:documentation>Полномочие</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="mnemonic">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:annotation>
+                            <xs:documentation>Код полномочия с признаком передоверия</xs:documentation>
+                        </xs:annotation>
+                        <xs:extension base="AuthorityMnemonicType">
+                            <xs:attribute name="entrustment" type="xs:boolean">
+                                <xs:annotation>
+                                    <xs:documentation>true - Доверитель разрешил передоверие полномочия
+                                    </xs:documentation>
+                                    <xs:documentation>false - доверитель запретил передоверие полномочия
+                                    </xs:documentation>
+                                </xs:annotation>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="AuthorityMnemonicType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий мнемонику полномочия</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="200"/>
+            <xs:minLength value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="AuthorityDicType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий запись справочника полномочий</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="mnemonic" type="AuthorityMnemonicType">
+                <xs:annotation>
+                    <xs:documentation>Тип описывающий мнемонику полномочия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="name" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Название полномочия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="parentMnemonic" type="AuthorityMnemonicType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Родительское полномочие</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateStart" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата начала действия полномочия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="dateEnd" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата окончания действия полномочия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="description" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Описание полномочия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="AuthorityChangeType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий изменение полномочия</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ADDED"/>
+            <xs:enumeration value="REVOKED"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PAStatusType">
+        <xs:annotation>
+            <xs:documentation>Статус доверенности</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="REGISTERED"/>
+            <xs:enumeration value="REVOKED"/>
+            <xs:enumeration value="ERROR"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="ProtocolType">
+        <xs:annotation>
+            <xs:documentation>Протокол обработки сообщения</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="message" type="ProtocolMessageType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Сообщение протокола</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="ProtocolMessageMnemonicType">
+        <xs:annotation>
+            <xs:documentation>Тип сообщения протокола</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ProtocolMessageLevelType">
+        <xs:annotation>
+            <xs:documentation>Уровень записи протокола</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="INFO"/>
+            <xs:enumeration value="WARN"/>
+            <xs:enumeration value="ERROR"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="ProtocolMessageType">
+        <xs:annotation>
+            <xs:documentation>Сообщение протокола</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="mnemonic" type="ProtocolMessageMnemonicType">
+                <xs:annotation>
+                    <xs:documentation>Тип сообщения протокола</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="level" type="ProtocolMessageLevelType">
+                <xs:annotation>
+                    <xs:documentation>Тип сообщения протокола</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="comment" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Комментарий</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="recommendation" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Рекомендации</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PersonDocumentType">
+        <xs:annotation>
+            <xs:documentation>Документ удостоверяющий личность</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="identityDocument" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Вид документа</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="series" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Серия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="number" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Номер</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="issuedDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата выдачи</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="issuedBy" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>Наименование органа, выдавшего документ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="issuedByCode" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Код органа, выдавшего документ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by BFT-Razrabotka (BFT-Razrabotka) -->
+<xs:schema xmlns="urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="urn:ru:ecp:integration:types:common:v3.0" xmlns:p="urn:ru:ecp:integration:types:person:v3.0" targetNamespace="urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="../../type/Common.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:person:v3.0" schemaLocation="../../type/Person.xsd"/>
+	<xs:element name="paymentStatusResponse">
+		<xs:annotation>
+			<xs:documentation>Результат обработки запроса статуса выплаты пособия по ВНиМ.
+Тип сообщения СЭДО №8510</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:element name="paymentStatusList">
+					<xs:annotation>
+						<xs:documentation>Список сведений о выплатах (если запрос статуса выплаты выполняется по реестру, то блок может содержать несколько записей, иначе, если запрос статуса выплаты выполняется по записи реестра, то блок будет содержать одну запись)</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="paymentStatusDetail" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Детализация сведений о выплате</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="batchNo">
+											<xs:annotation>
+												<xs:documentation>Номер записи реестра</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:minLength value="1"/>
+													<xs:maxLength value="50"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="processNum" type="com:proactiveProcessNumType" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Номер проактивного процесса</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="lnNumber" type="com:lnCode" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Номер ЛН</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="paymentState">
+											<xs:annotation>
+												<xs:documentation>Статус выплаты документа</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="1">
+														<xs:annotation>
+															<xs:documentation>Получены сведения о необходимости осуществления выплаты</xs:documentation>
+														</xs:annotation>
+													</xs:enumeration>
+													<xs:enumeration value="2">
+														<xs:annotation>
+															<xs:documentation>Отправлен на оплату</xs:documentation>
+														</xs:annotation>
+													</xs:enumeration>
+													<xs:enumeration value="3">
+														<xs:annotation>
+															<xs:documentation>Выплачен</xs:documentation>
+														</xs:annotation>
+													</xs:enumeration>
+													<xs:enumeration value="4">
+														<xs:annotation>
+															<xs:documentation>Оплата не прошла</xs:documentation>
+														</xs:annotation>
+													</xs:enumeration>
+													<xs:enumeration value="5">
+														<xs:annotation>
+															<xs:documentation>Направлено извещение о предоставлении дополнительных сведений</xs:documentation>
+														</xs:annotation>
+													</xs:enumeration>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+										<xs:element name="paymentDate" type="xs:date" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Дата выплаты</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="assignedSumm" type="com:sumType" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Назначенная сумма</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="dutySumm" type="com:sumType" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Удержанная сумма НДФЛ (из  назначенной суммы).
+Поле заполняется для пособий по временной нетрудоспособности с кодами "1", "6"</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="snils" type="p:snils">
+											<xs:annotation>
+												<xs:documentation>СНИЛС застрахованного лица</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Технический элемент, позволяющий расширять XML документ в перспективе</xs:documentation>
+											</xs:annotation>
+										</xs:any>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="errorInfo" type="com:errorInfoType">
+					<xs:annotation>
+						<xs:documentation>Информация об ошибках</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:attribute name="specVersion" type="com:specVersionType" use="required">
+				<xs:annotation>
+					<xs:documentation>Номер версии  спецификации для xml документа</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="responseOn" type="com:uuidV1Type" use="required">
+				<xs:annotation>
+					<xs:documentation>Ссылка на транспортный идентификатор запроса (тип сообщения СЭДО №8410)</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="messageDateTime" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>Дата и время формирования ответного сообщения на стороне СФР</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:anyAttribute processContents="skip">
+				<xs:annotation>
+					<xs:documentation>Технический атрибут, позволяющий расширять XML документ</xs:documentation>
+				</xs:annotation>
+			</xs:anyAttribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,796 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:org="http://www.fss.ru/integration/types/organization/v01"
+        xmlns:com="http://www.fss.ru/integration/types/common/v01"
+        xmlns:sedo="http://www.fss.ru/integration/types/sedo/v01"
+        targetNamespace="http://www.fss.ru/integration/types/sedo/arm/v01"
+        xmlns="http://www.fss.ru/integration/types/sedo/arm/v01"
+        version="1.0"
+>
+    <xsd:import namespace="http://www.fss.ru/integration/types/organization/v01"
+                schemaLocation="../type/Organization.xsd"/>
+    <xsd:import namespace="http://www.fss.ru/integration/types/sedo/v01" schemaLocation="Sedo.xsd"/>
+    <xsd:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="../type/Common.xsd"/>
+
+    <xsd:element name="responseRegNum" type="ResponseRegNum">
+        <xsd:annotation>
+            <xsd:documentation>
+                Ответ на запрос регистрационного номера
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="requestRegNum" type="RequestRegNum">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос регистрационного номера
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="subscribeRequest" type="SubscribeRequestType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос для подписки
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="unsubscribeRequest" type="UnsubscribeRequestType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос для снятия с подписки
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="confirmMessageReadRequest" type="ConfirmMessageReadRequestType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Подтверждение прочтения сообщения
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="dicMessageTypeRequest" type="DicMessageTypeRequestType" nillable="true">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос справочника типов сообщений
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="getCountMessageRequest" type="GetCountMessageRequestType" nillable="true">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос списка сообщений абонентом
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="getCountMessageOperatorRequest" type="GetCountMessageOperatorRequestType" nillable="true">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос списка сообщений оператором
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="countMessageResponse" type="sedo:MessageListResponseType" nillable="true">
+        <xsd:annotation>
+            <xsd:documentation>
+                Список сообщений для абонентов/операторов
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="subscriptionResponse" type="SubscriptionResponseType">
+        <xsd:annotation>
+            <xsd:documentation>Структура ответа по подписке</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="confirmMessageReadResponse" type="ConfirmMessageReadResponseType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат подтверждения прочтения сообщений
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="noticeOutboundReadType" type="NoticeOutboundReadType">
+        <xsd:annotation>
+            <xsd:documentation>Уведомление ФК о подтверждении прочтения сообщения</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="noticeOutboundExtendedReadType" type="NoticeOutboundExtendedReadType">
+        <xsd:annotation>
+            <xsd:documentation>Расширенное уведомление ФК о подтверждении прочтения сообщения</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="noticeOutboundGetType" type="NoticeOutboundReadType">
+        <xsd:annotation>
+            <xsd:documentation>Уведомление ФК о прочтении сообщения</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="noticeOutboundExtendedGaveType" type="NoticeOutboundExtendedReadType">
+        <xsd:annotation>
+            <xsd:documentation>Расширенное уведомление ФК о прочтении сообщения</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="noticeOutboundGetCountType" type="NoticeOutboundReadType">
+        <xsd:annotation>
+            <xsd:documentation>Уведомление ФК о заборе сообщения в списке сообщений</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="noticeOutboundExtendedGetCountType" type="NoticeOutboundExtendedReadType">
+        <xsd:annotation>
+            <xsd:documentation>Расширенное уведомление ФК о заборе сообщения в списке сообщений</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="dicMessageTypeResponse" type="DicMessageTypeResponseType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат запроса справочника типов сообщений
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="sedoAppealResponse" type="SedoAppealResponse">
+        <xsd:annotation>
+            <xsd:documentation>
+                Ответ страхователя на обращение
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="sedoAppealRequest" type="SedoAppealRequest">
+        <xsd:annotation>
+            <xsd:documentation>
+                Обращение к страхователю от Фонда
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="sedoAppealNotification" type="SedoAppealNotification">
+        <xsd:annotation>
+            <xsd:documentation>
+                Уведомление о принятии ответа страхователя на обращение от Фонда
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+
+    <xsd:element name="ping" type="com:PingType"/>
+    <xsd:element name="pong" type="com:PongType"/>
+
+    <xsd:complexType name="SubscriptionResponseType">
+        <xsd:annotation>
+            <xsd:documentation>Структура ответа по подписке</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="com:ResponseOnType">
+                <xsd:sequence>
+                    <xsd:choice>
+                        <xsd:element name="resultList" type="ResultListType"/>
+                        <xsd:element name="resultOrgList" type="ResultOrgListType"/>
+                        <xsd:element name="error" type="com:ErrorType"/>
+                    </xsd:choice>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="ResultType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат обработки абонента
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="regNum" type="org:regNum"/>
+            <xsd:element name="status" type="StatusType"/>
+            <xsd:element name="error" type="com:ErrorType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ResultOrgType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат обработки организации
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:sequence>
+                <xsd:element name="org" type="sedo:ORG"/>
+            </xsd:sequence>
+            <xsd:element name="status" type="StatusType"/>
+            <xsd:element name="error" type="com:ErrorType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ResultListType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат обработки абонентов
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="result" type="ResultType" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ResultOrgListType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат обработки абонентов
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="resultOrg" type="ResultOrgType" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SubscribeRequestType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос для подписки
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice>
+            <xsd:element name="recipientList" type="RecipientListType"/>
+            <xsd:element name="orgListType" type="OrgListType"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="UnsubscribeRequestType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос для снятия с подписки
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice>
+            <xsd:element name="orgListType" type="OrgListType"/>
+            <xsd:element name="recipientList" type="RecipientListType"/>
+        </xsd:choice>
+    </xsd:complexType>
+
+    <xsd:complexType name="RecipientListType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Перечень рег.номеров абонентов оператора
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="regNum" type="org:regNum" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="OrgListType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Перечень абонентов оператора(c типом ОРГ)
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="org" minOccurs="1" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:choice>
+                        <xsd:sequence>
+                            <xsd:element name="inn" type="xsd:string"></xsd:element>
+                            <xsd:element name="kpp" type="xsd:string" minOccurs="0"></xsd:element>
+                        </xsd:sequence>
+                        <xsd:sequence>
+                            <xsd:element name="ogrn" type="xsd:string"></xsd:element>
+                            <xsd:element name="inn" type="xsd:string"></xsd:element>
+                            <xsd:element name="kpp" type="xsd:string" minOccurs="0"></xsd:element>
+                        </xsd:sequence>
+                        <xsd:sequence>
+                            <xsd:element name="ogrnip" type="xsd:string"></xsd:element>
+                            <xsd:element name="inn" type="xsd:string"></xsd:element>
+                            <xsd:element name="snils" type="xsd:string"></xsd:element>
+                        </xsd:sequence>
+                        <xsd:sequence>
+                            <xsd:element name="snils" type="xsd:string"></xsd:element>
+                            <xsd:element name="inn" type="xsd:string"></xsd:element>
+                            <xsd:element name="regnum" type="xsd:string" minOccurs="0"></xsd:element>
+                        </xsd:sequence>
+                    </xsd:choice>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="StatusType">
+        <xsd:annotation>
+            <xsd:documentation>Справочник состояния запроса</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="SUCCESS">
+                <xsd:annotation>
+                    <xsd:documentation>SUCCESS - Сообщение успешно обработано
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="ERROR">
+                <xsd:annotation>
+                    <xsd:documentation>ERROR - Ошибка обработки сообщения
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="ConfirmMessageReadRequestType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Подтверждение прочтения сообщения
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="uuids" type="sedo:UuidList"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="OrgType">
+        <xsd:sequence>
+            <xsd:element name="uuids" type="sedo:UuidList"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ConfirmMessageReadResponseType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат подтверждения прочтения сообщений
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="confirmResults" type="ConfirmResultType" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="ConfirmResultType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат обработки подтверждения сообщения
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="uuid" type="sedo:Uuid"/>
+            <xsd:element name="status" type="StatusType"/>
+            <xsd:element name="error" type="com:ErrorType" minOccurs="0"/>
+            <xsd:element name="warn" type="com:WarnType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="NoticeOutboundReadType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Уведомление ФК о прочтении сообщения
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="messageOutboundId" type="sedo:Uuid"/>
+            <xsd:element name="dateConfirm" type="xsd:date"/>
+            <xsd:element name="confirmId" type="sedo:Uuid"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="NoticeOutboundExtendedReadType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Расширенное уведомление ФК о прочтении сообщения
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="messageOutboundId" type="sedo:Uuid">
+                <xsd:annotation>
+                    <xsd:documentation>Uuid исходящего сообщения</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="dateConfirm" type="xsd:date" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Дата перехода в статус READ (Страхователь подтвердил прочтение)</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="dateGave" type="xsd:dateTime">
+                <xsd:annotation>
+                    <xsd:documentation>Дата перехода в статус GAVE (Получено страхователем)</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="confirmId" type="sedo:Uuid">
+                <xsd:annotation>
+                    <xsd:documentation>Транспортный uuid сообщения, вызвавшего подтверждение (uuid getMessage или 6 сообщения)</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="dateSedoInsert" type="xsd:dateTime">
+                <xsd:annotation>
+                    <xsd:documentation>Дата появления сообщения в системе СЭДО</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="inn" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>ИНН</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="kpp" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>КПП</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="regnum" type="xsd:string" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>Регистрационны номер ФСС</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="status" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>Итоговый статус исходящего сообщения</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="DicMessageTypeRequestType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос справочника типов сообщений
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+
+        </xsd:sequence>
+
+    </xsd:complexType>
+
+    <xsd:complexType name="DicList">
+        <xsd:annotation>
+            <xsd:documentation>Список элементов справочника</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="dic" type="com:dictionary" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>Список значений словаря</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="DicMessageTypeResponseType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат запроса справочника типов сообщений
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="dicList" type="DicList" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="RequestRegNum">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос регистрационного номера
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="ipList" type="IPList" minOccurs="0"/>
+            <xsd:element name="organizationList" type="OrganizationList" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="IPList">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос регистрационных номеров для ИП
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="ip" type="IP" minOccurs="0" maxOccurs="2500"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="OrganizationList">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос регистрационных номеров для юридических лиц
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="organization" type="Organization" minOccurs="0" maxOccurs="2500"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="IP">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос регистрационного номера ИП
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="inn" type="org:inn"/>
+            <xsd:element name="ogrnip" type="org:ogrnip"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="Organization">
+        <xsd:annotation>
+            <xsd:documentation>
+                Запрос регистрационного номера юридического лица
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="inn" type="org:inn"/>
+            <xsd:element name="ogrn" type="org:ogrn"/>
+            <xsd:element name="kpp" type="org:kpp"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="ResponseRegNum">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат запроса регистрационного номера
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="ipList" type="IpResponseList" minOccurs="0"/>
+            <xsd:element name="organizationList" type="OrganizationResponseList" minOccurs="0"/>
+            <xsd:element name="error" type="com:ErrorType" minOccurs="0"/>
+
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="IpResponseList">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат запроса регистрационных номеров для ИП
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="ipResponse" type="IpResponse" minOccurs="0" maxOccurs="2500"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="OrganizationResponseList">
+        <xsd:annotation>
+            <xsd:documentation>
+                Результат запроса регистрационных номеров для юридических лиц
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="organizationResponse" type="OrganizationResponse" minOccurs="0" maxOccurs="2500"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="IpResponse">
+        <xsd:annotation>
+            <xsd:documentation>
+                Ответ на запрос регистрационного номера ИП
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="ip" type="IP"/>
+            <xsd:element name="response" type="RegNumResponse"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="OrganizationResponse">
+        <xsd:annotation>
+            <xsd:documentation>
+                Ответ на запрос регистрационного номера юридического лица
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="organization" type="Organization"/>
+            <xsd:element name="response" type="RegNumResponse"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="RegNumResponse">
+        <xsd:choice>
+            <xsd:sequence>
+                <xsd:element name="regNum" type="org:regNum"/>
+                <xsd:element name="regNumSfr" type="org:RegNumSfr"/>
+            </xsd:sequence>
+            <xsd:element name="error" type="ErrorResponse"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:complexType name="ErrorResponse">
+        <xsd:sequence>
+            <xsd:element name="code" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="message" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+            <xsd:element name="detail" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="GetCountMessageRequestType">
+        <xsd:sequence>
+            <xsd:choice>
+                <xsd:element name="recipientId" type="sedo:RecipientId">
+                    <xsd:annotation>
+                        <xsd:documentation>Идентификатор абонента</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="org" type="sedo:ORG"/>
+            </xsd:choice>
+            <xsd:element name="period">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="dateFrom" type="xsd:dateTime">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Дата начала периода
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="dateTo" type="xsd:dateTime">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Дата окончания периода
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="GetCountMessageOperatorRequestType">
+        <xsd:sequence>
+            <xsd:element name="operatorOgrn" type="org:ogrn">
+                <xsd:annotation>
+                    <xsd:documentation>Идентификатор оператора</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="interactionType" type="xsd:int">
+                <xsd:annotation>
+                    <xsd:documentation>Тип взаимодействия
+                        1 - МО 2 - Страхователь 3- Организация
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="period" minOccurs="0">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="dateFrom" type="xsd:dateTime">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Дата начала периода
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="dateTo" type="xsd:dateTime">
+                            <xsd:annotation>
+                                <xsd:documentation>
+                                    Дата окончания периода
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SedoAppealFile">
+        <xsd:sequence>
+            <xsd:element name="content" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Контент файла в base64
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="fileName" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Название файла
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SedoAppealRequest">
+        <xsd:sequence>
+            <xsd:element name="appealTitle">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Заголовок обращения к страхователю
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="300"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="appealBody">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Тело обращения к страхователю
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="2000"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="appealFile" type="SedoAppealFile" minOccurs="0" maxOccurs="10">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Файлы обращения к страхователю
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+
+    <xsd:complexType name="SedoAppealResponse">
+        <xsd:sequence>
+            <xsd:element name="appealUuid" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Uuid обращения к страхователю (Сообщение от СФР)
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="appealTitle">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Заголовок ответа на обращение
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="300"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="appealBody">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Тело ответа на обращение
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="2000"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="appealFile" type="SedoAppealFile" minOccurs="0" maxOccurs="10">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Файлы ответа на обращение
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="SedoAppealNotification" >
+        <xsd:sequence>
+            <xsd:element name="appealAnswerUuid" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        UUID сообщения
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="date" type="xsd:dateTime">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Дата и время получения сообщения
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="status" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Статус
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>

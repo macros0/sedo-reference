@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:proactive:eventLife:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="urn:ru:ecp:integration:types:common:v3.0" xmlns:org="urn:ru:ecp:integration:types:organization:v3.0" xmlns:p="urn:ru:ecp:integration:types:person:v3.0" xmlns:pr="urn:ru:ecp:integration:types:proactive:type:v3.0" xmlns:insCat="urn:ru:ecp:integration:types:dic:insuredCategories:v3.0" xmlns:ns1="urn:ru:ecp:integration:types:dic:OKSM:v3.0" targetNamespace="urn:ru:ecp:integration:proactive:eventLife:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="../../type/Common.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:organization:v3.0" schemaLocation="../../type/Organization.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:person:v3.0" schemaLocation="../../type/Person.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:proactive:type:v3.0" schemaLocation="../../type/Proactive.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:dic:insuredCategories:v3.0" schemaLocation="../../dic/InsuredCategories.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:dic:OKSM:v3.0" schemaLocation="../../dic/OKSM.xsd"/>
+	<xs:element name="eventLife">
+		<xs:annotation>
+			<xs:documentation>Информирование о жизненном событии.
+Тип сообщения СЭДО №10910</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="insurerInfo">
+					<xs:annotation>
+						<xs:documentation>Данные о страхователе</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="regNumSFR" type="org:regNumSFR">
+								<xs:annotation>
+									<xs:documentation>Единый рег. номер страхователя СФР</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:choice>
+					<xs:sequence>
+						<xs:element name="benefitInfo" type="benefitInfoType">
+							<xs:annotation>
+								<xs:documentation>Инициация назначения пособия по временной нетрудоспособности или материнству</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="recalculationFlag" type="com:fixedTrueType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Инициация перерасчёта на основании сведений по пособию - benefitInfo</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+					<xs:sequence>
+						<xs:element name="recalculation">
+							<xs:annotation>
+								<xs:documentation>Инициация перерасчёта на основании номера документа в СФР - batchNo</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="batchNo" type="batchNoType">
+										<xs:annotation>
+											<xs:documentation>Номер документа в СФР (батч номер), по которому необходимы сведения для формирования перерасчётного документа</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:choice>
+				<xs:element name="notice" type="pr:noticeType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Данные извещения о представлении недостающих сведений</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="specVersion" type="com:specVersionType" use="required">
+				<xs:annotation>
+					<xs:documentation>Номер версии  спецификации для xml документа</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="childInfoType">
+		<xs:sequence>
+			<xs:element name="snils" type="p:snils" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>СНИЛС ребёнка. Поле обязательно для заполнения:
+- для детей, рожденных в РФ;
+- для детей, рожденных за пределами РФ, в случае наличия СНИЛС</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="fullName" type="p:fullName2">
+				<xs:annotation>
+					<xs:documentation>ФИО ребёнка</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="birthDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата рождения ребёнка</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="gender" type="p:genderType">
+				<xs:annotation>
+					<xs:documentation>Пол ребёнка</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="insuredInfoType">
+		<xs:sequence>
+			<xs:element name="snils" type="p:snils">
+				<xs:annotation>
+					<xs:documentation>СНИЛС</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="category" type="insCat:insuredCategoriesType">
+				<xs:annotation>
+					<xs:documentation>Категория застрахованного лица</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="birthDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата рождения застрахованного лица</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="insuredInfoType2">
+		<xs:sequence>
+			<xs:element name="snils" type="p:snils">
+				<xs:annotation>
+					<xs:documentation>СНИЛС</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="category" type="insCat:insuredCategoriesType">
+				<xs:annotation>
+					<xs:documentation>Категория застрахованного лица</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="benefitInfoType">
+		<xs:choice>
+			<xs:element name="benefit1">
+				<xs:annotation>
+					<xs:documentation>Инициация назначения пособия по временной нетрудоспособности</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="insuredInfo" type="insuredInfoType2">
+							<xs:annotation>
+								<xs:documentation>Данные о застрахованном лице</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="lnNumber" type="com:lnCode">
+							<xs:annotation>
+								<xs:documentation>Номер ЭЛН</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="changeYears" type="changeYearsType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Информация о замененных расчетных годах. Заполняется при наличии заявления о замене лет</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="contractsInfo" type="pr:contractsInfoTypeResponse1">
+							<xs:annotation>
+								<xs:documentation>Договоры, по которым занято застрахованное лицо у страхователя</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="benefit2">
+				<xs:annotation>
+					<xs:documentation>Инициация назначения пособия по беременности и родам</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="insuredInfo" type="insuredInfoType2">
+							<xs:annotation>
+								<xs:documentation>Данные о застрахованном лице</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="lnNumber" type="com:lnCode">
+							<xs:annotation>
+								<xs:documentation>Номер ЭЛН</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="changeYears" type="changeYearsType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Информация о замененных расчетных годах. Заполняется при наличии заявления о замене лет</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="contractsInfo" type="pr:contractsInfoTypeResponse2">
+							<xs:annotation>
+								<xs:documentation>Договоры, по которым занято застрахованное лицо у страхователя</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="period" type="com:period">
+							<xs:annotation>
+								<xs:documentation>Если застрахованное лицо занято по трудовому договору, то заполняется период отпуска по беременности и родам. Если застрахованное лицо занято только по договору ГПХ, то заполняется период назначения и выплаты пособия в пределах действия договора ГПХ</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="benefit4">
+				<xs:annotation>
+					<xs:documentation>Инициация назначения единовременного пособия при рождении ребенка</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="insuredInfo" type="insuredInfoType">
+							<xs:annotation>
+								<xs:documentation>Данные о застрахованном лице</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="contractsInfo" type="pr:contractsInfoTypeRequest4">
+							<xs:annotation>
+								<xs:documentation>Договоры, по которым занято застрахованное лицо у страхователя</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="childInfo" type="childInfoType">
+							<xs:annotation>
+								<xs:documentation>Данные о ребёнке</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="childRelType" type="pr:childRelTypeBenefit4">
+							<xs:annotation>
+								<xs:documentation>Тип связи застрахованного лица с ребенком - мать, отец, опекун, усыновитель</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="baseDocuments">
+							<xs:annotation>
+								<xs:documentation>Основания для назначения пособия</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:choice>
+									<xs:element name="birthReferenceDocs">
+										<xs:annotation>
+											<xs:documentation>Справка о рождении и актовая запись</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="birthReference" type="p:birthReferenceType">
+													<xs:annotation>
+														<xs:documentation>Справка о рождении</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+												<xs:element name="birthRecord" type="p:birthRecordType" minOccurs="0">
+													<xs:annotation>
+														<xs:documentation>Актовая запись (реестровая запись) о рождении</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="birthRecord" type="p:birthRecordType">
+										<xs:annotation>
+											<xs:documentation>Актовая запись (реестровая запись) о рождении</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="birthDocOtherCountry" type="p:birthDocOtherCountryType">
+										<xs:annotation>
+											<xs:documentation>Иной документ, подтверждающий рождение ребёнка. Для детей, рождённых за рубежом</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:choice>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="benefit5">
+				<xs:annotation>
+					<xs:documentation>Инициация назначения пособия по уходу за ребёнком до достижения им возраста 1.5 лет</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="insuredInfo" type="insuredInfoType">
+							<xs:annotation>
+								<xs:documentation>Данные о застрахованном лице</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="changeYears" type="changeYearsType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Информация о замененных расчетных годах. Заполняется при наличии заявления о замене лет</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="contractsInfo" type="pr:contractsInfoTypeResponse2">
+							<xs:annotation>
+								<xs:documentation>Договоры, по которым занято застрахованное лицо у страхователя</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="period" type="com:period">
+							<xs:annotation>
+								<xs:documentation>Если застрахованное лицо занято по трудовому договору, то заполняется период отпуска по уходу за ребёнком до достижения им возраста 1.5 лет. Если застрахованное лицо занято только по договору ГПХ, то заполняется период назначения и выплаты пособия в пределах действия договора ГПХ</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="childInfo" type="childInfoType">
+							<xs:annotation>
+								<xs:documentation>Данные о ребёнке</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="childRelType" type="pr:childRelTypeBenefit5">
+							<xs:annotation>
+								<xs:documentation>Тип связи застрахованного лица с ребенком - мать, отец, опекун, иной родственник, фактически осуществляющий уход</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="baseDocuments">
+							<xs:annotation>
+								<xs:documentation>Основания для назначения пособия</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:choice>
+									<xs:sequence>
+										<xs:element name="birthCertificate" type="p:birthCertificateType">
+											<xs:annotation>
+												<xs:documentation>Свидетельство о рождении</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+										<xs:element name="birthRecord" type="p:birthRecordType" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Актовая запись (реестровая запись) о рождении</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+									<xs:element name="birthDocOtherCountry" type="p:birthDocOtherCountryType">
+										<xs:annotation>
+											<xs:documentation>Иной документ, подтверждающий рождение ребёнка. Для детей, рождённых за рубежом</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:choice>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="benefit6">
+				<xs:annotation>
+					<xs:documentation>Инициация назначения пособия по временной нетрудоспособности в связи с НС или ПЗ</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="insuredInfo" type="insuredInfoType2">
+							<xs:annotation>
+								<xs:documentation>Данные о застрахованном лице</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="lnNumber" type="com:lnCode">
+							<xs:annotation>
+								<xs:documentation>Номер ЭЛН</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="changeYears" type="changeYearsType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Информация о замененных расчетных годах. Заполняется при наличии заявления о замене лет</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="contractsInfo" type="pr:contractsInfoTypeResponse6">
+							<xs:annotation>
+								<xs:documentation>Договоры, по которым занято застрахованное лицо у страхователя</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="changeYearsType">
+		<xs:sequence>
+			<xs:element name="year" type="pr:yearType" minOccurs="2" maxOccurs="2">
+				<xs:annotation>
+					<xs:documentation>Год, использующийся для расчета</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="batchNoType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[E|P]_\d{10}_(19|20)[0-9]{2}_[0|1][0-9]_[0-3][0-9]_\d{1,9}[\S]{0,5}:\d{1,3}|\S{18}"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

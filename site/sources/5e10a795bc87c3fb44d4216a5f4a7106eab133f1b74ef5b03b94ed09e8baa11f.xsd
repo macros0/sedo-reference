@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.fss.ru/integration/types/ls/v01"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns:cm="http://www.fss.ru/integration/types/common/v01"
+           xmlns:org="http://www.fss.ru/integration/types/organization/v01"
+           targetNamespace="http://www.fss.ru/integration/types/ls/v01" elementFormDefault="qualified"
+           attributeFormDefault="unqualified" vc:minVersion="1.1">
+    <xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="../type/Common.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/organization/v01"
+               schemaLocation="../type/Organization.xsd"/>
+    <xs:element name="AppResult">
+        <xs:annotation>
+            <xs:documentation>Ответ на заявление</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="regNum" type="org:regNum">
+                    <xs:annotation>
+                        <xs:documentation>Регистрационный номер страхователя</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="regNumSFR" type="org:regNumSFR" minOccurs="0">
+                    <xs:annotation>
+                        <xs:documentation>Регистрационный номер страхователя СФР</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="dateStart" type="xs:dateTime">
+                    <xs:annotation>
+                        <xs:documentation>Дата, на которую производится расчет задолженности</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="idMessage" type="cm:UuidV1Type">
+                    <xs:annotation>
+                        <xs:documentation>Идентификатор сообщения</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="id" type="cm:UuidV1Type">
+                    <xs:annotation>
+                        <xs:documentation>Идентификатор запроса</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="date" type="xs:dateTime">
+                    <xs:annotation>
+                        <xs:documentation>Дата формирования заявления</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="responseOn" type="cm:UuidV1Type" use="required"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

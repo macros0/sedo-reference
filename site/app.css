@@ -46,3 +46,12 @@
 .schema-review-item dt {margin-top:6px; font-weight:600}
 .schema-review-item dd {margin:0; white-space:pre-wrap}
 .version-panel .source {overflow-wrap:anywhere; max-width:100%}
+
+.review-results {overflow-x:auto; margin-top:18px}
+.review-results table {border-collapse:collapse; width:100%; min-width:1050px; font-size:14px}
+.review-results th {background:#165a56; color:white; text-align:left}
+.review-results th,.review-results td {padding:12px; border:1px solid var(--line); vertical-align:top; min-width:140px; overflow-wrap:anywhere}
+.review-results td:nth-child(2) {min-width:230px}
+.review-results td p {margin:0}
+.review-results td .meta {margin-top:10px}
+#review-journal button:disabled {opacity:.5; cursor:default}

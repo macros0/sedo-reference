@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="urn:ru:ecp:integration:types:common:v3.0" xmlns:p="urn:ru:ecp:integration:types:person:v3.0" targetNamespace="urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="../type/Common.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:person:v3.0" schemaLocation="../type/Person.xsd"/>
+	<xs:element name="paymentStatusNotice" type="PaymentNoticeType">
+		<xs:annotation>
+			<xs:documentation>Уведомление о статусе выплаты пособия по ВНиМ.
+Тип сообщения СЭДО №11000</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="PaymentNoticeType">
+		<xs:sequence>
+			<xs:element name="noticeType" type="NoticeTypeType">
+				<xs:annotation>
+					<xs:documentation>Тип уведомления</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="batchNo" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Номер записи реестра</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50"/>
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="processNum" type="com:proactiveProcessNumType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Номер проактивного процесса</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="personInfo">
+				<xs:annotation>
+					<xs:documentation>Сведения о застрахованном лице</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="secondName" type="p:lastName">
+							<xs:annotation>
+								<xs:documentation>Фамилия</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="firstName" type="p:firstName">
+							<xs:annotation>
+								<xs:documentation>Имя</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="patronymic" type="p:middleName" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Отчество</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="birthDate" type="p:birthDate">
+							<xs:annotation>
+								<xs:documentation>Дата рождения</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="snils" type="p:snils">
+							<xs:annotation>
+								<xs:documentation>СНИЛС</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="registerRecieve" type="RegisterRecieveType">
+					<xs:annotation>
+						<xs:documentation>Уведомление о поступлении информации о необходимости осуществления выплаты</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="paymentSend" type="PaymentSendType">
+					<xs:annotation>
+						<xs:documentation>Уведомление о направлении документа на оплату</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="paymentDone" type="PaymentDoneType">
+					<xs:annotation>
+						<xs:documentation>Уведомление об успешном проведении выплаты</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="paymentCanceling" type="PaymentCancelingType">
+					<xs:annotation>
+						<xs:documentation>Уведомление о недоставке платежа (оплата не прошла)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="noticeSend" type="NoticeSendType">
+					<xs:annotation>
+						<xs:documentation>Уведомление о направлении извещения работодателю</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Технический элемент, позволяющий расширять XML документ в перспективе</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+		<xs:attribute name="specVersion" type="com:specVersionType" use="required">
+			<xs:annotation>
+				<xs:documentation>Номер версии спецификации для xml документа</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="messageDateTime" type="xs:dateTime" use="required">
+			<xs:annotation>
+				<xs:documentation>Дата и время формирования сообщения на стороне СФР</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:anyAttribute processContents="skip">
+			<xs:annotation>
+				<xs:documentation>Технический атрибут, позволяющий расширять XML документ</xs:documentation>
+			</xs:annotation>
+		</xs:anyAttribute>
+	</xs:complexType>
+	<xs:simpleType name="NoticeTypeType">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Уведомление о поступление информации о необходимости осуществления выплаты</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Уведомление о направлении документа на оплату</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Уведомление об успешном проведении выплаты пособия</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Уведомление о поступлении отказа от банка получение статуса «Оплата не прошла»</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>Уведомление о направлении работодателю извещения о необходимости предоставления дополнительных сведений</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="RegisterRecieveType">
+		<xs:complexContent>
+			<xs:extension base="messageDetailType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PaymentSendType">
+		<xs:complexContent>
+			<xs:extension base="messageDetailType">
+				<xs:sequence>
+					<xs:element name="assignedSumm" type="com:sumType">
+						<xs:annotation>
+							<xs:documentation>Назначенная сумма</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dutySumm" type="com:sumType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Удержанная сумма НДФЛ (из  назначенной суммы).
+Поле заполняется для пособий по временной нетрудоспособности с кодами "1", "6"</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PaymentDoneType">
+		<xs:complexContent>
+			<xs:extension base="messageDetailType">
+				<xs:sequence>
+					<xs:element name="assignedSumm" type="com:sumType">
+						<xs:annotation>
+							<xs:documentation>Назначенная сумма</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="dutySumm" type="com:sumType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>Удержанная сумма НДФЛ (из  назначенной суммы).
+Поле заполняется для пособий по временной нетрудоспособности с кодами "1", "6"</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PaymentCancelingType">
+		<xs:complexContent>
+			<xs:extension base="messageDetailType">
+				<xs:sequence>
+					<xs:element name="paymentState">
+						<xs:annotation>
+							<xs:documentation>Статус платежа (оплата не прошла)
+                            </xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="64"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+						<xs:annotation>
+							<xs:documentation>Технический элемент, позволяющий расширять XML документ</xs:documentation>
+						</xs:annotation>
+					</xs:any>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="NoticeSendType">
+		<xs:complexContent>
+			<xs:extension base="messageDetailType"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="messageDetailType">
+		<xs:sequence>
+			<xs:element name="docType" type="DocTypeType">
+				<xs:annotation>
+					<xs:documentation>Тип пособия</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="infoRecalcFlag" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>Признак перерасчета (true - перерасчет, false - первичный документ)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="period" type="com:period" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Период пособия (блок не заполняется для пособия с кодом "4" - единовременное пособие при рождении ребенка)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="addInformation" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Дополнительная информация</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="250"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="DocTypeType">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Пособие по временной нетрудоспособности</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Пособие по беременности и родам</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Единовременное пособие при рождении ребенка</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>Ежемесячное пособие по уходу за ребенком до 1.5 лет</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

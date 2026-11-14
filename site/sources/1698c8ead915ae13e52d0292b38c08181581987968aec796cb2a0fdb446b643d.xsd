@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:vnim:refusal:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="urn:ru:ecp:integration:types:common:v3.0" xmlns:p="urn:ru:ecp:integration:types:person:v3.0" xmlns:org="urn:ru:ecp:integration:types:organization:v3.0" xmlns:notice="urn:ru:ecp:integration:vnim:notice:v3.0" xmlns:att="urn:ru:ecp:integration:types:attachment:v3.0" targetNamespace="urn:ru:ecp:integration:vnim:refusal:v3.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="../type/Common.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:person:v3.0" schemaLocation="../type/Person.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:organization:v3.0" schemaLocation="../type/Organization.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:vnim:notice:v3.0" schemaLocation="Notice.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:attachment:v3.0" schemaLocation="../type/Attachment.xsd"/>
+	<xs:element name="refusal">
+		<xs:annotation>
+			<xs:documentation>Решение об отказе в назначении страхового обеспечения и иных выплат.
+Тип сообщения СЭДО №125</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="refusalNumber" type="refusalNumberType">
+					<xs:annotation>
+						<xs:documentation>Номер отказа</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="refusalDate" type="xs:date">
+					<xs:annotation>
+						<xs:documentation>Дата формирования отказа</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="tof" type="com:territorialDivision">
+					<xs:annotation>
+						<xs:documentation>Территориальное подразделение СФР РФ</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="registryNum" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Номер реестра (при наличии)</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:minLength value="1"/>
+							<xs:maxLength value="100"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="insuredInfo" type="notice:insuredInfoTypeRequest">
+					<xs:annotation>
+						<xs:documentation>Данные о застрахованном лице</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="insurerInfo" type="notice:insurerInfoTypeRequest">
+					<xs:annotation>
+						<xs:documentation>Данные о страхователе</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="benefitInfo" type="benefitInfoTypeRequest">
+					<xs:annotation>
+						<xs:documentation>Данные о пособии</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="refusalText">
+					<xs:annotation>
+						<xs:documentation>Текст основания отказа</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="requestTextType"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="attachments">
+					<xs:annotation>
+						<xs:documentation>Документ решения об отказе</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="attachment" type="att:AttachmentType" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Файлы в формте pdf, xml</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="senderInfo">
+					<xs:annotation>
+						<xs:documentation>Данные лица, направившего отказ</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="fullName" type="p:fullNameSimple">
+								<xs:annotation>
+									<xs:documentation>ФИО работника СФР, направившего отказ</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="role" type="com:roleType">
+								<xs:annotation>
+									<xs:documentation>Должность</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="phone" type="com:phoneNumberType">
+								<xs:annotation>
+									<xs:documentation>Контактный номер телефона</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="signatoryInfo">
+					<xs:annotation>
+						<xs:documentation>Данные лица, подписавшего отказ</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="fullName" type="p:fullNameSimple">
+								<xs:annotation>
+									<xs:documentation>ФИО работника СФР, подписавшего отказ</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="role" type="com:roleType">
+								<xs:annotation>
+									<xs:documentation>Должность</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Технический элемент, позволяющий расширять XML документ в перспективе</xs:documentation>
+					</xs:annotation>
+				</xs:any>
+			</xs:sequence>
+			<xs:attribute name="specVersion" type="com:specVersionType" use="required">
+				<xs:annotation>
+					<xs:documentation>Номер версии спецификации для xml документа</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="messageUuid101" type="com:uuidV1Type">
+				<xs:annotation>
+					<xs:documentation>Ссылка на транспортный идентификатор сообщения СЭДО №101 (при наличии)</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="messageDateTime" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>Дата и время формирования сообщения на стороне СФР</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:anyAttribute processContents="skip">
+				<xs:annotation>
+					<xs:documentation>Технический атрибут, позволяющий расширять XML документ</xs:documentation>
+				</xs:annotation>
+			</xs:anyAttribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="refusalNumberType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="35"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="benefitInfoTypeRequest">
+		<xs:sequence>
+			<xs:element name="proactiveProcessNum" type="com:proactiveProcessNumType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Номер проактивного процесса</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="rowNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Номер строки реестра, по которой сформирован отказ</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="benefit1">
+					<xs:annotation>
+						<xs:documentation>Пособие по временной нетрудоспособности</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="lnNumber" type="com:lnCode">
+								<xs:annotation>
+									<xs:documentation>Номер ЛН</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Технический элемент, позволяющий расширять XML документ в перспективе</xs:documentation>
+								</xs:annotation>
+							</xs:any>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="benefit2">
+					<xs:annotation>
+						<xs:documentation>Пособие по беременности и родам</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="lnNumber" type="com:lnCode">
+								<xs:annotation>
+									<xs:documentation>Номер ЛН</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Технический элемент, позволяющий расширять XML документ в перспективе</xs:documentation>
+								</xs:annotation>
+							</xs:any>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="benefit4">
+					<xs:annotation>
+						<xs:documentation>Единовременное пособие при рождении ребенка</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="childSnils" type="p:snils" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>СНИЛС ребенка</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="childBirthDate" type="xs:date">
+								<xs:annotation>
+									<xs:documentation>Дата рождения ребенка</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Технический элемент, позволяющий расширять XML документ в перспективе</xs:documentation>
+								</xs:annotation>
+							</xs:any>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="benefit5">
+					<xs:annotation>
+						<xs:documentation>Ежемесячное пособие по уходу за ребенком до 1.5 лет </xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="childSnils" type="p:snils" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>СНИЛС ребенка</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="vacationPeriod" type="com:period">
+								<xs:annotation>
+									<xs:documentation>Период отпуска</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Технический элемент, позволяющий расширять XML документ в перспективе</xs:documentation>
+								</xs:annotation>
+							</xs:any>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="benefit6">
+					<xs:annotation>
+						<xs:documentation>Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="lnNumber" type="com:lnCode">
+								<xs:annotation>
+									<xs:documentation>Номер ЛН</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Технический элемент, позволяющий расширять XML документ в перспективе</xs:documentation>
+								</xs:annotation>
+							</xs:any>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Технический элемент, позволяющий расширять XML документ в перспективе</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="requestTextType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="4000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="refusalReasonType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>На основании части 2 статьи 15 Федерального закона от 29 декабря 2006 года № 255-ФЗ «Об обязательном социальном страховании на случай временной нетрудоспособности и в связи с материнством»</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

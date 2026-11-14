@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:pr="urn:ru:ecp:integration:types:proactive:type:v3.0" xmlns:com="urn:ru:ecp:integration:types:common:v3.0"  targetNamespace="urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:proactive:type:v3.0" schemaLocation="../../type/Proactive.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="../../type/Common.xsd"/>
+	<xs:element name="proactiveNotification">
+		<xs:annotation>
+			<xs:documentation>Информирование о событиях по проактивному процессу по временной нетрудоспособности и материнству. Тип сообщения СЭДО №10710</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="socialAssistNum" type="xs:long">
+					<xs:annotation>
+						<xs:documentation>Номер текущего проактивного процесса</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:choice>
+					<xs:element name="procClosedOpenNew">
+						<xs:annotation>
+							<xs:documentation>Информирование о закрытии проактивного процесса в связи с изменением параметров по процессу. Будет выполнено открытие нового проактивного процесса</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="reason">
+									<xs:annotation>
+										<xs:documentation>Причина закрытия текущего проактивного процесса</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:maxLength value="1000"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="newSocialAssistNum" type="xs:long">
+									<xs:annotation>
+										<xs:documentation>Номер нового проактивного процесса</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="receivedConfirmationOtherInsurer">
+						<xs:annotation>
+							<xs:documentation>Информирование о приеме 10110 сообщения по страховому случаю от другого страхователя</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="paymentMethod" type="pr:paymentMethodType">
+									<xs:annotation>
+										<xs:documentation>Метод назначения пособия, полученный от другого страхователя</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="years">
+									<xs:annotation>
+										<xs:documentation>Расчетные года, полученные от другого страхователя</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="year" type="xs:integer" minOccurs="2" maxOccurs="2"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="specVersion" type="com:specVersionType" use="required">
+				<xs:annotation>
+					<xs:documentation>Номер версии  спецификации для xml документа</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="messageDateTime" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>Дата и время формирования сообщения на стороне СФР</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:anyAttribute processContents="skip">
+				<xs:annotation>
+					<xs:documentation>Технический атрибут, позволяющий расширять XML документ</xs:documentation>
+				</xs:annotation>
+			</xs:anyAttribute>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

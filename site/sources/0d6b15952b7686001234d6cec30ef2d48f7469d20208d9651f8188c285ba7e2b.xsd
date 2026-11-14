@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2023 sp1 (x64) (http://www.altova.com) by  () -->
+<xs:schema xmlns="urn:ru:ecp:integration:proactive:salary:request:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="urn:ru:ecp:integration:types:common:v3.0" xmlns:org="urn:ru:ecp:integration:types:organization:v3.0" xmlns:p="urn:ru:ecp:integration:types:person:v3.0" xmlns:ns1="urn:ru:ecp:integration:types:proactive:type:v3.0" targetNamespace="urn:ru:ecp:integration:proactive:salary:request:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="../../type/Common.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:organization:v3.0" schemaLocation="../../type/Organization.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:person:v3.0" schemaLocation="../../type/Person.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:proactive:type:v3.0" schemaLocation="../../type/Proactive.xsd"/>
+	<xs:element name="insuredPersonSalaryRequest">
+		<xs:annotation>
+			<xs:documentation>Запрос страхователя о получении от Фонда сведений о заработной плате застрахованного лица.
+Тип сообщения СЭДО №32010</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="insurerInfo">
+					<xs:annotation>
+						<xs:documentation>Сведения о страхователе</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="regNumSFR" type="org:regNumSFR">
+								<xs:annotation>
+									<xs:documentation>Регистрационный номер страхователя СФР</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="insuredInfo">
+					<xs:annotation>
+						<xs:documentation>Сведения о застрахованном лице</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="snils" type="p:snils">
+								<xs:annotation>
+									<xs:documentation>СНИЛС</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="birthDate" type="xs:date">
+								<xs:annotation>
+									<xs:documentation>Дата рождения</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="periodInfo">
+					<xs:annotation>
+						<xs:documentation>Сведения о запрашиваемом периоде</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="twoPrevYears">
+								<xs:annotation>
+									<xs:documentation>Два предшествующих года от даты направления запроса, а если заполнен блок "fired" (ЗЛ уволено), то от даты firstElnStartDate (даты начала страхового случая).
+В случае, если расчетные года не попадают в список  twoPrevYears, то необходимо указать их в блоке additionalYears</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="year" type="yearType" minOccurs="2" maxOccurs="2">
+											<xs:annotation>
+												<xs:documentation>Номер года</xs:documentation>
+											</xs:annotation>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="additionalYears" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Дополнительно запрашиваемый период</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="year" maxOccurs="unbounded">
+											<xs:annotation>
+												<xs:documentation>Номер года</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="yearType">
+													<xs:minInclusive value="2001"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="fired" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Застрахованное лицо на момент направления запроса - уволено</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="firstElnStartDate" type="xs:date">
+								<xs:annotation>
+									<xs:documentation>Дата начала страхового случая (дата начала периода нетрудоспособности по первому ЭЛН из цепочки ЭЛН)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="agreementInsuredPerson" type="com:fixedTrueType">
+					<xs:annotation>
+						<xs:documentation>Признак, определяющий получение согласия  застрахованного лица о запросе суммы заработка страхователем</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Технический элемент, позволяющий расширять XML документ</xs:documentation>
+					</xs:annotation>
+				</xs:any>
+			</xs:sequence>
+			<xs:attribute name="specVersion" type="com:specVersionType" use="required">
+				<xs:annotation>
+					<xs:documentation>Номер версии  спецификации для xml документа</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="yearType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="2001"/>
+			<xs:pattern value="\d{4}"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,922 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2023 sp1 (x64) (http://www.altova.com) by  () -->
+<xs:schema xmlns="http://www.fss.ru/integration/types/pvso/disabilitychildren/v01"
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+		   xmlns:cmn="http://www.fss.ru/integration/types/common/v01" xmlns:cuq="http://www.fss.ru/integration/types/commonUq/v01"
+		   xmlns:p="http://www.fss.ru/integration/types/person/v02"
+		   xmlns:org="http://www.fss.ru/integration/types/organization/v01"
+		   xmlns:dpt="http://www.fss.ru/integration/types/fssDepartment/v01"
+		   targetNamespace="http://www.fss.ru/integration/types/pvso/disabilitychildren/v01" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="../type/Common.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/commonUq/v01" schemaLocation="../type/CommonUQ.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/person/v02" schemaLocation="../../v02/type/Person.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/organization/v01" schemaLocation="../type/Organization.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/fssDepartment/v01" schemaLocation="../type/FssDepartment.xsd"/>
+	<xs:element name="disabilityChildrenRequest" type="DisabilityChildrenRequestType"/>
+	<xs:element name="disabilityChildrenStatementResponse" type="DisabilityChildrenResponseType"/>
+	<xs:element name="disabilityChildrenStatementReject" type="DisabilityChildrenRejectType">
+		<xs:annotation>
+			<xs:documentation>Отказано в возмещении расходов по всему заявлению на возмещение</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="DisabilityChildrenRequestType">
+		<xs:annotation>
+			<xs:documentation>Структура заявления о возмещении расходов на оплату дополнительных выходных дней для ухода за детьми-инвалидами</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="batch_no" type="StatementNoType">
+				<xs:annotation>
+					<xs:documentation>batch_no формируется на стороне Страхователя. batch_no должен быть уникальным по каждому запросу. Так же, формат значения должен соответствовать маске «D_регномер страхователя_год_месяц_число_номер», например: D_1234567890_2022_03_01_0001. </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="changeRecalcFlag" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Признак перерасчета(Используется только для  доплаты.):
+						false- Первичный;	true - Перерасчетный документ;
+						Переплата / Корректировка не допускается!</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="prim_batch_no" type="BatchNoType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Batch_no первичного  реестра выплаты.  Обязателен к заполнению, если changeRecalcFlag=1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="recalc_reason" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Причина перерасчета
+						1 - Представлены дополнительные сведения о выплатах в расчетном периоде. Обязателен к заполнению, если changeRecalcFlag=1</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="insurerInfo">
+				<xs:annotation>
+					<xs:documentation>Сведения о страхователе</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:choice>
+							<xs:element name="regNum" type="org:regNum">
+								<xs:annotation>
+									<xs:documentation>Идентификатор страхователя по социальному страхованию.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="regNumSFR" type="org:regNumSFR">
+								<xs:annotation>
+									<xs:documentation>Регистрационный номер страхователя СФР.
+										~
+										До начала переходного периода на регистрационные номера СФР будет приниматься (принимается) 1 поле: regNum.
+										~
+										В переходном периоде будет приниматься 1 из полей: regNum/regNumSFR
+										(если страхователь не перешел на новую схему взаимодействия, то будет направлять regNum, а после перехода на новую схему должен направлять regNumSFR)</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:choice>
+						<xs:element name="emplKPP" type="kpp" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Страхователь: КПП</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="emplINN" type="inn">
+							<xs:annotation>
+								<xs:documentation>Страхователь: ИНН</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="refNumber" type="org:ParentNoType">
+							<xs:annotation>
+								<xs:documentation>Код подчиненности (социального страхования)</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="Empl_Flag" type="xs:boolean">
+							<xs:annotation>
+								<xs:documentation>Страхователь: признак места работы –
+									true-основное место работы
+									false-по совместительству
+								</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="bankInfo">
+							<xs:annotation>
+								<xs:documentation>Банковские реквизиты</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="bik" type="org:BikType">
+										<xs:annotation>
+											<xs:documentation>БИК</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="accountNum" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Номер счета</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="org:AccountNumType"/>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="accountNumInFederalExchequer" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Лицевой счет организации, который открыт в органах Федерального
+												казначейства в соответствии с бюджетным законодательством Российской Федерации</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:maxLength value="13"/>
+												<xs:minLength value="9"/>
+												<xs:pattern value="[\dA-Za-zА-Яа-яёЁ]{9,13}"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="kbk" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Код бюджетной классификации</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:length value="20"/>
+												<xs:pattern value="[A-ZА-Я0-9]{20}"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="refundSum">
+				<xs:annotation>
+					<xs:documentation>Сумма возмещения расходов</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="totalSum" type="cmn:amount">
+							<xs:annotation>
+								<xs:documentation>Общая сумма</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="sumForNonBudgetFunds" type="cmn:amount">
+							<xs:annotation>
+								<xs:documentation>В том числе, по уплате страховых взносов во внебюджетные фонда СФР</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="sumForAdditionalDays" type="cmn:amount">
+							<xs:annotation>
+								<xs:documentation>В том числе, по оплате дополнительных выходных дней</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="numberRecipients" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Численность получателей всего, чел.
+						Заполняется числовым значением (количество человек, указанных в данном заявлении о возмещении.
+
+						Максимальное значение 100
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="certifiedCopiesOrders" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Заверенные копии приказов о предоставлении дополнительных	выходных дней прилагаются на ... листах</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="receiversRow" minOccurs="0" maxOccurs="100">
+				<xs:annotation>
+					<xs:documentation>Сведения о получателях:
+						Обязательно заполняются если  значение в теге sumForAdditionalDays > 0 и changeRecalcFlag=false.
+						Не заполняется:
+						-sumForAdditionalDays=0;
+						-changeRecalcFlag=true.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="parentInfo" type="parentInfoType">
+							<xs:annotation>
+								<xs:documentation>Сведения о родителе</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="childInfo">
+							<xs:annotation>
+								<xs:documentation>Сведения о ребенке</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="childInfoType">
+										<xs:sequence>
+											<xs:element name="certificateOfDisability">
+												<xs:annotation>
+													<xs:documentation>Справка об инвалидности </xs:documentation>
+												</xs:annotation>
+												<xs:complexType>
+													<xs:sequence>
+														<xs:element name="series">
+															<xs:annotation>
+																<xs:documentation>Серия справки</xs:documentation>
+															</xs:annotation>
+															<xs:simpleType>
+																<xs:restriction base="xs:string">
+																	<xs:maxLength value="20"/>
+																</xs:restriction>
+															</xs:simpleType>
+														</xs:element>
+														<xs:element name="number">
+															<xs:annotation>
+																<xs:documentation>Номер справки</xs:documentation>
+															</xs:annotation>
+															<xs:simpleType>
+																<xs:restriction base="xs:string">
+																	<xs:maxLength value="20"/>
+																</xs:restriction>
+															</xs:simpleType>
+														</xs:element>
+														<xs:element name="certificateDate" type="xs:date">
+															<xs:annotation>
+																<xs:documentation>Дата справки</xs:documentation>
+															</xs:annotation>
+														</xs:element>
+														<xs:element name="disabilityBeginDate" type="xs:date">
+															<xs:annotation>
+																<xs:documentation>Дата установления инвалидности</xs:documentation>
+															</xs:annotation>
+														</xs:element>
+														<xs:element name="disabilityEndDate">
+															<xs:annotation>
+																<xs:documentation>Инвалидность установлена на срок "до"</xs:documentation>
+															</xs:annotation>
+															<xs:complexType>
+																<xs:choice>
+																	<xs:element name="notLimited" type="xs:boolean" fixed="1">
+																		<xs:annotation>
+																			<xs:documentation>Инвалидность установлена на бессрочный срок </xs:documentation>
+																		</xs:annotation>
+																	</xs:element>
+																	<xs:element name="endDate" type="xs:date">
+																		<xs:annotation>
+																			<xs:documentation>Инвалидность установлена на срок "до". Дата</xs:documentation>
+																		</xs:annotation>
+																	</xs:element>
+																</xs:choice>
+															</xs:complexType>
+														</xs:element>
+													</xs:sequence>
+												</xs:complexType>
+											</xs:element>
+										</xs:sequence>
+									</xs:extension>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="ORD" type="ORDtype" minOccurs="0" maxOccurs="13">
+							<xs:annotation>
+								<xs:documentation>Сведения о приказе (приказах) о предоставлении дополнительных  выходных дней (Заполняется только для электронных реестров).
+									Должен быть указан хотя бы один номер и дата приказа (даже при указании в заявлении к возмещению только страховых взносов)
+									Максимальное количество - 13 шт</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="periods">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="additionalPeriods" type="additionalPeriodsType" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Заполняется в случае, если используются периоды дополнительных выходных дней, фактически предоставленных</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="accumulatedPeriods" type="accumulatedPeriodsType" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Заполняется в случае, если используются только периоды накопленных фактически предоставленных дополнительных выходных дней</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="addInfo" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="300"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="software" use="required">
+			<xs:annotation>
+				<xs:documentation>Наименование программного обеспечения</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="version_software" use="required">
+			<xs:annotation>
+				<xs:documentation>Версия программного обеспечения</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="15"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="author" use="required">
+			<xs:annotation>
+				<xs:documentation>ФИО лица предоставляющего сведения</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="120"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="phone" use="required">
+			<xs:annotation>
+				<xs:documentation>Контактный номер телефона
+					(с указанием кода) страхователя
+					(уполномоченного представителя)
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="30"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="email" use="required">
+			<xs:annotation>
+				<xs:documentation>Адрес электронной почты страхователя (уполномоченного представителя)
+				</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="40"/>
+					<xs:pattern value="[0-9a-zA-Z_.\-]{2,50}[@]{1}[0-9a-zA-Z_./-]{2,50}[.]{1}[a-zA-Z]{2,5}"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="emplRegNo" type="org:regNum" use="optional">
+			<xs:annotation>
+				<xs:documentation>Регистрационный номер по ОСС</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="regNumSFR" type="org:regNum" use="optional">
+			<xs:annotation>
+				<xs:documentation>Регистрационный номер СФР</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="DisabilityChildrenResponseType">
+		<xs:annotation>
+			<xs:documentation>Структура ответа на запрос обработки заявления о возмещении расходов на оплату дополнительных выходных дней для ухода за детьми-инвалидами</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="status" type="StateType">
+				<xs:annotation>
+					<xs:documentation>Статус обработки заявления</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="errorList" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Список ошибок</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="error" type="cmn:ErrorType" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="responseOn" type="cmn:UuidV1Type" use="required">
+			<xs:annotation>
+				<xs:documentation>Ссылка на транспортный идентификатор Заявления</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="DisabilityChildrenRejectType">
+		<xs:annotation>
+			<xs:documentation>Решение об отказе в возмещении расходов на оплату дополнительных выходных дней для ухода за детьми-инвалидами</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="msgDateTime" type="xs:dateTime">
+				<xs:annotation>
+					<xs:documentation>Дата и время направления отказа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="tof" type="dpt:FssDepartmentType">
+				<xs:annotation>
+					<xs:documentation>Территориальный орган СФР РФ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="batch_no">
+				<xs:annotation>
+					<xs:documentation>Идентификатор заявления</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="insurerInfo">
+				<xs:annotation>
+					<xs:documentation>Сведения о страхователе</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="regNum" type="org:regNum">
+							<xs:annotation>
+								<xs:documentation>Регистрационный номер по ОСС</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="regNumSFR" type="org:regNumSFR">
+							<xs:annotation>
+								<xs:documentation>Регистрационный номер страхователя СФР.
+									~
+									До начала переходного периода на регистрационные номера СФР будет приниматься (принимается) 1 поле: regNum.
+									~
+									В переходном периоде будет приниматься 1 из полей: regNum/regNumSFR
+									(если страхователь не перешел на новую схему взаимодействия, то будет направлять regNum, а после перехода на новую схему должен направлять regNumSFR)</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="receiversRow" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Перечень получателей, в части сведений которых были обнаружены ошибки</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="parentInfo" type="parentInfoType">
+							<xs:annotation>
+								<xs:documentation>Сведения о родителе</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="childInfo" type="childInfoTypeReject">
+							<xs:annotation>
+								<xs:documentation>Сведения о ребенке</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="periods">
+							<xs:annotation>
+								<xs:documentation>Сведения о предоставленных выходных днях и количестве рабочих часов которые приходилилсь на доп.выходные</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="daysAmount">
+										<xs:annotation>
+											<xs:documentation>Количество предоставленных дополнительных выходных дней</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:minInclusive value="1"/>
+												<xs:maxInclusive value="4"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="TotalHour">
+										<xs:annotation>
+											<xs:documentation>Суммарное количество рабочих часов, которые приходились на предоставленные дополнительные выходные дни:</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="rejectionInfo">
+				<xs:annotation>
+					<xs:documentation>Общие сведения об отказе</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="number">
+							<xs:annotation>
+								<xs:documentation>Номер решения</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="20"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="date" type="xs:date">
+							<xs:annotation>
+								<xs:documentation>Дата решения</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="reason">
+							<xs:annotation>
+								<xs:documentation>Общая причина отказа</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="4000"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element ref="cuq:attachment">
+				<xs:annotation>
+					<xs:documentation>
+						Документ решения об отказе
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="responseOn" type="cmn:UuidV1Type" use="optional">
+			<xs:annotation>
+				<xs:documentation>Ссылка на транспортный идентификатор Заявления</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="parentInfoType">
+		<xs:sequence>
+			<xs:element name="fullName" type="p:FullName">
+				<xs:annotation>
+					<xs:documentation>ФИО</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="snils" type="p:snils">
+				<xs:annotation>
+					<xs:documentation>СНИЛС</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="childRelType">
+				<xs:annotation>
+					<xs:documentation>Статус лица: мать, отец, опекун, попечитель
+						1- Мать
+						2-Отец
+						3-Опекун
+						4-Попечитель</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Мать</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="2">
+							<xs:annotation>
+								<xs:documentation>Отец</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="3">
+							<xs:annotation>
+								<xs:documentation>Опекун</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="4">
+							<xs:annotation>
+								<xs:documentation>Попечитель</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="childInfoType">
+		<xs:sequence>
+			<xs:element name="fullName" type="p:FullName">
+				<xs:annotation>
+					<xs:documentation>ФИО</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="snils">
+				<xs:annotation>
+					<xs:documentation>СНИЛС</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="p:snils">
+						<xs:pattern value="[0-9]*"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="birthDate" type="p:birthDate">
+				<xs:annotation>
+					<xs:documentation>Дата рождения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="childInfoTypeReject">
+		<xs:sequence>
+			<xs:element name="snils">
+				<xs:annotation>
+					<xs:documentation>СНИЛС</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="p:snils">
+						<xs:pattern value="[0-9]*"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="birthDate" type="p:birthDate">
+				<xs:annotation>
+					<xs:documentation>Дата рождения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="kpp">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{9}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="inn">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{10}|\d{12}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StatementNoType">
+		<xs:annotation>
+			<xs:documentation>Номер заявления
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[D]_\d{10}_(19|20)[0-9]{2}_[0|1][0-9]_[0-3][0-9]_\d{4}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StateType">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="0">
+				<xs:annotation>
+					<xs:documentation>Не принят</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Принят</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Произошла техническая ошибка. Необходимо повторно отправить запрос позже</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="BatchNoType">
+		<xs:annotation>
+			<xs:documentation>Номер файла
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[D]_\d{10}_(19|20)[0-9]{2}_[0|1][0-9]_[0-3][0-9]_\d{4}|\S{18}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="periodsAndCalculationDataType">
+		<xs:sequence>
+			<xs:element name="year">
+				<xs:annotation>
+					<xs:documentation>Год</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:pattern value="\d{4}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="month">
+				<xs:annotation>
+					<xs:documentation>Месяц</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="daysAmount">
+				<xs:annotation>
+					<xs:documentation>Количество предоставленных дополнительных выходных дней</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="dailyAverageSal">
+				<xs:annotation>
+					<xs:documentation>Средний дневной заработок</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="cmn:amount"/>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AccumulatedPeriodsDataType">
+		<xs:sequence>
+			<xs:element name="year">
+				<xs:annotation>
+					<xs:documentation>Год</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:pattern value="\d{4}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="month">
+				<xs:annotation>
+					<xs:documentation>Месяц</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="daysAmount">
+				<xs:annotation>
+					<xs:documentation>Количество накопленных дополнительных  выходных дней</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AccumulatedProvidedPeriodsDataType">
+		<xs:sequence>
+			<xs:element name="year">
+				<xs:annotation>
+					<xs:documentation>Год</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:pattern value="\d{4}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="month">
+				<xs:annotation>
+					<xs:documentation>Месяц</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="12"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="daysAmount">
+				<xs:annotation>
+					<xs:documentation>Количество  накопленных дополнительных выходных дней, фактически предоставленных</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="24"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="dailyAverageSal" type="cmn:amount">
+				<xs:annotation>
+					<xs:documentation>Средний дневной заработок</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ORDtype">
+		<xs:sequence>
+			<xs:element name="number">
+				<xs:annotation>
+					<xs:documentation>Номер приказа</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="date" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата приказа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="additionalPeriodsType">
+		<xs:sequence>
+			<xs:element name="periodAndCalculationData" type="periodsAndCalculationDataType" maxOccurs="12">
+				<xs:annotation>
+					<xs:documentation>Месяц,  год и количество дополнительных выходных дней, фактически предоставленных: Сочетания года и месяца не должны повторяться)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="providedDays">
+				<xs:annotation>
+					<xs:documentation>Количество предоставленных дополнительных выходных дней:</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="48"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="providedTotalHour">
+				<xs:annotation>
+					<xs:documentation>Суммарное количество рабочих часов, которые приходились на предоставленные дополнительные выходные дни. Не может превышать числовое значение предыдущего поля «Количество предоставленных дополнительных выходных дней: » умноженного на 8</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="384"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="accumulatedPeriodsType">
+		<xs:sequence>
+			<xs:element name="accumulatedPeriodData" type="AccumulatedPeriodsDataType" maxOccurs="11">
+				<xs:annotation>
+					<xs:documentation>Месяц, год, за который дополнительные выходные дни не были использованы, и количество накопленных дополнительных выходных дней, не использованных обоими родителями (опекунами, попечителями) ***</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="accumulatedDays">
+				<xs:annotation>
+					<xs:documentation>Количество накопленных дополнительных выходных дней:</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="24"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="accumulatedTotalHour">
+				<xs:annotation>
+					<xs:documentation>Суммарное количество рабочих часов, которые приходились на предоставленные дополнительные выходные дни. Не может превышать числовое значение предыдущего поля «Количество накопленных дополнительных выходных дней: » умноженного на 8</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="192"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="accumulatedProvidedPeriodData" type="AccumulatedProvidedPeriodsDataType" maxOccurs="3">
+				<xs:annotation>
+					<xs:documentation>Месяц, год и количество накопленных дополнительных выходных дней, фактически предоставленных***:
+						Максимальное количество - 3шт.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="accumulatedProvidedDays">
+				<xs:annotation>
+					<xs:documentation>Количество предоставленных накопленных  дополнительных выходных дней. Не может превышать 24.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="24"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="accumulatedProvidedTotalHour">
+				<xs:annotation>
+					<xs:documentation>Суммарное количество рабочих часов, которые приходились на предоставленные дополнительные выходные дни. Не может превышать числовое значение предыдущего поля «Количество предоставленных накопленных дополнительных выходных дней:» умноженного на 8 </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="192"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:proactive:eventLifeResult:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="urn:ru:ecp:integration:types:common:v3.0" targetNamespace="urn:ru:ecp:integration:proactive:eventLifeResult:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="../../type/Common.xsd"/>
+	<xs:element name="eventLifeResult">
+		<xs:annotation>
+			<xs:documentation>Результат обработки информирования о жизненном событии.
+Тип сообщения СЭДО №11210</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="status" type="responseStatus">
+					<xs:annotation>
+						<xs:documentation>Статус обработки сообщения №10910</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="proactiveProcessNum" type="com:proactiveProcessNumType">
+					<xs:annotation>
+						<xs:documentation>Номер сформированного проактивного процесса</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="errorList" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Информация об ошибках. Блок заполняется при статусе обработки "ERROR"</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="error" type="com:errorType" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Ошибка форматно-логического контроля</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="warnList" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Информация о предупреждениях форматно-логических контролей</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="warn" type="com:warnType" maxOccurs="unbounded">
+								<xs:annotation>
+									<xs:documentation>Предупреждение форматно-логического контроля</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="specVersion" type="com:specVersionType" use="required">
+				<xs:annotation>
+					<xs:documentation>Номер версии  спецификации для xml документа</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="responseOn" type="com:uuidV1Type" use="required">
+				<xs:annotation>
+					<xs:documentation>Ссылка на транспортный идентификатор запроса (тип сообщения СЭДО №10910)</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="messageDateTime" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>Дата и время формирования ответного сообщения на стороне СФР</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:anyAttribute processContents="skip">
+				<xs:annotation>
+					<xs:documentation>Технический атрибут, позволяющий расширять XML документ</xs:documentation>
+				</xs:annotation>
+			</xs:anyAttribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="responseStatus">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="RECEIVED">
+				<xs:annotation>
+					<xs:documentation>Сообщение получено СФР, принято к обработке. Осуществляется проверка данных. Результат будет направлен дополнительно</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ERROR">
+				<xs:annotation>
+					<xs:documentation>В процессе обработки сообщения были обнаружены ошибки форматно-логических контролей, блокирующие прием сообщения</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PROCESSED">
+				<xs:annotation>
+					<xs:documentation>Сообщение успешно обработано</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

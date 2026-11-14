@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns="http://www.fss.ru/integration/types/pvso/notice/v01"
+        xmlns:fss="http://www.fss.ru/integration/types/fssDepartment/v01"
+        xmlns:org="http://www.fss.ru/integration/types/organization/v01"
+        xmlns:cuq="http://www.fss.ru/integration/types/commonUq/v01"
+        xmlns:cmn="http://www.fss.ru/integration/types/common/v01"
+        targetNamespace="http://www.fss.ru/integration/types/pvso/notice/v01"
+        version="1.0">
+
+    <xs:import namespace="http://www.fss.ru/integration/types/fssDepartment/v01" schemaLocation="../type/FssDepartment.xsd" />
+    <xs:import namespace="http://www.fss.ru/integration/types/organization/v01" schemaLocation="../type/Organization.xsd" />
+    <xs:import namespace="http://www.fss.ru/integration/types/commonUq/v01" schemaLocation="../type/CommonUQ.xsd" />
+    <xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="../type/Common.xsd" />
+
+    <xs:element name="notice" type="NoticeType"/>
+
+    <xs:element name="paymentStatusNotice" type="PaymentStatusNoticeType">
+        <xs:annotation>
+            <xs:documentation>Уведомление об изменении статусов выплат</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:complexType name="NoticeType">
+        <xs:annotation>
+            <xs:documentation>Извещение ПВСО</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="tofCode" type="fss:code"/>
+            <xs:element name="regNum" type="org:regNum">
+                <xs:annotation>
+                    <xs:documentation>Регистрационный номер по ОСС.
+
+Так же см. документацию к полю regNumSFR</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="regNumSFR" type="org:regNumSFR" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Регистрационный номер страхователя СФР.
+~
+До начала переходного периода на регистрационные номера СФР будет направляться (направляется) 1 поле: regNum.
+~
+В переходном периоде будут направляться 2 поля: regNum и regNumSFR
+(если страхователь не перешел на новую схему взаимодействия, то будет обрабатывать regNum, а после перехода на новую схему сможет обрабатывать regNumSFR)
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="date" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>
+                        Дата формирования извещения
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="number" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation>
+                        Номер извещения
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="batchNum" type="cmn:StringMaxLen50" >
+                <xs:annotation>
+                    <xs:documentation>
+                        ID реестра данных по которому выставляется извещение
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="socialAssistNum" type="xs:long" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>ИД проактивного процесса</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="registrRowNums">
+                <xs:annotation>
+                    <xs:documentation>Перечень номеров строк реестра, по которым сформировано извещение</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="rowNumber" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element ref="cuq:attachment">
+                <xs:annotation>
+                    <xs:documentation>
+                        Документ извещения
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element ref="cuq:file" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Извещение в формате xml
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PaymentStatusNoticeType">
+        <xs:sequence>
+            <xs:element name="person" type="PersonType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Сведения о застрахованном
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="paymentNotice" type="PaymentNoticeType">
+                <xs:annotation>
+                    <xs:documentation>
+                        Сообщение застрахованному
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PersonType">
+        <xs:sequence>
+            <xs:element name="firstName">
+                <xs:annotation>
+                    <xs:documentation>
+                        Имя
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="60"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="secondName">
+                <xs:annotation>
+                    <xs:documentation>
+                        Фамилия
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="60"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="patronymic" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Отчество
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="60"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="birthDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>
+                        Дата рождения
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="snils" type="SnilsType">
+                <xs:annotation>
+                    <xs:documentation>
+                        СНИЛС
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PaymentNoticeType">
+        <xs:sequence>
+            <xs:element name="noticeType" type="NoticeTypeType">
+                <xs:annotation>
+                    <xs:documentation>
+                        Тип сообщения
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="batchNo" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Номер строки реестра</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="socialAssistNum" type="xs:long" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>ИД проактивного процесса</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice>
+                <xs:element name="registerRecieve" type="RegisterRecieveType"/>
+                <xs:element name="paymentSend" type="PaymentSendType"/>
+                <xs:element name="paymentDone" type="PaymentDoneType"/>
+                <xs:element name="paymentCanceling" type="PaymentCancelingType"/>
+                <xs:element name="noticeSend" type="NoticeSendType"/>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="messageDetailType">
+        <xs:sequence>
+            <xs:element name="infoType">
+                <xs:annotation>
+                    <xs:documentation>
+                        Тип выплаты
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:enumeration value="0">
+                            <xs:annotation>
+                                <xs:documentation>первичная</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="1">
+                            <xs:annotation>
+                                <xs:documentation>перерасчёт</xs:documentation>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="docType" type="DocTypeType">
+                <xs:annotation>
+                    <xs:documentation>
+                        Тип пособия
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="period" type="PeriodType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>
+                        Дата и время отчёта
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="addInformation" type="AddInformationType" minOccurs="0" >
+                <xs:annotation>
+                    <xs:documentation>
+                        Дополнительная информация
+                        Заполняется для типов выплат 98, 99
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="RegisterRecieveType">
+        <xs:annotation>
+            <xs:documentation>Уведомление о поступлении реестра от работодателя</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="messageDetailType">
+                <xs:sequence>
+                    <xs:element name="insurerName" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Наименование страхователя
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="PaymentSendType">
+        <xs:annotation>
+            <xs:documentation>Уведомление о поступлении реестра от работодателя</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="messageDetailType">
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="PaymentDoneType">
+        <xs:annotation>
+            <xs:documentation>Уведомление об успешном проведении выплаты пособия</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="messageDetailType">
+                <xs:sequence>
+                    <xs:element name="summa">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Сумма пособия начисленная
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:decimal">
+                                <xs:fractionDigits value="2"/>
+                                <xs:totalDigits value="12"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="sum">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Сумма пособия выплаченная ЗЛ
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:decimal">
+                                <xs:fractionDigits value="2"/>
+                                <xs:totalDigits value="12"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="dutySum" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Сумма удержания
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:decimal">
+                                <xs:fractionDigits value="2"/>
+                                <xs:totalDigits value="12"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="PaymentCancelingType">
+        <xs:annotation>
+            <xs:documentation>Уведомление о статусе выплаты (Оплата не прошла)</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="messageDetailType">
+                <xs:sequence>
+                    <xs:element name="sum">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Сумма пособия выплаченная ЗЛ
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:decimal">
+                                <xs:fractionDigits value="2"/>
+                                <xs:totalDigits value="12"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="paymentState">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Статус платежа. (Оплата не прошла)
+                            </xs:documentation>
+                        </xs:annotation>
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:maxLength value="64"/>
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="NoticeSendType">
+        <xs:annotation>
+            <xs:documentation>Уведомление о направлении извещения работодателю</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="messageDetailType">
+                <xs:sequence>
+                    <xs:element name="insurerName" type="xs:string">
+                        <xs:annotation>
+                            <xs:documentation>
+                                Наименование страхователя
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="PeriodType">
+        <xs:sequence>
+            <xs:element name="periodStart" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>
+                        Начало периода
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="periodEnd" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>
+                        Окончание периода
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="SnilsType">
+        <xs:annotation>
+            <xs:documentation>
+                СНИЛС
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="\d{11}"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DocTypeType">
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation>Пособие по временной нетрудоспособности</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+                <xs:annotation>
+                    <xs:documentation>Пособие по беременности и родам</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+                <xs:annotation>
+                    <xs:documentation>Единовременное пособие женщинам, вставшим на учет в медицинских учреждениях в ранние сроки беременности</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4">
+                <xs:annotation>
+                    <xs:documentation>Единовременное пособие при рождении ребенка</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="5">
+                <xs:annotation>
+                    <xs:documentation>Ежемесячное пособие по уходу за ребенком</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="6">
+                <xs:annotation>
+                    <xs:documentation>Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="7">
+                <xs:annotation>
+                    <xs:documentation>Социальное пособие на погребение</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="8">
+                <xs:annotation>
+                    <xs:documentation>Возмещение расходов Страхователю на оплату четырех дополнительных  выходных дней одному из родителей (опекуну, попечителю) для ухода за детьми-инвалидами за счет средств межбюджетных трансфертов из федерального фонда</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="9">
+                <xs:annotation>
+                    <xs:documentation>Оплата отпуска (сверх ежегодного оплачиваемого отпуска, установленного законодательством РФ) на весь период лечения и проезда к месту лечения и обратно</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="98">
+                <xs:annotation>
+                    <xs:documentation>Выплата соцработникам</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="99">
+                <xs:annotation>
+                    <xs:documentation>Выплата медикам</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="NoticeTypeType">
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation>Уведомление о поступление информации от работодателя о необходимости осуществления выплаты.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+                <xs:annotation>
+                    <xs:documentation>Уведомление о направлении документа на оплату.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+                <xs:annotation>
+                    <xs:documentation>Уведомление об успешном проведении выплаты пособия.</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4">
+                <xs:annotation>
+                    <xs:documentation>Уведомление о поступлении отказа от банка получение статуса «Оплата не прошла».</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="5">
+                <xs:annotation>
+                    <xs:documentation>Уведомление о направлении работодателю извещения о необходимости предоставления дополнительных сведений. </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="AddInformationType">
+        <xs:annotation>
+            <xs:documentation>
+                Дополнительная информация
+                Заполняется для типов выплат 98, 99
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="250" />
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

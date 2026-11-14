@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns:ns1="http://www.fss.ru/integration/type/NotificationDocType/v01" elementFormDefault="qualified"
+           targetNamespace="http://www.fss.ru/integration/kp/KpNotificationDocsAsv/v01"
+           attributeFormDefault="unqualified" vc:minVersion="1.1">
+    <xs:import namespace="http://www.fss.ru/integration/type/NotificationDocType/v01"
+               schemaLocation="../type/NotificationDocType.xsd"/>
+    <xs:element name="notificationDocKp" type="ns1:NotificationDocType">
+        <xs:annotation>
+            <xs:documentation>Уведомление о приеме (отказе в приеме) территориальным органом Фонда документа по
+                камеральной проверке
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+</xs:schema>
