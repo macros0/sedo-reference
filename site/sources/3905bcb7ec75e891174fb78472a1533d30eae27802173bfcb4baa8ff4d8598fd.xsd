@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:types:dic:taxpayerStatusType:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ru:ecp:integration:types:dic:taxpayerStatusType:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:simpleType name="taxpayerStatusType">
+		<xs:annotation>
+			<xs:documentation>
+                Справочник: "Статус налогоплательщика"
+            </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="0">
+				<xs:annotation>
+					<xs:documentation>Налогоплательщик, имеющий статус иностранного агента</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+					<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Налогоплательщик является налоговым резидентом Российской Федерации (кроме налогоплательщиков, осуществляющих трудовую деятельность по найму в Российской Федерации на основании патента)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Налогоплательщик не является налоговым резидентом Российской Федерации</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Налогоплательщик - высококвалифицированный специалист не является налоговым резидентом Российской Федерации</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Налогоплательщик участник Государственной программы по оказанию содействия добровольному переселению в Российскую Федерацию соотечественников, проживающих за рубежом (член экипажа судна, плавающего под Государственным флагом Российской Федерации), не является налоговым резидентом Российской Федерации;</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>Налогоплательщик - иностранный гражданин (лицо без гражданства) признан беженцем или получивший временное убежище на территории Российской Федерации, не является налоговым резидентом Российской Федерации</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>Налогоплательщик - иностранный гражданин, осуществляет трудовую деятельность по найму в Российской Федерации на основании патента</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="7">
+				<xs:annotation>
+					<xs:documentation>Налогоплательщик - высококвалифицированный специалист является налоговым резидентом Российской Федерации</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8">
+				<xs:annotation>
+					<xs:documentation>Налогоплательщик, получающий доходы, указанные в подпунктах 6.2 и 6.3 пункта 1 статьи 208 Кодекса, не является налоговым резидентом Российской Федерации</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="9">
+				<xs:annotation>
+					<xs:documentation>Налогоплательщик - налоговый резидент и гражданин государства - члена ЕЭС, получающий доходы от осуществления трудовой деятельности на территории РФ, не является налоговым резидентом Российской Федерации</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns="http://www.fss.ru/integration/types/dic/calcReason/v01"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.fss.ru/integration/types/dic/calcReason/v01"
+        elementFormDefault="qualified"
+        version="1.0"
+>
+
+    <xs:simpleType name="calcReason">
+        <xs:annotation>
+            <xs:documentation>
+                Нормативный справочник: "Причина изменения"
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:documentation>Представлены дополнительные сведения о выплатах в расчетном периоде</xs:documentation>
+                    <xs:documentation>Причина может быть выбрана при перерасчете или корректировке</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+                <xs:annotation>
+                    <xs:documentation>Поступление от застрахованного лица заявления о замене одного года или двух лет  расчетного периода предшествующими годами</xs:documentation>
+                    <xs:documentation>Причина может быть выбрана при перерасчете или корректировке</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+                <xs:annotation>
+                    <xs:documentation>По результатам документальной выездной (камеральной) проверки</xs:documentation>
+                    <xs:documentation>Причина может быть выбрана при перерасчете</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4">
+                <xs:annotation>
+                    <xs:documentation>Перерасчет листка нетрудоспособности при признании несчастного случая на производстве страховым</xs:documentation>
+                    <xs:documentation>Причина может быть выбрана при перерасчете</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="5">
+                <xs:annotation>
+                    <xs:documentation>Ошибка в сведениях, допущенная работодателем (1, 2 или 6 пособие)</xs:documentation>
+                    <xs:documentation>Причина может быть выбрана при перерасчете или корректировке</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="6">
+                <xs:annotation>
+                    <xs:documentation>Иное - Заполнить элемент note</xs:documentation>
+                    <xs:documentation>Причина может быть выбрана при перерасчете или корректировке</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

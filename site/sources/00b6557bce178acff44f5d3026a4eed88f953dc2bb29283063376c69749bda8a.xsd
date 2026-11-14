@@ -1,0 +1,796 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:fss:integration:types:proactive:benefit4:v02" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:org="http://www.fss.ru/integration/types/organization/v01" xmlns:p="http://www.fss.ru/integration/types/person/v02" xmlns:c="http://www.fss.ru/integration/types/common/v01" xmlns:tax="http://www.fss.ru/integration/types/dic/TaxpayerStatusType/v01" xmlns:pt="http://www.fss.ru/integration/types/dic/PartTimeType/v01" xmlns:rr="http://www.fss.ru/integration/types/dic/RegionRate/v01" xmlns:ic="urn:ru:fss:integration:dic:InsuredCategories:v01" xmlns:pr="urn:ru:fss:integration:types:proactive:v01" xmlns:prt="http://www.fss.ru/integration/types/proactive/type/v01" targetNamespace="urn:ru:fss:integration:types:proactive:benefit4:v02" elementFormDefault="qualified" version="1.0">
+	<xs:import namespace="http://www.fss.ru/integration/types/organization/v01" schemaLocation="../../../v01/type/Organization.xsd" id="org"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/person/v02" schemaLocation="../../../v02/type/Person.xsd" id="p"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="../../../v01/type/Common.xsd" id="c"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/dic/TaxpayerStatusType/v01" schemaLocation="../../../v01/dic/TaxpayerStatusType.xsd" id="tax"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/dic/PartTimeType/v01" schemaLocation="../../../v01/dic/PartTimeType.xsd" id="pt"/>
+	<xs:import namespace="urn:ru:fss:integration:types:proactive:v01" schemaLocation="../../../v01/proactive/Confirmation.xsd"/>
+	<xs:import namespace="urn:ru:fss:integration:dic:InsuredCategories:v01" schemaLocation="../../../v01/dic/InsuredCategories.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/dic/RegionRate/v01" schemaLocation="../../../v01/dic/RegionRate.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/proactive/type/v01" schemaLocation="../../../v01/type/Proactive.xsd"/>
+	<xs:element name="benefit4Approve" type="Benefit4ApproveType">
+		<xs:annotation>
+			<xs:documentation>Элемент описывающий запроса/ответ для подтверждения выплаты по ВНиМ</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="Benefit4ApproveType">
+		<xs:annotation>
+			<xs:documentation>Схема документа запроса недостающих данных(со стороны СФР)/подтверждения и коррекции (со стороны Страхователя ) в рамках единовременного пособия при рождении ребенка</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="insurerInfo">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="regNum" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Регистрационный номер по ОСС.
+
+Так же см. документацию к полю regNumSFR</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="org:regNum">
+										<xs:attribute ref="pr:editable" fixed="false"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="regNumSFR" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Регистрационный номер страхователя СФР.
+~
+До начала переходного периода на регистрационные номера СФР:
+- в 100 сообщении будет направляться (направляется) 1 поле: regNum,
+- в 101 сообщении будет приниматься (принимается)  1 поле: regNum.
+~
+В переходном периоде:
+- в 100 сообщении будут направляться 2 поля: regNum и regNumSFR
+(если страхователь не перешел на новую схему взаимодействия, то будет обрабатывать regNum, а после перехода на новую схему должен обрабатывать regNumSFR),
+- в 101 сообщении будет приниматься 1 из полей: regNum/regNumSFR
+(если страхователь не перешел на новую схему взаимодействия, то будет направлять regNum, а после перехода на новую схему должен направлять regNumSFR)</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="org:regNumSFR">
+										<xs:attribute ref="pr:editable" fixed="false"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="partTime" nillable="true">
+							<xs:annotation>
+								<xs:documentation>
+                                    признак частичной занятости
+                                </xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="pt:PartTimeType">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="parentNo" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Код подчиненности (социального страхования)</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="org:ParentNoType">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="insuredInfo">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="category">
+							<xs:annotation>
+								<xs:documentation>Категория застрахованного лица</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="ic:InsuredCategoriesType">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="snils">
+							<xs:annotation>
+								<xs:documentation>СНИЛС застрахованного лица</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="p:snils">
+										<xs:attribute ref="pr:editable" fixed="false"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="inn" nillable="true">
+							<xs:annotation>
+								<xs:documentation>ИНН физического лица</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="p:inn">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="false"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<!--TODO: проработать смену фамилии, имени, отчества в части выплат-->
+						<xs:element name="fullName" nillable="true">
+							<xs:annotation>
+								<xs:documentation>ФИО</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="p:FullName">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="birthDate" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Дата рождения</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:date">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="gender" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Пол</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="p:GenderType">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="taxpayer" nillable="true">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="taxpayerStatus" type="tax:TaxpayerStatusType">
+										<xs:annotation>
+											<xs:documentation>Статус налогоплательщика</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="countryCode">
+										<xs:annotation>
+											<xs:documentation>Цифровой код страны, гражданином которой является налогоплательщик</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:length value="3"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:choice>
+										<xs:sequence>
+											<xs:element name="address" type="c:AddressFiasType" nillable="true">
+												<xs:annotation>
+													<xs:documentation>Адрес регистрации в РФ</xs:documentation>
+												</xs:annotation>
+											</xs:element>
+											<xs:element name="postalCode" nillable="true">
+												<xs:annotation>
+													<xs:documentation>Почтовый индекс</xs:documentation>
+												</xs:annotation>
+												<xs:simpleType>
+													<xs:restriction base="xs:string">
+														<xs:maxLength value="6"/>
+													</xs:restriction>
+												</xs:simpleType>
+											</xs:element>
+										</xs:sequence>
+										<xs:element name="foreignAddress" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Адрес регистрации за пределами РФ</xs:documentation>
+												<xs:documentation>Неформализованный текст</xs:documentation>
+											</xs:annotation>
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:maxLength value="2000"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:choice>
+								</xs:sequence>
+								<xs:attribute ref="pr:required" fixed="true"/>
+								<xs:attribute ref="pr:editable" fixed="true"/>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="id" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Сведения об идентификаторе личности</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="p:IdType">
+										<xs:attribute ref="pr:required" fixed="true"/>
+										<xs:attribute ref="pr:editable" fixed="true"/>
+									</xs:extension>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="residenceDocument" type="p:residenceDocumentType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Сведения о документах, подтверждающих постоянное или временное проживание (пребывание) на территории РФ (для иностранных граждан и лиц без гражданства)</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="workContract" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Срочный трудовой договор/Срок договора ГПХ</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="c:workContractPeriod">
+										<xs:attribute ref="pr:required" fixed="false"/>
+										<xs:attribute ref="pr:editable" fixed="true"/>
+									</xs:extension>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="childRelType" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Получатель пособия: мать, отец, попечитель, опекун</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="p:RelationType">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="personPhone" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Номер телефона застрахованного. При наличии - мобильный, в формате +7хххххххххх</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:maxLength value="30"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="receivePayment" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Данные о способе получения выплаты</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="c:MethodReceivePaymentType">
+							<xs:attribute ref="pr:editable" fixed="true"/>
+							<xs:attribute ref="pr:required" fixed="true"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="calculationData" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Данные для расчета</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="kfReg" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Районный коэффициент</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="rr:RegionRateType">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="assignmentParams" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Параметры назначения и выплаты пособия.
+В случае, если в сообщении с типом №100 заполнен блок «assignmentParams», то заполнение блока «assignmentParams» обязательно в ответном сообщении с типом №101.
+Блок временно не подлежит заполнению в перерасчетных документах</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="paymentMethod">
+							<xs:annotation>
+								<xs:documentation>Метод назначения и выплаты пособия</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="prt:paymentMethodType">
+										<xs:attribute ref="pr:editable" fixed="false"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="contractsType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Вид договора по которому занято застрахованное лицо</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="contractType" maxOccurs="2">
+										<xs:annotation>
+											<xs:documentation>
+                                                Застрахованное лицо занято по трудовому договору и/или по гражданско-правовому договору
+                                            </xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:simpleContent>
+												<xs:extension base="pr:contractType">
+													<xs:attribute ref="pr:editable" fixed="true"/>
+												</xs:extension>
+											</xs:simpleContent>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="wardInfo" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Данные об усыновлении/опеке</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="type" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Тип</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="WardType">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="num" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Номер</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:string">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="issueDate" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Дата выдачи</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:date">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute ref="pr:editable" fixed="true"/>
+					<xs:attribute ref="pr:required" fixed="false"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="refFamilyInfo" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="num" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Документ о передаче в приемную семью</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:integer">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="issueDate" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Дата выдачи Документа о передаче в приемную семью</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:date">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="birthInfo" nillable="true">
+				<xs:annotation>
+					<xs:documentation>Информация о рождении ребенка</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="zagsAct" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Данные об актовой записи ЗАГС</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="num" nillable="true" minOccurs="1">
+										<xs:annotation>
+											<xs:documentation>Номер актовой записи (поле не подлежит редактированию с "значение1" (100) на "значение2" (101), но возможно редактирование с "пустое" (100) на "значение"(101))</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:simpleContent>
+												<xs:extension base="c:StringMinLen1MaxLen22">
+													<xs:attribute ref="pr:editable" fixed="false"/>
+													<xs:attribute ref="pr:required" fixed="true"/>
+												</xs:extension>
+											</xs:simpleContent>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="issueDate" nillable="true" minOccurs="1">
+										<xs:annotation>
+											<xs:documentation>Дата актовой записи (поле не подлежит редактированию с "значение1" (100) на "значение2" (101), но возможно редактирование с "пустое" (100) на "значение"(101))</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:simpleContent>
+												<xs:extension base="xs:date">
+													<xs:attribute ref="pr:editable" fixed="false"/>
+													<xs:attribute ref="pr:required" fixed="true"/>
+												</xs:extension>
+											</xs:simpleContent>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:choice>
+							<xs:element name="cert">
+								<xs:annotation>
+									<xs:documentation>Свидетельство о рождении</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="num">
+											<xs:annotation>
+												<xs:documentation>Серия и номер</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="c:StringMinLen1MaxLen20">
+														<xs:attribute ref="pr:editable" fixed="false"/>
+														<xs:attribute ref="pr:required" fixed="true"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="issueDate">
+											<xs:annotation>
+												<xs:documentation>Дата выдачи</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:date">
+														<xs:attribute ref="pr:editable" fixed="false"/>
+														<xs:attribute ref="pr:required" fixed="true"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="otherDoc">
+								<xs:annotation>
+									<xs:documentation>Иной документ подтверждающий рождение ребенка</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="num" nillable="true">
+											<xs:annotation>
+												<xs:documentation>Номер</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="c:StringMaxLen20">
+														<xs:attribute ref="pr:editable" fixed="false"/>
+														<xs:attribute ref="pr:required" fixed="true"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="series" nillable="true" minOccurs="0">
+											<xs:annotation>
+												<xs:documentation>Серия</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="c:StringMinLen1MaxLen20">
+														<xs:attribute ref="pr:editable" fixed="false"/>
+														<xs:attribute ref="pr:required" fixed="false"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="issueDate" nillable="true">
+											<xs:annotation>
+												<xs:documentation>Дата выдачи</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:date">
+														<xs:attribute ref="pr:editable" fixed="false"/>
+														<xs:attribute ref="pr:required" fixed="true"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="birthReference" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Справка о рождении</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="number" nillable="true">
+											<xs:annotation>
+												<xs:documentation>Номер (поле не подлежит редактированию с "значение1" (100) на "значение2" (101), но возможно редактирование с "пустое" (100) на "значение"(101))</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="c:StringMinLen1MaxLen20">
+														<xs:attribute ref="pr:editable" fixed="false"/>
+														<xs:attribute ref="pr:required" fixed="true"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="issueDate" nillable="true">
+											<xs:annotation>
+												<xs:documentation>Дата выдачи (поле не подлежит редактированию с "значение1" (100) на "значение2" (101), но возможно редактирование с "пустое" (100) на "значение"(101))</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:date">
+														<xs:attribute ref="pr:editable" fixed="false"/>
+														<xs:attribute ref="pr:required" fixed="true"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="refType" nillable="true">
+											<xs:annotation>
+												<xs:documentation>Вид справки (поле не подлежит редактированию с "значение1" (100) на "значение2" (101), но возможно редактирование с "пустое" (100) на "значение"(101))</xs:documentation>
+											</xs:annotation>
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="ref_type">
+														<xs:attribute ref="pr:editable" fixed="false"/>
+														<xs:attribute ref="pr:required" fixed="true"/>
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:choice>
+						<xs:element name="birthDate" nillable="true">
+							<xs:annotation>
+								<xs:documentation>Дата рождения ребенка</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:date">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="fullName" nillable="true">
+							<xs:annotation>
+								<xs:documentation>ФИО ребенка</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:complexContent>
+									<xs:extension base="p:FullName">
+										<xs:attribute ref="pr:editable" fixed="true"/>
+										<xs:attribute ref="pr:required" fixed="true"/>
+									</xs:extension>
+								</xs:complexContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="snils" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>СНИЛС ребенка (поле не подлежит редактированию с "значение1" (100) на "значение2" (101), но возможно редактирование с "пустое" (100) на "значение"(101))</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="p:snils">
+										<xs:attribute ref="pr:editable" fixed="false"/>
+										<xs:attribute ref="pr:required" fixed="false"/>
+									</xs:extension>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="gender" type="p:GenderType" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Пол ребёнка. Поле "Пол ребенка" не подлежит редактированию с "значение1" (100) на "значение2" (101), но возможно редактирование с "пустое" (100) на "значение"(101). Обязательно для заполнения в 101 сообщении.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute ref="pr:editable" fixed="true"/>
+					<xs:attribute ref="pr:required" fixed="true"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:choice>
+				<xs:element name="refNpayOther" nillable="true" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Справка от другого родителя о не получении пособия</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<!--TODO: Добавить ограничения на длину строки-->
+							<xs:element name="num" type="xs:string" nillable="true">
+								<xs:annotation>
+									<xs:documentation>Номер</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="issueDate" type="xs:date" nillable="true">
+								<xs:annotation>
+									<xs:documentation>Дата выдачи</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute ref="pr:editable" fixed="true"/>
+						<xs:attribute ref="pr:required" fixed="true"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="otherMissing" fixed="true">
+					<xs:annotation>
+						<xs:documentation>Заполняется в случае если другой родитель отсутствует</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:boolean">
+								<xs:attribute ref="pr:editable" fixed="true"/>
+								<xs:attribute ref="pr:required" fixed="true"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:element name="notice" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Данные извещения</xs:documentation>
+					<xs:documentation>Данные извещения по прямым выплатам</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="num" type="c:StringMinLen1MaxLen12">
+							<xs:annotation>
+								<xs:documentation>Номер извещения</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="date" type="xs:date">
+							<xs:annotation>
+								<xs:documentation>Дата извещения</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="WardType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Опека</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Усыновление</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ref_type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="48">
+				<xs:annotation>
+					<xs:documentation>
+                        Cправка о рождении ребенка, выданной органами ЗАГСа форма 1
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="49">
+				<xs:annotation>
+					<xs:documentation>
+                        Cправка о рождении ребенка, выданной органами ЗАГСа форма 2
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="51">
+				<xs:annotation>
+					<xs:documentation>
+                        Cправка о рождении ребенка, выданной органами ЗАГСа форма 4
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RelationType">
+		<xs:annotation>
+			<xs:documentation>Степень родства</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="38">
+				<xs:annotation>
+					<xs:documentation>Мать</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="39">
+				<xs:annotation>
+					<xs:documentation>Отец</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="40">
+				<xs:annotation>
+					<xs:documentation>Опекун</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="41">
+				<xs:annotation>
+					<xs:documentation>Попечитель</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

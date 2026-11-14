@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:org="http://www.fss.ru/integration/types/organization/v01" xmlns:dpt="http://www.fss.ru/integration/types/fssDepartment/v01" xmlns:cm="http://www.fss.ru/integration/types/common/v01" xmlns:cmq="http://www.fss.ru/integration/types/commonUq/v01" xmlns:ns1="http://www.fss.ru/integration/types/DocumentType/v01" xmlns:ns2="http://www.fss.ru/integration/types/dic/errors/v01" targetNamespace="http://www.fss.ru/integration/types/DocumentType/v01" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="Common.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/commonUq/v01" schemaLocation="CommonUQ.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/fssDepartment/v01" schemaLocation="FssDepartment.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/organization/v01" schemaLocation="Organization.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/dic/errors/v01" schemaLocation="Errors.xsd"/>
+	<xs:complexType name="DocumentType">
+		<xs:annotation>
+			<xs:documentation>Базовый унифицированный тип документов территоирального органа Фонда</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="department" type="dpt:FssDepartmentType">
+				<xs:annotation>
+					<xs:documentation>Сведения о территориальном органе СФР РФ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="idMessage" type="cm:UuidV1Type">
+				<xs:annotation>
+					<xs:documentation>Идентификатор сообщения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="regNum" type="org:regNum">
+				<xs:annotation>
+					<xs:documentation>Регистрационный номер по ОСС</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="regNumSFR" type="org:regNumSFR" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Регистрационный номер страхователя СФР</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="date" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="number" type="xs:integer">
+				<xs:annotation>
+					<xs:documentation>Номер документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="requestDocs" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Блок с запрашиваемымми документами из требования о представлении документов
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="requestDoc" maxOccurs="150">
+							<xs:annotation>
+								<xs:documentation>Перечисление запрашиваемых документов</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:attribute name="typeDocument" type="xs:integer" use="required">
+									<xs:annotation>
+										<xs:documentation>Значение из справочника видов документов</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+								<xs:attribute name="description" use="required">
+									<xs:annotation>
+										<xs:documentation>Описание от сотрудника территориального органа Фонда к
+                                            запрашиваемому документу
+                                        </xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:minLength value="1"/>
+											<xs:maxLength value="4000"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+								<xs:attribute name="count" use="required">
+									<xs:annotation>
+										<xs:documentation>Количество экземпляров запрашиваемых документов
+                                        </xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:integer">
+											<xs:minInclusive value="1"/>
+											<xs:maxInclusive value="50000"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="attachment">
+				<xs:annotation>
+					<xs:documentation>Подписанный документ (передается основной документ в PDF-формате)</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="content" type="xs:base64Binary" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Содержимое файла основного документа</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ext" type="xs:string" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Расширение файла</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="mimeType" type="xs:string" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Mime-тип файла</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="size" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Размер файла</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:integer">
+									<xs:minInclusive value="1"/>
+									<xs:maxInclusive value="5000000"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="name" minOccurs="1" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Название файла</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:minLength value="1"/>
+									<xs:maxLength value="200"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="signatureEmpl" type="xs:base64Binary" minOccurs="0" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Подпись должностного лица территориального органа Фонда</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="signatureFund" type="xs:base64Binary" minOccurs="0" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Подпись Фонда к основному документу</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="application" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Блок с приложениями к Акту проверки</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="description">
+										<xs:annotation>
+											<xs:documentation>Описание к приложению (возможные значения: Расчет пени, Расчет пособий)</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="1"/>
+												<xs:maxLength value="200"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="content" type="xs:base64Binary">
+										<xs:annotation>
+											<xs:documentation>Содержание файла приложения</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="ext" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>Расширение файла</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="mimeType" type="xs:string">
+										<xs:annotation>
+											<xs:documentation>Mime-тип файла</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="size">
+										<xs:annotation>
+											<xs:documentation>Размер файла</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:minInclusive value="1"/>
+												<xs:maxInclusive value="5000000"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="name">
+										<xs:annotation>
+											<xs:documentation>Название файла</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="1"/>
+												<xs:maxLength value="200"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="signatureEmpl" type="xs:base64Binary" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Подпись должностного лица территориального органа Фонда (при необходимости)</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="signatureFund" type="xs:base64Binary" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Подпись Фонда к основному документу (при необходимости)</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="dateDeadline" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Крайняя дата выгрузки документа из СЭДО</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="organizationSize" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Признак численности сотрудников у страхователя</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="1">
+							<xs:annotation>
+								<xs:documentation>Численность сотрудников более 10</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="0">
+							<xs:annotation>
+								<xs:documentation>Численность сотрудников не более 10</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="idReport" type="cm:UuidV1Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Идентификатор отчета</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="idProtocol" type="cm:UuidV1Type" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Идентификатор протокола отчета</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

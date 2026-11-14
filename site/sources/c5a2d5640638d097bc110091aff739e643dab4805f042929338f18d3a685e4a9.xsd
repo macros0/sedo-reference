@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:types:dic:insuredCategories:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ru:ecp:integration:types:dic:insuredCategories:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:simpleType name="insuredCategoriesType">
+		<xs:annotation>
+			<xs:documentation>
+                Справочник: "Категория застрахованного лица"
+            </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Лица, осужденные к лишению свободы и привлеченные к оплачиваемому труду</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Лица, осужденные к принудительным работам, привлеченные к труду</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Лица, в период приостановления трудового договора после окончания военной службы</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>Лица, работающие по трудовым договорам или по договорам гражданско-правового характера</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="7">
+				<xs:annotation>
+					<xs:documentation>Руководители организаций, являющиеся единственными участниками (учредителями), членами организаций, собственниками их имущества</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8">
+				<xs:annotation>
+					<xs:documentation>Государственные гражданские (муниципальные) служащие</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="9">
+				<xs:annotation>
+					<xs:documentation>Лица, замещающие государственные (муниципальные) должности</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="10">
+				<xs:annotation>
+					<xs:documentation>Члены производственного кооператива, принимающие личное трудовое участие в его деятельности</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="11">
+				<xs:annotation>
+					<xs:documentation>Священнослужители</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="insuredClassType">
+		<xs:annotation>
+			<xs:documentation>
+                Справочник: "Классификация застрахованного лица"
+            </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Граждане РФ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Временно пребывающие иностранные граждане</xs:documentation>
+					<xs:documentation>Примечание: за исключением высококвалифицированных специалистов в соответствии с Федеральным законом от 25.07.2002 № 115-ФЗ «О правовом положении иностранных граждан в Российской Федерации» и иностранных граждан направляемых иностранной коммерческой организацией, зарегистрированной на территории государства - члена Всемирной торговой организации для осуществления трудовой деятельности на территории Российской Федерации</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Временно проживающие иностранные граждане</xs:documentation>
+					<xs:documentation>Примечание: за исключением иностранных граждан направляемых иностранной коммерческой организацией, зарегистрированной на территории государства - члена Всемирной торговой организации для осуществления трудовой деятельности на территории Российской Федерации</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Постоянно проживающие иностранные граждане</xs:documentation>
+					<xs:documentation>Примечание: за исключением иностранных граждан направляемых иностранной коммерческой организацией, зарегистрированной на территории государства - члена Всемирной торговой организации для осуществления трудовой деятельности на территории Российской Федерации</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>Лица без гражданства</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>Беженцы</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>		
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

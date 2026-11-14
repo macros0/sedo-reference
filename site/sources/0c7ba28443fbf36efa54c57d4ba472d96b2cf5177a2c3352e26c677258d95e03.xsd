@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns="http://www.fss.ru/integration/types/wsClient/v01"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.fss.ru/integration/types/wsClient/v01"
+        elementFormDefault="qualified"
+        version="1.0"
+>
+    <xs:complexType name="SystemInfo">
+        <xs:annotation>
+            <xs:documentation>Информация о взаимодействующей по протоколу системе</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="specVersion">
+                <xs:annotation>
+                    <xs:documentation>
+                        Версия спецификации, по которой происходит взаимодействие. Берется с титульного листа документации с описанием спецификации.
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="software">
+                <xs:annotation>
+                    <xs:documentation>Наименование использующегося программного обеспечения</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="softwareVersion">
+                <xs:annotation>
+                    <xs:documentation>Версия использующегося программного обеспечения</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="10"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:types:dic:causeRadiationExposure:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ru:ecp:integration:types:dic:causeRadiationExposure:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:simpleType name="CauseRadiationExposureType">
+		<xs:annotation>
+			<xs:documentation>
+                Нормативный справочник: Причина воздействия радиации
+            </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>ЧАЭС</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Семипалатинск</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>Маяк</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Граждане из подразделений особого риска</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

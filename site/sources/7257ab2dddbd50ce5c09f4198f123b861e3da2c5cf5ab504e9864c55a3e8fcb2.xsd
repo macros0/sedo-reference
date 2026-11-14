@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2021 rel. 2 sp1 (x64) (http://www.altova.com) by  () -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns:org="http://www.fss.ru/integration/types/organization/v01"
+           xmlns:cm="http://www.fss.ru/integration/types/common/v01"
+           xmlns:cmq="http://www.fss.ru/integration/types/commonUq/v01"
+           xmlns:ns1="http://www.fss.ru/integration/type/ResponseDocType/v01"
+           xmlns:ns2="http://www.fss.ru/integration/types/dic/errors/v01"
+           targetNamespace="http://www.fss.ru/integration/type/ResponseDocType/v01" elementFormDefault="qualified"
+           attributeFormDefault="unqualified" vc:minVersion="1.1">
+    <xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="Common.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/commonUq/v01" schemaLocation="CommonUQ.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/organization/v01" schemaLocation="Organization.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/dic/errors/v01" schemaLocation="Errors.xsd"/>
+    <xs:complexType name="ResponseDocType">
+        <xs:annotation>
+            <xs:documentation>Базовый тип ответа страхователя с направленными документами в территориальный орган
+                Фонда
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="responseOn" type="cm:UuidV1Type">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор транспортного сообщения, в рамках которого направлен ответ
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="idMessage" type="cm:UuidV1Type">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор исходного сообщения на который направлен ответ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="letter" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Сопроводительное письмо страхователя к направляемым документам (опционально)
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="content" type="xs:base64Binary">
+                            <xs:annotation>
+                                <xs:documentation>Содержимое файла сопроводительного письма</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="ext" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>Расширение файла сопроводительного письма</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="mimeType" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>Mime-тип файла сопроводительного письма</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="size">
+                            <xs:annotation>
+                                <xs:documentation>Размер файла сопроводительного письма</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="1"/>
+                                    <xs:maxInclusive value="5000000"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="name">
+                            <xs:annotation>
+                                <xs:documentation>Название файла сопроводительного письма</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:minLength value="1"/>
+                                    <xs:maxLength value="200"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="provideDocs" maxOccurs="25">
+                <xs:annotation>
+                    <xs:documentation>Блок с представленными документами</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="idDocumentsGroup">
+                            <xs:annotation>
+                                <xs:documentation>Идентификатор представленного набора документов</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="1"/>
+                                    <xs:maxInclusive value="999999999"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="typeDocument" type="xs:integer">
+                            <xs:annotation>
+                                <xs:documentation>Значение из справочника видов документов</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="count">
+                            <xs:annotation>
+                                <xs:documentation>Количество представленных документов во вложении</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="1"/>
+                                    <xs:maxInclusive value="50000"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="attachment">
+                            <xs:annotation>
+                                <xs:documentation>Представленный документ</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="content" type="xs:base64Binary" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>Содержимое файла</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="ext" type="xs:string" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>Расширение файла</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="mimeType" type="xs:string" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>Mime-тип файла</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="size" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>Размер файла</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:integer">
+                                                <xs:minInclusive value="1"/>
+                                                <xs:maxInclusive value="5000000"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="name" minOccurs="1" maxOccurs="1">
+                                        <xs:annotation>
+                                            <xs:documentation>Название файла</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:minLength value="1"/>
+                                                <xs:maxLength value="200"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="date" type="xs:date" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>Дата представленного документа (при наличии)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="number" type="xs:integer" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>Номер представленного документа (при наличии)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="description" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>Коментарий к документу (при необходимости)</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:minLength value="1"/>
+                                    <xs:maxLength value="500"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

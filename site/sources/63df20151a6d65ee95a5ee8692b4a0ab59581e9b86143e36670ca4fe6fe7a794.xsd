@@ -1,0 +1,1078 @@
+<?xml version='1.0' encoding='UTF-8'?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:org="http://www.fss.ru/integration/types/organization/v01" xmlns:e="http://www.fss.ru/integration/types/dic/errors/v01" xmlns="http://www.fss.ru/integration/types/common/v01" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.fss.ru/integration/types/common/v01">
+	
+	<xs:import namespace="http://www.fss.ru/integration/types/dic/errors/v01" schemaLocation="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Errors.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/organization/v01" schemaLocation="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=xsd/fss/v01/type/Organization.xsd"/>
+
+	<xs:complexType name="dictionary">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="code" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="name" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="contact">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="type" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="value" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="description" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="amount">
+		<xs:annotation>
+			<xs:documentation> Тип данных для денежных сумм </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="22"/>
+			<xs:fractionDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="Tariff">
+		<xs:annotation>
+			<xs:documentation> Тип данных для тарифа </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="4"/>
+			<xs:fractionDigits value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="countYear">
+		<xs:annotation>
+			<xs:documentation> Количество лет </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="200"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="countMount">
+		<xs:annotation>
+			<xs:documentation> Количество месяцев </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="11"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:complexType name="period">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="begin" type="xs:date"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="end" type="xs:date"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:simpleType name="emailAddress">
+		<xs:annotation>
+			<xs:documentation>
+				E-mail адрес
+			</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[^@]+@[^\.]+\..+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="errors">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="unbounded" minOccurs="0" name="error" type="BaseErrorType"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:complexType abstract="true" name="BaseErrorType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="uuid" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="1" name="faultName" type="xs:string"/>
+			<xs:element maxOccurs="1" minOccurs="0" name="message" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="BusinessErrorType">
+		<xs:complexContent>
+			<xs:extension base="BaseErrorType">
+				<xs:sequence>
+					<xs:element maxOccurs="1" minOccurs="1" name="errorCode" type="e:BusinessErrorCodeType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	
+	<xs:complexType name="SystemErrorType">
+		<xs:complexContent>
+			<xs:extension base="BaseErrorType">
+				<xs:sequence>
+					<xs:element maxOccurs="1" minOccurs="1" name="errorCode" type="e:SystemErrorCodeType"/>
+					<xs:element maxOccurs="1" minOccurs="1" name="originatingError" type="xs:string"/>
+					<xs:element maxOccurs="unbounded" minOccurs="0" name="trace" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+
+	<xs:simpleType name="StringMaxLen2">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="StringMaxLen3">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="StringMaxLen12">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="StringMaxLen15">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="15"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="StringMaxLen20">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="StringMinLen1MaxLen22">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="22"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="StringMaxLen22">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="22"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="StringMaxLen90">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="90"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="StringMaxLen4000">
+		<xs:annotation>
+			<xs:documentation>строка до 4000 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="4000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMaxLen256">
+		<xs:annotation>
+			<xs:documentation>строка от 1 до 256 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="256"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMinLen1MaxLen12">
+		<xs:annotation>
+			<xs:documentation>строка от 1 до 12 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMinLen1MaxLen80">
+		<xs:annotation>
+			<xs:documentation>строка от 1 до 80 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="80"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMinLen1MaxLen20">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMaxLen160">
+		<xs:annotation>
+			<xs:documentation>строка до 160 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="160"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMaxLen200">
+		<xs:annotation>
+			<xs:documentation>строка до 200 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="200"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMaxLen100">
+		<xs:annotation>
+			<xs:documentation>строка до 100 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMaxLen50">
+		<xs:annotation>
+			<xs:documentation>строка до 50 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMaxLen30">
+		<xs:annotation>
+			<xs:documentation>строка до 30 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="30"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMaxLen10">
+		<xs:annotation>
+			<xs:documentation>строка до 10 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="StringMaxLen6">
+		<xs:annotation>
+			<xs:documentation>строка до 6 символов</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Between0and1IncType">
+		<xs:annotation>
+			<xs:documentation>Значение между 0 и 1 включительно</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="1"/>
+			<xs:fractionDigits value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="formattedDate">
+		<xs:annotation>
+			<xs:documentation>Дата в формате дд-мм-гггг</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{2}-\d{2}-\d{4}"/>
+			<xs:length value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="PeriodStr">
+		<xs:annotation>
+			<xs:documentation>Период yyyymm</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="6"/>
+			<xs:maxLength value="6"/>
+			<xs:pattern value="([0-9]{6})"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="ErrorType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="code" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Код ошибки. См. коды ошибок конкретного модуля</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="message" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Сообщение ошибки</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="details" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Детализация ошибки</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="WarnType">
+		<xs:sequence>
+			<xs:element minOccurs="0" name="code" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Код предупреждения. См. коды предупреждений конкретного модуля</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="message" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Сообщение предупреждения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="details" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Детализация предупреждения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="EntityReferenceType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="entityVersId" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>Ид версии сущности</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="1" name="entityId" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>Ид сущности</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="1" name="subsystemId" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation>Ид подсистемы сущности</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+            <xs:element maxOccurs="1" minOccurs="0" name="subsystemEntityId" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>Ид сущности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+		</xs:sequence>
+	</xs:complexType>
+    
+    <xs:complexType name="EntityReferenceTypeEmptyId">
+        <xs:sequence>
+            <xs:element maxOccurs="1" minOccurs="0" name="entityVersId" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>Ид версии сущности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element maxOccurs="1" minOccurs="0" name="entityId" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>Ид сущности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element maxOccurs="1" minOccurs="1" name="subsystemId" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>Ид подсистемы сущности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element maxOccurs="1" minOccurs="0" name="subsystemEntityId" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>Ид сущности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+	<xs:element name="dictionaryResponse" type="DictionaryType"/>
+	<xs:element name="dictionaryRequest" type="DictionaryRequestType"/>
+
+	<xs:complexType name="DictionaryRequestType">
+		<xs:sequence>
+			<xs:element name="type" type="DictionaryTypeType"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="DictionaryTypeType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="INSURERS"/>
+			<xs:enumeration value="SEDO_MESSAGES"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="DictionaryType">
+		<xs:sequence>
+			<xs:element maxOccurs="1" minOccurs="1" name="code" type="DictionaryTypeType">
+				<xs:annotation>
+					<xs:documentation>Код справочника</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="1" name="name">
+				<xs:annotation>
+					<xs:documentation>Название справочника</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="1" name="fields">
+				<xs:annotation>
+					<xs:documentation>Список полей элемента-справочника</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="field">
+							<xs:annotation>
+								<xs:documentation>Описание поля справочника</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="1" minOccurs="1" name="key" type="xs:string"/>
+									<xs:element maxOccurs="1" minOccurs="1" name="label" type="xs:string"/>
+									<xs:element maxOccurs="1" minOccurs="1" name="type">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:enumeration value="STRING"/>
+												<xs:enumeration value="INTEGER"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element maxOccurs="1" minOccurs="1" name="items">
+				<xs:annotation>
+					<xs:documentation>Список полей элемента-справочника</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="item">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element maxOccurs="unbounded" minOccurs="1" name="field">
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element maxOccurs="1" minOccurs="1" name="value" nillable="true">
+													<xs:annotation>
+														<xs:documentation>Значение</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+											<xs:attribute name="key" type="xs:string" use="required"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+								<xs:attribute name="code" type="xs:string" use="required">
+									<xs:annotation>
+										<xs:documentation>Бизнесключ записи</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+								<xs:attribute name="parentCode" type="xs:string" use="optional">
+									<xs:annotation>
+										<xs:documentation>Бизнесключ записи</xs:documentation>
+									</xs:annotation>
+								</xs:attribute>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PingType">
+		<xs:sequence>
+			<xs:element name="message" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="PongType">
+		<xs:sequence>
+			<xs:element name="message" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType abstract="true" name="ResponseOnType">
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="uuid"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ProcessLinkType">
+		<xs:sequence>
+			<xs:element name="processUuid" type="xs:string"/>
+ 		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ChainLinkType">
+		<xs:sequence>
+			<xs:element name="responseOn" type="ResponseOnType"/>
+ 		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="CompositeLinkType">
+		<xs:sequence>
+			<xs:element name="processUuid" type="xs:string"/>
+			<xs:element name="responseOn" type="ResponseOnType"/>
+ 		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="PhoneNumType">
+		<xs:annotation>
+			<xs:documentation>Тип телефонного номера</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LANDLINE">
+				<xs:annotation>
+					<xs:documentation>Стационарный</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MOBILE">
+				<xs:annotation>
+					<xs:documentation>Мобильный</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="SimpleSignPrivateCodeType">
+		<xs:restriction base="xs:string">
+			<xs:length value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="UuidV1Type">
+		<xs:annotation>
+			<xs:documentation>Уникальный идентификатор с разделителями</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UuidV2Type">
+		<xs:annotation>
+			<xs:documentation>Уникальный идентификатор без разделителей</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="([0-9a-fA-F]{32})"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="indexType">
+		<xs:annotation>
+			<xs:documentation>Почтовый индекс</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\d{6}"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="SystemInfoType">
+		<xs:annotation>
+			<xs:documentation>Информация о взаимодействующей по протоколу системе</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="specVersion">
+				<xs:annotation>
+					<xs:documentation>Версия спецификации, по которой происходит взаимодействие. Берется с титульного
+						листа документации с описанием спецификации.
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="software">
+				<xs:annotation>
+					<xs:documentation>Наименование используемого программного обеспечения</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="50"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="softwareVersion">
+				<xs:annotation>
+					<xs:documentation>Версия используемого программного обеспечения</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="MethodReceivePaymentType">
+		<xs:annotation>
+			<xs:documentation>Способ получения выплаты</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="bankInfo" type="BankInfoType"/>
+			<xs:element name="cardMir" type="CardMirType"/>
+			<xs:element name="otherOrg" type="OtherOrgType"/>
+			<xs:sequence>
+				<xs:element name="currentFiasAddress" type="AddressFiasType">
+					<xs:annotation>
+						<xs:documentation>Сведения о месте фактического проживания</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="postalCode">
+					<xs:annotation>
+						<xs:documentation>Почтовый индекс</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="MethodReceivePaymentVolunteerType">
+		<xs:annotation>
+			<xs:documentation>Способ получения выплаты</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="bankInfo" type="BankInfoType"/>
+			<xs:element name="cardMir" type="CardMirType"/>
+			<xs:sequence>
+				<xs:element name="currentFiasAddress" type="AddressFiasType">
+					<xs:annotation>
+						<xs:documentation>Сведения о месте фактического проживания</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="postalCode">
+					<xs:annotation>
+						<xs:documentation>Почтовый индекс</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="6"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:choice>
+	</xs:complexType>
+
+	<xs:complexType name="BankInfoType">
+		<xs:annotation>
+			<xs:documentation>
+				Реквизиты для перечисления в банк
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="bankName">
+				<xs:annotation>
+					<xs:documentation>
+						Наименование банка
+					</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="120"/>
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="bik" type="org:BikType">
+				<xs:annotation>
+					<xs:documentation>
+						БИК банка
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="accountNum" type="org:AccountNumType">
+				<xs:annotation>
+					<xs:documentation>
+						Номер расчетного счета
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="CardMirType">
+		<xs:annotation>
+			<xs:documentation>
+				Номер банковской карты МИР
+			</xs:documentation>
+		</xs:annotation>
+			<xs:restriction base="xs:string">
+				<xs:pattern value="\d{16,19}"/>
+			</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="OtherOrgType">
+		<xs:annotation>
+			<xs:documentation>Сведения об иной организации для осуществления выплат</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="nameOrg" type="StringMaxLen160">
+				<xs:annotation>
+					<xs:documentation>Наименование организации получателя (для платежного поручения)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="bik" type="org:BikType">
+				<xs:annotation>
+					<xs:documentation>БИК банка</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="accountNum" type="org:AccountNumType">
+				<xs:annotation>
+					<xs:documentation>Номер счета страхователя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element minOccurs="0" name="personalOrgAccount">
+				<xs:annotation>
+					<xs:documentation>Лицевой счет организации</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="\d{5}[A-ZА-Я0-9]{5}\d{1}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="personalInsuredAccount">
+				<xs:annotation>
+					<xs:documentation>Лицевой счет застрахованного</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="\d{11}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="kbk">
+				<xs:annotation>
+					<xs:documentation>Код КБК</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[A-ZА-Я0-9]{20}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="regNumCorrectionalFacility">
+				<xs:annotation>
+					<xs:documentation>Регистрационный номер организации получателя</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="\d{10}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="innCorrectionalFacility">
+				<xs:annotation>
+					<xs:documentation>ИНН организации получателя</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="\d{10}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="kppCorrectionalFacility">
+				<xs:annotation>
+					<xs:documentation>КПП организации получателя</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="\d{9}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="AddressType">
+		<xs:annotation>
+			<xs:documentation>
+				Адрес (в текстовом представлении)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="a1">
+				<xs:annotation>
+					<xs:documentation>Субъект</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="a2">
+				<xs:annotation>
+					<xs:documentation>Район</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="a3">
+				<xs:annotation>
+					<xs:documentation>Город</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="a4">
+				<xs:annotation>
+					<xs:documentation>Населенный пункт</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="plan">
+				<xs:annotation>
+					<xs:documentation>Планировочная структура</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="a5">
+				<xs:annotation>
+					<xs:documentation>Улица</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="house">
+				<xs:annotation>
+					<xs:documentation>Номер дома</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="100"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="building">
+				<xs:annotation>
+					<xs:documentation>Строение/Корпус</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="flat">
+				<xs:annotation>
+					<xs:documentation>Квартира</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="30"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element minOccurs="0" name="postalCode">
+				<xs:annotation>
+					<xs:documentation>Индекс</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="AddressFiasType">
+		<xs:annotation>
+			<xs:documentation>
+				Адрес (в представлении ГАР uuid )
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:choice>
+				<xs:element name="houseGuid" type="UuidV1Type">
+					<xs:annotation>
+						<xs:documentation>
+							Соответствие ГАР: Если указан дом: HOUSEGUID – Глобальный уникальный идентификатор дома
+						</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:sequence>
+					<xs:element name="guid" type="UuidV1Type">
+						<xs:annotation>
+							<xs:documentation>
+								Соответствие ГАР: Если не указан дом: AOGUID - Guid записи родительского объекта (улицы, города, населенного пункта, планировочной структуры и т.п.)
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="house" type="StringMaxLen30">
+						<xs:annotation>
+							<xs:documentation>Номер дома</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element minOccurs="0" name="building" type="StringMaxLen30">
+						<xs:annotation>
+							<xs:documentation>Строение/Корпус</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:choice>
+			<xs:element minOccurs="0" name="flat" type="StringMaxLen30">
+				<xs:annotation>
+					<xs:documentation>Квартира</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+
+	</xs:complexType>
+
+	<xs:complexType name="ProtocolType">
+		<xs:annotation>
+			<xs:documentation>Протокол обработки сообщения</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" minOccurs="0" name="item">
+				<xs:annotation>
+					<xs:documentation>Запись протокола</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Тип описывающий запись протокола</xs:documentation>
+					</xs:annotation>
+					<xs:sequence>
+						<xs:element name="mnemonic" type="ProtocolItemMnemonicType">
+							<xs:annotation>
+								<xs:documentation>Тип записи протокола</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="level" type="ProtocolItemLevelType">
+							<xs:annotation>
+								<xs:documentation>Уровень записи протокола</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="text" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Текст записи протокола</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element minOccurs="0" name="description" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Дополнительное описание</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="ProtocolItemMnemonicType">
+		<xs:annotation>
+			<xs:documentation>Тип описывающий мнемонику/код типа записи</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ProtocolItemLevelType">
+		<xs:annotation>
+			<xs:documentation>Уровень записи протокола</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="INFO"/>
+			<xs:enumeration value="WARN"/>
+			<xs:enumeration value="ERR"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="lnCode">
+		<xs:annotation>
+			<xs:documentation>Номер ЭЛН</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="integerGreatZero">
+		<xs:annotation>
+			<xs:documentation>Тип данных для 'Очередность рождения'</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="MseInvalidLoss">
+		<xs:annotation>
+			<xs:documentation>Утрата профессиональной трудоспособности</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="29"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="mobilPeriodsType">
+		<xs:annotation>
+			<xs:documentation>Периоды приостановления действия трудового договора в соответствии со статьей 351.7 Трудового кодекса Российской Федерации или приостановления прохождения государственной гражданской службы в соответствии со статьей 53.1 Федерального закона от 27 июля 2004 года N 79-ФЗ "О государственной гражданской службе Российской Федерации, которые приходятся на расчетные года</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element maxOccurs="unbounded" name="mobilPeriod">
+				<xs:annotation>
+					<xs:documentation>Период</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="beginDate" type="xs:date">
+							<xs:annotation>
+								<xs:documentation>Дата начала</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="endDate" type="xs:date">
+							<xs:annotation>
+								<xs:documentation>Дата окончания</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="periodType">
+							<xs:annotation>
+								<xs:documentation>Тип периода</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="Период приостановления действия трудового договора в соответствии со статьей 351.7 ТК РФ">
+										<xs:annotation>
+											<xs:documentation>Период приостановления действия трудового договора в соответствии со статьей 351.7 Трудового кодекса Российской Федерации</xs:documentation>
+										</xs:annotation>
+									</xs:enumeration>
+									<xs:enumeration value="Период приостановления прохождения гос. гражданской службы (ст. 53.1 ФЗ от 27.07.04 года N 79-ФЗ)">
+										<xs:annotation>
+											<xs:documentation>Период приостановления прохождения государственной гражданской службы в соответствии со статьей 53.1 Федерального закона от 27 июля 2004 года N 79-ФЗ "О государственной гражданской службе Российской Федерации"</xs:documentation>
+										</xs:annotation>
+									</xs:enumeration>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>

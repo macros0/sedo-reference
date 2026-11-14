@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.fss.ru/integration/types/person/v02" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:id="http://www.fss.ru/integration/types/dic/identtityDoc/v01" xmlns:c="http://www.fss.ru/integration/types/common/v01" targetNamespace="http://www.fss.ru/integration/types/person/v02" elementFormDefault="qualified">
+	<xs:import namespace="http://www.fss.ru/integration/types/dic/identtityDoc/v01" schemaLocation="../../v01/dic/IdentityDocuments.xsd" id="id"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="../../v01/type/Common.xsd" id="c"/>
+	<xs:element name="person" type="person"/>
+	<xs:element name="address" type="address"/>
+	<xs:element name="contacts" type="contacts"/>
+	<xs:complexType name="person">
+		<xs:sequence>
+			<xs:element name="firstName" type="firstName"/>
+			<xs:element name="lastName" type="lastName"/>
+			<xs:element name="middleName" type="middleName"/>
+			<xs:element name="id" type="id:identityDocument"/>
+			<xs:element name="birthDate" type="xs:date"/>
+			<xs:element name="citizenship" type="xs:string" maxOccurs="1"/>
+			<xs:element name="gender" type="c:dictionary" maxOccurs="1"/>
+			<xs:element name="snils" type="snils" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="address">
+		<xs:sequence>
+			<xs:element name="residence" type="xs:string"/>
+			<xs:element name="isFixPlaceResidence" type="xs:boolean"/>
+			<xs:element name="placeRegistration" type="xs:string"/>
+			<xs:element name="isHomeless" type="xs:boolean"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="contacts">
+		<xs:sequence>
+			<xs:element name="contact" type="c:contact"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FullName">
+		<xs:annotation>
+			<xs:documentation>Полное имя физлица</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="firstName" type="firstName">
+				<xs:annotation>
+					<xs:documentation>Имя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="lastName" type="lastName">
+				<xs:annotation>
+					<xs:documentation>Фамилия</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="middleName" type="middleName" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Отчество</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="firstName">
+		<xs:annotation>
+			<xs:documentation>Имя</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="lastName">
+		<xs:annotation>
+			<xs:documentation> Фамилия</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="middleName">
+		<xs:annotation>
+			<xs:documentation> Отчество</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="snils">
+		<xs:annotation>
+			<xs:documentation>Страховой номер индивидуального лицевого счёта (СНИЛС)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="11"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="inn">
+		<xs:annotation>
+			<xs:documentation>Индивидуальный номер налогоплательщика (ИНН)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="12"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GenderType">
+		<xs:annotation>
+			<xs:documentation>Пол</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MALE">
+				<xs:annotation>
+					<xs:documentation>Пол: мужской</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="FEMALE">
+				<xs:annotation>
+					<xs:documentation>Пол: женский</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="RecipientAddressType">
+		<xs:annotation>
+			<xs:documentation>Тип адреса</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LIVEPLACE">
+				<xs:annotation>
+					<xs:documentation>Местожительства</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="REG">
+				<xs:annotation>
+					<xs:documentation>Регистрации</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="WORK">
+				<xs:annotation>
+					<xs:documentation>Рабочий</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="REGLK">
+				<xs:annotation>
+					<xs:documentation>Регистрации адрес ЛК</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="FACTLK">
+				<xs:annotation>
+					<xs:documentation>Фактический адрес ЛК</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="REG_PFR">
+				<xs:annotation>
+					<xs:documentation>Регистрации ГЛК ПФР</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="FACT_PFR">
+				<xs:annotation>
+					<xs:documentation>Фактический ГЛК ПФР</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LEGAL">
+				<xs:annotation>
+					<xs:documentation>Юридический</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="FACT">
+				<xs:annotation>
+					<xs:documentation>Фактический</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="HOST">
+				<xs:annotation>
+					<xs:documentation>Пребывания</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="FACTLIVE">
+				<xs:annotation>
+					<xs:documentation>Фактического проживания</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="birthDate">
+		<xs:annotation>
+			<xs:documentation>Дата рождения</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:date"/>
+	</xs:simpleType>
+
+
+	<xs:complexType name="IdType">
+		<xs:annotation>
+			<xs:documentation>Сведения об идентификаторе личности</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="type" type="id:identityDocument">
+				<xs:annotation>
+					<xs:documentation>Вид удостоверения личности</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="series" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Серия документа</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="80"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="num">
+				<xs:annotation>
+					<xs:documentation>Номер документа</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="80"/>
+						<xs:minLength value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="issueDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи документа Формат ГГГГ-ММ-ДД</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dept" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Кем выдан документ</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="200"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="endDate" type="xs:date" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Документ действителен до</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="RelationType">
+		<xs:annotation>
+			<xs:documentation>Степень родства</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="38">
+				<xs:annotation><xs:documentation>Мать</xs:documentation></xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="39">
+				<xs:annotation><xs:documentation>Отец</xs:documentation></xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="41">
+				<xs:annotation><xs:documentation>Попечитель</xs:documentation></xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="40">
+				<xs:annotation><xs:documentation>Опекун</xs:documentation></xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="42">
+				<xs:annotation><xs:documentation>Иной родственник, фактически осуществляющий уход за ребёнком</xs:documentation></xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="residenceDocumentType">
+		<xs:annotation>
+			<xs:documentation>Сведения о документах, подтверждающих постоянное или временное проживание (пребывание) на территории РФ (для иностранных граждан и лиц без гражданства)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="type">
+				<xs:annotation>
+					<xs:documentation>Вид документа</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="12">
+							<xs:annotation>
+								<xs:documentation>Вид на жительство в Российской Федерации
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="15">
+							<xs:annotation>
+								<xs:documentation>Разрешение на временное проживание (пребывание) в Российской Федерации</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="number">
+				<xs:annotation>
+					<xs:documentation>Серия и номер документа</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="issueDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

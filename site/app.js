@@ -89,7 +89,11 @@ function appendSchemaReview(container,r){
     for(const [label,value] of [["Место в спецификации",issue.location],["В спецификации",issue.spec],["Место в XSD",issue.xlocation],["В схеме",issue.xsd],["Последствие",issue.impact]]){
      if(value)evidence.append(node("dt","",label),node("dd","",value));
     }
-    item.append(evidence);details.append(item);
+    item.append(evidence);
+    for(const target of window.SedoReviewJournal?.fieldLinks(r,issue)||[]){
+     const a=node("a","source",target.text);a.href=target.href;item.append(node("br"),a);
+    }
+    details.append(item);
    }
   }
   details.hidden=!details.hidden;

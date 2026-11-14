@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns="urn:ru:fss:integration:dic:InsuredCategories:v01"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="urn:ru:fss:integration:dic:InsuredCategories:v01"
+        elementFormDefault="qualified"
+        version="1.0"
+>
+
+    <xs:simpleType name="InsuredCategoriesType">
+        <xs:annotation>
+            <xs:documentation>
+                Справочник: "Категория застрахованного"
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="INSURED">
+                <xs:annotation>
+                    <xs:documentation>Застрахованное лицо</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="PRISONER">
+                <xs:annotation>
+                    <xs:documentation>Oсужденное к лишению свободы лицо, привлекаемое к оплачиваемому труду</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="COMPULSORY">
+                <xs:annotation>
+                    <xs:documentation>Лицо, осужденное к принудительным работам, привлеченное к труду</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+			<xs:enumeration value="ENDOFMILITARY">
+                <xs:annotation>
+                    <xs:documentation>Лицо, в период приостановления ТД после окончания военной службы</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

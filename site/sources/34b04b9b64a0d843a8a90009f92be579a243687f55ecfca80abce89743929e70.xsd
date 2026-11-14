@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns="http://www.fss.ru/integration/types/fssDepartment/v01"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.fss.ru/integration/types/fssDepartment/v01"
+        elementFormDefault="qualified"
+>
+
+    <xs:simpleType name="code">
+        <xs:annotation>
+            <xs:documentation>Код территориального органа СФР РФ</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="4"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="name">
+        <xs:annotation>
+            <xs:documentation>Наименование территориального органа СФР РФ
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="500"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="FssDepartmentType">
+        <xs:annotation>
+            <xs:documentation>Территориальный орган СФР РФ</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="code">
+                <xs:simpleType>
+                    <xs:restriction base="code"/>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="name" type="name"/>
+        </xs:sequence>
+    </xs:complexType>
+
+</xs:schema>

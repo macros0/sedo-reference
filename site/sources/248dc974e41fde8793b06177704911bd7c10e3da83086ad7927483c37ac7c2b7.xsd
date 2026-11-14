@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by BFT-Razrabotka (BFT-Razrabotka) -->
+<xs:schema xmlns="urn:ru:ecp:integration:types:person:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="urn:ru:ecp:integration:types:common:v3.0" xmlns:OKSM="urn:ru:ecp:integration:types:dic:OKSM:v3.0" targetNamespace="urn:ru:ecp:integration:types:person:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="Common.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:dic:OKSM:v3.0" schemaLocation="../dic/OKSM.xsd"/>
+	<xs:complexType name="fullName">
+		<xs:annotation>
+			<xs:documentation>Полное имя физлица</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="firstName" type="firstName">
+				<xs:annotation>
+					<xs:documentation>Имя</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="lastName" type="lastName">
+				<xs:annotation>
+					<xs:documentation>Фамилия</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="middleName" type="middleName" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Отчество</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="firstName">
+		<xs:annotation>
+			<xs:documentation>Имя</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="lastName">
+		<xs:annotation>
+			<xs:documentation> Фамилия</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="middleName">
+		<xs:annotation>
+			<xs:documentation> Отчество</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="60"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="snils">
+		<xs:annotation>
+			<xs:documentation>Страховой номер индивидуального лицевого счёта (СНИЛС)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:length value="11"/>
+			<xs:pattern value="\d{11}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="inn">
+		<xs:annotation>
+			<xs:documentation>Индивидуальный номер налогоплательщика (ИНН)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="12"/>
+			<xs:pattern value="[0-9]*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="genderType">
+		<xs:annotation>
+			<xs:documentation>Пол</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="MALE">
+				<xs:annotation>
+					<xs:documentation>Пол: мужской</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="FEMALE">
+				<xs:annotation>
+					<xs:documentation>Пол: женский</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="birthDate">
+		<xs:annotation>
+			<xs:documentation>Дата рождения</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:date"/>
+	</xs:simpleType>
+	<xs:complexType name="residenceDocumentTypeRequest">
+		<xs:annotation>
+			<xs:documentation>Сведения о документах, подтверждающих постоянное или временное проживание (пребывание) на территории РФ (для иностранных граждан и лиц без гражданства)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="type">
+				<xs:annotation>
+					<xs:documentation>Вид документа</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="12">
+							<xs:annotation>
+								<xs:documentation>Вид на жительство в Российской Федерации
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="15">
+							<xs:annotation>
+								<xs:documentation>Разрешение на временное проживание (пребывание) в Российской Федерации</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="19">
+							<xs:annotation>
+								<xs:documentation>Свидетельство о предоставлении временного убежища на территории РФ</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="61">
+							<xs:annotation>
+								<xs:documentation>Свидетельство о регистрации по месту жительства</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="62">
+							<xs:annotation>
+								<xs:documentation>Вид на жительство иностранного гражданина</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="63">
+							<xs:annotation>
+								<xs:documentation>Свидетельство о регистрации по месту пребывания</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="number">
+				<xs:annotation>
+					<xs:documentation>Серия и номер документа</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="issueDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Технический элемент, позволяющий расширять XML документ</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="residenceDocumentType">
+		<xs:annotation>
+			<xs:documentation>Сведения о документах, подтверждающих постоянное или временное проживание (пребывание) на территории РФ (для иностранных граждан и лиц без гражданства)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="type">
+				<xs:annotation>
+					<xs:documentation>Вид документа</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="12">
+							<xs:annotation>
+								<xs:documentation>Вид на жительство в Российской Федерации
+								</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="15">
+							<xs:annotation>
+								<xs:documentation>Разрешение на временное проживание (пребывание) в Российской Федерации</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="19">
+							<xs:annotation>
+								<xs:documentation>Свидетельство о предоставлении временного убежища на территории РФ</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="61">
+							<xs:annotation>
+								<xs:documentation>Свидетельство о регистрации по месту жительства</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="62">
+							<xs:annotation>
+								<xs:documentation>Вид на жительство иностранного гражданина</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="63">
+							<xs:annotation>
+								<xs:documentation>Свидетельство о регистрации по месту пребывания</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="number">
+				<xs:annotation>
+					<xs:documentation>Серия и номер документа</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="issueDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи документа</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="birthRecordType">
+		<xs:sequence>
+			<xs:element name="number">
+				<xs:annotation>
+					<xs:documentation>Номер</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:length value="21"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="issueDate">
+				<xs:annotation>
+					<xs:documentation>Дата</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:date"/>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="birthReferenceType">
+		<xs:sequence>
+			<xs:element name="number" type="com:stringMinLen1MaxLen20">
+				<xs:annotation>
+					<xs:documentation>Номер</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="issueDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата выдачи</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="refType">
+				<xs:annotation>
+					<xs:documentation>Вид справки</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="48">
+							<xs:annotation>
+								<xs:documentation>Справка о рождении ребенка, выданной органами ЗАГСа форма 1</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="49">
+							<xs:annotation>
+								<xs:documentation>Справка о рождении ребенка, выданной органами ЗАГСа форма 2</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+						<xs:enumeration value="51">
+							<xs:annotation>
+								<xs:documentation>Справка о рождении ребенка, выданной органами ЗАГСа форма 4</xs:documentation>
+							</xs:annotation>
+						</xs:enumeration>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="birthDocOtherCountryType">
+		<xs:sequence>
+			<xs:element name="series" type="com:stringMinLen1MaxLen20" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Серия</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="number" type="com:stringMinLen1MaxLen20">
+				<xs:annotation>
+					<xs:documentation>Номер</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="issueDate">
+				<xs:annotation>
+					<xs:documentation>Дата выдaчи</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:date"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="country" type="OKSM:OKSMType">
+				<xs:annotation>
+					<xs:documentation>Код страны, на территории которой выдан документ</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="birthCertificateType">
+		<xs:sequence>
+			<xs:element name="series" type="com:stringMinLen1MaxLen20">
+				<xs:annotation>
+					<xs:documentation>Серия</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="number" type="com:stringMinLen1MaxLen20">
+				<xs:annotation>
+					<xs:documentation>Номер</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="issueDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Даты выдачи</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="fullNameSimple">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

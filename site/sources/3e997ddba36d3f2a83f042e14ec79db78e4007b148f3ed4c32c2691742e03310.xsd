@@ -1,0 +1,1041 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2023 sp1 (x64) (http://www.altova.com) by  () -->
+<xs:schema xmlns="urn:ru:ecp:integration:types:proactive:type:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="urn:ru:ecp:integration:types:common:v3.0" xmlns:org="urn:ru:ecp:integration:types:organization:v3.0" xmlns:p="urn:ru:ecp:integration:types:person:v3.0" xmlns:country="urn:ru:ecp:integration:types:dic:OKSM:v3.0" xmlns:insCat="urn:ru:ecp:integration:types:dic:insuredCategories:v3.0" xmlns:tax="urn:ru:ecp:integration:types:dic:taxpayerStatusType:v3.0" xmlns:ex="urn:ru:ecp:integration:types:dic:exclperiodstypes:v3.0" targetNamespace="urn:ru:ecp:integration:types:proactive:type:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="Common.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:organization:v3.0" schemaLocation="Organization.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:person:v3.0" schemaLocation="Person.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:dic:OKSM:v3.0" schemaLocation="../dic/OKSM.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:dic:insuredCategories:v3.0" schemaLocation="../dic/InsuredCategories.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:dic:taxpayerStatusType:v3.0" schemaLocation="../dic/TaxpayerStatusType.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:dic:exclperiodstypes:v3.0" schemaLocation="../dic/ExcludePeriodsType.xsd"/>
+	<xs:simpleType name="assignmentMethodType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="oneInsurerAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по одному страхователю</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="severalInsurersAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по нескольким страхователям</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="severalTDInsurersAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по нескольким страхователям по ТД</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="oneTDInsurerAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по одному страхователю по ТД</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="oneGPHInsurerAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по одному страхователю по ГПХ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="oneTDInsurerAssignment_And_oneGPHInsurerAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по одному страхователю по ТД и по одному страхователю по ГПХ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="severalTDInsurersAssignment_And_oneGPHInsurerAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по нескольким страхователям по ТД и по одному страхователю по ГПХ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="severalInsurersInTwoPrevYearAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение по нескольким страхователям, у которых застрахованный работал в 2-х предшествующих годах</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="elnInfoTypeRequest">
+		<xs:sequence>
+			<xs:element name="lnNumber" type="com:lnCode">
+				<xs:annotation>
+					<xs:documentation>Номер ЭЛН</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Технический элемент, позволяющий расширять XML документ</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="elnInfoTypeResponse">
+		<xs:sequence>
+			<xs:element name="lnNumber" type="com:lnCode">
+				<xs:annotation>
+					<xs:documentation>Номер ЭЛН</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="insurerInfoTypeRequest">
+		<xs:sequence>
+			<xs:element name="regNumSFR" type="org:regNumSFR">
+				<xs:annotation>
+					<xs:documentation>Единый рег. номер страхователя СФР</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Технический элемент, позволяющий расширять XML документ</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="insurerInfoTypeResponse">
+		<xs:sequence>
+			<xs:element name="regNumSFR" type="org:regNumSFR">
+				<xs:annotation>
+					<xs:documentation>Единый рег. номер страхователя СФР</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="calcYearsTypeRequest">
+		<xs:choice>
+			<xs:element name="twoPrevYears">
+				<xs:annotation>
+					<xs:documentation>Два календарных года, непосредственно предшествующие году наступления страхового случая</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="yearInfo" type="yearInfoTypeRequest" minOccurs="2" maxOccurs="2">
+							<xs:annotation>
+								<xs:documentation>Сведения о заработке в расчетном году</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="changeYears">
+				<xs:annotation>
+					<xs:documentation>Замененные календарные года (в случае наличия заявления о замене лет)</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="yearInfo" type="yearInfoTypeRequest" minOccurs="2" maxOccurs="2">
+							<xs:annotation>
+								<xs:documentation>Сведения о заработке в расчетном году</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="calcYearsTypeRequest5">
+		<xs:choice>
+			<xs:element name="twoPrevYears">
+				<xs:annotation>
+					<xs:documentation>Два календарных года, непосредственно предшествующие году наступления страхового случая</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="yearInfo" type="yearInfoTypeRequestBenefit5" minOccurs="2" maxOccurs="2">
+							<xs:annotation>
+								<xs:documentation>Сведения о заработке в расчетном году</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="changeYears">
+				<xs:annotation>
+					<xs:documentation>Замененные календарные года (в случае наличия заявления о замене лет)</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="yearInfo" type="yearInfoTypeRequestBenefit5" minOccurs="2" maxOccurs="2">
+							<xs:annotation>
+								<xs:documentation>Сведения о заработке в расчетном году</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="calcYearsTypeResponse">
+		<xs:choice>
+			<xs:element name="twoPrevYears">
+				<xs:annotation>
+					<xs:documentation>Два календарных года, непосредственно предшествующие году наступления страховго случая</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="yearInfo" type="yearInfoTypeResponse" minOccurs="2" maxOccurs="2">
+							<xs:annotation>
+								<xs:documentation>Сведения о заработке в расчетном году</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="changeYears">
+				<xs:annotation>
+					<xs:documentation>Замененные календарные года (в случае наличия заявления о замене лет)</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:choice>
+						<xs:element name="doChangeYears">
+							<xs:annotation>
+								<xs:documentation>Изменение расчетных лет (будет выпущен подпроцесс)</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="year" type="yearType" minOccurs="2" maxOccurs="2">
+										<xs:annotation>
+											<xs:documentation>Год, использующийся для
+расчета</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="approveChangeYears">
+							<xs:annotation>
+								<xs:documentation>Назначение пособия по замененным годам</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="yearInfo" type="yearInfoTypeResponse" minOccurs="2" maxOccurs="2">
+										<xs:annotation>
+											<xs:documentation>Сведения о заработке в расчетном году</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:simpleType name="yearType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="2000"/>
+			<xs:pattern value="\d{4}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="yearInfoTypeRequest">
+		<xs:sequence>
+			<xs:element name="year">
+				<xs:annotation>
+					<xs:documentation>Год, использующийся для расчета</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="yearType"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sum" type="sumType">
+				<xs:annotation>
+					<xs:documentation>Сумма заработка застрахованного лица. 
+Сумма не должна превышать предельную величину базы для начисления страховых взносов, установленной в календарном году (за исключением пособий временной нетрудоспособности связанной с НС или ПЗ)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="insurersCalcType" type="insurersCalcType">
+				<xs:annotation>
+					<xs:documentation>Вид суммы заработка: "Общая сумма заработка по всем страхователям" 
+ИЛИ 
+"Сумма заработка по одному (текущему) страхователю"
+ИЛИ
+"Общая сумма заработка по всем страхователям по договору ГПХ"</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Технический элемент, позволяющий расширять XML документ</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="yearInfoTypeRequestBenefit5">
+		<xs:sequence>
+			<xs:element name="year">
+				<xs:annotation>
+					<xs:documentation>Год, использующийся для расчета</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="yearType"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="sum" type="sumType">
+				<xs:annotation>
+					<xs:documentation>Сумма заработка застрахованного лица. 
+Сумма не должна превышать предельную величину базы для начисления страховых взносов, установленной в календарном году (за исключением пособий временной нетрудоспособности связанной с НС или ПЗ)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="insurersCalcType" type="insurersCalcTypeBenefit5">
+				<xs:annotation>
+					<xs:documentation>Вид суммы заработка: "Общая сумма заработка по всем страхователям"
+ИЛИ
+"Общая сумма заработка по всем страхователям (по непересекающимся периодам работы) "
+ИЛИ
+"Общая сумма заработка по всем страхователям (для текущих страхователей по непересекающимся периодам)"</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Технический элемент, позволяющий расширять XML документ</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="yearInfoTypeResponse">
+		<xs:sequence>
+			<xs:element name="year" type="yearType">
+				<xs:annotation>
+					<xs:documentation>Год, использующийся для расчета</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="sum" type="sumType">
+				<xs:annotation>
+					<xs:documentation>Сумма заработка застрахованного лица. 
+Сумма не должна превышать предельную величину базы для начисления страховых взносов, установленной в календарном году</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="insurersCalcType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="amountForAllInsurers">
+				<xs:annotation>
+					<xs:documentation>Общая сумма заработка по всем страхователям</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="amountForCurrentInsurer">
+				<xs:annotation>
+					<xs:documentation>Сумма заработка по одному (текущему) страхователю</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="amountForAllInsurersGph">
+				<xs:annotation>
+					<xs:documentation>Общая сумма заработка по всем страхователям по договору ГПХ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="insurersCalcTypeBenefit5">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="amountForAllInsurers">
+				<xs:annotation>
+					<xs:documentation>Общая сумма заработка по всем страхователям</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="amountForCurrentAndPrevOtherInsurers">
+				<xs:annotation>
+					<xs:documentation>Общая сумма заработка по всем страхователям (по непересекающимся периодам работы)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="amountForCurrentInsurerAndPrevOtherInsurersAndAllInsurers">
+				<xs:annotation>
+					<xs:documentation>Общая сумма заработка по всем страхователям (для текущих страхователей по непересекающимся периодам)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="baseCalcType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="OPS"/>
+			<xs:enumeration value="OPS-GPH"/>
+			<xs:enumeration value="GPH"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="senderInfoType">
+		<xs:sequence>
+			<xs:element name="author" type="p:fullName2">
+				<xs:annotation>
+					<xs:documentation>ФИО</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="email" type="com:emailAddress">
+				<xs:annotation>
+					<xs:documentation>Адрес электронной почты</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="phoneNumber" type="com:phoneNumberType">
+				<xs:annotation>
+					<xs:documentation>Номер телефона</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="noticeType">
+		<xs:sequence>
+			<xs:element name="number" type="noticeNumberType">
+				<xs:annotation>
+					<xs:documentation>Номер извещения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="date" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>Дата извещения</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="kfShortDaysType">
+		<xs:restriction base="xs:decimal">
+			<xs:minInclusive value="0"/>
+			<xs:maxInclusive value="1"/>
+			<xs:fractionDigits value="3"/>
+			<xs:pattern value="\d{1}([\.]\d{1,3})?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="excludePeriodListType">
+		<xs:sequence>
+			<xs:element name="excludePeriod" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Исключаемый период</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="type" type="ex:exclPeriodsType">
+							<xs:annotation>
+								<xs:documentation>Тип (причина) исключаемого периода</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="period" type="com:period">
+							<xs:annotation>
+								<xs:documentation>Период</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="downPeriodListType">
+		<xs:sequence>
+			<xs:element name="downPeriod" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Период простоя</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="period" type="com:period">
+							<xs:annotation>
+								<xs:documentation>Период</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="idleAverage" type="sumType">
+							<xs:annotation>
+								<xs:documentation>Средний заработок за период простоя</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="experienceType">
+		<xs:sequence>
+			<xs:element name="insurYY" type="com:countYear">
+				<xs:annotation>
+					<xs:documentation>Страховой стаж (лет). Общая продолжительность страхового стажа (Включая страховые и не страховые периоды)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="insurMM" type="com:countMonth">
+				<xs:annotation>
+					<xs:documentation>Страховой стаж (мес.). Общая продолжительность страхового стажа (Включая страховые и не страховые периоды).
+При страховом стаже менее 30 дней поле insurMM заполняется значением = 1</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="notInsurYY" type="com:countYear" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Не страховой период (лет)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="notInsurMM" type="com:countMonth" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Не страховой период (мес.)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="paymentMethodType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="oneInsurerAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по одному страхователю</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="severalInsurersAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по нескольким страхователям</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="severalTDInsurersAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по нескольким страхователям по ТД</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="oneTDInsurerAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по одному страхователю по ТД</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="oneGPHInsurerAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по одному страхователю по ГПХ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="oneTDInsurerAssignment_And_oneGPHInsurerAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по одному страхователю по ТД и по одному страхователю по ГПХ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="severalTDInsurersAssignment_And_oneGPHInsurerAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение пособия по нескольким страхователям по ТД и по одному страхователю по ГПХ</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="severalInsurersInTwoPrevYearAssignment">
+				<xs:annotation>
+					<xs:documentation>Назначение по нескольким страхователям, у которых застрахованный работал в 2-х предшествующих годах</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="noteType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="2000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="sumType">
+		<xs:restriction base="xs:decimal">
+			<xs:fractionDigits value="2"/>
+			<xs:totalDigits value="11"/>
+			<xs:pattern value="\d{1,9}([\.]\d{1,2})?"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="reasonType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="2000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="workerContractType">
+		<xs:sequence>
+			<xs:element name="period" type="com:period2" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Период договора.
+
+Поле обязательно для заполнения при срочном ТД на срок до 6 месяцев</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="GPHcontractType">
+		<xs:sequence>
+			<xs:element name="period" type="com:period2" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Период договора</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="contractsInfoTypeRequest">
+		<xs:choice>
+			<xs:element name="workerContract">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по трудовому договору
+При указании условия исчисления = 46 также необходимо даты начала и окончания договора</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="period" type="com:period2" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Период договора</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GPHcontract">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по гражданско-правовому договору
+Обязательно указание даты начала договора.
+При указании условия исчисления = 46 также необходимо указать дату окончания договора</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="period" type="com:period2" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Период договора</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="workerAndGPHcontract">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по трудовому договору и по гражданско-правовому договору</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="workerContract">
+							<xs:annotation>
+								<xs:documentation>Застрахованное лицо занято по трудовому договору</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="period" type="com:period2" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Период договора</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="GPHcontract" type="xs:boolean">
+							<xs:annotation>
+								<xs:documentation>Застрахованное лицо занято по гражданско-правовому договору</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="contractsInfoTypeResponse1">
+		<xs:choice>
+			<xs:element name="workerContract">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по трудовому договору.
+При указании условия исчисления = 46 также необходимо указать дату окончания договора</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="period" type="com:period2" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Период договора.
+
+Поле обязательно для заполнения при срочном ТД на срок до 6 месяцев</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GPHcontract">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по гражданско-правовому договору.
+При указании условия исчисления = 46 также необходимо указать дату окончания договора</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="period">
+							<xs:annotation>
+								<xs:documentation>Период договора</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="begin" type="xs:date">
+										<xs:annotation>
+											<xs:documentation>Дата начала</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="end" type="xs:date" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Дата окончания.
+
+Поле обязательно для заполнения при договоре ГПХ на срок до 6 месяцев</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="workerAndGPHcontract">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по трудовому договору и по гражданско-правовому договору</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="workerContract">
+							<xs:annotation>
+								<xs:documentation>Застрахованное лицо занято по трудовому договору</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="period" type="com:period2" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Период договора.
+
+Поле обязательно для заполнения при срочном ТД на срок до 6 месяцев</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="GPHcontract" type="xs:boolean">
+							<xs:annotation>
+								<xs:documentation>Застрахованное лицо занято по гражданско-правовому договору</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="contractsInfoTypeResponse2">
+		<xs:choice>
+			<xs:element name="workerContract" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по трудовому договору</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GPHcontract">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по гражданско-правовому договору</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="period" type="com:period">
+							<xs:annotation>
+								<xs:documentation>Период договора</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="workerAndGPHcontract" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по трудовому договору и по гражданско-правовому договору</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="contractsInfoTypeRequest4">
+		<xs:choice>
+			<xs:element name="workerContract" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по трудовому договору</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GPHcontract" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по гражданско-правовому договору</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="workerAndGPHcontract" type="xs:boolean">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по трудовому договору и по гражданско-правовому договору</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="contractsInfoTypeResponse6">
+		<xs:choice>
+			<xs:element name="workerContract">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по трудовому договору.
+При указании условия исчисления = 46 также необходимо указать дату окончания договора</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="period" type="com:period2" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Период договора.
+
+Поле обязательно для заполнения при срочном ТД на срок до 6 месяцев</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GPHcontract">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по гражданско-правовому договору.
+При указании условия исчисления = 46 также необходимо указать дату окончания договора</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="period">
+							<xs:annotation>
+								<xs:documentation>Период договора</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="begin" type="xs:date">
+										<xs:annotation>
+											<xs:documentation>Дата начала</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="end" type="xs:date" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Дата окончания.
+
+Поле обязательно для заполнения при договоре ГПХ на срок до 6 месяцев</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="GPHinsurancePaymentObligation" type="com:fixedTrueType">
+							<xs:annotation>
+								<xs:documentation>В договоре ГПХ указана обязанность уплаты страховых взносов от НС и ПЗ</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="workerAndGPHcontract">
+				<xs:annotation>
+					<xs:documentation>Застрахованное лицо занято по трудовому договору и по гражданско-правовому договору</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="workerContract">
+							<xs:annotation>
+								<xs:documentation>Застрахованное лицо занято по трудовому договору</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="period" type="com:period2" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Период договора.
+
+Поле обязательно для заполнения при срочном ТД на срок до 6 месяцев</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="GPHcontract" type="xs:boolean">
+							<xs:annotation>
+								<xs:documentation>Застрахованное лицо занято по гражданско-правовому договору</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:simpleType name="filledTrue">
+		<xs:restriction base="xs:boolean">
+			<xs:pattern value="true"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="noticeNumberType">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="12"/>
+			<xs:minLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="childRelTypeBenefit4">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="38">
+				<xs:annotation>
+					<xs:documentation>Мать</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="39">
+				<xs:annotation>
+					<xs:documentation>Отец</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="40">
+				<xs:annotation>
+					<xs:documentation>Опекун</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="50">
+				<xs:annotation>
+					<xs:documentation>Усыновитель</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="childRelTypeBenefit5">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="38">
+				<xs:annotation>
+					<xs:documentation>Мать</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="39">
+				<xs:annotation>
+					<xs:documentation>Отец</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="40">
+				<xs:annotation>
+					<xs:documentation>Опекун</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="42">
+				<xs:annotation>
+					<xs:documentation>Иной родственник</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="salarySumType">
+		<xs:choice>
+			<xs:sequence>
+				<xs:annotation>
+					<xs:documentation>Передается для годов с 2023 г.</xs:documentation>
+				</xs:annotation>
+				<xs:element name="sumOPS" type="sumType">
+					<xs:annotation>
+						<xs:documentation>Сумма заработной платы застрахованного лица, которая включает все виды выплат и иных вознаграждений в пользу застрахованного лица по базе для исчисления страховых взносов в пределах единой предельной величины</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="sumGPH" type="sumType">
+					<xs:annotation>
+						<xs:documentation>Сумма заработной платы застрахованного лица по гражданско-правовым договорам, включенная в базу для исчисления страховых взносов</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Технический элемент, позволяющий расширять XML документ</xs:documentation>
+					</xs:annotation>
+				</xs:any>
+			</xs:sequence>
+			<xs:sequence>
+				<xs:annotation>
+					<xs:documentation>Передается для годов до 2023 г.</xs:documentation>
+				</xs:annotation>
+				<xs:element name="sumOPS-GPH" type="sumType">
+					<xs:annotation>
+						<xs:documentation>Сумма заработной платы застрахованного лица, которая включает все виды выплат и иных вознаграждений в пользу застрахованного лица по базе для исчисления страховых взносов в пределах единой предельной величины, за вычетом сумм по ГПД</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:choice>
+	</xs:complexType>
+	<xs:simpleType name="mobilDays1YearType">
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="365"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="mobilDays2YearsType">
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="730"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="subProcessReasonDetailsType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="4000"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="taxpayerType">
+		<xs:sequence>
+			<xs:element name="taxpayerStatus" type="tax:taxpayerStatusType">
+				<xs:annotation>
+					<xs:documentation>Статус налогоплательщика</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="inn" nillable="true">
+				<xs:annotation>
+					<xs:documentation>ИНН физического лица</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:simpleContent>
+						<xs:extension base="p:inn"/>
+					</xs:simpleContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="guardianshipType">
+		<xs:annotation>
+			<xs:documentation>Данные об опеке</xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="guardianshipDoc">
+				<xs:annotation>
+					<xs:documentation>Документ об установлении опеки</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="num" type="com:stringMinLen1MaxLen20">
+							<xs:annotation>
+								<xs:documentation>Номер</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="issueDate">
+							<xs:annotation>
+								<xs:documentation>Дата выдачи</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:date"/>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="refFamilyInfo">
+				<xs:annotation>
+					<xs:documentation>Договор о передаче в приемную семью</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="num" type="com:stringMinLen1MaxLen20">
+							<xs:annotation>
+								<xs:documentation>Номер</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="issueDate">
+							<xs:annotation>
+								<xs:documentation>Дата</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:date"/>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="adoptionType">
+		<xs:annotation>
+			<xs:documentation>Данные об усыновлении</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="adoptionDoc">
+				<xs:annotation>
+					<xs:documentation>Решение суда об усыновлении</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="num" type="com:stringMinLen1MaxLen20">
+							<xs:annotation>
+								<xs:documentation>Номер</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="issueDate">
+							<xs:annotation>
+								<xs:documentation>Дата</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:simpleContent>
+									<xs:extension base="xs:date"/>
+								</xs:simpleContent>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

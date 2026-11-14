@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2021 rel. 2 sp1 (x64) (http://www.altova.com) by  () -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns:org="http://www.fss.ru/integration/types/organization/v01"
+           xmlns:dpt="http://www.fss.ru/integration/types/fssDepartment/v01"
+           xmlns:cm="http://www.fss.ru/integration/types/common/v01"
+           xmlns:cmq="http://www.fss.ru/integration/types/commonUq/v01"
+           xmlns:ns1="http://www.fss.ru/integration/type/NotificationDocType/v01"
+           xmlns:ns2="http://www.fss.ru/integration/types/dic/errors/v01"
+           targetNamespace="http://www.fss.ru/integration/type/NotificationDocType/v01" elementFormDefault="qualified"
+           attributeFormDefault="unqualified" vc:minVersion="1.1">
+    <xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="Common.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/commonUq/v01" schemaLocation="CommonUQ.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/fssDepartment/v01" schemaLocation="FssDepartment.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/organization/v01" schemaLocation="Organization.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/dic/errors/v01" schemaLocation="Errors.xsd"/>
+    <xs:complexType name="NotificationDocType">
+        <xs:annotation>
+            <xs:documentation>Базовый тип уведомления о приеме (отказе в приеме) территориальным органом Фонда
+                документов
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="responseOn" type="cm:UuidV1Type">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор транспортного сообщения, в рамках которого направлен ответ
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="idMessage" type="cm:UuidV1Type">
+                <xs:annotation>
+                    <xs:documentation>Идентификатор сообщения</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="date" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation>Дата и время приема (отказа в приеме) документов</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="insurer">
+                <xs:annotation>
+                    <xs:documentation>Страхователь</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:choice>
+                        <xs:element name="insurerName" type="org:fullName" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>Наименование страхователя (ЮЛ)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="FIO" type="xs:string" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>ФИО страхователя (ФЛ)</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:choice>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="statusDocument" maxOccurs="25">
+                <xs:annotation>
+                    <xs:documentation>Блок с описанием статуса приема документа</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="idDocumentsGroup">
+                            <xs:annotation>
+                                <xs:documentation>Идентификатор представленного набора документов</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="1"/>
+                                    <xs:maxInclusive value="999999999"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="typeDocument" type="xs:integer">
+                            <xs:annotation>
+                                <xs:documentation>Значение из справочника видов документов</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="count">
+                            <xs:annotation>
+                                <xs:documentation>Количество принятых (отклоненных) документов, представленных в составе
+                                    ранее направленного набора документов по idDocumentsGroup
+                                </xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="1"/>
+                                    <xs:maxInclusive value="50000"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="status">
+                            <xs:annotation>
+                                <xs:documentation>Статус приема документа</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:enumeration value="1">
+                                        <xs:annotation>
+                                            <xs:documentation>Документ принят</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                    <xs:enumeration value="2">
+                                        <xs:annotation>
+                                            <xs:documentation>Документ не принят</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:enumeration>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="reason" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>Основание отказа в приеме</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="codeError">
+                                        <xs:annotation>
+                                            <xs:documentation>Код основания отказа в приеме</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:integer">
+                                                <xs:enumeration value="1">
+                                                    <xs:annotation>
+                                                        <xs:documentation>Несоответствие запросу территориального органа
+                                                            Фонда
+                                                        </xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:enumeration>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="description">
+                                        <xs:annotation>
+                                            <xs:documentation>Описание отказа в приеме</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:minLength value="1"/>
+                                                <xs:maxLength value="500"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

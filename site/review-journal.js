@@ -16,6 +16,12 @@
   }
   return rows.sort((a,b)=>Number(a.revision.number)-Number(b.revision.number)||a.revision.environment.localeCompare(b.revision.environment)||documentName(a.revision).localeCompare(documentName(b.revision),'ru'));
  }
+ function fieldLink(revision,path){
+  return '#'+new URLSearchParams({message:revision.number,env:revision.environment,rev:revision.revision_id,field:path});
+ }
+ function fieldLinks(revision,finding){
+  return (finding.field_paths||[]).map(path=>({path,href:fieldLink(revision,path),text:(finding.field_link_scope==='parent'?'Открыть родительский блок':'Открыть поле XSD')+' · '+path}));
+ }
  function filter(rows,number='',env=''){
   const query=number.trim();
   return rows.filter(({revision:r})=>(!query||r.number===query)&&(!env||r.environment===env));
@@ -25,23 +31,51 @@
   const resolved=new URL(url,baseURL);
   return ['https:','http:','file:'].includes(resolved.protocol)?{text,hyperlink:resolved.href}:text;
  }
+ function schemaSources(r,finding){
+  const origin=r.archive_url?.split('#')[0],service=r.schema_source_url;
+  const location=finding?.xlocation||'';
+  const files=r.schema_files||[];
+  let compared=files.find(s=>location.includes(s.path));
+  if(!compared){
+   const candidates=files.filter(s=>location.includes(s.path.split('/').pop()));
+   if(candidates.length===1)compared=candidates[0];
+  }
+  const path=compared?.path||r.schema_path;
+  const file=path?.split('/').pop();
+  const digest=compared?.sha256||r.dependencies?.find(([name])=>name===file)?.[1];
+  const remote=['wsdl','wsdl_bridge'].includes(r.schema_source_type)?r.schema_sources?.find(s=>digest&&s.kind==='xsd'&&s.sha256===digest):null;
+  const name=url=>decodeURIComponent(new URL(url).pathname.split('/').pop());
+  const embedded=r.schema_source_type==='wsdl_bridge'||r.archive_url?.includes('#embedded=');
+  const manual=origin?.startsWith('manual:');
+  const publication=r.schema_source_type==='wsdl'||remote
+   ?{text:'WSDL шлюза СФР',url:service}
+   :{text:origin?(manual?'Загруженный архив ':embedded?'Документ ':'Архив ')+name(origin):r.manual_source?.label||'Источник не указан',url:manual?undefined:origin};
+  return {
+   page:{text:r.schema_publication_page?'Страница СФР ('+new URL(r.schema_publication_page).host+new URL(r.schema_publication_page).pathname+')':'Страница публикации не сохранена',url:r.schema_publication_page},
+   publication,
+   container:embedded&&!remote?(r.archive_url.includes('#schema-')?'Схема в тексте документа':r.schema_source_type==='wsdl_bridge'?'Вложенная XSD':r.archive_name||'Вложенная XSD'):'',
+   file:{text:path||'Файл XSD не указан',url:remote?.url||compared?.download||r.schema_file_download},
+   wsdl:r.schema_source_type==='wsdl_bridge'&&!remote?{text:service||'Источник зависимостей не указан',url:service}:null
+  };
+ }
  function createWorkbook(ExcelJS,rows,{number='',env='',baseURL,createdAt=new Date()}={}){
   const workbook=new ExcelJS.Workbook();workbook.creator='Справочник СЭДО';workbook.created=createdAt;
   const sheet=workbook.addWorksheet('Замечания',{views:[{state:'frozen',ySplit:1}]});
   const columns=[
    ['Сообщение',14],['Контур',20],['Версия документа',18],['Спецификация',65],
    ['Замечание',28],['Место в спецификации',60],['В спецификации',65],
-   ['Место в XSD',60],['В XSD',65],['Последствие',60],['Первоисточник XSD',65],
-   ['Зависимости WSDL',65],['Файл XSD',65],['Открыть сообщение',32]
+   ['Место в XSD',60],['В XSD',65],['Последствие',60],['Страница публикации СФР',65],
+   ['Архив, документ или WSDL с XSD',65],['Файл XSD',65],['Зависимости WSDL',65],
+   ['Открыть сообщение',32],['Дата спецификации',22],['Расположение схемы в документе',42],['Основная схема сообщения',65]
   ];
   sheet.columns=columns.map(([header,width])=>({header,width}));
   for(const {revision:r,finding:f} of rows){
-   const origin=r.schema_source_type==='wsdl'?r.schema_source_url:r.archive_url?.split('#')[0];
+   const sources=schemaSources(r,f),cell=s=>s?link(s.text,s.url,baseURL):'';
    const values=[r.number,envNames[r.environment],r.document_version||'',link(documentName(r),r.document_url||r.document_download,baseURL),
     f.kind,f.location,f.spec,f.xlocation,f.xsd,f.impact,
-    link(origin||r.manual_source?.label||'Источник не указан',origin,baseURL),
-    r.schema_source_type==='wsdl_bridge'?link(r.schema_source_url,r.schema_source_url,baseURL):'',
-    r.schema_path||'',link('Сообщение '+r.number,'index.html#'+new URLSearchParams({message:r.number,env:r.environment,rev:r.revision_id}),baseURL)];
+    cell(sources.page),cell(sources.publication),cell(sources.file),cell(sources.wsdl),
+    link('Сообщение '+r.number,'index.html#'+new URLSearchParams({message:r.number,env:r.environment,rev:r.revision_id}),baseURL),
+    r.label_date||'',sources.container,r.schema_path||''];
    for(const value of values)if(typeof value==='string'&&value.length>32767)throw Error('Текст превышает лимит ячейки Excel. Выгрузка остановлена без обрезки.');
    const row=sheet.addRow(values);
    row.alignment={vertical:'top',wrapText:true};
@@ -91,8 +125,27 @@
     a.href='#'+new URLSearchParams({message:r.number,env:r.environment,rev:r.revision_id});identity.append(a);
     const source=el('td'),doc=el(r.document_url||r.document_download?'a':'span',documentName(r));
     if(doc.tagName==='A'){doc.href=r.document_url||r.document_download;doc.target='_blank';doc.rel='noopener'}
-    source.append(doc,el('p','Версия '+(r.document_version||'не указана'),'meta'));
+    source.append(doc,el('p','Версия '+(r.document_version||'не указана')+(r.label_date?' · '+r.label_date:''),'meta'));
     const spec=el('td'),schema=el('td');spec.append(el('p',f.spec),el('p',f.location,'meta'));schema.append(el('p',f.xsd),el('p',f.xlocation,'meta'));
+    const chain=el('p','Первоисточник XSD · ','meta review-source-chain'),sources=schemaSources(r,f);
+    const steps=[sources.page,sources.publication,...(sources.container?[{text:sources.container}]:[]),sources.file];
+    for(const [index,step] of steps.entries()){
+     if(index)chain.append(document.createTextNode(' → '));
+     const resolved=link(step.text,step.url,location.href);
+     const item=el(typeof resolved==='object'?'a':'span',step.text);
+     if(typeof resolved==='object'){item.href=resolved.hyperlink;item.target='_blank';item.rel='noopener'}
+     chain.append(item);
+    }
+    if(sources.wsdl){
+     chain.append(document.createTextNode(' · Зависимости из '));
+     const resolved=link('WSDL шлюза СФР',sources.wsdl.url,location.href);
+     const item=el(typeof resolved==='object'?'a':'span','WSDL шлюза СФР');
+     if(typeof resolved==='object'){item.href=resolved.hyperlink;item.target='_blank';item.rel='noopener'}
+     chain.append(item);
+    }
+    schema.append(chain);
+    if(sources.file.text!==r.schema_path)schema.append(el('p','Основная схема сообщения · '+r.schema_path,'meta'));
+    for(const target of fieldLinks(r,f)){const a=el('a',target.text,'source');a.href=target.href;schema.append(el('br'),a)}
     row.append(identity,source,el('td',f.kind),spec,schema,el('td',f.impact));body.append(row);
    }
    table.append(body);result.append(table);
@@ -111,7 +164,7 @@
   };
   render();
  }
- const api={collect,filter,createWorkbook,mount};
+ const api={collect,filter,createWorkbook,mount,schemaSources,fieldLinks};
  if(typeof module==='object'&&module.exports)module.exports=api;
  else root.SedoReviewJournal=api;
 })(typeof window==='undefined'?globalThis:window);

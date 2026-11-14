@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns="urn:ru:fss:integration:types:dic:SpecialZone:v01"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="urn:ru:fss:integration:types:dic:SpecialZone:v01"
+    elementFormDefault="qualified"
+    version="1.0"
+>
+
+<xs:element name="specialZone" type="SpecialZoneType"/>
+<xs:simpleType name="SpecialZoneType">
+    <xs:annotation>
+        <xs:documentation>
+            Нормативный справочник: "Особые зоны"
+        </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+        <xs:enumeration value="1">
+            <xs:annotation>
+                <xs:documentation>Зона с правом на отселение</xs:documentation>
+            </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="2">
+            <xs:annotation>
+                <xs:documentation>Зона с льготным социально-экономическим статусом</xs:documentation>
+            </xs:annotation>
+        </xs:enumeration>
+        <xs:enumeration value="3">
+            <xs:annotation>
+                <xs:documentation>Зона отселения</xs:documentation>
+            </xs:annotation>
+        </xs:enumeration>
+    </xs:restriction>
+</xs:simpleType>
+
+</xs:schema>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:types:dic:changeReasons:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ru:ecp:integration:types:dic:changeReasons:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:simpleType name="changeReasons">
+		<xs:annotation>
+			<xs:documentation>
+                Справочник: "Причина изменения"
+            </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Представлены дополнительные сведения о выплатах в расчетном периоде</xs:documentation>
+					<xs:documentation>Причина может быть выбрана при перерасчете или корректировке</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="2">
+				<xs:annotation>
+					<xs:documentation>Поступление от застрахованного лица заявления о замене одного года или двух лет  расчетного периода предшествующими годами</xs:documentation>
+					<xs:documentation>Причина может быть выбрана при перерасчете или корректировке</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="3">
+				<xs:annotation>
+					<xs:documentation>По результатам документальной выездной (камеральной) проверки</xs:documentation>
+					<xs:documentation>Причина может быть выбрана при перерасчете</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Перерасчет листка нетрудоспособности при признании несчастного случая на производстве страховым</xs:documentation>
+					<xs:documentation>Причина может быть выбрана при перерасчете</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>По вине страхователя/страховщика</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>Иное - заполнить поле комментария (элемент note)</xs:documentation>
+					<xs:documentation>Причина может быть выбрана при перерасчете или корректировке</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="10">
+				<xs:annotation>
+					<xs:documentation>По решению суда</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

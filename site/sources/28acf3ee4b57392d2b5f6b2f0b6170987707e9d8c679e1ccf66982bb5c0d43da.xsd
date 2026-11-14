@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        xmlns="http://www.fss.ru/integration/types/proactive/type/v01"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.fss.ru/integration/types/proactive/type/v01"
+        elementFormDefault="qualified">
+
+    <xs:simpleType name="paymentMethodType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="oneInsurerAssignment">
+                <xs:annotation>
+                    <xs:documentation>Назначение пособия по одному страхователю</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="severalInsurersAssignment">
+                <xs:annotation>
+                    <xs:documentation>Назначение пособия по нескольким страхователям</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="severalTDInsurersAssignment">
+                <xs:annotation>
+                    <xs:documentation>Назначение пособия по нескольким страхователям по ТД</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="oneTDInsurerAssignment">
+                <xs:annotation>
+                    <xs:documentation>Назначение пособия по одному страхователю по ТД</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="oneGPHInsurerAssignment">
+                <xs:annotation>
+                    <xs:documentation>Назначение пособия по одному страхователю по ГПХ</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="oneTDInsurerAssignment_And_oneGPHInsurerAssignment">
+                <xs:annotation>
+                    <xs:documentation>Назначение пособия по одному страхователю по ТД и по одному страхователю по ГПХ</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="severalTDInsurersAssignment_And_oneGPHInsurerAssignment">
+                <xs:annotation>
+                    <xs:documentation>Назначение пособия по нескольким страхователям по ТД и по одному страхователю по ГПХ</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="severalInsurersInTwoPrevYearAssignment">
+                <xs:annotation>
+                    <xs:documentation>Назначение по нескольким страхователям, у которых застрахованный работал в 2-х предшествующих годах</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by BFT-Razrabotka (BFT-Razrabotka) -->
+<xs:schema xmlns="urn:ru:ecp:integration:types:dic:exclperiodstypes:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ru:ecp:integration:types:dic:exclperiodstypes:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:simpleType name="exclPeriodsType">
+		<xs:annotation>
+			<xs:documentation>
+                Справочник: "Виды исключаемых периодов по ВН"
+            </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1">
+				<xs:annotation>
+					<xs:documentation>Период отстранения от работы в соответствии с законодательством Российской Федерации, если за этот период не начисляется заработная плата</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="4">
+				<xs:annotation>
+					<xs:documentation>Иное - заполнить поле комментария (элемент note)</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="5">
+				<xs:annotation>
+					<xs:documentation>Период освобождения работника от работы с полным или частичным сохранением заработной платы или без оплаты в соответствии с законодательством Российской Федерации, за исключением случаев утраты трудоспособности работником вследствие заболевания или травмы в период ежегодного оплачиваемого отпуска</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="6">
+				<xs:annotation>
+					<xs:documentation>Период заключения под стражу</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="7">
+				<xs:annotation>
+					<xs:documentation>Период административного ареста</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="8">
+				<xs:annotation>
+					<xs:documentation>Период проведения судебно-медицинской экспертизы</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="9">
+				<xs:annotation>
+					<xs:documentation>Период осуществления работы, в том числе дистанционно</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="10">
+				<xs:annotation>
+					<xs:documentation>Период оплаты 3-х дней за счет страхователя</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

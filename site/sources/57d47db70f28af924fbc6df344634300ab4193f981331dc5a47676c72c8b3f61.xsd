@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+	targetNamespace="http://www.fss.ru/integration/types/commonUq/v01"
+	xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns="http://www.fss.ru/integration/types/commonUq/v01"
+    elementFormDefault="unqualified"
+    attributeFormDefault="unqualified">
+
+	<xs:annotation>
+		<xs:documentation>
+			Типы с неквалифицированными елементами
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="attachment" type="AttachmentType"/>
+	<xs:element name="file" type="AttachmentType"/>
+	<xs:element name="fileInfo" type="FileInfoType"/>
+	<xs:element name="fileUuid" type="xs:string"/>
+
+	<xs:complexType name="AttachmentType">
+		<xs:sequence>
+			<xs:element name="content" type="xs:base64Binary" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						Содержимое файла
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ext" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						Расширение файла
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mimeType" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						Mime-тип файла
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="size" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1" >
+                <xs:annotation>
+                    <xs:documentation>
+                        Название файла
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="FileInfoType">
+		<xs:sequence>
+			<xs:element name="name" type="xs:string" minOccurs="0" maxOccurs="1" >
+				<xs:annotation>
+					<xs:documentation>
+						Название файла
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="ext" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						Расширение файла
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="mimeType" type="xs:string" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation>
+						Mime-тип файла
+					</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="size" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:group name="lkId">
+		<xs:sequence>
+			<xs:element name="id" type="xs:integer"/>
+			<xs:element name="versId" type="xs:integer"/>
+		</xs:sequence>
+	</xs:group>
+
+</xs:schema>
