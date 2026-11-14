@@ -82,7 +82,8 @@ restoreField();
         if not r["ready"]:continue
         fields=field_cache[rid]
         (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8")
-        data=dict(fields=fields,review_sources=review_sources(catalog,r),revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=r.get("archive_name") or unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
+        r["review_sources"]=review_sources(catalog,r)
+        data=dict(fields=fields,review_sources=r["review_sources"],revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=r.get("archive_name") or unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
         (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
         r["viewer_sha256"]=sha((editions/(rid+".html")).read_bytes())
     if catalog.get("updates"):

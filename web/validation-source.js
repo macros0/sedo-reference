@@ -1,7 +1,7 @@
 (function(scope){
 "use strict";
 // Source/draft stay private; read-only rows and editor line-number DOM are bounded.
-function mount(host,document,{onChange=()=>{},onValidate=()=>{}}={}){
+function mount(host,document,{onChange=()=>{},onValidate=()=>{},onReview=()=>{}}={}){
  const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
  const title=node('h3','','XML — локальный просмотр'),info=node('p','source-info'),tools=node('div','source-tools'),lines=node('div','source-lines');
  lines.setAttribute('role','region');lines.setAttribute('aria-label','XML с номерами строк');
@@ -15,7 +15,7 @@ function mount(host,document,{onChange=()=>{},onValidate=()=>{}}={}){
  const edit=node('button','','Редактировать XML'),repeat=node('button','','Проверить исправленный XML');edit.type=repeat.type='button';repeat.hidden=true;repeat.disabled=true;editTools.append(edit,repeat);
  const editNote=node('small','','Правки остаются в этом окне до очистки или закрытия валидатора. Исходный файл не меняется.');
  host.replaceChildren(title,info,editTools,tools,editWrap,lines,editNote);host.hidden=true;
- let text='',count=0,current=1,column=1,ranges=[],hint='',editing=false,hasDraft=false,busy=false;
+ let text='',count=0,current=1,column=1,ranges=[],reviews=[],hint='',editing=false,hasDraft=false,busy=false;
  function countLines(){count=1;for(let i=0;i<text.length;i++)if(text.charCodeAt(i)===10)count++}
  function syncEditorGutter(){
   if(!editing||!count)return;
@@ -38,7 +38,7 @@ function mount(host,document,{onChange=()=>{},onValidate=()=>{}}={}){
 
  edit.onclick=()=>{editing=!editing;if(editing&&!hasDraft){editor.value=text;hasDraft=true}editor.hidden=!editing;editWrap.hidden=!editing;lines.hidden=editing;edit.textContent=editing?'Показать подсветку':'Редактировать XML';repeat.hidden=!hasDraft;setBusy(busy);render(true)};
  repeat.onclick=()=>{if(!repeat.disabled)return onValidate()};
- editor.oninput=()=>{hasDraft=true;text=editor.value.replace(/\r\n?/g,'\n');countLines();ranges=[];hint='XML изменён — повторите проверку.';const at=point(editor.selectionStart||0);current=at.line;column=at.column;setBusy(false);render(false);onChange()};
+ editor.oninput=()=>{hasDraft=true;text=editor.value.replace(/\r\n?/g,'\n');countLines();ranges=[];reviews=[];hint='XML изменён — повторите проверку.';const at=point(editor.selectionStart||0);current=at.line;column=at.column;setBusy(false);render(false);onChange()};
  editor.onscroll=syncEditorGutter;editor.onclick=editor.onkeyup=editor.onselect=editorPosition;
  const Resize=document.defaultView?.ResizeObserver;if(typeof Resize==='function')new Resize(syncEditorGutter).observe(editor);document.defaultView?.addEventListener?.('resize',syncEditorGutter);
  const clamp=(x,a,b)=>Math.max(a,Math.min(b,Number.isFinite(x)?Math.trunc(x):a));
@@ -51,6 +51,7 @@ function mount(host,document,{onChange=()=>{},onValidate=()=>{}}={}){
   const first=Math.max(1,current-8),last=Math.min(count,first+24),focus=startOf(current)+column-1;let at=startOf(first),selected=null;
   const sorted=[...ranges].sort((a,b)=>a.start-b.start||a.end-b.end),merged=[];
   for(const r of sorted){const prev=merged.at(-1);if(prev&&r.start<prev.end)prev.end=Math.max(prev.end,r.end);else merged.push({start:r.start,end:r.end})}
+  const reviewRanges=reviews.flatMap(location=>location.ranges.map(range=>({...range,field:location.field,path:location.path})));
   lines.replaceChildren();let currentLength=0,currentLeft=0,visibleMarks=0;
   for(let number=first;number<=last;number++){
    let end=text.indexOf('\n',at);if(end<0)end=text.length;
@@ -58,9 +59,17 @@ function mount(host,document,{onChange=()=>{},onValidate=()=>{}}={}){
    const row=node('div','source-row'+(number===current?' source-current':'')),gutter=node('span','source-number',String(number)),code=node('code','source-code');gutter.setAttribute('aria-hidden','true');row.setAttribute('aria-label','Строка '+number);row.tabIndex=-1;
    if(number===current){selected=row;currentLength=length;currentLeft=from}
    if(from)code.append(document.createTextNode('…'));
-   let cursor=begin;
-   for(const r of merged){const a=Math.max(begin,r.start),b=Math.min(finish,r.end);if(a>=b)continue;if(a>cursor)code.append(document.createTextNode(text.slice(cursor,a)));visibleMarks++;const mark=node('mark','xml-error-tag',text.slice(a,b));mark.tabIndex=-1;code.append(mark);if(number===current&&r.start<=focus&&focus<r.end)selected=mark;cursor=b}
-   if(cursor<finish)code.append(document.createTextNode(text.slice(cursor,finish)));if(to<length)code.append(document.createTextNode('…'));
+   const errors=merged.filter(r=>r.start<finish&&r.end>begin),notes=reviewRanges.filter(r=>r.start<finish&&r.end>begin);
+   const cuts=[...new Set([begin,finish,...[...errors,...notes].flatMap(r=>[Math.max(begin,r.start),Math.min(finish,r.end)])])].sort((a,b)=>a-b);
+   for(let i=0;i<cuts.length-1;i++){
+    const a=cuts[i],b=cuts[i+1];if(a===b)continue;
+    const error=errors.some(r=>r.start<=a&&r.end>=b),note=notes.find(r=>r.start<=a&&r.end>=b);
+    let part=document.createTextNode(text.slice(a,b));
+    if(error){const mark=node('mark','xml-error-tag');mark.append(part);mark.tabIndex=-1;part=mark;visibleMarks++}
+    if(note){const button=node('button','xml-review-tag');button.type='button';button.title='Замечания к спецификации · '+note.path;button.setAttribute('aria-label','Показать замечания к полю XML '+note.path);button.append(part);button.onclick=()=>onReview(note.field);part=button}
+    code.append(part);if(number===current&&a<=focus&&focus<b&&(error||note))selected=part;
+   }
+   if(to<length)code.append(document.createTextNode('…'));
    row.append(gutter,code);lines.append(row);at=end+1;
   }
   input.value=String(current);input.max=String(count);navigationState(currentLength,currentLeft);
@@ -83,8 +92,18 @@ function mount(host,document,{onChange=()=>{},onValidate=()=>{}}={}){
   if(editing&&!scroll){const caret=point(editor.selectionStart||0);line=caret.line;col=caret.column}
   go(line,col,scroll);return true;
  }
- function clear(){text='';count=0;current=1;column=1;ranges=[];hint='';editing=hasDraft=busy=false;editor.value='';editor.hidden=true;editWrap.hidden=true;gutterViewport.replaceChildren();gutterViewport.style.height='0px';editWrap.style.gridTemplateColumns='';lines.hidden=false;edit.textContent='Редактировать XML';repeat.hidden=true;repeat.disabled=true;lines.replaceChildren();info.textContent='';input.value='';input.max='1';previous.disabled=next.disabled=left.disabled=right.disabled=true;host.hidden=true}
- return {getEditedSource(){return hasDraft?editor.value:null},setBusy,setSource(source,{preserveEditor=false}={}){if(!preserveEditor||!hasDraft)clear();text=String(source).replace(/\r\n?/g,'\n');if(!text)return;countLines();current=Math.min(current,count);ranges=[];hint='';host.hidden=false;render(false)},setErrors(errors){const first=(errors||[]).find(canShow);if(first)showError(first,null,false);else {ranges=[];hint='';render(false)}},showError,canShow,clear};
+ function setReviews(locations){
+  reviews=(locations||[]).map(location=>({...location,ranges:validRanges({},location).filter(range=>location.path?.includes('/@')?range.kind==='attribute':range.kind!=='attribute')}));
+  render(false);
+ }
+ function showReview(location){
+  const candidates=validRanges({},location).filter(range=>location.path?.includes('/@')?range.kind==='attribute':range.kind!=='attribute');
+  if(!candidates.length)return false;const range=candidates[0],at=point(range.start);
+  ranges=[];hint='Поле с замечаниями к спецификации.';go(at.line,at.column,true);
+  if(editing)editor.setSelectionRange(range.start,range.end);return true;
+ }
+ function clear(){reviews=[];text='';count=0;current=1;column=1;ranges=[];hint='';editing=hasDraft=busy=false;editor.value='';editor.hidden=true;editWrap.hidden=true;gutterViewport.replaceChildren();gutterViewport.style.height='0px';editWrap.style.gridTemplateColumns='';lines.hidden=false;edit.textContent='Редактировать XML';repeat.hidden=true;repeat.disabled=true;lines.replaceChildren();info.textContent='';input.value='';input.max='1';previous.disabled=next.disabled=left.disabled=right.disabled=true;host.hidden=true}
+ return {setReviews,showReview,getEditedSource(){return hasDraft?editor.value:null},setBusy,setSource(source,{preserveEditor=false}={}){if(!preserveEditor||!hasDraft)clear();text=String(source).replace(/\r\n?/g,'\n');if(!text)return;countLines();current=Math.min(current,count);ranges=[];reviews=[];hint='';host.hidden=false;render(false)},setErrors(errors){const first=(errors||[]).find(canShow);if(first)showError(first,null,false);else {ranges=[];hint='';render(false)}},showError,canShow,clear};
 }
 const api={mount};scope.SedoXmlSource=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof self==='object'?self:globalThis);

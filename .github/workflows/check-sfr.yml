@@ -55,7 +55,9 @@ jobs:
           node tests/test_edition_groups.cjs
           node tests/test_browser_validation.cjs
           node tests/test_validation_paths.cjs
+          node tests/test_validation_review_paths.cjs
           node tests/test_validation_source.cjs
+          node tests/test_validation_review_source.cjs
           node tests/test_validation_messages.cjs
           node tests/test_validation_navigation.cjs
       - name: Import verified SourceCraft WSDL snapshots
