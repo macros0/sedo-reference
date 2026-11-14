@@ -84,6 +84,8 @@
    ['Архив, документ или WSDL с XSD',65],['Файл XSD',65],['Зависимости WSDL',65],
    ['Открыть сообщение',32],['Дата спецификации',22],['Расположение схемы в документе',42],['Основная схема сообщения',65]
   ];
+  const fieldCount=rows.reduce((count,{revision,finding})=>Math.max(count,fieldLinks(revision,finding).length),1);
+  for(let i=0;i<fieldCount;i++)columns.push([fieldCount===1?'Открыть поле XSD':'Поле XSD '+(i+1),65]);
   sheet.columns=columns.map(([header,width])=>({header,width}));
   for(const {revision:r,finding:f} of rows){
    const sources=schemaSources(r,f),cell=s=>s?link(s.text,s.url,baseURL):'';
@@ -92,6 +94,11 @@
     cell(sources.page),cell(sources.publication),cell(sources.file),cell(sources.wsdl),
     link('Сообщение '+r.number,'index.html#'+new URLSearchParams({message:r.number,env:r.environment,rev:r.revision_id}),baseURL),
     r.label_date||'',sources.container,r.schema_path||''];
+   const targets=fieldLinks(r,f);
+   for(let i=0;i<fieldCount;i++){
+    const target=targets[i];
+    values.push(target?link(target.text,'index.html'+target.href,baseURL):(i===0?'Поле не определено':''));
+   }
    for(const value of values)if(typeof value==='string'&&value.length>32767)throw Error('Текст превышает лимит ячейки Excel. Выгрузка остановлена без обрезки.');
    const row=sheet.addRow(values);
    row.alignment={vertical:'top',wrapText:true};
