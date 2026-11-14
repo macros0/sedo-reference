@@ -2,7 +2,7 @@ const assert=require('node:assert/strict');
 const journal=require('../web/review-journal.js');
 const ExcelJS=require('../web/vendor/exceljs.min.js');
 const issue={kind:'Кратность',location:'Таблица 2',spec:'=0..1',xlocation:'main.xsd / item',xsd:'1..1',impact:'Обязательное поле'};
-const revision={number:'6',environment:'prod',document_version:'3.1',document_sha256:'doc',archive_sha256:'archive',dependency_digest:'deps',document_url:'https://lk.sfr.gov.ru/spec.docx',archive_url:'https://lk.sfr.gov.ru/xsd.zip',schema_path:'main.xsd',revision_id:'one',schema_review:{findings:[issue]}};
+const revision={number:'6',environment:'prod',document_version:'3.1',label_date:'12.12.2024',document_sha256:'doc',archive_sha256:'archive',dependency_digest:'deps',document_url:'https://lk.sfr.gov.ru/spec.docx',archive_url:'https://lk.sfr.gov.ru/xsd.zip',schema_publication_page:'https://lk.sfr.gov.ru/sedo.html',schema_file_download:'sources/main.xsd',schema_path:'main.xsd',revision_id:'one',schema_review:{findings:[issue]}};
 (async()=>{
  const catalog={revisions:[revision,{...revision,revision_id:'alias'},{...revision,revision_id:'test',environment:'test'},{...revision,revision_id:'changed',dependency_digest:'new'},{...revision,revision_id:'empty',number:'60',schema_review:{findings:[]}}]};
  const rows=journal.collect(catalog);
@@ -15,6 +15,18 @@ const revision={number:'6',environment:'prod',document_version:'3.1',document_sh
  assert.equal(sheet.rowCount,3);assert.equal(sheet.getCell('B2').value,'Продуктивный');
  assert.equal(sheet.getCell('G2').value,'=0..1','source text must stay literal, including formula-like values');
  assert.equal(sheet.getCell('D2').value.hyperlink,revision.document_url);
+ assert.equal(sheet.getCell('K2').value.hyperlink,revision.schema_publication_page);
+ assert.equal(sheet.getCell('L2').value.hyperlink,revision.archive_url);
+ assert.equal(sheet.getCell('M2').value.hyperlink,'https://macros0.github.io/sedo-reference/sources/main.xsd');
+ assert.equal(sheet.getCell('P2').value,revision.label_date);
+ const bridged={...revision,schema_source_type:'wsdl_bridge',archive_url:revision.document_url+'#wsdl=generated',schema_source_url:'https://ecp.sfr.gov.ru/sedo/soap/SedoGateway?wsdl'};
+ const bridge=journal.createWorkbook(ExcelJS,[{revision:bridged,finding:issue}],{baseURL:'https://macros0.github.io/sedo-reference/'}).getWorksheet('Замечания');
+ assert.equal(bridge.getCell('L2').value.hyperlink,revision.document_url);
+ assert.equal(bridge.getCell('N2').value.hyperlink,bridged.schema_source_url);
+ assert.equal(bridge.getCell('Q2').value,'Вложенная XSD');
+ const direct={...revision,schema_source_type:'wsdl',schema_source_url:bridged.schema_source_url,dependencies:[['main.xsd','hash']],schema_sources:[{kind:'xsd',sha256:'hash',url:'https://ecp.sfr.gov.ru/sedo/soap/SedoGateway?xsd=main.xsd'}]};
+ assert.equal(journal.schemaSources(direct).file.url,direct.schema_sources[0].url);
+ assert.equal(journal.schemaSources({...revision,archive_url:'manual:///uploaded.zip'}).publication.url,undefined);
  assert.ok(sheet.autoFilter);assert.equal(sheet.views[0].ySplit,1);
  assert.equal(journal.collect({revisions:[{...revision,schema_review:{findings:[]}}]}).length,0,'updated source removes resolved notices');
  console.log('Journal filters, changed source results, deduplication and Excel roundtrip verified.');

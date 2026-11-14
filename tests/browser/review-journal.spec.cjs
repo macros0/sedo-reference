@@ -9,6 +9,10 @@ test('journal filters match the exported Excel and survive navigation',async({pa
  await expect(rows).toHaveCount(1);
  await expect(rows.first()).toContainText('confirmMessageReadRequest');
  await expect(rows.first()).toContainText('Продуктивный');
+ const chain=rows.first().locator('.review-source-chain');
+ await expect(chain).toContainText('Страница СФР');
+ await expect(chain).toContainText('SedoArm_ЕЦП.xsd');
+ await expect(chain.getByRole('link',{name:'WSDL шлюза СФР',exact:true})).toHaveAttribute('href','https://ecp.sfr.gov.ru/sedo/soap/SedoGateway?wsdl');
  const download=page.waitForEvent('download');
  await page.locator('#review-export').click();
  const result=await download;
@@ -16,6 +20,11 @@ test('journal filters match the exported Excel and survive navigation',async({pa
  const workbook=new ExcelJS.Workbook();await workbook.xlsx.load(require('node:fs').readFileSync(await result.path()));
  const sheet=workbook.getWorksheet('Замечания');
  expect(sheet.rowCount).toBe(2);expect(sheet.getCell('A2').value).toBe('6');expect(sheet.getCell('B2').value).toBe('Продуктивный');
+ expect(sheet.getCell('K2').value.hyperlink).toBe('https://lk.sfr.gov.ru/sedo.html');
+ expect(sheet.getCell('L2').value.hyperlink).toMatch(/^https:\/\/lk.sfr.gov.ru\/.*\.docx$/);
+ expect(sheet.getCell('M2').value.text).toBe('document/SedoArm_ЕЦП.xsd');
+ expect(sheet.getCell('M2').value.hyperlink).toMatch(/\/sources\/[0-9a-f]{64}\.xsd$/);
+ expect(sheet.getCell('N2').value.hyperlink).toBe('https://ecp.sfr.gov.ru/sedo/soap/SedoGateway?wsdl');
  await page.reload();
  await expect(page.locator('#review-env')).toHaveValue('prod');await expect(page.locator('#review-number')).toHaveValue('6');
  await page.locator('#review-env').selectOption('test');
