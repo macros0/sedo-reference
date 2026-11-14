@@ -43,6 +43,7 @@ jobs:
           node tests/test_transitions.cjs
           node tests/test_viewer_sections.cjs
           node tests/test_schema_origin.cjs
+          node tests/test_review_journal.cjs
           node tests/test_cross_message_compare.cjs
           node tests/test_comparison_export.cjs
           node tests/test_comparison_mapping.cjs

@@ -199,9 +199,16 @@ function openValidationField(revision,path){
 let loadedRevision=null;
 function renderRoute(){
  window.SedoValidator?.dispose();
+ const journal=document.getElementById("review-journal");if(journal)journal.hidden=true;
  const p=new URLSearchParams(location.hash.slice(1)),number=p.get("message"),env=p.get("env"),rev=p.get("rev"),field=p.get("field");
  for(const id of ["catalog","versions","viewer","comparison","updates","import-help","error"])$(id).hidden=true;
  $("crumbs").replaceChildren(anchor("Все сообщения",""));
+ if(p.has("remarks")){
+  let section=document.getElementById("review-journal");
+  if(!section){section=node("section");section.id="review-journal";$("versions").after(section)}
+  section.hidden=false;$("crumbs").append(node("span","","/"),node("span","","Журнал замечаний"));
+  document.title="Журнал замечаний · СЭДО";window.SedoReviewJournal.mount(section,catalog,p);return;
+ }
  if(p.has("import")){$("import-help").hidden=false;document.title="Ручная загрузка · СЭДО";return}
  if(p.has("updates")){$("updates").hidden=false;$("crumbs").append(node("span","","/"),node("span","","Журнал обновлений"));document.title="Журнал обновлений · СЭДО";renderUpdates(p);return}
  if(!number){$("catalog").hidden=false;renderMessages();return}
