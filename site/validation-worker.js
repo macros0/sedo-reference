@@ -21,6 +21,7 @@ self.onmessage=async event=>{
   if(parsed.stdout.trim()!==pack.root+'|'+(pack.namespace||'')){self.postMessage({type:'result',valid:false,errors:locations.locate([{root:true,line:index?.[0]?.line||1,message:'Неверный корневой элемент или пространство имён. Ожидается {'+(pack.namespace||'')+'}'+pack.root+'.'}],index,pack.fields||[],pack.field_namespaces||[])});return}
   const result=await runLint(['--nonet','--noout','--schema','message.xsd','input.xml'],files);
   if(![0,3,4].includes(result.code))throw Error('Не удалось выполнить XSD-проверку. '+result.stderr.slice(0,2000));
-  self.postMessage({type:'result',valid:result.code===0,errors:result.code===0?[]:locations.locate(core.errors(result.stderr),index,pack.fields||[],pack.field_namespaces||[])});
+  const reviewLocations=locations.reviewLocations(index,pack.fields||[],pack.field_namespaces||[],event.data.reviewFields||[]);
+  self.postMessage({type:'result',valid:result.code===0,reviewLocations,errors:result.code===0?[]:locations.locate(core.errors(result.stderr),index,pack.fields||[],pack.field_namespaces||[])});
  }catch(error){self.postMessage({type:'result',valid:false,runtime:true,errors:[{line:null,message:String(error.message||error).slice(0,2000)}]})}
 };
