@@ -6,6 +6,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from sync import inspect_file, sha, write
 from schema_review import compare_revision
+from source_provenance import publish_sources
 from edition_groups import group_editions, display_updates, source_updates
 from xsd_bundle import publish_bundles
 HERE=Path(__file__).resolve().parent
@@ -48,6 +49,7 @@ def main():
     site=HERE/"site";editions=site/"editions";editions.mkdir(parents=True,exist_ok=True)
     comparison=site/"fields";comparison.mkdir(exist_ok=True)
     archive_documents(catalog, HERE/"state", site)
+    publish_sources(catalog, HERE/"state", site)
     field_cache={rid:json.loads((HERE/"data/fields"/(rid+".json")).read_bytes())["fields"] for rid,status in statuses.items() if status["status"]=="ready"}
     publish_bundles(catalog, HERE/"state", site, navigation={rid:[f["path"] for f in fields] for rid,fields in field_cache.items()})
     template=(HERE/"viewer-template.html").read_text("utf-8-sig")

@@ -22,29 +22,43 @@ function external(text,url){const a=node("a","source",text);a.href=url;a.target=
 function documentDownload(r){const a=node("a","source","Скачать DOCX");a.href=r.document_download;a.download=r.document_filename;return a}
 function appendSchemaOrigin(card,r){
  if(!r.schema_path)return;
- const file=r.schema_path.split("/").pop(), line=node("p","meta","Первоисточник XSD · ");
+ const file=r.schema_path.split("/").pop(), line=node("p","meta schema-origin","Первоисточник XSD · ");
  const origin=r.archive_url?.split("#")[0], service=r.schema_source_url;
  const filename=url=>decodeURIComponent(new URL(url).pathname.split("/").pop());
+ const step=()=>line.append(document.createTextNode(" → "));
+ if(r.schema_publication_page){
+  line.append(external("Страница СФР ("+new URL(r.schema_publication_page).host+new URL(r.schema_publication_page).pathname+")",r.schema_publication_page));
+  step();
+ }
  if(r.schema_source_type==="wsdl"){
+  if(service){line.append(external("WSDL шлюза СФР",service));step()}
   const digest=r.dependencies?.find(([name])=>name===file)?.[1];
   const original=r.schema_sources?.find(s=>digest&&s.kind==="xsd"&&s.sha256===digest);
   if(original)line.append(external(file,original.url));
-  else {line.append(document.createTextNode(file+" · "));if(service)line.append(external("WSDL шлюза СФР",service))}
- }else if(r.schema_source_type==="wsdl_bridge"||r.archive_url?.includes("#embedded=")){
-  const inline=r.archive_url.includes("#schema-");
-  const attachment=r.archive_url.includes("#embedded=word/embeddings/")?r.archive_name?.replace(/ \(из DOCX\)$/,""):"";
-  const place=inline?"Схема в тексте документа ":file+(attachment&&attachment!==file?" из вложения "+attachment:"")+" в документе ";
-  line.append(document.createTextNode(place),external(filename(origin),origin));
-  if(r.schema_source_type==="wsdl_bridge"&&service)
-   line.append(document.createTextNode(" · Зависимости из "),external("WSDL шлюза СФР ("+new URL(service).hostname+")",service));
- }else if(origin?.startsWith("manual:")){
-  line.append(document.createTextNode(r.schema_path+" · загруженный архив "+filename(origin)));
-  if(r.manual_source?.label)line.append(document.createTextNode(" · "+r.manual_source.label));
- }else if(origin){
-  line.append(document.createTextNode(r.schema_path+" · архив "),external(filename(origin),origin));
+  else line.append(document.createTextNode(file));
  }else{
-  line.append(document.createTextNode(file+" · источник не указан"));
+  if(origin?.startsWith("manual:")){
+   line.append(document.createTextNode("Загруженный архив "+filename(origin)));
+  }else if(origin){
+   const embedded=r.schema_source_type==="wsdl_bridge"||r.archive_url.includes("#embedded=");
+   line.append(external((embedded?"Документ ":"Архив ")+filename(origin),origin));
+   if(embedded){
+    step();
+    const inline=r.archive_url.includes("#schema-");
+    const attachment=r.schema_source_type==="wsdl_bridge"?"":r.archive_name?.replace(/ \(из DOCX\)$/,"");
+    line.append(document.createTextNode(inline?"Схема в тексте документа":attachment&&attachment!==file?"Вложение "+attachment:"Вложенная XSD"));
+   }
+  }
+  step();
+  if(r.schema_file_download){
+   const link=node("a","source",r.schema_path);link.href=r.schema_file_download;link.download=r.schema_file_name||file;
+   link.title="Скачать исходный файл XSD";line.append(link);
+  }else line.append(document.createTextNode(r.schema_path));
+  if(r.schema_source_type==="wsdl_bridge"&&service){
+   line.append(document.createTextNode(" · Зависимости из "),external("WSDL шлюза СФР ("+new URL(service).hostname+")",service));
+  }
  }
+ if(!r.schema_publication_page)line.append(document.createTextNode(origin?.startsWith("manual:")?" · "+(r.manual_source?.label||"Ручная загрузка"):" · Страница публикации не сохранена"));
  card.append(line);
 }
 function appendSchemaReview(container,r){

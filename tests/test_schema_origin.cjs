@@ -36,6 +36,12 @@ const primary = wsdl.schema_sources.find(s => s.kind === 'xsd' && s.sha256 === d
 assert.ok(walk(cardFor(wsdl)).some(x => x.href === primary.url && x.textContent.includes(rootFile)));
 const archived = catalog.revisions.find(r => r.archive_url?.endsWith('.zip'));
 assert.ok(walk(cardFor(archived)).some(x => x.href === archived.archive_url));
+const linked={...archived,schema_publication_page:'https://lk.sfr.gov.ru/prab.html',
+  schema_file_download:'sources/original.xsd',schema_file_name:'Notice.xsd'};
+const chain=walk(cardFor(linked)).find(x=>x.className==='meta schema-origin');
+const links=chain.children.filter(x=>x.tagName==='a'||x.href);
+assert.deepEqual(links.map(x=>x.href),[linked.schema_publication_page,linked.archive_url,linked.schema_file_download]);
+assert.equal(links[2].download,'Notice.xsd');
 const manual = {...archived, source_type:'manual', archive_url:'manual:///my%20schemas.zip', document_url:null};
 assert.ok(walk(cardFor(manual)).some(x => x.textContent.includes('my schemas.zip')));
 assert.ok(!walk(cardFor(manual)).some(x => x.href?.startsWith('manual:')));
