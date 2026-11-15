@@ -21,7 +21,12 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "addDocument",
+        "statementUuid"
+      ]
     },
     {
       "name": "addDocument",
@@ -45,7 +50,14 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "docNmber",
+        "docDate",
+        "docComment",
+        "attachment"
+      ]
     },
     {
       "name": "docNmber",
@@ -124,7 +136,15 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ]
     },
     {
       "name": "content",

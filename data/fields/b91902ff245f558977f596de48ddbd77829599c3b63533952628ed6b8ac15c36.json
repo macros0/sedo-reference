@@ -23,7 +23,14 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "statementID",
+        "msgDate",
+        "status",
+        "errors"
+      ]
     },
     {
       "name": "statementID",
@@ -105,7 +112,12 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "errorCode",
+        "errorMessage"
+      ]
     },
     {
       "name": "errorCode",

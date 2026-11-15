@@ -24,7 +24,16 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insurerInfo",
+        "insuredInfo",
+        "contractsType",
+        "periodInfo",
+        "agreementInsuredPerson",
+        "eln3days"
+      ]
     },
     {
       "name": "insurerInfo",
@@ -47,7 +56,17 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        "emplINN",
+        "emplKPP"
+      ]
     },
     {
       "name": "regNum",
@@ -170,7 +189,14 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "birthDate",
+        "gender"
+      ]
     },
     {
       "name": "snils",
@@ -221,7 +247,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -371,7 +403,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "contractType"
+      ]
     },
     {
       "name": "contractType",
@@ -419,7 +455,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "twoPrevYears",
+        "additionalYears"
+      ]
     },
     {
       "name": "twoPrevYears",
@@ -439,7 +480,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "year"
+      ]
     },
     {
       "name": "year",
@@ -487,7 +532,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "year"
+      ]
     },
     {
       "name": "year",
@@ -556,7 +605,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        "employed",
+        "fired"
+      ]
     },
     {
       "name": "employed",
@@ -596,7 +650,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "firstElnStartDate"
+      ]
     },
     {
       "name": "firstElnStartDate",

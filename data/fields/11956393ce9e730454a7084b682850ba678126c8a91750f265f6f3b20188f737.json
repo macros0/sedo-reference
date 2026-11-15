@@ -23,7 +23,14 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveExpireNotice:v3.0",
       "file": "ProactiveExpireNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "socialAssistNum",
+        "snils",
+        "UUID",
+        "date"
+      ]
     },
     {
       "name": "socialAssistNum",

@@ -31,7 +31,22 @@
       "ns": "http://www.fss.ru/integration/rvz/RvzDocumentsAsv/v01",
       "file": "RustDocumentsAsv.xsd",
       "flags": {},
-      "typeFile": "DocumentType.xsd"
+      "typeFile": "DocumentType.xsd",
+      "contentModel": [
+        "sequence",
+        "department",
+        "idMessage",
+        "regNum",
+        "regNumSFR",
+        "date",
+        "number",
+        "requestDocs",
+        "attachment",
+        "dateDeadline",
+        "organizationSize",
+        "idReport",
+        "idProtocol"
+      ]
     },
     {
       "name": "department",
@@ -53,7 +68,12 @@
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
       "flags": {},
-      "typeFile": "FssDepartment.xsd"
+      "typeFile": "FssDepartment.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "name"
+      ]
     },
     {
       "name": "code",
@@ -229,7 +249,11 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "requestDoc"
+      ]
     },
     {
       "name": "requestDoc",
@@ -350,7 +374,18 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name",
+        "signatureEmpl",
+        "signatureFund",
+        "application"
+      ]
     },
     {
       "name": "content",
@@ -521,7 +556,18 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "description",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name",
+        "signatureEmpl",
+        "signatureFund"
+      ]
     },
     {
       "name": "description",

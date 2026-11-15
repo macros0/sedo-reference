@@ -3,11 +3,13 @@ import json
 import os
 import shutil
 import tempfile
+from contextlib import contextmanager
 from pathlib import Path
 from unittest.mock import patch
 
 import build_site
 from catalog import export
+from collector_snapshots import collector_source
 from fields import build
 from sync import encode, sync, write
 
@@ -107,7 +109,8 @@ def promote(root, stage):
     recover_promotion(root)
 
 
-def run(root):
+@contextmanager
+def update_lock(root):
     root = Path(root).resolve()
     # OS releases the lock even when the process terminates unexpectedly.
     with (root / ".update.lock").open("a+b") as lock:
@@ -121,12 +124,16 @@ def run(root):
         else:
             import fcntl
             fcntl.flock(lock.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        _run(root)
+        recover_promotion(root)
+        yield root
+
+
+def run(root):
+    with update_lock(root) as locked_root:
+        _run(locked_root)
 
 
 def _run(root):
-    root = Path(root).resolve()
-    recover_promotion(root)
     report = root / "update-report.json"
     previous = json.loads((root / "data/catalog.json").read_bytes())
     try:
@@ -170,7 +177,7 @@ def _run(root):
                 missing.append(dict(environment=env,number=number,title=row["title"],reasons=reasons or ["В опубликованных источниках не найдена полная сопоставленная XSD."]))
             write(stage/"data/schema-coverage.json",encode(dict(checked_at=current["checked_at"],numbers_with_trees=len({n for e,n in ready_pairs}),source_checks=wsdl_status,missing=missing)))
             promote(root, stage)
-            result = dict(status="ok", checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics, wsdl_status=wsdl_status, missing_trees=missing,
+            result = dict(status="ok", collector_source=collector_source(), checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics, wsdl_status=wsdl_status, missing_trees=missing,
                           new_messages=[dict(environment=e, number=n) for e,n in new_messages],
                           total_revisions=len(current["revisions"]))
             write(report, encode(result))

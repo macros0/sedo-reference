@@ -14,6 +14,14 @@ assert.deepEqual(compare([field("x")],[field("x",{flags:{fixed:"true"},max:"unbo
 assert.equal(compare(right,left).find(x=>x.path==="root/added").status,"removed");
 assert.throws(()=>compare([field("x"),field("x")],[]),/Неоднозначный/);
 assert.equal(compare([field("u",{alternatives:[{base:"xs:string",facets:[["maxLength","5"]],values:[],flags:{}}]})],[field("u",{alternatives:[{base:"xs:string",facets:[["maxLength","6"]],values:[],flags:{}}]})])[0].changes[0].key,"alternatives");
+const model=(kind,...children)=>field("parent",{contentModel:[kind,...children]});
+assert.deepEqual(compare([model("sequence","a","b")],[model("sequence","b","a")])[0].changes.map(c=>c.key),["contentModel"]);
+assert.equal(compare([model("all","a","b")],[model("all","b","a")]).length,0);
+assert.equal(compare([model("sequence","a","b")],[model("all","a","b")])[0].changes[0].key,"contentModel");
+assert.equal(compare([field("parent")],[model("sequence","a","b")]).length,0,"historical trees lack compositor information");
+assert.equal(compare([model("sequence",["sequence","a","b"],"c")],[model("sequence","a","b","c")]).length,0,"nested sequences preserve the same sibling order");
+assert.equal(compare([model("sequence","a","b")],[model("sequence","a","extra","b")]).length,0,"an added child already has its own result");
+assert.equal(compare([model("sequence",["choice","a","b"],"c")],[model("sequence","c",["choice","a","b"])])[0].changes[0].key,"contentModel");
 const root=path.resolve(__dirname,".."),catalog=JSON.parse(fs.readFileSync(path.join(root,"data/catalog.json"),"utf8"));
 const load=r=>JSON.parse(fs.readFileSync(path.join(root,"data/fields",r.revision_id+".json"),"utf8")).fields;
 const pair=n=>catalog.revisions.filter(r=>r.number===n&&r.status==='matched');

@@ -24,7 +24,16 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "socialAssistNum",
+        [
+          "choice",
+          "procClosedOpenNew",
+          "receivedConfirmationOtherInsurer"
+        ]
+      ]
     },
     {
       "name": "socialAssistNum",
@@ -63,7 +72,12 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "reason",
+        "newSocialAssistNum"
+      ]
     },
     {
       "name": "reason",
@@ -125,7 +139,12 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "paymentMethod",
+        "years"
+      ]
     },
     {
       "name": "paymentMethod",
@@ -197,7 +216,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "year"
+      ]
     },
     {
       "name": "year",
@@ -277,7 +300,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
+      "ns": "",
       "file": "proactiveNotification.xsd",
       "flags": {
         "processContents": "skip"

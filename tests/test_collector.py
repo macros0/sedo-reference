@@ -49,6 +49,29 @@ class CollectorTests(unittest.TestCase):
             self.assertIsNone(load_library(base, "prod"))
             self.assertEqual(load_library(base, "test"), manifest["library"])
 
+    def test_pages_collector_entry_recovers_before_reading_current_snapshot(self):
+        import os
+        import shutil
+        import subprocess
+        import sys
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            recovery = root / ".update-recovery"
+            previous = recovery / "previous/state"
+            (previous / "snapshots").mkdir(parents=True)
+            (previous / "current.json").write_bytes(encode({"snapshot": "old"}))
+            (previous / "snapshots/old.json").write_bytes(encode({"entries": []}))
+            (recovery / "journal.json").write_bytes(encode({"state": True, "data": False, "site": False}))
+            project = Path(__file__).resolve().parents[1]
+            entry = root / "collector_snapshots.py"
+            shutil.copyfile(project / entry.name, entry)
+            result = subprocess.run([sys.executable, "-B", str(entry)], cwd=root,
+                                    env=dict(os.environ, PYTHONPATH=str(project), SEDO_COLLECTOR_SOURCE="sourcecraft"),
+                                    capture_output=True, text=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertFalse(recovery.exists())
+            self.assertTrue((root / "state/snapshots/old.json").is_file())
+
     def test_publisher_noop_atomic_commit_and_retry_preserve_concurrent_tree(self):
         manifest, objects = self.capture()
         api = FakeAPI()
@@ -57,6 +80,46 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(api.parents, ["head1", "head2"])
         self.assertTrue(all(p.startswith(("state/objects/", "state/collector/test/")) for p in api.uploaded))
         self.assertFalse(publish_inputs(api, [manifest], objects))
+
+    def test_home_publisher_sets_pointer_on_return_to_archived_content(self):
+        from tests.test_collector_feed import FeedTests
+        api = FakeAPI()
+        fixture = FeedTests()
+        a, ao = fixture.capture()
+        b, bo = fixture.capture(True)
+        publish_inputs(api, [a], ao)
+        publish_inputs(api, [b], bo)
+        self.assertTrue(publish_inputs(api, [a], ao))
+        name = "state/collector/test/current"
+        self.assertEqual(api.blobs[api.tree[name]].decode().strip(), a["content_id"])
+        self.assertFalse(publish_inputs(api, [a], ao))
+
+    def test_retry_keeps_another_home_writers_newer_pointer_and_archives_our_inputs(self):
+        from tests.test_collector_feed import FeedTests
+        from urllib.error import HTTPError
+
+        pointer = "state/collector/test/current"
+        first_pointer = "a" * 40
+        newer_pointer = "b" * 40
+
+        class ConcurrentPublisher(FakeAPI):
+            def __call__(self, method, path, payload=None):
+                if path.startswith("git/trees/"):
+                    return {"tree": [{"path": pointer, "type": "blob", "sha": self.tree[pointer]}]}
+                try:
+                    return super().__call__(method, path, payload)
+                except HTTPError:
+                    self.tree = {pointer: newer_pointer}
+                    raise
+
+        fixture = FeedTests()
+        a, objects = fixture.capture()
+        api = ConcurrentPublisher()
+        api.tree[pointer] = first_pointer
+        self.assertTrue(publish_inputs(api, [a], objects))
+        self.assertEqual(api.tree[pointer], newer_pointer)
+        self.assertIn("state/collector/test/" + a["content_id"] + ".json", api.tree)
+        self.assertIn("state/objects/" + a["library"]["sha256"], api.tree)
 
     def test_publisher_rejects_forged_input_before_api_calls(self):
         manifest, objects = self.capture()
@@ -125,6 +188,8 @@ class FakeAPI:
         self.updates = 0
         self.parents = []
         self.uploaded = set()
+        self.tree = {}
+        self.blobs = {}
         self.committed = False
     def __call__(self, method, path, payload=None):
         if path == "git/ref/heads/main":
@@ -132,11 +197,17 @@ class FakeAPI:
         if path.startswith("git/commits/"):
             return {"tree": {"sha": "tree"}}
         if path.startswith("git/trees/"):
-            return {"tree": [{"path": p, "type": "blob"} for p in self.uploaded] if self.committed else [], "truncated": False}
+            return {"tree": [{"path": p, "type": "blob", "sha": self.tree[p]} for p in self.uploaded] if self.committed else [], "truncated": False}
         if path == "git/blobs":
-            return {"sha": "blob"}
+            import base64
+            import hashlib
+            raw = base64.b64decode(payload["content"])
+            digest = hashlib.sha1(b"blob " + str(len(raw)).encode() + b"\0" + raw).hexdigest()
+            self.blobs[digest] = raw
+            return {"sha": digest}
         if path == "git/trees":
             self.uploaded.update(x["path"] for x in payload["tree"])
+            self.tree.update((x["path"], x["sha"]) for x in payload["tree"])
             return {"sha": "newtree"}
         if path == "git/commits":
             self.parents.extend(payload["parents"])

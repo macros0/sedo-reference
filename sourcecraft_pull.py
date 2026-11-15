@@ -5,6 +5,7 @@ import subprocess
 from pathlib import Path
 from urllib.request import Request, urlopen
 
+from auto_update import update_lock
 from collector_feed import import_feed
 
 REPOSITORY = "https://git@git.sourcecraft.dev/alexey-sagitov/sedo-xsd-collector.git"
@@ -12,6 +13,11 @@ RAW = "https://raw.sourcecraft.tech/raw/alexey-sagitov/sedo-xsd-collector/"
 
 
 def pull(root):
+    with update_lock(root) as locked_root:
+        return _pull(locked_root)
+
+
+def _pull(root):
     result = subprocess.run(["git", "-c", "credential.helper=", "ls-remote", REPOSITORY,
                              "refs/heads/snapshots"], check=True, capture_output=True, text=True, timeout=60)
     rows = result.stdout.strip().splitlines()

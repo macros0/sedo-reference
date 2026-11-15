@@ -19,7 +19,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "event"
+      ]
     },
     {
       "name": "event",
@@ -43,7 +47,18 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "category",
+        [
+          "choice",
+          "childCareVocation",
+          "birthChild",
+          "elnClosed",
+          "recalculation"
+        ]
+      ]
     },
     {
       "name": "category",
@@ -102,7 +117,14 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredInfo",
+        "childInfo",
+        "baseDocuments",
+        "contractsType"
+      ]
     },
     {
       "name": "insuredInfo",
@@ -126,7 +148,14 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "birthDate",
+        "childRelType"
+      ]
     },
     {
       "name": "snils",
@@ -177,7 +206,13 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -343,7 +378,17 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "birthDate",
+        [
+          "sequence",
+          "snils",
+          "gender"
+        ]
+      ]
     },
     {
       "name": "fullName",
@@ -366,7 +411,13 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -545,7 +596,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "vocationPeriod",
+        "identityDocument"
+      ]
     },
     {
       "name": "vocationPeriod",
@@ -566,7 +622,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -624,7 +685,16 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "birthCertificate",
+          "birthDocOtherCountry"
+        ],
+        "birthRecord"
+      ]
     },
     {
       "name": "birthCertificate",
@@ -648,7 +718,14 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "issueDate",
+        "issuer"
+      ]
     },
     {
       "name": "series",
@@ -759,7 +836,14 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "issueDate",
+        "issuer"
+      ]
     },
     {
       "name": "series",
@@ -872,7 +956,12 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "number",
@@ -933,7 +1022,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "contractType"
+      ]
     },
     {
       "name": "contractType",
@@ -984,7 +1077,14 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredInfo",
+        "childInfo",
+        "baseDocuments",
+        "contractsType"
+      ]
     },
     {
       "name": "insuredInfo",
@@ -1008,7 +1108,14 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "birthDate",
+        "childRelType"
+      ]
     },
     {
       "name": "snils",
@@ -1059,7 +1166,13 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -1225,7 +1338,17 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "birthDate",
+        [
+          "sequence",
+          "snils",
+          "gender"
+        ]
+      ]
     },
     {
       "name": "fullName",
@@ -1248,7 +1371,13 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -1426,7 +1555,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "identityDocument"
+      ]
     },
     {
       "name": "identityDocument",
@@ -1448,7 +1581,16 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "birthReference",
+          "birthDocOtherCountry"
+        ],
+        "birthRecord"
+      ]
     },
     {
       "name": "birthReference",
@@ -1471,7 +1613,14 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "number",
+        "issueDate",
+        "issuer",
+        "refType"
+      ]
     },
     {
       "name": "number",
@@ -1600,7 +1749,14 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "issueDate",
+        "issuer"
+      ]
     },
     {
       "name": "series",
@@ -1713,7 +1869,12 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "number",
@@ -1774,7 +1935,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "contractType"
+      ]
     },
     {
       "name": "contractType",
@@ -1825,7 +1990,14 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredInfo",
+        "lnCode",
+        "insuranceCaseState",
+        "contractsType"
+      ]
     },
     {
       "name": "insuredInfo",
@@ -1845,7 +2017,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils"
+      ]
     },
     {
       "name": "snils",
@@ -1935,7 +2111,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "contractType"
+      ]
     },
     {
       "name": "contractType",
@@ -1983,7 +2163,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "batchNo"
+      ]
     },
     {
       "name": "batchNo",

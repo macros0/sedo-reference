@@ -20,7 +20,10 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "SedoArm_ЕЦП.xsd"
+      "typeFile": "SedoArm_ЕЦП.xsd",
+      "contentModel": [
+        "sequence"
+      ]
     }
   ]
 }

@@ -26,7 +26,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "choice",
+        "primarySttmnt",
+        "recalcSttmnt",
+        "correctSttmnt"
+      ]
     },
     {
       "name": "primarySttmnt",
@@ -52,7 +58,20 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "conformRules",
+        "orgInfo",
+        "paymentInfo",
+        [
+          "choice",
+          "workerList",
+          "workerListOPK",
+          "workerListDisability"
+        ],
+        "note"
+      ]
     },
     {
       "name": "conformRules",
@@ -93,7 +112,19 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "legalEntity",
+          "ip"
+        ],
+        [
+          "sequence",
+          "compliance"
+        ]
+      ]
     },
     {
       "name": "legalEntity",
@@ -120,7 +151,23 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "inn",
+        "kpp",
+        "ogrn",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        [
+          "choice",
+          "publicOrganizationDisability",
+          "founderFizlicoDocument"
+        ]
+      ]
     },
     {
       "name": "inn",
@@ -279,7 +326,14 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "name",
+        "inn",
+        "kpp",
+        "ogrn"
+      ]
     },
     {
       "name": "name",
@@ -413,7 +467,18 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "lastName",
+        "firstName",
+        "middleName",
+        "seria",
+        "number",
+        "certificateDate",
+        "soglasie"
+      ]
     },
     {
       "name": "snils",
@@ -643,7 +708,21 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "lastName",
+        "firstName",
+        "middleName",
+        "inn",
+        "ogrn",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        "founderDisabilityDocument"
+      ]
     },
     {
       "name": "lastName",
@@ -862,7 +941,14 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "seria",
+        "number",
+        "certificateDate"
+      ]
     },
     {
       "name": "snils",
@@ -986,7 +1072,14 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "orgPOE",
+        "orgDefinedAreas",
+        "avgRegion",
+        "largeProject"
+      ]
     },
     {
       "name": "orgPOE",
@@ -1080,7 +1173,12 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "choice",
+        "bankInfo",
+        "cardMir"
+      ]
     },
     {
       "name": "bankInfo",
@@ -1103,7 +1201,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "bik",
+        "corAccNum",
+        "accountNum"
+      ]
     },
     {
       "name": "bik",
@@ -1239,7 +1343,11 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "worker"
+      ]
     },
     {
       "name": "worker",
@@ -1272,7 +1380,23 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "rowNum",
+        "lastName",
+        "firstName",
+        "middleName",
+        "birthDate",
+        "gender",
+        "snils",
+        "insurenceSum",
+        "regionRate",
+        "orderDate",
+        "orderNum",
+        "contractDate",
+        "beganWorking"
+      ]
     },
     {
       "name": "rowNum",
@@ -1668,7 +1792,11 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "worker"
+      ]
     },
     {
       "name": "worker",
@@ -1707,7 +1835,35 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "rowNum",
+          "lastName",
+          "firstName",
+          "middleName",
+          "birthDate",
+          "gender",
+          "snils",
+          "insurenceSum",
+          "regionRate",
+          "orderDate",
+          "orderNum",
+          "contractDate",
+          "beganWorking"
+        ],
+        [
+          "sequence",
+          "SZNname",
+          "SZNbegin",
+          "SZNend",
+          "profession",
+          "confirmation",
+          "movingMoreThan50km"
+        ]
+      ]
     },
     {
       "name": "rowNum",
@@ -2237,7 +2393,11 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "worker"
+      ]
     },
     {
       "name": "worker",
@@ -2271,7 +2431,30 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "rowNum",
+          "lastName",
+          "firstName",
+          "middleName",
+          "birthDate",
+          "gender",
+          "snils",
+          "insurenceSum",
+          "regionRate",
+          "orderDate",
+          "orderNum",
+          "contractDate",
+          "beganWorking"
+        ],
+        [
+          "sequence",
+          "certificateOfDisability"
+        ]
+      ]
     },
     {
       "name": "rowNum",
@@ -2669,7 +2852,13 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "seria",
+        "number",
+        "certificateDate"
+      ]
     },
     {
       "name": "seria",
@@ -2793,7 +2982,18 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sttmntNumber",
+        [
+          "choice",
+          "workerList",
+          "workerListOPK",
+          "workerListDisability"
+        ],
+        "note"
+      ]
     },
     {
       "name": "sttmntNumber",
@@ -2841,7 +3041,11 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "worker"
+      ]
     },
     {
       "name": "worker",
@@ -2874,7 +3078,23 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "rowNum",
+        "lastName",
+        "firstName",
+        "middleName",
+        "birthDate",
+        "gender",
+        "snils",
+        "insurenceSum",
+        "regionRate",
+        "orderDate",
+        "orderNum",
+        "contractDate",
+        "beganWorking"
+      ]
     },
     {
       "name": "rowNum",
@@ -3270,7 +3490,11 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "worker"
+      ]
     },
     {
       "name": "worker",
@@ -3309,7 +3533,35 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "rowNum",
+          "lastName",
+          "firstName",
+          "middleName",
+          "birthDate",
+          "gender",
+          "snils",
+          "insurenceSum",
+          "regionRate",
+          "orderDate",
+          "orderNum",
+          "contractDate",
+          "beganWorking"
+        ],
+        [
+          "sequence",
+          "SZNname",
+          "SZNbegin",
+          "SZNend",
+          "profession",
+          "confirmation",
+          "movingMoreThan50km"
+        ]
+      ]
     },
     {
       "name": "rowNum",
@@ -3839,7 +4091,11 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "worker"
+      ]
     },
     {
       "name": "worker",
@@ -3873,7 +4129,30 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "rowNum",
+          "lastName",
+          "firstName",
+          "middleName",
+          "birthDate",
+          "gender",
+          "snils",
+          "insurenceSum",
+          "regionRate",
+          "orderDate",
+          "orderNum",
+          "contractDate",
+          "beganWorking"
+        ],
+        [
+          "sequence",
+          "certificateOfDisability"
+        ]
+      ]
     },
     {
       "name": "rowNum",
@@ -4271,7 +4550,13 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "seria",
+        "number",
+        "certificateDate"
+      ]
     },
     {
       "name": "seria",
@@ -4393,7 +4678,13 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sttmntNumber",
+        "paymentInfo",
+        "note"
+      ]
     },
     {
       "name": "sttmntNumber",
@@ -4443,7 +4734,12 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "choice",
+        "bankInfo",
+        "cardMir"
+      ]
     },
     {
       "name": "bankInfo",
@@ -4466,7 +4762,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "bik",
+        "corAccNum",
+        "accountNum"
+      ]
     },
     {
       "name": "bik",

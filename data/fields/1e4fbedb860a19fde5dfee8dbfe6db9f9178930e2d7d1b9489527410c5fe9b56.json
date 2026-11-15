@@ -25,7 +25,13 @@
       ],
       "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:response:v3.0",
       "file": "NoticeTermination05Response.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "status",
+        "errorList",
+        "warnList"
+      ]
     },
     {
       "name": "status",
@@ -50,7 +56,7 @@
         ]
       ],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:response:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Response.xsd",
       "flags": {},
       "typeFile": "NoticeTermination05Response.xsd"
@@ -71,9 +77,13 @@
       "children": [
         3
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:response:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Response.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -93,10 +103,16 @@
         5,
         6
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:response:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Response.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -195,9 +211,13 @@
       "children": [
         8
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:response:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Response.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "warn"
+      ]
     },
     {
       "name": "warn",
@@ -217,10 +237,16 @@
         10,
         11
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:response:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Response.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -387,7 +413,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:response:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Response.xsd",
       "flags": {
         "processContents": "skip"

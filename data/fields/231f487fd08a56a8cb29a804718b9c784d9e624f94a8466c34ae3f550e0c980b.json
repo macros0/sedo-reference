@@ -20,7 +20,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
-      "typeFile": "PaymentState.xsd"
+      "typeFile": "PaymentState.xsd",
+      "contentModel": [
+        "sequence",
+        "resiveId"
+      ]
     },
     {
       "name": "resiveId",

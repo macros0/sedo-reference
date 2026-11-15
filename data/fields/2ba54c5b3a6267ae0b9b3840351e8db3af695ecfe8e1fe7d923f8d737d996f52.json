@@ -21,7 +21,12 @@
       "ns": "http://www.fss.ru/integration/types/fault/v01",
       "file": "Fault.xsd",
       "flags": {},
-      "typeFile": "Fault.xsd"
+      "typeFile": "Fault.xsd",
+      "contentModel": [
+        "sequence",
+        "uuidInbound",
+        "faultList"
+      ]
     },
     {
       "name": "uuidInbound",
@@ -65,7 +70,11 @@
       ],
       "ns": "http://www.fss.ru/integration/types/fault/v01",
       "file": "Fault.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fault"
+      ]
     },
     {
       "name": "fault",
@@ -88,7 +97,13 @@
       "ns": "http://www.fss.ru/integration/types/fault/v01",
       "file": "Fault.xsd",
       "flags": {},
-      "typeFile": "Fault.xsd"
+      "typeFile": "Fault.xsd",
+      "contentModel": [
+        "sequence",
+        "uuid",
+        "code",
+        "message"
+      ]
     },
     {
       "name": "uuid",

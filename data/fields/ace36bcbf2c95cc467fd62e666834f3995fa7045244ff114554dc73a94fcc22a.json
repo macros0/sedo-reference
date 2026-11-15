@@ -23,7 +23,13 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "status",
+        "protocol"
+      ]
     },
     {
       "name": "snils",
@@ -104,7 +110,11 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "item"
+      ]
     },
     {
       "name": "item",
@@ -127,7 +137,14 @@
       ],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "mnemonic",
+        "level",
+        "text",
+        "description"
+      ]
     },
     {
       "name": "mnemonic",

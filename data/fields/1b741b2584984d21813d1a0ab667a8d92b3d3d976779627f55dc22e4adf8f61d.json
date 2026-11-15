@@ -25,7 +25,12 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:result:v3.0",
       "file": "DisabilityChildrenStatementResult.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatementResult.xsd"
+      "typeFile": "DisabilityChildrenStatementResult.xsd",
+      "contentModel": [
+        "sequence",
+        "status",
+        "errorList"
+      ]
     },
     {
       "name": "status",
@@ -77,7 +82,11 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:result:v3.0",
       "file": "DisabilityChildrenStatementResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -100,7 +109,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:result:v3.0",
       "file": "DisabilityChildrenStatementResult.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -267,7 +282,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:result:v3.0",
+      "ns": "",
       "file": "DisabilityChildrenStatementResult.xsd",
       "flags": {
         "processContents": "skip"

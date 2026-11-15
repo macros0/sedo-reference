@@ -27,7 +27,18 @@
       ],
       "ns": "urn:ru:ecp:integration:vnim:notice:responseResult:v3.0",
       "file": "NoticeResponseResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "status",
+        "warnInfo",
+        [
+          "choice",
+          "processedInfo",
+          "errorInfo"
+        ],
+        "*"
+      ]
     },
     {
       "name": "status",
@@ -52,7 +63,7 @@
         ]
       ],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:responseResult:v3.0",
+      "ns": "",
       "file": "NoticeResponseResult.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -74,10 +85,15 @@
         3,
         8
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:responseResult:v3.0",
+      "ns": "",
       "file": "NoticeResponseResult.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "warnList",
+        "*"
+      ]
     },
     {
       "name": "warnList",
@@ -97,7 +113,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "warn"
+      ]
     },
     {
       "name": "warn",
@@ -120,7 +140,13 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -239,9 +265,13 @@
       "children": [
         10
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:responseResult:v3.0",
+      "ns": "",
       "file": "NoticeResponseResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "*"
+      ]
     },
     {
       "name": "*",
@@ -257,7 +287,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:responseResult:v3.0",
+      "ns": "",
       "file": "NoticeResponseResult.xsd",
       "flags": {
         "processContents": "skip"
@@ -280,10 +310,15 @@
         12,
         17
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:responseResult:v3.0",
+      "ns": "",
       "file": "NoticeResponseResult.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "errorList",
+        "*"
+      ]
     },
     {
       "name": "errorList",
@@ -303,7 +338,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -326,7 +365,13 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -443,7 +488,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:responseResult:v3.0",
+      "ns": "",
       "file": "NoticeResponseResult.xsd",
       "flags": {
         "processContents": "skip"
@@ -533,7 +578,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:responseResult:v3.0",
+      "ns": "",
       "file": "NoticeResponseResult.xsd",
       "flags": {
         "processContents": "skip"

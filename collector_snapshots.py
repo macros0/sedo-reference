@@ -1,5 +1,6 @@
 """Validate Russian collector inputs by replaying their complete WSDL closure offline."""
 import json
+import os
 import re
 from datetime import datetime
 from pathlib import Path
@@ -52,17 +53,36 @@ def validate_manifest(manifest, read_object):
     return row
 
 
+def collector_source():
+    source = os.environ.get("SEDO_COLLECTOR_SOURCE") or "sourcecraft"
+    if source not in ("sourcecraft", "home"):
+        raise ValueError("SEDO_COLLECTOR_SOURCE must be sourcecraft or home")
+    return source
+
+
+def _load_pointer(base, environment, pointer):
+    from collector_feed import manifest_path
+    if not DIGEST.fullmatch(pointer):
+        raise ValueError("Invalid current manifest identity")
+    manifest = json.loads((base / manifest_path(environment, pointer)).read_bytes())
+    if manifest["content_id"] != pointer or manifest["environment"] != environment:
+        raise ValueError("Current manifest identity mismatch")
+    return validate_manifest(manifest, lambda h: (base / "objects" / h).read_bytes())
+
+
 def load_library(base, environment):
     base = Path(base)
+    if collector_source() == "home":
+        current = base / "collector" / environment / "current"
+        if not current.is_file():
+            raise ValueError("Home collector has no confirmed pointer for " + environment)
+        return _load_pointer(base, environment, current.read_text("ascii").strip())
     feed = base / "collector/feed.json"
     if feed.exists():
-        from collector_feed import validate_index, manifest_path
+        from collector_feed import validate_index
         pointer = validate_index(json.loads(feed.read_bytes()))["latest"].get(environment)
-        if pointer:
-            manifest = json.loads((base / manifest_path(environment, pointer)).read_bytes())
-            if manifest["content_id"] != pointer or manifest["environment"] != environment:
-                raise ValueError("Feed current manifest identity mismatch")
-            return validate_manifest(manifest, lambda h: (base / "objects" / h).read_bytes())
+        return _load_pointer(base, environment, pointer) if pointer else None
+    # Legacy installations predate both the SourceCraft feed and home pointers.
     manifests = []
     for path in (base / "collector" / environment).glob("*.json"):
         if path.stat().st_size > 1024 * 1024:
@@ -83,17 +103,15 @@ def pending(root):
     snapshot = json.loads((root / "state/snapshots" / (pointer["snapshot"] + ".json")).read_bytes())
     for environment in ("prod", "test"):
         row = load_library(root / "state", environment)
-        if row and not any(r.get("source_type") == "wsdl" and
-                           r["environment"] == environment and r.get("sha256") == row["sha256"]
-                           for r in snapshot["entries"]):
+        if row and not any(entry == row for entry in snapshot["entries"]):
             return True
     return False
 
 
 if __name__ == "__main__":
-    from auto_update import run
-    root = Path(__file__).resolve().parent
-    if pending(root):
-        run(root)
-    else:
-        print("No pending collector inputs; validated current snapshots.")
+    from auto_update import _run, update_lock
+    with update_lock(Path(__file__).resolve().parent) as root:
+        if pending(root):
+            _run(root)
+        else:
+            print("No pending collector inputs; validated current snapshots.")

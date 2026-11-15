@@ -105,7 +105,10 @@ def export(state,target):
                                     previous_revision_id=previous_by_message.get(identity)))
                 added[identity]=row["revision_id"]
             old=versions.get(row["revision_id"])
-            if not old or row.get("source_type")!="manual" or old.get("source_type")=="manual":
+            # A previously observed snapshot can become current again. Keep its
+            # source URL and label even when later history contains the same bytes.
+            may_replace = key == ptr or row["revision_id"] not in current_ids
+            if may_replace and (not old or row.get("source_type")!="manual" or old.get("source_type")=="manual"):
                 if old and old.get("manual_source") and not row.get("manual_source"):
                     row=dict(row,manual_source=old["manual_source"])
                 versions[row["revision_id"]]=row

@@ -3,7 +3,7 @@ from automation_status import build_status
 
 
 def run(number, sha='a'*40, status='completed', conclusion='success', created='2026-11-13T08:00:00Z'):
-    return dict(id=number, head_sha=sha, status=status, conclusion=conclusion,
+    return dict(id=number, head_sha=sha, head_branch='main', path='.github/workflows/pages.yml', status=status, conclusion=conclusion,
                 created_at=created, updated_at='2026-11-13T08:10:00Z',
                 html_url='https://github.com/macros0/sedo-reference/actions/runs/'+str(number))
 
@@ -55,6 +55,21 @@ class AutomationStatusTests(unittest.TestCase):
         self.assertIsNone(result['github']['versions']['count'])
         self.assertEqual(result['github']['publication']['state'],'waiting')
 
+    def test_home_collector_results_do_not_wait_for_sourcecraft(self):
+        reports = {'update-report.json': dict(status='ok', collector_source='home', new_revisions=[]),
+                   'publication-target.json': dict(update_run_id='1', head_sha='a'*40)}
+        result = build_status(dict(latest=dict(complete=True, contours={'prod': dict(content_id='old')})),
+                              [run(1)], [run(2)], reports, {})
+        self.assertEqual(result['collector_source'], 'home')
+        self.assertEqual(result['github']['check']['state'], 'success')
+        self.assertEqual(result['github']['publication']['state'], 'success')
+
+    def test_in_progress_home_mode_visible_before_check_writes_report(self):
+        result = build_status({}, [run(1, status='in_progress', conclusion=None)], [], {}, {},
+                              configured_source='home')
+        self.assertEqual(result['collector_source'], 'home')
+        self.assertEqual(result['github']['check']['state'], 'processing')
+
     def test_artifact_reads_only_named_json_reports(self):
         import io,json,zipfile
         from unittest.mock import patch
@@ -104,3 +119,32 @@ class AutomationStatusTests(unittest.TestCase):
                     publication = collect_status(publication_run_id=2)['github']['publication']
                 self.assertEqual(publication['state'], conclusion)
                 self.assertEqual(publication['finished_at'], final['updated_at'])
+
+    def test_final_refresh_merges_missing_run_and_preserves_newer_matches(self):
+        from automation_status import collect_status
+        from unittest.mock import patch
+
+        check = run(1)
+        final = run(2)
+        newer = run(3, created='2026-11-13T08:05:00Z', conclusion='failure')
+        for listed, direct, wanted in (
+                ([], final, 2), ([newer], final, 3),
+                ([], dict(final, head_branch='feature'), None),
+                ([], dict(final, path='.github/workflows/check-sfr.yml'), None),
+                ([dict(final, run_attempt=2, status='in_progress', conclusion=None)],
+                 dict(final, run_attempt=1), 2)):
+            with self.subTest(listed=listed, direct=direct):
+                responses = {
+                    'actions/workflows/check-sfr.yml/runs?branch=main&per_page=10': {'workflow_runs': [check]},
+                    'actions/workflows/pages.yml/runs?branch=main&per_page=10': {'workflow_runs': listed},
+                    'actions/runs/2': direct,
+                }
+                reports = {'publication-target.json': {'update_run_id': 1, 'head_sha': check['head_sha']},
+                           'update-report.json': {'status': 'ok', 'new_revisions': []}}
+                with patch('automation_status.api', side_effect=responses.__getitem__), \
+                     patch('automation_status.sourcecraft_status', return_value={}), \
+                     patch('automation_status.run_reports', return_value=reports):
+                    result = collect_status(2)['github']['publication']
+                self.assertEqual(result.get('run_id'), wanted)
+                if listed and listed[0].get('run_attempt') == 2:
+                    self.assertEqual(result['state'], 'processing')

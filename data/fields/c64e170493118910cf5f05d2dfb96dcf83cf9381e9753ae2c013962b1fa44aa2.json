@@ -24,7 +24,16 @@
       ],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "noticeData",
+        "moData",
+        "lnData",
+        "senderData",
+        "signatoryData",
+        "fixData"
+      ]
     },
     {
       "name": "noticeData",
@@ -45,7 +54,12 @@
       ],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "noticeDate",
+        "noticeNumber"
+      ]
     },
     {
       "name": "noticeDate",
@@ -103,7 +117,13 @@
       ],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "moName",
+        "ogrn",
+        "moId"
+      ]
     },
     {
       "name": "moName",
@@ -199,7 +219,11 @@
       ],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber"
+      ]
     },
     {
       "name": "lnNumber",
@@ -246,7 +270,14 @@
       ],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "employeeName",
+        "employeeRole",
+        "phone",
+        "tofName"
+      ]
     },
     {
       "name": "employeeName",
@@ -339,7 +370,12 @@
       ],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "signatoryName",
+        "signatoryRole"
+      ]
     },
     {
       "name": "signatoryName",
@@ -395,7 +431,11 @@
       ],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fixes"
+      ]
     },
     {
       "name": "fixes",

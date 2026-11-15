@@ -36,7 +36,20 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "batch_no",
+        "changeRecalcFlag",
+        "prim_batch_no",
+        "recalc_reason",
+        "insurerInfo",
+        "refundSum",
+        "numberRecipients",
+        "certifiedCopiesOrders",
+        "receiversRow",
+        "addInfo"
+      ]
     },
     {
       "name": "batch_no",
@@ -151,7 +164,20 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        "emplKPP",
+        "emplINN",
+        "refNumber",
+        "Empl_Flag",
+        "bankInfo"
+      ]
     },
     {
       "name": "regNum",
@@ -314,7 +340,14 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "bik",
+        "accountNum",
+        "accountNumInFederalExchequer",
+        "kbk"
+      ]
     },
     {
       "name": "bik",
@@ -450,7 +483,13 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "totalSum",
+        "sumForNonBudgetFunds",
+        "sumForAdditionalDays"
+      ]
     },
     {
       "name": "totalSum",
@@ -611,7 +650,14 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "parentInfo",
+        "childInfo",
+        "ORD",
+        "periods"
+      ]
     },
     {
       "name": "parentInfo",
@@ -634,7 +680,13 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "snils",
+        "childRelType"
+      ]
     },
     {
       "name": "fullName",
@@ -657,7 +709,13 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -828,7 +886,20 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "fullName",
+          "snils",
+          "birthDate"
+        ],
+        [
+          "sequence",
+          "certificateOfDisability"
+        ]
+      ]
     },
     {
       "name": "fullName",
@@ -851,7 +922,13 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -1010,7 +1087,15 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "certificateDate",
+        "disabilityBeginDate",
+        "disabilityEndDate"
+      ]
     },
     {
       "name": "series",
@@ -1113,7 +1198,12 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        "notLimited",
+        "endDate"
+      ]
     },
     {
       "name": "notLimited",
@@ -1173,7 +1263,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "number",
+        "date"
+      ]
     },
     {
       "name": "number",
@@ -1235,7 +1330,12 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "additionalPeriods",
+        "accumulatedPeriods"
+      ]
     },
     {
       "name": "additionalPeriods",
@@ -1258,7 +1358,13 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "periodAndCalculationData",
+        "providedDays",
+        "providedTotalHour"
+      ]
     },
     {
       "name": "periodAndCalculationData",
@@ -1282,7 +1388,14 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "month",
+        "daysAmount",
+        "dailyAverageSal"
+      ]
     },
     {
       "name": "year",
@@ -1467,7 +1580,16 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "accumulatedPeriodData",
+        "accumulatedDays",
+        "accumulatedTotalHour",
+        "accumulatedProvidedPeriodData",
+        "accumulatedProvidedDays",
+        "accumulatedProvidedTotalHour"
+      ]
     },
     {
       "name": "accumulatedPeriodData",
@@ -1490,7 +1612,13 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "month",
+        "daysAmount"
+      ]
     },
     {
       "name": "year",
@@ -1645,7 +1773,14 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "month",
+        "daysAmount",
+        "dailyAverageSal"
+      ]
     },
     {
       "name": "year",

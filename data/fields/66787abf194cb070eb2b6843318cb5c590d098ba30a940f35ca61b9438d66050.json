@@ -21,7 +21,16 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "socialAssistNum",
+        [
+          "choice",
+          "procClosedOpenNew",
+          "receivedConfirmationOtherInsurer"
+        ]
+      ]
     },
     {
       "name": "socialAssistNum",
@@ -60,7 +69,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "reason",
+        "newSocialAssistNum"
+      ]
     },
     {
       "name": "reason",
@@ -122,7 +136,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "paymentMethod",
+        "years"
+      ]
     },
     {
       "name": "paymentMethod",
@@ -194,7 +213,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "year"
+      ]
     },
     {
       "name": "year",

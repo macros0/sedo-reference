@@ -114,6 +114,7 @@ restoreField();
         version=sha((site/file).read_bytes())[:16]
         html=html.replace('"'+file+'"','"'+file+'?v='+version+'"')
     (site/"index.html").write_text(html,encoding="utf8")
+    (site/".nojekyll").touch()
     print(f"Built {len(catalog['revisions'])} revisions in {site}")
 if __name__=="__main__":main()
 

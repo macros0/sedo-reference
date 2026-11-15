@@ -58,6 +58,52 @@ class FeedTests(unittest.TestCase):
             self.assertEqual(load_library(local, "test"), a["library"])
             self.assertEqual(len(list((local / "collector/test").glob("*.json"))), 2)
 
+    def test_selected_home_pointer_and_sourcecraft_rollback_are_independent(self):
+        import os
+        from unittest.mock import patch
+        a, ao = self.capture()
+        b, bo = self.capture(True)
+        with tempfile.TemporaryDirectory() as remote, tempfile.TemporaryDirectory() as local:
+            remote, local = Path(remote), Path(local)
+            store_feed(remote, [a], ao)
+            store_feed(remote, [b], bo)
+            store_feed(remote, [a], ao)
+            import_feed(local, lambda name: (remote / name).read_bytes())
+            pointer = local / "collector/test/current"
+            pointer.write_text(b["content_id"] + "\n", encoding="ascii")
+            with patch.dict(os.environ, SEDO_COLLECTOR_SOURCE="home"):
+                self.assertEqual(load_library(local, "test"), b["library"])
+                pointer.write_text(a["content_id"] + "\n", encoding="ascii")
+                self.assertEqual(load_library(local, "test"), a["library"])
+            with patch.dict(os.environ, SEDO_COLLECTOR_SOURCE="sourcecraft"):
+                pointer.write_text(b["content_id"] + "\n", encoding="ascii")
+                self.assertEqual(load_library(local, "test"), a["library"])
+
+    def test_missing_feed_contour_does_not_load_a_home_manifest(self):
+        from unittest.mock import patch
+        import os
+        a, objects = self.capture()
+        with tempfile.TemporaryDirectory() as remote, tempfile.TemporaryDirectory() as local:
+            remote, local = Path(remote), Path(local)
+            store_feed(remote, [a], objects)
+            import_feed(local, lambda name: (remote / name).read_bytes())
+            empty = {"format": 1, "latest": {}, "manifests": []}
+            (local / "collector/feed.json").write_text(json.dumps(empty))
+            with patch.dict(os.environ, SEDO_COLLECTOR_SOURCE="sourcecraft"):
+                self.assertIsNone(load_library(local, "test"))
+
+    def test_sourcecraft_pull_cannot_modify_state_during_a_generation_update(self):
+        from subprocess import CompletedProcess
+        from unittest.mock import patch
+        from auto_update import update_lock
+        from sourcecraft_pull import pull
+        ref = CompletedProcess([], 0, stdout="a"*40 + " refs/heads/snapshots\n")
+        with tempfile.TemporaryDirectory() as temp, patch("sourcecraft_pull.subprocess.run", return_value=ref), \
+                patch("sourcecraft_pull.import_feed", return_value={}) as imported, update_lock(Path(temp)):
+            with self.assertRaises(OSError):
+                pull(Path(temp))
+            imported.assert_not_called()
+
     def test_corrupt_remote_batch_writes_nothing(self):
         a, objects = self.capture()
         with tempfile.TemporaryDirectory() as remote, tempfile.TemporaryDirectory() as local:

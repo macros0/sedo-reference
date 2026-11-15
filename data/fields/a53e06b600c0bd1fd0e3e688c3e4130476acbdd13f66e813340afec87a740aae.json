@@ -26,7 +26,20 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "owner",
+          "principal",
+          "representative",
+          "startDate",
+          "endDate",
+          "anyState",
+          "authority"
+        ]
+      ]
     },
     {
       "name": "owner",
@@ -49,7 +62,13 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "choice",
+        "legalOrganization",
+        "legalPerson",
+        "person"
+      ]
     },
     {
       "name": "legalOrganization",
@@ -75,7 +94,19 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "jurAddress",
+        "inn",
+        "kpp",
+        [
+          "choice",
+          "ogrn",
+          "foreign"
+        ]
+      ]
     },
     {
       "name": "fullName",
@@ -244,7 +275,17 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName",
+        "birthDate",
+        "snils",
+        "inn",
+        "ogrnip"
+      ]
     },
     {
       "name": "firstName",
@@ -459,7 +500,24 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "firstName",
+          "lastName",
+          "middleName",
+          "birthDate",
+          "snils",
+          "inn"
+        ],
+        [
+          "choice",
+          "insurer",
+          "volunteer"
+        ]
+      ]
     },
     {
       "name": "firstName",
@@ -638,7 +696,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum"
+      ]
     },
     {
       "name": "regNum",
@@ -682,7 +744,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "kpsNum"
+      ]
     },
     {
       "name": "regNum",
@@ -756,7 +823,13 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "person",
+        "signedByNotary",
+        "notaryBasedOn"
+      ]
     },
     {
       "name": "person",
@@ -782,7 +855,16 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName",
+        "birthDate",
+        "snils",
+        "inn"
+      ]
     },
     {
       "name": "firstName",
@@ -1003,7 +1085,17 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "legalOrganization",
+          "legalPerson",
+          "person",
+          "certificate"
+        ]
+      ]
     },
     {
       "name": "legalOrganization",
@@ -1029,7 +1121,19 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "jurAddress",
+        "inn",
+        "kpp",
+        [
+          "choice",
+          "ogrn",
+          "foreign"
+        ]
+      ]
     },
     {
       "name": "fullName",
@@ -1199,7 +1303,24 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "firstName",
+          "lastName",
+          "middleName",
+          "birthDate",
+          "snils",
+          "inn",
+          "ogrnip"
+        ],
+        [
+          "sequence",
+          "personDocument"
+        ]
+      ]
     },
     {
       "name": "firstName",
@@ -1412,7 +1533,16 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "identityDocument",
+        "series",
+        "number",
+        "issuedDate",
+        "issuedBy",
+        "issuedByCode"
+      ]
     },
     {
       "name": "identityDocument",
@@ -1547,7 +1677,23 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "firstName",
+          "lastName",
+          "middleName",
+          "birthDate",
+          "snils",
+          "inn"
+        ],
+        [
+          "sequence",
+          "personDocument"
+        ]
+      ]
     },
     {
       "name": "firstName",
@@ -1732,7 +1878,16 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "identityDocument",
+        "series",
+        "number",
+        "issuedDate",
+        "issuedBy",
+        "issuedByCode"
+      ]
     },
     {
       "name": "identityDocument",
@@ -1935,7 +2090,11 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "mnemonic"
+      ]
     },
     {
       "name": "mnemonic",

@@ -32,7 +32,20 @@
       ],
       "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
       "file": "NoticeRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "noticeNumber",
+        "noticeDate",
+        "tof",
+        "registryNum",
+        "insuredInfo",
+        "insurerInfo",
+        "benefitInfo",
+        "informationRequest",
+        "senderInfo",
+        "*"
+      ]
     },
     {
       "name": "noticeNumber",
@@ -57,7 +70,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -76,7 +89,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {}
     },
@@ -97,10 +110,15 @@
         4,
         5
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "name"
+      ]
     },
     {
       "name": "code",
@@ -179,7 +197,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {}
     },
@@ -201,10 +219,16 @@
         9,
         13
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "*"
+      ]
     },
     {
       "name": "snils",
@@ -229,7 +253,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -252,10 +276,16 @@
         11,
         12
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -355,7 +385,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -378,10 +408,15 @@
         15,
         16
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "regNumSFR",
+        "*"
+      ]
     },
     {
       "name": "regNumSFR",
@@ -406,7 +441,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -425,7 +460,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -456,10 +491,26 @@
         42,
         45
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "proactiveProcessNum",
+        "rowNumber",
+        [
+          "choice",
+          "benefit1",
+          "benefit2",
+          "benefit4",
+          "benefit5",
+          "benefit6",
+          "benefit87",
+          "benefit88"
+        ],
+        "*"
+      ]
     },
     {
       "name": "proactiveProcessNum",
@@ -484,7 +535,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -512,7 +563,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -533,9 +584,14 @@
         21,
         22
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber",
+        "*"
+      ]
     },
     {
       "name": "lnNumber",
@@ -560,7 +616,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -579,7 +635,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -602,9 +658,14 @@
         24,
         25
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber",
+        "*"
+      ]
     },
     {
       "name": "lnNumber",
@@ -629,7 +690,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -648,7 +709,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -672,9 +733,15 @@
         28,
         29
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "childSnils",
+        "childBirthDate",
+        "*"
+      ]
     },
     {
       "name": "childSnils",
@@ -699,7 +766,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -718,7 +785,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -736,7 +803,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -760,9 +827,15 @@
         32,
         35
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "childSnils",
+        "vacationPeriod",
+        "*"
+      ]
     },
     {
       "name": "childSnils",
@@ -787,7 +860,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -809,10 +882,15 @@
         33,
         34
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -864,7 +942,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -887,9 +965,14 @@
         37,
         38
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber",
+        "*"
+      ]
     },
     {
       "name": "lnNumber",
@@ -914,7 +997,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -933,7 +1016,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -956,9 +1039,14 @@
         40,
         41
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "dt1",
+        "*"
+      ]
     },
     {
       "name": "dt1",
@@ -974,7 +1062,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -992,7 +1080,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -1015,9 +1103,14 @@
         43,
         44
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "dt1",
+        "*"
+      ]
     },
     {
       "name": "dt1",
@@ -1033,7 +1126,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1051,7 +1144,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -1071,7 +1164,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -1093,9 +1186,13 @@
       "children": [
         47
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "item"
+      ]
     },
     {
       "name": "item",
@@ -1114,9 +1211,14 @@
         48,
         49
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "requestText",
+        "requestFields"
+      ]
     },
     {
       "name": "requestText",
@@ -1141,7 +1243,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -1162,10 +1264,14 @@
       "children": [
         50
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "field"
+      ]
     },
     {
       "name": "field",
@@ -1184,9 +1290,14 @@
         51,
         52
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fieldName",
+        "fieldCode"
+      ]
     },
     {
       "name": "fieldName",
@@ -1207,7 +1318,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1230,7 +1341,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1252,9 +1363,15 @@
         55,
         56
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "role",
+        "phone"
+      ]
     },
     {
       "name": "fullName",
@@ -1279,7 +1396,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -1307,7 +1424,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -1335,7 +1452,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -1354,7 +1471,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {
         "processContents": "skip"
@@ -1444,7 +1561,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:request:v3.0",
+      "ns": "",
       "file": "NoticeRequest.xsd",
       "flags": {
         "processContents": "skip"

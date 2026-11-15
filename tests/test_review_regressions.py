@@ -78,6 +78,36 @@ class ReviewRegressions(unittest.TestCase):
                     self.assertEqual('new', (root / folder / 'value').read_text())
                 self.assertFalse((root / '.update-recovery').exists())
 
+    def test_manual_import_recovers_complete_generation_after_interruption(self):
+        from manual_import import promote_import
+        with tempfile.TemporaryDirectory() as temp:
+            root, stage = Path(temp) / "root", Path(temp) / "stage"
+            files = ["state/objects/blob", "state/snapshots/snapshot", "state/history.json",
+                     "state/observations.json", "state/inbox.json", "data/catalog.json",
+                     "data/fields/index.json", "site/catalog-data.js"]
+            for directory in (root, stage):
+                for name in files:
+                    path = directory / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text(directory.name)
+            replace = Path.replace
+            def interrupt(source, target):
+                if target in (root / "data/catalog.json", root / "site"):
+                    raise SystemExit("interrupted publication")
+                return replace(source, target)
+            with patch.object(Path, "replace", interrupt), self.assertRaises(SystemExit):
+                promote_import(root, stage)
+            auto_update.recover_promotion(root)
+            self.assertTrue(all((root / name).read_text() == "root" for name in files))
+
+    def test_inbox_cannot_publish_while_automatic_update_holds_the_lock(self):
+        from import_inbox import process_inbox
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            with patch.object(auto_update, "_run", side_effect=lambda root: process_inbox(root)):
+                with self.assertRaises(OSError):
+                    auto_update.run(root)
+
     def test_partial_journal_write_keeps_previous_generation(self):
         with tempfile.TemporaryDirectory() as tmp:
             root, stage = Path(tmp) / 'root', Path(tmp) / 'stage'

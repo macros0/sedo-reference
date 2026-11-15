@@ -62,6 +62,9 @@ jobs:
           node tests/test_validation_messages.cjs
           node tests/test_validation_navigation.cjs
       - name: Validate and apply pending Russian collector snapshots
+        env:
+          SEDO_SFR_POLITE: '1'
+          SEDO_COLLECTOR_SOURCE: ${{ vars.SEDO_COLLECTOR_SOURCE || 'sourcecraft' }}
         run: python collector_snapshots.py
       - name: Import incoming specifications
         run: python import_inbox.py
@@ -128,12 +131,22 @@ jobs:
         uses: actions/deploy-pages@v4
   refresh-status:
     needs: [build, deploy]
-    if: ${{ always() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
+    # A status-service outage must not change the result of the deployment.
+    continue-on-error: true
+    if: ${{ always() && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     permissions:
       actions: write
     steps:
-      - name: Refresh the public status after automatic publication
+      - name: Refresh the public status after publication
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run automation-status.yml --repo "$GITHUB_REPOSITORY" --ref main -f publication_run_id="$GITHUB_RUN_ID"
+        run: |
+          for pause in 0 5 15; do
+            sleep "$pause"
+            if gh workflow run automation-status.yml --repo "$GITHUB_REPOSITORY" --ref main -f publication_run_id="$GITHUB_RUN_ID"; then
+              exit 0
+            fi
+          done
+          echo "::warning::Could not dispatch the public status refresh for Pages run $GITHUB_RUN_ID"
+          exit 1

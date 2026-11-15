@@ -28,7 +28,19 @@
       ],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "dateStart",
+        "id",
+        "idMessage",
+        "regNum",
+        "regNumSFR",
+        "date",
+        "number",
+        "attachment",
+        "signature"
+      ]
     },
     {
       "name": "dateStart",
@@ -205,7 +217,18 @@
       ],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name",
+        "signatureEmpl",
+        "signatureFund",
+        "application"
+      ]
     },
     {
       "name": "content",
@@ -376,7 +399,18 @@
       ],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "description",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name",
+        "signatureEmpl",
+        "signatureFund"
+      ]
     },
     {
       "name": "description",

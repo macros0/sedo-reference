@@ -23,7 +23,12 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "contentModel": [
+        "choice",
+        "result",
+        "errorList"
+      ]
     },
     {
       "name": "result",
@@ -44,10 +49,17 @@
         19,
         24
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "contentModel": [
+        "sequence",
+        "messageCount",
+        "messageList",
+        "errorList",
+        "broadcastMessageList"
+      ]
     },
     {
       "name": "messageCount",
@@ -63,7 +75,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -91,10 +103,28 @@
         17,
         18
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "contentModel": [
+        "sequence",
+        "uuid",
+        "messageType",
+        [
+          "choice",
+          [
+            "sequence",
+            "recipientId",
+            "regNumSfr"
+          ],
+          "org"
+        ],
+        "subAbonentId",
+        "expiryDate",
+        "needConfirm",
+        "messageDate"
+      ]
     },
     {
       "name": "uuid",
@@ -115,7 +145,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -134,7 +164,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -161,7 +191,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -185,7 +215,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -211,10 +241,36 @@
         13,
         14
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "contentModel": [
+        "choice",
+        [
+          "sequence",
+          "ogrn",
+          "inn",
+          "kpp"
+        ],
+        [
+          "sequence",
+          "ogrnip",
+          "inn",
+          "snils"
+        ],
+        [
+          "sequence",
+          "snils",
+          "inn",
+          "regnum"
+        ],
+        [
+          "sequence",
+          "inn",
+          "kpp"
+        ]
+      ]
     },
     {
       "name": "ogrn",
@@ -239,7 +295,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -270,7 +326,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -298,7 +354,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -326,7 +382,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -353,7 +409,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -381,7 +437,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -408,7 +464,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -426,7 +482,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -444,7 +500,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -462,7 +518,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -485,10 +541,17 @@
         22,
         23
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "contentModel": [
+        "sequence",
+        "recipientId",
+        "regNumSfr",
+        "code",
+        "message"
+      ]
     },
     {
       "name": "recipientId",
@@ -513,7 +576,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -537,7 +600,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -556,7 +619,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -574,7 +637,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -594,9 +657,13 @@
       "children": [
         25
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "broadcastMessage"
+      ]
     },
     {
       "name": "broadcastMessage",
@@ -616,10 +683,16 @@
         27,
         28
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "contentModel": [
+        "sequence",
+        "messageUuid",
+        "message",
+        "dateOfRelevance"
+      ]
     },
     {
       "name": "messageUuid",
@@ -640,7 +713,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -659,7 +732,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -677,7 +750,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -699,10 +772,16 @@
         31,
         32
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",

@@ -27,7 +27,18 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "vacationStatementCalc",
+        "primaryStatementUuid",
+        "insurerInfo",
+        "insuredInfo",
+        "orderInfo",
+        "calculationData",
+        "receivePayment",
+        "documents"
+      ]
     },
     {
       "name": "vacationStatementCalc",
@@ -104,7 +115,15 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "insurerName",
+        "regNum",
+        "regNumMain",
+        "inn",
+        "documentsSendPerson"
+      ]
     },
     {
       "name": "insurerName",
@@ -228,7 +247,12 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "rank",
+        "fullName"
+      ]
     },
     {
       "name": "rank",
@@ -269,7 +293,13 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "lastName",
+        "firstName",
+        "middleName"
+      ]
     },
     {
       "name": "lastName",
@@ -375,7 +405,12 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "fullNamePU",
+        "snils"
+      ]
     },
     {
       "name": "fullNamePU",
@@ -398,7 +433,13 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "lastName",
+        "firstName",
+        "middleName"
+      ]
     },
     {
       "name": "lastName",
@@ -535,7 +576,15 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "orderNum",
+        "orderDate",
+        "orderBeginDate",
+        "orderEndDate",
+        "daysAmount"
+      ]
     },
     {
       "name": "orderNum",
@@ -653,7 +702,18 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "periodsData",
+        "totalSum",
+        "totalDays",
+        "premiumSum",
+        "totalIncomeSum",
+        "dailyAverageSum",
+        "totalDaysAmount",
+        "vacationSum"
+      ]
     },
     {
       "name": "periodsData",
@@ -676,7 +736,13 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "period",
+        "periodSumm",
+        "countDays"
+      ]
     },
     {
       "name": "period",
@@ -879,7 +945,16 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "bankInfo",
+          "cardMir",
+          "postalTransfer"
+        ]
+      ]
     },
     {
       "name": "bankInfo",
@@ -902,7 +977,13 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "accountNum",
+        "bik",
+        "bankName"
+      ]
     },
     {
       "name": "accountNum",
@@ -1025,7 +1106,19 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "postIndex",
+        "region",
+        "district",
+        "city",
+        "street",
+        "house",
+        "block",
+        "building",
+        "flat"
+      ]
     },
     {
       "name": "postIndex",
@@ -1221,7 +1314,14 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "docNmber",
+        "docDate",
+        "docComment",
+        "attachment"
+      ]
     },
     {
       "name": "docNmber",
@@ -1300,7 +1400,15 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ]
     },
     {
       "name": "content",

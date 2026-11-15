@@ -32,7 +32,23 @@
       "ns": "http://www.fss.ru/integration/f4/F4DocumentsAsv/v01",
       "file": "F4DocumentsAsv.xsd",
       "flags": {},
-      "typeFile": "DocumentType.xsd"
+      "typeFile": "DocumentType.xsd",
+      "contentModel": [
+        "sequence",
+        "department",
+        "idMessage",
+        "regNum",
+        "regNumSFR",
+        "date",
+        "number",
+        "requestDocs",
+        "attachment",
+        "dateDeadline",
+        "organizationSize",
+        "idReport",
+        "idProtocol",
+        "addInfo"
+      ]
     },
     {
       "name": "department",
@@ -54,7 +70,12 @@
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
       "flags": {},
-      "typeFile": "FssDepartment.xsd"
+      "typeFile": "FssDepartment.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "name"
+      ]
     },
     {
       "name": "code",
@@ -230,7 +251,11 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "requestDoc"
+      ]
     },
     {
       "name": "requestDoc",
@@ -351,7 +376,18 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name",
+        "signatureEmpl",
+        "signatureFund",
+        "application"
+      ]
     },
     {
       "name": "content",
@@ -522,7 +558,18 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "description",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name",
+        "signatureEmpl",
+        "signatureFund"
+      ]
     },
     {
       "name": "description",
@@ -808,7 +855,13 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        "overOffsetDcBcc",
+        "overRefundDcBcc",
+        "payNote"
+      ]
     },
     {
       "name": "overOffsetDcBcc",
@@ -830,7 +883,13 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "docTypeId",
+        "overDcResultId",
+        "kbkSum"
+      ]
     },
     {
       "name": "docTypeId",
@@ -909,7 +968,16 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "offsetKbkCode",
+        "offsetKbkName",
+        "offsetPurposeId",
+        "overKbkCode",
+        "overKbkName",
+        "offsetSum"
+      ]
     },
     {
       "name": "offsetKbkCode",
@@ -1058,7 +1126,13 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "docTypeId",
+        "overDcResultId",
+        "kbkSum"
+      ]
     },
     {
       "name": "docTypeId",
@@ -1134,7 +1208,13 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "refundKbkCode",
+        "refundKbkName",
+        "refundSum"
+      ]
     },
     {
       "name": "refundKbkCode",
@@ -1223,7 +1303,12 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "docTypeId",
+        "sums"
+      ]
     },
     {
       "name": "docTypeId",
@@ -1272,7 +1357,13 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sumArrear",
+        "sumPenalty",
+        "sumSurcharge"
+      ]
     },
     {
       "name": "sumArrear",

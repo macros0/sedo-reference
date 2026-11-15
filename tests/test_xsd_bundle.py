@@ -196,6 +196,12 @@ class XsdBundleTests(unittest.TestCase):
         with zipfile.ZipFile(data) as z:
             result=_field_namespaces(z,dict(schema_path='main.xsd',root='Request'),['Request','Request/local','Request/qualified','Request/Child','Request/@plain','Request/@qualified','Request/@global'])
         self.assertEqual(result,[['urn:main'],[''],['urn:main'],['urn:main'],[''],['urn:main'],['urn:main']])
+        from schema import Schema
+        with zipfile.ZipFile(data) as z:
+            schema=Schema(z,'main.xsd','Request')
+            schema.field(schema.root)
+        self.assertEqual([[f['ns']] for f in schema.fields],result)
+        self.assertEqual(schema.fields[0]['contentModel'],['sequence','local','qualified','Child'])
 
     def test_all_archived_editions_compile_and_keep_original_dependency_bytes(self):
         catalog=json.loads((PROJECT/'data/catalog.json').read_bytes());publish_bundles(catalog,PROJECT/'state',self.site)

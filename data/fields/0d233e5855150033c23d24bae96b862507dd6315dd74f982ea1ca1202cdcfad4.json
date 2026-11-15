@@ -21,7 +21,12 @@
       ],
       "ns": "urn:ru:ecp:integration:vnim:paymentStatus:request:v3.0",
       "file": "PaymentStatusRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        "batchNo",
+        "receiveId"
+      ]
     },
     {
       "name": "batchNo",
@@ -42,7 +47,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:request:v3.0",
+      "ns": "",
       "file": "PaymentStatusRequest.xsd",
       "flags": {}
     },
@@ -65,7 +70,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:request:v3.0",
+      "ns": "",
       "file": "PaymentStatusRequest.xsd",
       "flags": {}
     },

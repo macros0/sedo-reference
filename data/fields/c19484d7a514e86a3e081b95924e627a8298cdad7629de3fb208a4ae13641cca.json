@@ -23,7 +23,14 @@
       "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "file": "Poved.xsd",
       "flags": {},
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "contentModel": [
+        "sequence",
+        "insurerInfo",
+        "okved",
+        "incomeDistribution",
+        "note"
+      ]
     },
     {
       "name": "insurerInfo",
@@ -57,10 +64,30 @@
         17,
         18
       ],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "kpsNum",
+        "regNumFund",
+        "codeTerrOrg",
+        "inn",
+        "ogrn",
+        "kpp",
+        "startDate",
+        "registrationDate",
+        "registrationPlace",
+        "state",
+        "uncommercial",
+        "jurAddress",
+        "ceoName",
+        "cfoName",
+        "emplCount",
+        "year"
+      ]
     },
     {
       "name": "regNum",
@@ -81,7 +108,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -109,7 +136,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -141,7 +168,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -169,7 +196,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -197,7 +224,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -225,7 +252,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -249,7 +276,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -268,7 +295,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {}
     },
@@ -286,7 +313,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {}
     },
@@ -309,7 +336,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Poved.xsd"
@@ -328,7 +355,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {}
     },
@@ -346,7 +373,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {}
     },
@@ -369,7 +396,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Poved.xsd"
@@ -393,7 +420,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Poved.xsd"
@@ -417,7 +444,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Poved.xsd"
@@ -436,7 +463,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {}
     },
@@ -463,7 +490,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {}
     },
@@ -483,10 +510,14 @@
       "children": [
         20
       ],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "contentModel": [
+        "sequence",
+        "codeOKVED2"
+      ]
     },
     {
       "name": "codeOKVED2",
@@ -515,7 +546,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Poved.xsd"
@@ -539,10 +570,17 @@
         24,
         25
       ],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "contentModel": [
+        "sequence",
+        "codeOKVED2",
+        "incomeVED",
+        "targetedIncome",
+        "emplCount"
+      ]
     },
     {
       "name": "codeOKVED2",
@@ -571,7 +609,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Poved.xsd"
@@ -590,7 +628,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {}
     },
@@ -608,7 +646,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {}
     },
@@ -626,7 +664,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {}
     },
@@ -647,10 +685,15 @@
         27,
         28
       ],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "contentModel": [
+        "sequence",
+        "noteText",
+        "noteFile"
+      ]
     },
     {
       "name": "noteText",
@@ -671,7 +714,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
       "typeFile": "Poved.xsd"
@@ -696,10 +739,18 @@
         32,
         33
       ],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeFile": "CommonUQ.xsd"
+      "typeFile": "CommonUQ.xsd",
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ]
     },
     {
       "name": "content",
@@ -715,7 +766,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -733,7 +784,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -751,7 +802,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -769,7 +820,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -787,7 +838,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     }

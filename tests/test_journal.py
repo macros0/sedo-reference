@@ -64,6 +64,17 @@ class JournalTests(unittest.TestCase):
         self.add("returned", [self.revision("p1")])
         self.assertEqual(self.export(), first)
 
+    def test_return_to_saved_snapshot_restores_current_metadata_and_keeps_events(self):
+        first = dict(self.revision("same"), document_url="/A", document_version="1.0")
+        second = dict(first, document_url="/B", document_version="1.1")
+        self.add("A", [first])
+        self.add("B", [second])
+        events = self.export()
+        write(self.state / "current.json", encode(dict(snapshot="A")))
+        self.assertEqual(self.export(), events)
+        listed = json.loads((self.state / "catalog.json").read_bytes())["revisions"]
+        self.assertEqual(listed, [dict(first, listed_now=True)])
+
     def test_missing_observation_stays_unknown(self):
         self.add("first", [self.revision("p1")])
         self.assertIsNone(self.export()[0]["observed_at"])

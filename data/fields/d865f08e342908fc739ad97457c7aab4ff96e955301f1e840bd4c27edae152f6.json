@@ -24,7 +24,15 @@
       ],
       "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insurerInfo",
+        "insuredInfo",
+        "childInfo",
+        "terminationInfo",
+        "senderInfo"
+      ]
     },
     {
       "name": "insurerInfo",
@@ -42,9 +50,13 @@
       "children": [
         2
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNumSFR"
+      ]
     },
     {
       "name": "regNumSFR",
@@ -69,7 +81,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -90,9 +102,13 @@
       "children": [
         4
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils"
+      ]
     },
     {
       "name": "snils",
@@ -117,7 +133,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -140,9 +156,15 @@
         7,
         14
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "birthDate"
+      ]
     },
     {
       "name": "snils",
@@ -167,7 +189,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -193,10 +215,28 @@
         12,
         13
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "lastName",
+          "noLastName"
+        ],
+        [
+          "choice",
+          "firstName",
+          "noFirstName"
+        ],
+        [
+          "choice",
+          "middleName",
+          "noMiddleName"
+        ]
+      ]
     },
     {
       "name": "lastName",
@@ -368,7 +408,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {}
     },
@@ -394,9 +434,19 @@
         21,
         22
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "batchNo",
+        "holidType",
+        "holidTypeInfo",
+        "holidDtEx",
+        "holidDoc",
+        "holidNo",
+        "holidDt"
+      ]
     },
     {
       "name": "batchNo",
@@ -417,7 +467,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeFile": "NoticeTermination05Request.xsd"
@@ -457,7 +507,7 @@
         ]
       ],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {}
     },
@@ -484,7 +534,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {}
     },
@@ -502,7 +552,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {}
     },
@@ -529,7 +579,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {}
     },
@@ -556,7 +606,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {}
     },
@@ -574,7 +624,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {}
     },
@@ -596,10 +646,16 @@
         31,
         32
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
-      "typeFile": "NoticeTermination05Request.xsd"
+      "typeFile": "NoticeTermination05Request.xsd",
+      "contentModel": [
+        "sequence",
+        "author",
+        "email",
+        "phoneNumber"
+      ]
     },
     {
       "name": "author",
@@ -622,10 +678,28 @@
         29,
         30
       ],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "lastName",
+          "noLastName"
+        ],
+        [
+          "choice",
+          "firstName",
+          "noFirstName"
+        ],
+        [
+          "choice",
+          "middleName",
+          "noMiddleName"
+        ]
+      ]
     },
     {
       "name": "lastName",
@@ -810,7 +884,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -838,7 +912,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
+      "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeFile": "Common.xsd"

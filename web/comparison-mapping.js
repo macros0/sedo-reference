@@ -156,26 +156,33 @@
  }
  const storageKey=(left,right)=>"sedo-field-mappings:v1:"+[left.revision_id,right.revision_id].sort().map(encodeURIComponent).join(":");
  function createStore(getStorage){
-  const memory=new Map(),notices=new Map();
+  const lastKnown=new Map(),sessionOnly=new Map();
   return {
    load(options){
-    const key=storageKey(options.left,options.right);let raw;
-    try{raw=memory.has(key)?memory.get(key):getStorage().getItem(key)}catch{return {pairs:[],notice:"Хранилище браузера недоступно. Соответствия будут действовать в текущем сеансе."}}
-    if(!raw)return {pairs:[],notice:notices.get(key)||""};
+    const key=storageKey(options.left,options.right);
+    let raw=lastKnown.get(key),notice=sessionOnly.get(key)||"";
+    if(!sessionOnly.has(key)){
+     try{raw=getStorage().getItem(key);lastKnown.set(key,raw)}
+     catch{notice="Хранилище браузера недоступно. Соответствия будут действовать в текущем сеансе."}
+    }
+    if(!raw)return {pairs:[],notice};
     try{
      const record=JSON.parse(raw);if(record.version!==1)throw Error("Неизвестный формат");
      if(!Array.isArray(record.pairs))throw Error("Не указан список пар");
      const current=orient(record,options.left,options.right);validatePairs(current.pairs,options.before,options.after);
-     return {pairs:current.pairs,notice:notices.get(key)||""};
+     return {pairs:current.pairs,notice};
     }catch{return {pairs:[],notice:"Сохранённые соответствия повреждены или не подходят к схемам и не применены. Сбросьте их или загрузите Excel снова."}}
    },
    save(options,pairs){
-    validatePairs(pairs,options.before,options.after);const key=storageKey(options.left,options.right),raw=JSON.stringify({version:1,left:options.left.revision_id,right:options.right.revision_id,pairs});memory.set(key,raw);
-    let notice="";try{getStorage().setItem(key,raw)}catch{notice="Не удалось сохранить соответствия в браузере. Они действуют только в текущем сеансе; сохраните Excel для повторной загрузки."}notices.set(key,notice);return notice;
+    validatePairs(pairs,options.before,options.after);const key=storageKey(options.left,options.right),raw=JSON.stringify({version:1,left:options.left.revision_id,right:options.right.revision_id,pairs});
+    lastKnown.set(key,raw);
+    try{getStorage().setItem(key,raw);sessionOnly.delete(key);return ""}
+    catch{const notice="Не удалось сохранить соответствия в браузере. Они действуют только в текущем сеансе; сохраните Excel для повторной загрузки.";sessionOnly.set(key,notice);return notice}
    },
    clear(options){
-    const key=storageKey(options.left,options.right);memory.set(key,null);let notice="";
-    try{getStorage().removeItem(key)}catch{notice="Соответствия сброшены в текущем сеансе. Хранилище браузера недоступно; после перезапуска может потребоваться повторный сброс."}notices.set(key,notice);return notice;
+    const key=storageKey(options.left,options.right);lastKnown.set(key,null);
+    try{getStorage().removeItem(key);sessionOnly.delete(key);return ""}
+    catch{const notice="Соответствия сброшены в текущем сеансе. Хранилище браузера недоступно; после перезапуска может потребоваться повторный сброс.";sessionOnly.set(key,notice);return notice}
    }
   };
  }

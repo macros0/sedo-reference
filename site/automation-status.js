@@ -7,28 +7,39 @@
  // .github/workflows/check-sfr.yml. Moscow is UTC+3; visitor time zones do not apply.
  const dailyRuns={sourcecraft:{hour:4,minute:0},github:{hour:4,minute:17}};
  function nextRun(kind,now){const {hour,minute}=dailyRuns[kind],next=new Date(now);next.setUTCHours(hour,minute,0,0);if(next.getTime()<=now)next.setUTCDate(next.getUTCDate()+1);return date(next.toISOString())}
- function model(data,now=Date.now()){
-  if(data?.format!==1||!data.github||!data.sourcecraft)return {tone:'unknown',summary:'Автообновление · статус недоступен',cards:[],updated:''};
-  const sc=data.sourcecraft,gh=data.github,check=gh.check||{},pub=gh.publication||{},versions=gh.versions||{};
+ function sourcecraftCard(sc,now){
   const contours=['prod','test'].map(env=>({env,...(sc.contours?.[env]||{})}));
   let sourceState=sc.state||'unknown';
   if(sourceState==='success'&&!contours.every(c=>Number.isFinite(Date.parse(c.observed_at))))sourceState='unknown';
   const sourceAge=now-Date.parse(sc.finished_at);
   if(sourceState==='success'&&sourceAge>STALE)sourceState='stale';
   if(sourceState==='processing'&&now-Date.parse(sc.started_at)>30*60*1000)sourceState='stale';
-  const checkState=['success','waiting'].includes(check.state)&&now-Date.parse(check.finished_at)>STALE?'stale':check.state;
   const changed=c=>c.changed===true?' · XSD изменились':c.changed===false?' · XSD без изменений':c.observed_at?' · первый снимок':'';
   const sourceLines=contours.map(c=>(c.env==='prod'?'Продуктивный':'Тестовый')+': '+(c.observed_at?date(c.observed_at)+changed(c):'не проверен в последнем запуске'));
   if(sourceState==='stale'&&sc.state==='processing')sourceLines.push('Сбор не завершился за 30 минут. Проверьте журнал SourceCraft.');
   if(sc.state==='failure'&&sc.error)sourceLines.push(sc.error);
   if(sc.state!=='success'&&sc.last_success_at)sourceLines.push('Последний успешный сбор: '+date(sc.last_success_at));
   sourceLines.push('Следующая проверка по расписанию: '+nextRun('sourcecraft',now));
+  return {title:'SourceCraft · '+(labels[sourceState]||labels.unknown),state:sourceState,lines:sourceLines,url:sc.url,link:sc.run_id?'SourceCraft · запуск № '+sc.run_id:'Открыть SourceCraft'};
+ }
+ function homeCard(check,checkState,versions){
+  const state=checkState==='success'&&(!versions.checked_at||!Number.isInteger(versions.count))?'unknown':checkState||'unknown';
+  const text={processing:'GitHub проверяет снимки домашнего сборщика.',failure:'Проверка GitHub завершилась ошибкой.',
+   cancelled:'Проверка GitHub отменена.',waiting:'Ожидается проверка снимков GitHub.',unknown:'Обработка снимков пока не подтверждена.'};
+  const lines=versions.checked_at?['Снимки обоих контуров обработаны GitHub '+date(versions.checked_at)]:[text[state]||text.unknown];
+  return {title:'Домашний сборщик · '+(labels[state]||labels.unknown),state,lines,url:check.url,link:'Открыть обработку снимков в GitHub'};
+ }
+ function model(data,now=Date.now()){
+  if(data?.format!==1||!data.github||!data.sourcecraft)return {tone:'unknown',summary:'Автообновление · статус недоступен',cards:[],updated:''};
+  const sc=data.sourcecraft,gh=data.github,check=gh.check||{},pub=gh.publication||{},versions=gh.versions||{};
+  const checkState=['success','waiting'].includes(check.state)&&now-Date.parse(check.finished_at)>STALE?'stale':check.state;
+  const sourceCard=data.collector_source==='home'?homeCard(check,checkState,versions):sourcecraftCard(sc,now);
   const count=Number.isInteger(versions.count)&&versions.count>=0?versions.count:null;
   const versionsText=check.state==='success'&&count!==null?(count?'Добавлено редакций: '+count:'Новых редакций нет'):check.state==='processing'?'Проверка справочника выполняется':check.state==='waiting'?'Ожидается обработка новых снимков SourceCraft':'Число новых редакций пока неизвестно';
   const publicationText={success:'Обновление опубликовано',failure:'Публикация завершилась ошибкой',processing:'Публикация выполняется',waiting:'Ожидает публикации',not_published:'Обновление не опубликовано',cancelled:'Публикация отменена',unknown:'Публикация не подтверждена'}[pub.state]||'Публикация не подтверждена';
   const publicationLines=[publicationText];if(pub.finished_at)publicationLines.push(date(pub.finished_at));
   if(pub.state!=='success'&&gh.last_successful_publication?.finished_at)publicationLines.push('Предыдущая успешная публикация: '+date(gh.last_successful_publication.finished_at));
-  const states=[sourceState,checkState||'unknown',pub.state||'unknown'];
+  const states=[sourceCard.state,checkState||'unknown',pub.state||'unknown'];
   let tone=states.includes('failure')||states.includes('not_published')?'failure':
    states.includes('stale')||now-Date.parse(data.generated_at)>STALE?'stale':
    states.some(s=>['processing','waiting'].includes(s))?'processing':
@@ -36,7 +47,7 @@
   if(!Number.isFinite(Date.parse(data.generated_at)))tone='unknown';
   const summary={success:'Автообновление · успешно · '+(count?'новых редакций: '+count:'новых редакций нет'),failure:'Автообновление · есть ошибка',stale:'Автообновление · данные статуса устарели',processing:'Автообновление · проверка или публикация ожидается',unknown:'Автообновление · не все этапы подтверждены'}[tone];
   return {tone,summary,updated:'Статус получен '+date(data.generated_at)+'. Фактический запуск может задержаться относительно расписания.',cards:[
-   {title:'SourceCraft · '+(labels[sourceState]||labels.unknown),state:sourceState,lines:sourceLines,url:sc.url,link:sc.run_id?'SourceCraft · запуск № '+sc.run_id:'Открыть SourceCraft'},
+   sourceCard,
    {title:'Новые редакции · '+(labels[checkState]||labels.unknown),state:checkState,lines:[versionsText,...(versions.checked_at?['Проверено '+date(versions.checked_at)]:[]),'Следующий забор по расписанию: '+nextRun('github',now)],url:check.url,link:'Открыть проверку GitHub'},
    {title:'GitHub Pages · '+(labels[pub.state]||labels.unknown),state:pub.state,lines:publicationLines,url:pub.url,link:'Открыть публикацию'}
   ]};

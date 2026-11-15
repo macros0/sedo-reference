@@ -21,7 +21,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "RefundUnempl.xsd"
+      "typeFile": "RefundUnempl.xsd",
+      "contentModel": [
+        "sequence",
+        "result",
+        "errorList"
+      ]
     },
     {
       "name": "result",
@@ -42,7 +47,12 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sttmntNumber",
+        "status"
+      ]
     },
     {
       "name": "sttmntNumber",
@@ -101,7 +111,13 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",

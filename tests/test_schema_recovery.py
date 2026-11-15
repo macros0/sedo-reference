@@ -84,6 +84,32 @@ class SchemaRecoveryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'Неоднозначный импорт'):
             dependency_set(inspect_file(content,'zip')['schemas'],'main.xsd')
 
+    def test_enumeration_restriction_replaces_inherited_values(self):
+        xsd = """<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+          <xs:simpleType name="Base"><xs:restriction base="xs:string">
+            <xs:enumeration value="A"/><xs:enumeration value="B"/>
+          </xs:restriction></xs:simpleType>
+          <xs:element name="root"><xs:simpleType><xs:restriction base="Base">
+            <xs:enumeration value="B"/>
+          </xs:restriction></xs:simpleType></xs:element></xs:schema>"""
+        with zipfile.ZipFile(io.BytesIO(archive({'main.xsd':xsd}))) as z:
+            schema=Schema(z,'main.xsd','root')
+            schema.field(schema.root)
+        self.assertEqual(schema.fields[0]['values'],[['B','']])
+
+    def test_type_prefix_uses_lexical_scope(self):
+        xsd = """<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:t="urn:main" targetNamespace="urn:main">
+          <xs:simpleType name="string"><xs:restriction base="xs:string"><xs:length value="2"/></xs:restriction></xs:simpleType>
+          <xs:element name="root"><xs:complexType><xs:sequence>
+            <xs:element name="custom" type="t:string"/>
+            <xs:element xmlns:t="http://www.w3.org/2001/XMLSchema" name="builtin" type="t:string"/>
+          </xs:sequence></xs:complexType></xs:element></xs:schema>"""
+        with zipfile.ZipFile(io.BytesIO(archive({'main.xsd':xsd}))) as z:
+            schema=Schema(z,'main.xsd','root')
+            schema.field(schema.root)
+        self.assertEqual(schema.fields[1]['facets'],[['length','2']])
+        self.assertEqual(schema.fields[2]['facets'],[])
+
     def test_union_keeps_alternative_constraints_separate(self):
         xsd='<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:element name="root"><xs:simpleType><xs:union><xs:simpleType><xs:restriction base="xs:string"><xs:maxLength value="3"/></xs:restriction></xs:simpleType><xs:simpleType><xs:restriction base="xs:int"><xs:maxInclusive value="10"/></xs:restriction></xs:simpleType></xs:union></xs:simpleType></xs:element></xs:schema>'
         with zipfile.ZipFile(io.BytesIO(archive({'main.xsd':xsd}))) as z:

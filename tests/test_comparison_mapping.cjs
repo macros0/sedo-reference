@@ -54,6 +54,23 @@ const workbook=()=>exporter.createWorkbook(ExcelJS,{...options,results:core.comp
  assert.deepEqual(store.load({...options,left:right,right:left,before:after,after:before}).pairs,reversed.pairs);
  assert.equal(store.load({...options,right:{...right,revision_id:"another-edition"}}).pairs.length,0);
  const reload=mapping.createStore(()=>storage);assert.deepEqual(reload.load(options).pairs,[pair]);reload.clear(options);assert.equal(reload.load(options).pairs.length,0);
+ assert.equal(store.load(options).pairs.length,0,"reset in another tab must be visible");
+ reload.save(options,[{...pair,comment:"updated in another tab"}]);
+ assert.equal(store.load(options).pairs[0].comment,"updated in another tab");
+ let rejectRead=false,rejectWrite=false;
+ const changingStorage={
+  getItem(key){if(rejectRead)throw Error("blocked read");return storage.getItem(key)},
+  setItem(key,value){if(rejectWrite)throw Error("blocked write");storage.setItem(key,value)},
+  removeItem(key){storage.removeItem(key)}
+ };
+ const session=mapping.createStore(()=>changingStorage);
+ session.save(options,[pair]);rejectRead=true;
+ assert.deepEqual(session.load(options).pairs,[pair],"use last successful save when reads become blocked");
+ assert.ok(session.load(options).notice);
+ rejectRead=false;reload.clear(options);assert.deepEqual(session.load(options).pairs,[]);
+ rejectRead=true;assert.deepEqual(session.load(options).pairs,[],"another tab's confirmed reset updates the fallback");
+ rejectRead=false;rejectWrite=true;assert.ok(session.save(options,[pair]));
+ assert.deepEqual(session.load(options).pairs,[pair],"a session-only save has priority over readable older storage");
  const blocked=mapping.createStore(()=>{throw Error("blocked")});assert.ok(blocked.save(options,[pair]));assert.deepEqual(blocked.load(options).pairs,[pair]);assert.ok(blocked.clear(options));assert.equal(blocked.load(options).pairs.length,0);
  storage.setItem(mapping.storageKey(left,right),'not json');const corrupt=mapping.createStore(()=>storage).load(options);assert.ok(corrupt.notice);assert.equal(corrupt.pairs.length,0);
  assert.throws(()=>mapping.preflightArchive(new Uint8Array([1,2,3])),/XLSX|ZIP/i);

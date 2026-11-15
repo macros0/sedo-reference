@@ -26,7 +26,14 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
       "file": "EventLifeResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "status",
+        "proactiveProcessNum",
+        "errorList",
+        "warnList"
+      ]
     },
     {
       "name": "status",
@@ -106,7 +113,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
       "file": "EventLifeResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -129,7 +140,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
       "file": "EventLifeResult.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -230,7 +247,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
       "file": "EventLifeResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "warn"
+      ]
     },
     {
       "name": "warn",
@@ -253,7 +274,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
       "file": "EventLifeResult.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -420,7 +447,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
+      "ns": "",
       "file": "EventLifeResult.xsd",
       "flags": {
         "processContents": "skip"

@@ -25,7 +25,16 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:response:v3.0",
       "file": "InsuredPersonSalaryResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "status",
+        [
+          "choice",
+          "processedInfo",
+          "errorInfo"
+        ]
+      ]
     },
     {
       "name": "status",
@@ -79,7 +88,13 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:response:v3.0",
       "file": "InsuredPersonSalaryResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredInfo",
+        "periodInfo",
+        "*"
+      ]
     },
     {
       "name": "insuredInfo",
@@ -100,7 +115,12 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:response:v3.0",
       "file": "InsuredPersonSalaryResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "*"
+      ]
     },
     {
       "name": "snils",
@@ -169,7 +189,12 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:response:v3.0",
       "file": "InsuredPersonSalaryResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "twoPrevYears",
+        "additionalYears"
+      ]
     },
     {
       "name": "twoPrevYears",
@@ -189,7 +214,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:response:v3.0",
       "file": "InsuredPersonSalaryResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "yearSum"
+      ]
     },
     {
       "name": "yearSum",
@@ -214,7 +243,15 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:response:v3.0",
       "file": "InsuredPersonSalaryResponse.xsd",
       "flags": {},
-      "typeFile": "InsuredPersonSalaryResponse.xsd"
+      "typeFile": "InsuredPersonSalaryResponse.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "amountForAllInsurers",
+        "amountForAllInsurersGph",
+        "amountForCurrentInsurer",
+        "amountForCurrentInsurerGph"
+      ]
     },
     {
       "name": "year",
@@ -378,7 +415,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:response:v3.0",
       "file": "InsuredPersonSalaryResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "yearSum"
+      ]
     },
     {
       "name": "yearSum",
@@ -403,7 +444,15 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:response:v3.0",
       "file": "InsuredPersonSalaryResponse.xsd",
       "flags": {},
-      "typeFile": "InsuredPersonSalaryResponse.xsd"
+      "typeFile": "InsuredPersonSalaryResponse.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "amountForAllInsurers",
+        "amountForAllInsurersGph",
+        "amountForCurrentInsurer",
+        "amountForCurrentInsurerGph"
+      ]
     },
     {
       "name": "year",
@@ -589,7 +638,12 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:response:v3.0",
       "file": "InsuredPersonSalaryResponse.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "errorList",
+        "*"
+      ]
     },
     {
       "name": "errorList",
@@ -609,7 +663,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -632,7 +690,13 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -819,7 +883,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:proactive:salary:response:v3.0",
+      "ns": "",
       "file": "InsuredPersonSalaryResponse.xsd",
       "flags": {
         "processContents": "skip"

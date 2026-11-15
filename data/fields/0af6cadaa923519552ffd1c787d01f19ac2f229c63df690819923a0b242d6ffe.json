@@ -26,7 +26,17 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "elnInfo",
+        "insurerInfo",
+        "insuredInfo",
+        "insuredWorksSeveralInsurers",
+        "paymentMethod",
+        "salaryInfo",
+        "mobilDaysAmount"
+      ]
     },
     {
       "name": "elnInfo",
@@ -46,7 +56,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber"
+      ]
     },
     {
       "name": "lnNumber",
@@ -91,7 +105,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "regNumSFR"
+      ]
     },
     {
       "name": "regNum",
@@ -161,7 +180,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "birthDate"
+      ]
     },
     {
       "name": "snils",
@@ -212,7 +237,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -404,7 +435,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "yearSum"
+      ]
     },
     {
       "name": "yearSum",
@@ -427,7 +462,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeFile": "Notifications.xsd"
+      "typeFile": "Notifications.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "salaryByCurrentInsurer",
+        "salaryByAllInsurers"
+      ]
     },
     {
       "name": "year",
@@ -477,7 +518,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sumOPS",
+        "sumGPH",
+        "sumOPS-GPH"
+      ]
     },
     {
       "name": "sumOPS",
@@ -583,7 +630,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sumOPS",
+        "sumGPH",
+        "sumOPS-GPH"
+      ]
     },
     {
       "name": "sumOPS",

@@ -21,7 +21,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "person",
+        "paymentNotice"
+      ]
     },
     {
       "name": "person",
@@ -43,10 +48,18 @@
         5,
         6
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "secondName",
+        "patronymic",
+        "birthDate",
+        "snils"
+      ]
     },
     {
       "name": "firstName",
@@ -67,7 +80,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -90,7 +103,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -113,7 +126,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -131,7 +144,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -154,7 +167,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -182,10 +195,24 @@
         36,
         45
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "noticeType",
+        "batchNo",
+        "socialAssistNum",
+        [
+          "choice",
+          "registerRecieve",
+          "paymentSend",
+          "paymentDone",
+          "paymentCanceling",
+          "noticeSend"
+        ]
+      ]
     },
     {
       "name": "noticeType",
@@ -222,7 +249,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -246,7 +273,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -264,7 +291,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -288,10 +315,24 @@
         17,
         18
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "infoType",
+          "docType",
+          "period",
+          "addInformation"
+        ],
+        [
+          "sequence",
+          "insurerName"
+        ]
+      ]
     },
     {
       "name": "infoType",
@@ -316,7 +357,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -379,7 +420,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -401,10 +442,15 @@
         15,
         16
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "periodStart",
+        "periodEnd"
+      ]
     },
     {
       "name": "periodStart",
@@ -420,7 +466,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -438,7 +484,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -461,7 +507,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -480,7 +526,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -503,10 +549,17 @@
         22,
         25
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "infoType",
+        "docType",
+        "period",
+        "addInformation"
+      ]
     },
     {
       "name": "infoType",
@@ -531,7 +584,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -594,7 +647,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -616,10 +669,15 @@
         23,
         24
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "periodStart",
+        "periodEnd"
+      ]
     },
     {
       "name": "periodStart",
@@ -635,7 +693,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -653,7 +711,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -676,7 +734,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -703,10 +761,26 @@
         34,
         35
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "infoType",
+          "docType",
+          "period",
+          "addInformation"
+        ],
+        [
+          "sequence",
+          "summa",
+          "sum",
+          "dutySum"
+        ]
+      ]
     },
     {
       "name": "infoType",
@@ -731,7 +805,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -794,7 +868,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -816,10 +890,15 @@
         30,
         31
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "periodStart",
+        "periodEnd"
+      ]
     },
     {
       "name": "periodStart",
@@ -835,7 +914,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -853,7 +932,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -876,7 +955,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -904,7 +983,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -931,7 +1010,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -958,7 +1037,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -983,10 +1062,25 @@
         43,
         44
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "infoType",
+          "docType",
+          "period",
+          "addInformation"
+        ],
+        [
+          "sequence",
+          "sum",
+          "paymentState"
+        ]
+      ]
     },
     {
       "name": "infoType",
@@ -1011,7 +1105,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1074,7 +1168,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -1096,10 +1190,15 @@
         40,
         41
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "periodStart",
+        "periodEnd"
+      ]
     },
     {
       "name": "periodStart",
@@ -1115,7 +1214,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1133,7 +1232,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1156,7 +1255,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -1184,7 +1283,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1207,7 +1306,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1231,10 +1330,24 @@
         51,
         52
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "infoType",
+          "docType",
+          "period",
+          "addInformation"
+        ],
+        [
+          "sequence",
+          "insurerName"
+        ]
+      ]
     },
     {
       "name": "infoType",
@@ -1259,7 +1372,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1322,7 +1435,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -1344,10 +1457,15 @@
         49,
         50
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "periodStart",
+        "periodEnd"
+      ]
     },
     {
       "name": "periodStart",
@@ -1363,7 +1481,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1381,7 +1499,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -1404,7 +1522,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -1423,7 +1541,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     }
