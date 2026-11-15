@@ -1,6 +1,7 @@
 {
   "format": 1,
-  "generated_at": "2026-11-15T16:43:28.356622+00:00",
+  "generated_at": "2026-11-15T17:23:52.437602+00:00",
+  "collector_source": "sourcecraft",
   "sourcecraft": {
     "state": "success",
     "started_at": "2026-11-15T04:01:22.644101+00:00",
