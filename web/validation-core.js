@@ -1,6 +1,18 @@
 (function(scope){
 "use strict";
 const MAX_BYTES=10*1024*1024;
+// Validate the original declaration before any in-memory transcoding can alter
+// it. XMLDecl requires version first, then optional encoding and standalone.
+function inspectDeclaration(text){
+ if(!/^\uFEFF?<\?xml(?=[\s?]|$)/.test(text))return;
+ const declaration=text.match(/^\uFEFF?<\?xml[ \t\r\n]+version[ \t\r\n]*=[ \t\r\n]*(["'])(1\.[0-9]+)\1(?:[ \t\r\n]+encoding[ \t\r\n]*=[ \t\r\n]*(["'])([A-Za-z][A-Za-z0-9._-]*)\3)?(?:[ \t\r\n]+standalone[ \t\r\n]*=[ \t\r\n]*(["'])(yes|no)\5)?[ \t\r\n]*\?>/);
+ if(!declaration)throw Error('Некорректное объявление XML. Укажите version, затем непустую encoding и standalone при необходимости.');
+ return declaration;
+}
+function utf8Bytes(text){
+ inspectDeclaration(text);
+ return new TextEncoder().encode(text.replace(/^(\uFEFF?<\?xml\s[^?]*\bencoding\s*=\s*)(["'])[^"']*\2/, '$1"UTF-8"'));
+}
 function inspectBytes(bytes){
  if(!(bytes instanceof Uint8Array)||!bytes.length)throw Error('Выберите непустой XML-файл.');
  if(bytes.length>MAX_BYTES)throw Error('Размер XML превышает 10 МиБ. Используйте локальный Python-валидатор из ZIP.');
@@ -18,6 +30,7 @@ function inspectBytes(bytes){
   }else if(['utf-8','utf8','utf-16','utf-16le','utf-16be','windows-1251','cp1251'].includes(label))text=new TextDecoder(encoding,{fatal:true}).decode(bytes);
   else throw Error('Кодировка не поддерживается');
  }catch{throw Error('Некорректные байты или неподдерживаемая кодировка XML. Поддерживаются UTF-8, UTF-16, Windows-1251, ASCII и ISO-8859-1. Можно использовать валидатор из ZIP.')}
+ inspectDeclaration(text);
  const declaration=text.match(/^<\?xml\s[^?]*encoding\s*=\s*["']([^"']+)["']/);
  if(encoding.startsWith('utf-16')&&declaration&&!['utf-16',encoding].includes(declaration[1].toLowerCase()))throw Error('Объявленная кодировка XML не соответствует байтам UTF-16.');
  // Skip lexical containers where declaration-looking text has no DTD meaning.
@@ -41,6 +54,17 @@ function checkPack(pack,expected){
  let size=0;
  for(const [name,value] of entries){if(!/^(?:message\.xsd|schemas\/[A-Za-z0-9_.-]+\.xsd)$/.test(name)||name.includes('..'))throw Error('Небезопасный путь XSD.');if(typeof value!=='string'||!/^[A-Za-z0-9+/]*={0,2}$/.test(value))throw Error('Некорректные байты XSD.');size+=value.length}
  if(size>32*1024*1024)throw Error('Слишком большой комплект XSD.');
+ if(pack.attribute_checks!==undefined||pack.attribute_type_checks!==undefined){
+  const pair=value=>Array.isArray(value)&&value.length===2&&value.every(x=>typeof x==='string'&&x.length<=8192)&&value[1].length>0;
+  const rule=(value,relative)=>value&&Array.isArray(value.path)&&(relative||value.path.length>0)&&value.path.length<=256&&value.path.every(pair)&&pair(value.attribute)&&typeof value.element==='string'&&/^value[0-9]+$/.test(value.element)&&typeof value.field==='string'&&value.field.length<=8192;
+  if(!Array.isArray(pack.attribute_checks)||pack.attribute_checks.length>50000||typeof pack.supplementary_namespace!=='string'||!pack.supplementary_namespace||pack.supplementary_namespace.length>8192||typeof pack.supplementary_schema!=='string'||!Object.hasOwn(pack.files,pack.supplementary_schema))throw Error('Некорректные дополнительные проверки XSD.');
+  if(!pack.attribute_checks.every(value=>rule(value,false)))throw Error('Некорректный путь дополнительной проверки XSD.');
+  if(pack.attribute_type_checks!==undefined){
+   if(!Array.isArray(pack.attribute_type_checks)||pack.attribute_type_checks.length>50000)throw Error('Некорректные проверки типов XSD.');
+   let total=pack.attribute_checks.length;
+   for(const profile of pack.attribute_type_checks){if(!profile||!pair(profile.type)||!Array.isArray(profile.checks)||(total+=profile.checks.length)>50000||!profile.checks.every(value=>rule(value,true)))throw Error('Некорректный путь проверки типа XSD.')}
+  }
+ }
  return pack;
 }
 function decode64(text){return Uint8Array.from(atob(text),c=>c.charCodeAt(0))}
@@ -71,5 +95,5 @@ function groupErrors(errors){
  }
  return groups;
 }
-const api={MAX_BYTES,inspectBytes,checkPack,decode64,errors,groupErrors};scope.SedoValidationCore=api;if(typeof module==='object'&&module.exports)module.exports=api;
+const api={MAX_BYTES,inspectDeclaration,utf8Bytes,inspectBytes,checkPack,decode64,errors,groupErrors};scope.SedoValidationCore=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof self==='object'?self:globalThis);

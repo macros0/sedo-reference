@@ -22,6 +22,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd",
       "contentModel": [
         "sequence",
@@ -59,6 +60,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd"
     },
     {
@@ -106,6 +108,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -130,7 +133,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -148,7 +152,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -166,7 +171,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -190,6 +196,7 @@
       "ns": "",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     }
   ]

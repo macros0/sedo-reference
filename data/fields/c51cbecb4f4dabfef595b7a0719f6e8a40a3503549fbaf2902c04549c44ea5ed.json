@@ -63,6 +63,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:notice:v3.0",
       "typeFile": "Notice.xsd"
     },
     {
@@ -115,6 +116,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -167,6 +169,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -247,6 +250,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -276,6 +280,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -309,6 +314,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -337,6 +343,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -369,6 +376,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -396,6 +404,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -434,6 +443,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -462,6 +472,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -490,6 +501,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -518,6 +530,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -546,6 +559,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -574,6 +588,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -602,6 +617,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -625,6 +641,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -660,6 +677,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -699,6 +717,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -723,6 +742,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -751,6 +771,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -779,6 +800,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -807,6 +829,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -835,6 +858,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -863,6 +887,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -891,6 +916,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -940,6 +966,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -974,6 +1001,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1002,6 +1030,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1030,6 +1059,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1048,7 +1078,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noInformation",
@@ -1072,6 +1103,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1096,6 +1128,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1120,6 +1153,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1148,6 +1182,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
       "typeFile": "NoticeResponse.xsd"
     },
     {
@@ -1171,6 +1206,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
       "typeFile": "NoticeResponse.xsd",
       "contentModel": [
         "sequence",
@@ -1200,6 +1236,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -1234,6 +1271,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1262,6 +1300,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1290,6 +1329,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1322,6 +1362,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1350,6 +1391,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1378,6 +1420,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1402,6 +1445,7 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     }
   ]

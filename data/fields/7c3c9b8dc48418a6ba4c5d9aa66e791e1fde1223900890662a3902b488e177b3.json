@@ -63,6 +63,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd"
     },
     {
@@ -110,6 +111,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -134,7 +136,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -152,7 +155,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -170,7 +174,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "socialAssistNum",
@@ -188,7 +193,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -206,7 +212,8 @@
       "children": [],
       "ns": "",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

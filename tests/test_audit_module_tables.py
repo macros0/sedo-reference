@@ -4,7 +4,7 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from audit_module_tables import audit
+from audit_module_tables import audit, prepare, Comparison
 from module_xsd import W
 
 
@@ -38,6 +38,35 @@ class ModuleAuditTests(unittest.TestCase):
         self.revision = dict(number='55', root='notice', namespace='urn:test', schema_path='Example.xsd')
         self.fields = [field('notice', 'notice', -1, 'NoticeType', [1]),
                        field('code', 'notice/code', 0, 'xs:string')]
+
+    def test_type_card_matches_declared_type_namespace_for_unqualified_use(self):
+        self.fields[0].update(ns='', typeNs='urn:test', typeFile='Imported.xsd')
+        body=make_body('Приложение 1', 'Атрибуты типа NoticeType', [
+            ['Пространство имен', 'urn:test'], HEADER, ['code', 'xs:string', 'Макс. длина: 2', '1', '']])
+        self.fields[1]['facets']=[['maxLength','3']]
+        checked,findings=audit(self.revision,body,self.fields)
+        self.assertGreater(checked,0)
+        self.assertTrue(any(f['kind']=='Ограничение длины' for f in findings))
+
+    def test_real_notice_send_type_card_is_audited_and_detects_changed_card(self):
+        from schema import Schema
+        rows=json.loads((ROOT/'data/catalog.json').read_bytes())['revisions']
+        revision=next(r for r in rows if r['number']=='110' and r['environment']=='prod' and r.get('document_version')=='2.28')
+        with zipfile.ZipFile(ROOT/'state/objects'/revision['archive_sha256']) as archive:
+            tree=Schema(archive,revision['schema_path'],revision['root']);tree.field(tree.root)
+        with zipfile.ZipFile(ROOT/'state/objects'/revision['document_sha256']) as document:
+            tables=prepare(ET.fromstring(document.read('word/document.xml')).find(W+'body'))
+        table=next(t for t in tables if 'NoticeSendType' in t[1])
+        number,title,context,rows,properties=table
+        targets=Comparison(revision,tree.fields).targets(number,title,context,properties)
+        self.assertEqual(len(targets),1)
+        self.assertEqual(targets[0]['ns'],'')
+        self.assertEqual(targets[0]['typeNs'],properties['Пространство имен'])
+        self.assertGreater(audit(revision,[table],tree.fields)[0],0)
+        changed=dict(properties)
+        changed['Дочерние элементы']=properties.get('Дочерние элементы','')+' regressionProbe'
+        issues=audit(revision,[(number,title,context,None,changed)],tree.fields)[1]
+        self.assertTrue(any('regressionProbe' in issue['spec'] for issue in issues))
 
     def test_current_constraints_recomputed_after_either_source_changes(self):
         def document(name, typ, limit):

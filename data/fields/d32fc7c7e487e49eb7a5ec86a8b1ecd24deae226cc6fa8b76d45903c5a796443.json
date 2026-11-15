@@ -55,6 +55,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -87,6 +88,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd"
     },
     {
@@ -105,7 +107,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "protocol",
@@ -126,6 +129,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd",
       "contentModel": [
         "sequence",
@@ -154,6 +158,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd",
       "contentModel": [
         "sequence",
@@ -185,6 +190,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd"
     },
     {
@@ -217,6 +223,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd"
     },
     {
@@ -235,7 +242,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "recommendation",
@@ -253,7 +261,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -277,6 +286,7 @@
       "ns": "",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     }
   ]

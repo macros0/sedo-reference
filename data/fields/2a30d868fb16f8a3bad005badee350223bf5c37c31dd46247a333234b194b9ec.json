@@ -24,6 +24,7 @@
       "ns": "http://www.fss.ru/integration/bp/BpNotificationDocsAsv/v01",
       "file": "BpNotificationDocsAsv.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "typeFile": "NotificationDocType.xsd",
       "contentModel": [
         "sequence",
@@ -56,6 +57,7 @@
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -80,6 +82,7 @@
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -98,7 +101,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurer",
@@ -148,6 +152,7 @@
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -166,7 +171,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "statusDocument",
@@ -243,7 +249,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "count",

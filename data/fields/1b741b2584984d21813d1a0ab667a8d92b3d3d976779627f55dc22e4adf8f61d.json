@@ -25,6 +25,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:result:v3.0",
       "file": "DisabilityChildrenStatementResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:result:v3.0",
       "typeFile": "DisabilityChildrenStatementResult.xsd",
       "contentModel": [
         "sequence",
@@ -62,6 +63,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:result:v3.0",
       "file": "DisabilityChildrenStatementResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:result:v3.0",
       "typeFile": "DisabilityChildrenStatementResult.xsd"
     },
     {
@@ -109,6 +111,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:result:v3.0",
       "file": "DisabilityChildrenStatementResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -224,6 +227,7 @@
       "ns": "",
       "file": "DisabilityChildrenStatementResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -248,6 +252,7 @@
       "ns": "",
       "file": "DisabilityChildrenStatementResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -266,7 +271,8 @@
       "children": [],
       "ns": "",
       "file": "DisabilityChildrenStatementResult.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

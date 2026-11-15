@@ -60,7 +60,7 @@ async function check(){
  clearReviews();sourceView.setErrors([]);$('validation-results').className='validation-results source-only';checking(true);$('errors').replaceChildren();status('Проверяем XML на вашем компьютере…');
  try{
   if((file?.size||pasted.length)>core.MAX_BYTES)throw Error('Размер XML превышает 10 МиБ. Используйте Python-валидатор из ZIP.');
-  const bytes=file?new Uint8Array(await file.arrayBuffer()):new TextEncoder().encode(pasted.replace(/^(<\?xml\s[^?]*\bencoding\s*=\s*)(["'])[^"']*\2/, '$1"UTF-8"'));if(token!==generation)return;
+  const bytes=file?new Uint8Array(await file.arrayBuffer()):core.utf8Bytes(pasted);if(token!==generation)return;
   core.checkPack(SEDO_PACK,SEDO_PACK);const decoded=core.inspectBytes(bytes);sourceView.setSource(file?decoded:pasted,{preserveEditor:edited!==null});sourceView.setBusy(true);
   worker=new Worker(workerUrl);timer=setTimeout(()=>{if(token!==generation)return;stop();checking(false);status('Проверка остановлена через 30 секунд. Можно повторить или использовать Python-валидатор из ZIP.','invalid')},30000);
   worker.onmessage=event=>{if(token!==generation)return;const result=event.data;stop();checking(false);

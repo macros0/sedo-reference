@@ -57,6 +57,7 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -89,6 +90,7 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "typeFile": "InsuredPerson.xsd"
     },
     {
@@ -110,6 +112,7 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -168,6 +171,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -200,6 +204,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -218,7 +223,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "description",
@@ -236,7 +242,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -260,6 +267,7 @@
       "ns": "",
       "file": "InsuredPerson.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     }
   ]

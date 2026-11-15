@@ -23,6 +23,7 @@
       "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd",
       "contentModel": [
         "sequence",
@@ -67,6 +68,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd",
       "contentModel": [
         "sequence",
@@ -111,6 +113,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -139,6 +142,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -171,6 +175,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -199,6 +204,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -227,6 +233,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -255,6 +262,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -279,6 +287,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -297,7 +306,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "registrationDate",
@@ -315,7 +325,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "registrationPlace",
@@ -339,6 +350,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd"
     },
     {
@@ -357,7 +369,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "uncommercial",
@@ -375,7 +388,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "jurAddress",
@@ -399,6 +413,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd"
     },
     {
@@ -423,6 +438,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd"
     },
     {
@@ -447,6 +463,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd"
     },
     {
@@ -465,7 +482,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "year",
@@ -513,6 +531,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd",
       "contentModel": [
         "sequence",
@@ -549,6 +568,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd"
     },
     {
@@ -573,6 +593,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd",
       "contentModel": [
         "sequence",
@@ -612,6 +633,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd"
     },
     {
@@ -630,7 +652,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "targetedIncome",
@@ -648,7 +671,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplCount",
@@ -666,7 +690,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "note",
@@ -688,6 +713,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd",
       "contentModel": [
         "sequence",
@@ -717,6 +743,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd"
     },
     {
@@ -742,6 +769,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/commonUq/v01",
       "typeFile": "CommonUQ.xsd",
       "contentModel": [
         "sequence",
@@ -768,7 +796,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -786,7 +815,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -804,7 +834,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -822,7 +853,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "name",
@@ -840,7 +872,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

@@ -48,7 +48,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveExpireNotice:v3.0",
       "file": "ProactiveExpireNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -76,6 +77,7 @@
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveExpireNotice:v3.0",
       "file": "ProactiveExpireNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -100,6 +102,7 @@
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveExpireNotice:v3.0",
       "file": "ProactiveExpireNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -118,7 +121,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveExpireNotice:v3.0",
       "file": "ProactiveExpireNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -146,6 +150,7 @@
       "ns": "",
       "file": "ProactiveExpireNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     }
   ]

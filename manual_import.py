@@ -110,7 +110,9 @@ def _prepare_import(root, document, filename, metadata, archive, archive_filenam
     previous = json.loads((root / "data/catalog.json").read_bytes())
     title = str(metadata.get("title") or "").strip()
     if not title:
-        title = next((r["title"] for r in previous["revisions"] if r["number"] == number), "Сообщение " + number)
+        candidates = [r for r in previous["revisions"] if r["number"] == number and r["environment"] == env]
+        current = [r for r in candidates if r.get("listed_now", True)]
+        title = next((r["title"] for r in reversed(current or candidates)), "Сообщение " + number)
     revision["title"] = title[:1000]
     duplicate = next((r for r in previous["revisions"] if r["revision_id"] == revision["revision_id"] or
                       (archive is None and r["number"] == number and r["environment"] == env and r["document_sha256"] == doc_hash)), None)

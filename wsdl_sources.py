@@ -36,7 +36,7 @@ def _allowed(url, seed):
     folder = posixpath.dirname(origin.path) + "/"
     path = posixpath.normpath(unquote(u.path))
     if (u.scheme != "https" or u.hostname != origin.hostname or
-            u.port != origin.port or u.username or u.password or u.fragment or
+            (u.port or 443) != (origin.port or 443) or u.username or u.password or u.fragment or
             not path.startswith(folder)):
         raise ValueError("WSDL dependency outside approved HTTPS endpoint: " + url)
     query = parse_qs(u.query, keep_blank_values=True)

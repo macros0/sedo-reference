@@ -21,6 +21,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -51,6 +52,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -146,7 +148,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -170,6 +173,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -198,6 +202,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -252,6 +257,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -293,7 +299,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "registerRecieve",
@@ -318,6 +325,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -423,6 +431,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -445,6 +454,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -468,7 +478,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodEnd",
@@ -486,7 +497,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -510,6 +522,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -528,7 +541,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentSend",
@@ -552,6 +566,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -650,6 +665,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -672,6 +688,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -695,7 +712,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodEnd",
@@ -713,7 +731,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -737,6 +756,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -764,6 +784,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -871,6 +892,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -893,6 +915,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -916,7 +939,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodEnd",
@@ -934,7 +958,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -958,6 +983,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -1065,6 +1091,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -1171,6 +1198,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -1193,6 +1221,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -1216,7 +1245,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodEnd",
@@ -1234,7 +1264,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -1258,6 +1289,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -1333,6 +1365,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -1438,6 +1471,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -1460,6 +1494,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -1483,7 +1518,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodEnd",
@@ -1501,7 +1537,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -1525,6 +1562,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd"
     },
     {
@@ -1543,7 +1581,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

@@ -52,7 +52,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "status",
@@ -84,6 +85,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:v01",
       "typeFile": "Confirmation.xsd"
     },
     {
@@ -102,7 +104,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "registryNum",
@@ -120,7 +123,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorList",
@@ -167,6 +171,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -191,7 +196,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -209,7 +215,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -227,7 +234,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "warnList",
@@ -274,6 +282,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -298,7 +307,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -316,7 +326,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -334,7 +345,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -358,6 +370,7 @@
       "ns": "",
       "file": "Confirmation.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     }
   ]

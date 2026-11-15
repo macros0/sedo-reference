@@ -1,5 +1,7 @@
 """Append-only collector feed shared by SourceCraft producer and GitHub consumer."""
 import json
+import os
+import tempfile
 from pathlib import Path
 
 from collector_snapshots import DIGEST, validate_manifest
@@ -40,16 +42,26 @@ def write_files(base, files, pointer, index):
     # Callers have verified the entire batch before changing any published pointer.
     base = Path(base)
     for name, raw in files.items():
-        path = base / name
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_bytes(raw)
+        atomic_write(base / name, raw)
     path = base / pointer
     raw = encode(index)
     if not path.exists() or path.read_bytes() != raw:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        temporary = path.with_suffix(".tmp")
+        atomic_write(path, raw)
+
+
+def atomic_write(path, raw):
+    """Publish complete bytes by replacing a file on the same filesystem."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, name = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=path.parent)
+    os.close(descriptor)
+    temporary = Path(name)
+    try:
         temporary.write_bytes(raw)
+        if temporary.read_bytes() != raw:
+            raise ValueError("Incomplete feed file write: " + str(path))
         temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def store_feed(base, manifests, objects):
@@ -68,16 +80,17 @@ def store_feed(base, manifests, objects):
         environments.add(env)
         for h in [row["sha256"], *(s["sha256"] for s in row["source_files"])]:
             name = "objects/" + h
-            if (base / name).exists():
-                checked_object((base / name).read_bytes(), h)
-            else:
+            if not (base / name).exists() or sha((base / name).read_bytes()) != h:
                 files[name] = checked_object(objects[h], h)
         name = manifest_path(env, digest)
         if (base / name).exists():
-            existing = json.loads((base / name).read_bytes())
-            if existing["environment"] != env or existing["content_id"] != digest:
-                raise ValueError("Existing feed manifest identity mismatch")
-            validate_manifest(existing, lambda h: files.get("objects/"+h) if "objects/"+h in files else (base/"objects"/h).read_bytes())
+            try:
+                existing = json.loads((base / name).read_bytes())
+                if existing["environment"] != env or existing["content_id"] != digest:
+                    raise ValueError("Existing feed manifest identity mismatch")
+                validate_manifest(existing, lambda h: files.get("objects/"+h) if "objects/"+h in files else (base/"objects"/h).read_bytes())
+            except (ValueError, KeyError, TypeError):
+                files[name] = encode(manifest)
         else:
             files[name] = encode(manifest)
         if (env, digest) not in known:
@@ -109,10 +122,20 @@ def import_feed(base, fetch):
         env, digest = entry["environment"], entry["content_id"]
         name = manifest_path(env, digest)
         existing = base / name
-        raw = existing.read_bytes() if existing.exists() else fetch(name)
-        manifest = json.loads(raw)
-        if manifest["environment"] != env or manifest["content_id"] != digest:
-            raise ValueError("Feed manifest identity mismatch")
+        raw = existing.read_bytes() if existing.exists() else None
+        def parse(raw):
+            manifest = json.loads(raw)
+            if (manifest["environment"] != env or manifest["content_id"] != digest
+                    or sha(encode(manifest["library"])) != digest):
+                raise ValueError("Feed manifest identity mismatch")
+            return manifest
+        try:
+            manifest = parse(raw) if raw is not None else None
+        except (ValueError, KeyError, TypeError):
+            manifest = None
+        if manifest is None:
+            raw = fetch(name)
+            manifest = parse(raw)
         def read(h):
             if not isinstance(h, str) or not DIGEST.fullmatch(h):
                 raise ValueError("Invalid feed object identity")
@@ -120,15 +143,15 @@ def import_feed(base, fetch):
             if name in files:
                 return files[name]
             path = base / name
-            content = path.read_bytes() if path.exists() else fetch(name)
-            checked_object(content, h)
-            if not path.exists():
+            content = path.read_bytes() if path.exists() else None
+            if content is None or sha(content) != h:
+                content = checked_object(fetch(name), h)
                 files[name] = content
             return content
         validate_manifest(manifest, read)
-        if not existing.exists():
+        if not existing.exists() or existing.read_bytes() != raw:
             files[name] = raw
-            count += 1
+            count += not existing.exists()
     write_files(base, files, "collector/feed.json", index)
     return dict(new_manifests=count, new_objects=sum(p.startswith("objects/") for p in files),
                 latest=index["latest"], history_size=len(index["manifests"]))

@@ -22,6 +22,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "typeFile": "PaymentState.xsd",
       "contentModel": [
         "sequence",
@@ -48,6 +49,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "typeFile": "PaymentState.xsd",
       "contentModel": [
         "sequence",
@@ -79,6 +81,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "typeFile": "PaymentState.xsd",
       "contentModel": [
         "sequence",
@@ -130,7 +133,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SNILS",
@@ -148,7 +152,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "LNCode",
@@ -166,7 +171,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "stateDate",
@@ -184,7 +190,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentSum",
@@ -251,6 +258,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "typeFile": "PaymentState.xsd"
     },
     {
@@ -272,6 +280,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "typeFile": "PaymentState.xsd",
       "contentModel": [
         "sequence",
@@ -298,6 +307,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "typeFile": "PaymentState.xsd",
       "contentModel": [
         "sequence",
@@ -373,6 +383,7 @@
       "ns": "",
       "file": "PaymentState.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     }
   ]

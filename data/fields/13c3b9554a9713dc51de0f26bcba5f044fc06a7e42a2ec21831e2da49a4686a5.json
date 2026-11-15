@@ -84,6 +84,7 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -136,6 +137,7 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -192,6 +194,7 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -218,6 +221,7 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -264,6 +268,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -288,6 +293,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -316,6 +322,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -340,6 +347,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -368,6 +376,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -392,6 +401,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -410,7 +420,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "terminationInfo",
@@ -470,6 +481,7 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
       "typeFile": "NoticeTermination05Request.xsd"
     },
     {
@@ -554,7 +566,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidDoc",
@@ -626,7 +639,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "senderInfo",
@@ -649,6 +663,7 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
       "typeFile": "NoticeTermination05Request.xsd",
       "contentModel": [
         "sequence",
@@ -681,6 +696,7 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -727,6 +743,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -751,6 +768,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -779,6 +797,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -803,6 +822,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -831,6 +851,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -855,6 +876,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -887,6 +909,7 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -915,6 +938,7 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -943,6 +967,7 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     }
   ]

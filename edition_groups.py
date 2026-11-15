@@ -1,10 +1,11 @@
 """Group exact schema editions for display without rewriting source history."""
 import copy
 import json
+import re
 
 from sync import sha
 
-SOURCE_KEYS = ("revision_id", "document_version", "label_date", "document_url", "document_sha256",
+SOURCE_KEYS = ("revision_id", "number", "environment", "title", "document_version", "label_date", "document_url", "document_sha256",
                "document_download", "document_filename", "source_type", "manual_source", "module", "listed_now")
 
 
@@ -15,6 +16,20 @@ def _tree(value):
     if isinstance(value, list):
         return [_tree(v) for v in value]
     return value
+
+
+def _source_record(observed, current_rows):
+    source = {key: copy.deepcopy(observed[key]) for key in SOURCE_KEYS if key in observed}
+    identity = (source.get("document_sha256"), source.get("document_url"))
+    source["listed_now"] = any((row.get("document_sha256"), row.get("document_url")) == identity
+                               and row.get("listed_now", True) for row in current_rows)
+    downloadable = next((row for row in current_rows if row.get("document_sha256") == identity[0]
+                         and row.get("document_download")), None)
+    if downloadable:
+        source["document_download"] = downloadable["document_download"]
+        filename = f"sedo-{source.get('number', downloadable['number'])}-{source.get('environment', downloadable['environment'])}-v{source.get('document_version') or 'unversioned'}-{source['document_sha256'][:8]}.docx"
+        source["document_filename"] = re.sub(r"[^A-Za-z0-9._-]", "_", filename)
+    return source
 
 
 def group_editions(catalog, load_fields):
@@ -28,15 +43,18 @@ def group_editions(catalog, load_fields):
                         sorted({digest for path, digest in row["dependencies"]}), _tree(load_fields(rid))]
             key = sha(json.dumps(identity, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf8"))
         groups.setdefault(key, []).append(row)
+    observed_sources = {}
+    for observation in result.get("source_observations", []):
+        observed_sources.setdefault(observation["revision_id"], []).append(observation["source"])
     for members in groups.values():
         # Source history is chronological and append-only. Keep the first ID so
         # adding another document cannot invalidate existing bookmarks/mappings.
         representative = members[0]["revision_id"]
         sources = {}
-        for row in members:
+        observed = [source for row in members for source in observed_sources.get(row["revision_id"], [])]
+        for row in [*observed, *members]:
             identity = (row.get("document_sha256"), row.get("document_url"))
-            source = {k: copy.deepcopy(row[k]) for k in SOURCE_KEYS if k in row}
-            source.setdefault("listed_now", True)
+            source = _source_record(row, members)
             if identity in sources:
                 sources[identity]["listed_now"] |= source["listed_now"]
             else:
@@ -60,18 +78,26 @@ def _event_batch(event):
 def _source_history(catalog):
     revisions = {r["revision_id"]: r for r in catalog["revisions"]}
     seen = set()
-    for event in catalog.get("updates", []):
+    for event in catalog.get("source_observations", catalog.get("updates", [])):
         row = revisions[event["revision_id"]]
         rid = row.get("display_revision_id", row["revision_id"])
-        if not row.get("document_sha256"):
+        saved = event.get("source", catalog.get("update_sources", {}).get(event["revision_id"]))
+        observed = saved if saved is not None else row
+        if not observed.get("document_sha256"):
             continue
-        identity = (row["document_sha256"], row.get("document_url"))
+        identity = (observed["document_sha256"], observed.get("document_url"))
         if (rid, identity) in seen:
             continue
         seen.add((rid, identity))
-        source = next((s for s in row.get("edition_sources", [])
-                       if (s.get("document_sha256"), s.get("document_url")) == identity),
-                      {k: row[k] for k in SOURCE_KEYS if k in row})
+        current = next((s for s in row.get("edition_sources", [row])
+                        if (s.get("document_sha256"), s.get("document_url")) == identity), None)
+        source = {k: copy.deepcopy(observed[k]) for k in SOURCE_KEYS if k in observed}
+        if saved is not None:
+            # Download bytes are addressed by digest; labels stay those seen at
+            # this event, even when the current row uses a later URL/version.
+            source = _source_record(source, row.get("edition_sources", [row]))
+        elif current:
+            source = copy.deepcopy(current)
         yield event, rid, copy.deepcopy(source)
 
 

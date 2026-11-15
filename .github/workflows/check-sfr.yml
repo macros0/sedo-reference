@@ -52,8 +52,10 @@ jobs:
           node tests/test_mapping_draft.cjs
           node tests/test_mapping_editor.cjs
           node tests/test_mapping_apply.cjs
+          node tests/test_mapping_concurrency.cjs
           node tests/test_edition_groups.cjs
           node tests/test_browser_validation.cjs
+          node tests/test_attribute_ref_constraints.cjs
           node tests/test_validation_paths.cjs
           node tests/test_validation_review_paths.cjs
           node tests/test_validation_source.cjs

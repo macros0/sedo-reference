@@ -1,5 +1,6 @@
 """Publish exact-edition XSD closures with byte-identical originals and offline copies."""
 import io
+import copy
 import base64
 import gzip
 import json
@@ -9,6 +10,7 @@ import tempfile
 import zipfile
 from pathlib import Path, PurePosixPath
 from lxml import etree
+from xml.etree import ElementTree as ET
 from schema import import_basename, Schema
 from sync import sha, write
 from xsd_validate import compile_schema
@@ -65,6 +67,135 @@ def _resolve(files, source, reference, namespace):
     raise Unavailable(('Неоднозначная' if candidates else 'Не найдена')+' зависимость XSD: '+location)
 
 
+def _attribute_checks(row, selected, files, local_paths):
+    """Compile attribute-use fixed constraints as equivalent local-attribute probes.
+
+    libxml2 ignores fixed on an attribute ref. Local attribute fixed constraints use the
+    same XSD type/value-space comparison and are enforced in both shipped engines.
+    Originals and their working schema components remain otherwise unchanged.
+    """
+    fixed_globals={(root.get('targetNamespace',''),node.get('name')) for _,root in files.values()
+                   for node in root.findall('{'+XS+'}attribute') if node.get('fixed') is not None}
+    def affected(node):
+        reference=node.get('ref')
+        if node.tag!='{'+XS+'}attribute' or not reference:return False
+        prefix,_,name=reference.rpartition(':')
+        return node.get('fixed') is not None or (node.nsmap.get(prefix or None,''),name) in fixed_globals
+    if not any(affected(node) for _,root in files.values() for node in root.iter()):return {},{}
+    archive_bytes=io.BytesIO()
+    with zipfile.ZipFile(archive_bytes,'w') as archive:
+        for name,content in selected.items():archive.writestr(name,content)
+    with zipfile.ZipFile(archive_bytes) as archive:
+        tree=Schema(archive,row['schema_path'],row['root']);tree.field(tree.root)
+    nodes={}
+    for name,(root,_,_) in tree.files.items():
+        native=[e for e in files[name][1].iter() if isinstance(e.tag,str)]
+        nodes.update(zip(root.iter(),native))
+    namespace='urn:sedo:attribute-value-checks'
+    while any(root.get('targetNamespace')==namespace for _,root in files.values()):namespace+=':checks'
+    checks=etree.Element('{'+XS+'}schema',nsmap={'xs':XS,'probe':namespace},targetNamespace=namespace)
+    groups={}
+    for name,(_,root) in files.items():groups.setdefault(root.get('targetNamespace',''),[]).append(name)
+    generated={};entry='schemas/attribute-checks.xsd'
+    # Import complete namespace groups once. Includes retain chameleon semantics;
+    # grouping also supports namespaces split across several source XSD files.
+    for ordinal,(ns,names) in enumerate(sorted(groups.items())):
+        if len(names)==1:target=local_paths[names[0]]
+        else:
+            target=f'schemas/attribute-types-{ordinal}.xsd'
+            attributes={'targetNamespace':ns} if ns else {}
+            group=etree.Element('{'+XS+'}schema',nsmap={'xs':XS},**attributes)
+            for name in names:etree.SubElement(group,'{'+XS+'}include',schemaLocation=posixpath.relpath(local_paths[name],'schemas'))
+            generated[target]=etree.tostring(group,encoding='UTF-8',xml_declaration=True)
+        attributes={'namespace':ns} if ns else {}
+        etree.SubElement(checks,'{'+XS+'}import',schemaLocation=posixpath.relpath(target,'schemas'),**attributes)
+    probe_names={}
+    def collect(fields, relative=False):
+        rules=[];definitions={}
+        for field in fields:
+            if field['kind']!='attribute' or 'fixed' not in field['flags']:continue
+            decl,source=tree.field_declarations[id(field)]
+            if not decl.get('ref'):continue
+            path=[];contexts=[field['group']] if field['group'] else [];current=field['parent']
+            while current>=0:
+                ancestor=fields[current];path.append([ancestor['ns'],ancestor['name']]);current=ancestor['parent']
+                if ancestor['group']:contexts.append(ancestor['group'])
+            path.reverse();contexts=tuple(reversed(contexts))
+            if relative:path=path[1:]
+            key=tuple(map(tuple,path))+((field['ns'],field['name']),)
+            fixed=field['flags']['fixed']
+            signature=(fixed,source.get('type'),tree.owner[source],etree.tostring(nodes[source]))
+            # Restrictions retain inherited fixed values, including equivalent
+            # lexical forms (boolean false/0). Keep both typed probes rather
+            # than comparing their strings; distinct choice contexts stay ambiguous.
+            prior=definitions.setdefault(key,[])
+            if any(previous==signature for previous,_ in prior):continue
+            if any(context!=contexts and any('Выбор' in label for label in (*context,*contexts)) for _,context in prior):raise Unavailable('Неоднозначное fixed для пути '+field['path'])
+            prior.append((signature,contexts))
+            constraint=decl if 'fixed' in decl.attrib else source
+            probe_key=(constraint,source)
+            if probe_key not in probe_names:
+                fixed_source=nodes[constraint];actual=nodes[source];bindings=dict(fixed_source.nsmap)
+                element_name='value'+str(len(probe_names));probe_names[probe_key]=element_name
+                attributes={'name':'value','fixed':fixed,'use':'required'}
+                if actual.get('type'):
+                    qname=actual.get('type');prefix,_,name=qname.rpartition(':');ns=actual.nsmap.get(prefix or None,'')
+                    if ns:
+                        alias='sedotype'
+                        while alias in bindings:alias+='x'
+                        bindings[alias]=ns;attributes['type']=alias+':'+name
+                    else:
+                        if bindings.get(None):raise Unavailable('Тип без namespace и QName fixed требуют отдельного пространства имён: '+field['path'])
+                        attributes['type']=name
+                else:
+                    anonymous=actual.find('{'+XS+'}simpleType')
+                    if anonymous is None:
+                        alias='sedotype'
+                        while alias in bindings:alias+='x'
+                        bindings[alias]=XS;attributes['type']=alias+':anySimpleType'
+                probe_element=etree.SubElement(checks,'{'+XS+'}element',name=element_name)
+                probe=etree.SubElement(etree.SubElement(probe_element,'{'+XS+'}complexType'),'{'+XS+'}attribute',nsmap=bindings,**attributes)
+                if not actual.get('type') and actual.find('{'+XS+'}simpleType') is not None:probe.append(copy.deepcopy(actual.find('{'+XS+'}simpleType')))
+            rules.append(dict(path=path,attribute=[field['ns'],field['name'][1:]],element=probe_names[probe_key],field=field['path']))
+        return rules
+    rules=collect(tree.fields);type_rules=[]
+    def needs_checks(declaration):
+        pending=[declaration];visited=set()
+        while pending:
+            node=pending.pop()
+            if node in visited:continue
+            visited.add(node)
+            for child in node.iter():
+                native=nodes.get(child)
+                if native is not None and affected(native):return True
+                qname=child.get('type') or child.get('base') or child.get('ref')
+                if not qname:continue
+                kinds=['simpleType','complexType'] if child.get('type') or child.get('base') else [child.tag.rsplit('}',1)[-1]]
+                target=tree.resolve(qname,child,kinds)
+                if target is not None:pending.append(target)
+        return False
+    # xsi:type can select a compatible named type not present in the static root
+    # tree. Compile each type's additional constraints relative to its XML node.
+    # These expansions consume the same 50,000-node budget as the root tree.
+    for (namespace_uri,kind,name),declaration in sorted(tree.symbol.items()):
+        if kind!='complexType' or not needs_checks(declaration):continue
+        bindings=dict(tree.prefixes[declaration]);alias='sedotyperef'
+        while alias in bindings:alias+='x'
+        if namespace_uri:bindings[alias]=namespace_uri;qname=alias+':'+name
+        else:bindings['']='';qname=name
+        temporary=ET.Element('{'+XS+'}element',name='typeRoot',type=qname)
+        tree.owner[temporary]=tree.owner[declaration];tree.prefixes[temporary]=bindings
+        tree.fields=[];tree.field(temporary)
+        applicable=collect(tree.fields,relative=True)
+        if applicable:type_rules.append(dict(type=[namespace_uri,name],checks=applicable))
+    if not probe_names:return {},{}
+    root=etree.SubElement(checks,'{'+XS+'}element',name='checks')
+    choice=etree.SubElement(etree.SubElement(root,'{'+XS+'}complexType'),'{'+XS+'}choice',minOccurs='0',maxOccurs='unbounded')
+    for element_name in probe_names.values():etree.SubElement(choice,'{'+XS+'}element',ref='probe:'+element_name)
+    generated[entry]=etree.tostring(checks,encoding='UTF-8',xml_declaration=True)
+    return generated,dict(attribute_checks=rules,attribute_type_checks=type_rules,supplementary_schema=entry,supplementary_namespace=namespace,generated_files=[dict(local_path=name,local_sha256=sha(content)) for name,content in sorted(generated.items())])
+
+
 def _prepare(row, selected):
     files={}
     for name,content in sorted(selected.items()):
@@ -93,22 +224,29 @@ def _prepare(row, selected):
         local=etree.tostring(root,encoding='UTF-8',xml_declaration=True)
         output[original_paths[name]]=content;output[local_paths[name]]=local
         records.append(dict(source_path=name,original_path=original_paths[name],local_path=local_paths[name],original_sha256=sha(content),local_sha256=sha(local),rewrites=changes))
+    generated,constraints=_attribute_checks(row,selected,files,local_paths)
+    output.update(generated)
     with tempfile.TemporaryDirectory(prefix='sedo-xsd-compile-') as folder:
         base=Path(folder)
         for name,content in output.items():
             if name.startswith('originals/'):continue
             target=base/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(content)
         compile_schema(base/'message.xsd',base)
-    return output,records
+        if constraints:compile_schema(base/constraints['supplementary_schema'],base)
+    return output,records,constraints
 
 
-def _zip(row, output, records):
+def _zip(row, output, records, constraints=None):
     manifest={k:row.get(k) for k in ('number','environment','revision_id','document_version','label_date','root','namespace','schema_path','archive_sha256','archive_url','document_url','schema_source_type','schema_source_url','schema_sources')}
     manifest.update(format=1,entrypoint='message.xsd',files=records)
+    manifest.update(constraints or {})
     output=dict(output)
     output['manifest.json']=(json.dumps(manifest,ensure_ascii=False,indent=2,sort_keys=True)+'\n').encode('utf8')
     output['validate.py']=Path(__file__).with_name('xsd_validate.py').read_text('utf-8-sig').encode('utf8')
     output['requirements.txt']=('lxml=='+LXML_VERSION+'\n').encode('ascii')
+    constraint_note=('Дополнительная схема schemas/attribute-checks.xsd проверяет fixed на ссылках атрибутов:\n'
+                     'это правило libxml2 пропускает при обычной XSD-проверке. Используйте validate.py\n'
+                     'для полной проверки; стороннему валидатору требуется отдельная проверка этого правила.\n' if constraints else '')
     readme=f'''Комплект XSD сообщения СЭДО {row['number']}
 Контур: {row['environment']}
 Версия документа: {row.get('document_version') or 'не указана'}
@@ -141,7 +279,7 @@ originals — исходные XSD без изменения байтов; им�
 чтобы избежать совпадений и длинных путей. Исходные пути находятся в manifest.json.
 schemas и message.xsd — рабочие копии: изменены только пути schemaLocation
 для автономного разрешения зависимостей. Типы, namespace и ограничения сохранены.
-manifest.json содержит контрольные суммы и список изменений путей.
+{constraint_note}manifest.json содержит контрольные суммы, изменения путей и дополнительные проверки.
 Комплект относится к этой точной редакции и контуру, включая архивные версии.
 Документация библиотеки: https://lxml.de/6.1/validation.html
 '''
@@ -186,7 +324,7 @@ def publish_bundles(catalog,state,site,navigation=None):
             if isinstance(value,str):
                 row['schema_export_error']='XSD не готова для локальной валидации: '+value[:500]
                 continue
-            output,records=value;content=_zip(row,output,records);relative='schemas/'+rid+'.zip';target=Path(site)/relative
+            output,records,constraints=value;content=_zip(row,output,records,constraints);relative='schemas/'+rid+'.zip';target=Path(site)/relative
             if not target.is_file() or target.read_bytes()!=content:write(target,content)
             version=row.get('document_version') or 'unversioned'
             row.update(schema_export_status='ready',schema_download=relative,schema_filename=re.sub('[^A-Za-z0-9._-]','_',f"sedo-{row['number']}-{row['environment']}-v{version}-{rid[:8]}-xsd.zip"),schema_bundle_sha256=sha(content),schema_file_count=len(records))
@@ -196,7 +334,8 @@ def publish_bundles(catalog,state,site,navigation=None):
                 namespace_key=(key,tuple(pack['fields']))
                 if namespace_key not in namespace_cache:namespace_cache[namespace_key]=_field_namespaces(archives[digest],row,pack['fields'])
                 pack['field_namespaces']=namespace_cache[namespace_key]
-            pack.update(format=1,entrypoint='message.xsd',files={f['local_path']:base64.b64encode(output[f['local_path']]).decode('ascii') for f in records})
+            pack.update(constraints)
+            pack.update(format=1,entrypoint='message.xsd',files={name:base64.b64encode(content).decode('ascii') for name,content in output.items() if not name.startswith('originals/')})
             browser=gzip.compress(json.dumps(pack,ensure_ascii=True,separators=(',',':'),sort_keys=True).encode('utf8'),compresslevel=9,mtime=0)
             browser=browser[:9]+b'\xff'+browser[10:]  # Stable gzip OS marker across Python/platform versions.
             relative='schemas/'+rid+'.validation.json.gz';target=Path(site)/relative

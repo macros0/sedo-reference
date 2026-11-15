@@ -71,14 +71,15 @@ vm.runInContext(fs.readFileSync(path.join(root,"web/comparison-mapping.js"),"utf
 const ui=context.SedoMapping,uiFields=prefix=>[{path:prefix,doc:"Уникальный раздел"},...Array.from({length:52},(_,i)=>({path:prefix+"/x"+i,doc:"Поле "+i}))];
 const uiOptions={left:{revision_id:"ui-left"},right:{revision_id:"ui-right"},before:uiFields("a"),after:uiFields("b"),isCurrent:()=>true},uiParent={beforePath:"a",afterPath:"b",comment:""};
 const host=new Element("host"),walk=n=>[n,...n.children.flatMap(walk)],find=cls=>walk(host).filter(n=>n.className.split(" ").includes(cls));
+(async()=>{
 let updates=0;ui.store.save(uiOptions,[uiParent]);ui.mount(host,uiOptions,{pairs:[uiParent],notice:""},()=>updates++);
 find("mapping-suggest")[0].onclick();assert.equal(ui.store.load(uiOptions).pairs.length,1);assert.equal(updates,0,"opening preview must not apply suggestions");
 const uncheck=checkbox=>{checkbox.checked=false;checkbox.onchange()};
 uncheck(find("mapping-proposal")[0]);find("mapping-next")[0].onclick();uncheck(find("mapping-proposal").at(-1));find("mapping-prev")[0].onclick();
 assert.equal(find("mapping-proposal")[0].checked,false,"choice survives pagination");
-find("mapping-apply")[0].onclick();const approved=ui.store.load(uiOptions).pairs;
+await find("mapping-apply")[0].onclick();const approved=ui.store.load(uiOptions).pairs;
 assert.equal(updates,1);assert.equal(approved.length,51);assert.ok(approved.some(p=>p.beforePath==="a"));assert.ok(!approved.some(p=>["a/x0","a/x51"].includes(p.beforePath)));
-find("mapping-controls")[0].children[1].onclick();assert.equal(ui.store.load(uiOptions).pairs.length,0);
+await find("mapping-controls")[0].children[1].onclick();assert.equal(ui.store.load(uiOptions).pairs.length,0);
 host.replaceChildren();updates=0;ui.store.save(uiOptions,[uiParent]);ui.mount(host,uiOptions,{pairs:[uiParent],notice:""},()=>updates++);find("mapping-suggest")[0].onclick();
 find("mapping-select-none")[0].onclick();assert.ok(find("mapping-proposal").every(c=>!c.checked));assert.match(find("mapping-selected")[0].textContent,/предложений 0 из 52/);assert.equal(ui.store.load(uiOptions).pairs.length,1);
 find("mapping-select-all")[0].onclick();assert.ok(find("mapping-proposal").every(c=>c.checked));find("mapping-next")[0].onclick();assert.ok(find("mapping-proposal").every(c=>c.checked));
@@ -89,8 +90,9 @@ search.value="УНИКАЛЬНЫЙ РАЗДЕЛ";search.oninput();assert.equal(f
 only.checked=false;only.onchange();assert.equal(find("mapping-explicit").length,1);assert.match(find("mapping-selected")[0].textContent,/предложений 51 из 52/);
 search.value="";search.oninput();assert.match(find("mapping-visible-count")[0].textContent,/страница 1 из 2/);
 search.value="ПОЛЕ 50";search.oninput();only.checked=true;only.onchange();assert.equal(find("mapping-proposal").length,1);
-find("mapping-apply")[0].onclick();const filteredApproval=ui.store.load(uiOptions).pairs;
+await find("mapping-apply")[0].onclick();const filteredApproval=ui.store.load(uiOptions).pairs;
 assert.equal(filteredApproval.length,52,"apply includes selected pairs hidden by the search");assert.ok(!filteredApproval.some(p=>p.beforePath==="a/x51"));
 ui.store.save(uiOptions,[uiParent]);updates=0;
-uiOptions.isCurrent=()=>false;find("mapping-apply")[0].onclick();assert.equal(updates,0,"stale preview must not apply to another comparison");assert.equal(ui.store.load(uiOptions).pairs.length,1);
+uiOptions.isCurrent=()=>false;await find("mapping-apply")[0].onclick();assert.equal(updates,0,"stale preview must not apply to another comparison");assert.equal(ui.store.load(uiOptions).pairs.length,1);
 console.log("Preview UI: search, only-proposed filter, preserved selection, pages, approval, reset and stale-navigation guard passed.");
+})().catch(error=>{console.error(error);process.exitCode=1});

@@ -162,7 +162,8 @@ class CollectorTests(unittest.TestCase):
         context = MagicMock()
         response = MagicMock()
         response.__enter__.return_value.read.return_value = b"fixture"
-        with patch("sync.ssl.create_default_context", return_value=context), patch("sync.urlopen", return_value=response):
+        with patch("sync.ssl.create_default_context", return_value=context), patch("sync.HTTPSHandler"), patch("sync.build_opener") as opener:
+            opener.return_value.open.return_value = response
             self.assertEqual(get(fixtures.SEED), b"fixture")
         context.load_verify_locations.assert_called_once()
         self.assertTrue(context.load_verify_locations.call_args.kwargs["cafile"].endswith("ecp-test.sfr.gov.ru.pem"))

@@ -21,6 +21,7 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "typeFile": "InsuredPerson.xsd",
       "contentModel": [
         "sequence",
@@ -54,6 +55,7 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -75,6 +77,7 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "typeFile": "InsuredPerson.xsd",
       "contentModel": [
         "sequence",

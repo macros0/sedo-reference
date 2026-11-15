@@ -36,6 +36,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd",
       "contentModel": [
         "sequence",
@@ -73,6 +74,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd"
     },
     {
@@ -91,7 +93,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "prim_batch_no",
@@ -115,6 +118,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd"
     },
     {
@@ -201,6 +205,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -225,6 +230,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -251,6 +257,7 @@
       "flags": {
         "nillable": "true"
       },
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd"
     },
     {
@@ -275,6 +282,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd"
     },
     {
@@ -299,6 +307,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -317,7 +326,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "bankInfo",
@@ -371,6 +381,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -517,6 +528,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -545,6 +557,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -573,6 +586,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -680,6 +694,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd",
       "contentModel": [
         "sequence",
@@ -709,6 +724,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -743,6 +759,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -771,6 +788,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -799,6 +817,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -827,6 +846,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -922,6 +942,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -956,6 +977,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -984,6 +1006,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1012,6 +1035,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1063,6 +1087,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1159,7 +1184,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "disabilityBeginDate",
@@ -1177,7 +1203,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "disabilityEndDate",
@@ -1223,7 +1250,8 @@
       "file": "disabilityChildrenStatement.xsd",
       "flags": {
         "fixed": "1"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "endDate",
@@ -1241,7 +1269,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ORD",
@@ -1263,6 +1292,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd",
       "contentModel": [
         "sequence",
@@ -1309,7 +1339,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periods",
@@ -1358,6 +1389,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd",
       "contentModel": [
         "sequence",
@@ -1388,6 +1420,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd",
       "contentModel": [
         "sequence",
@@ -1580,6 +1613,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd",
       "contentModel": [
         "sequence",
@@ -1612,6 +1646,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd",
       "contentModel": [
         "sequence",
@@ -1773,6 +1808,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "typeFile": "disabilityChildrenStatement.xsd",
       "contentModel": [
         "sequence",
@@ -1885,6 +1921,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -2105,6 +2142,7 @@
       "ns": "",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -2129,6 +2167,7 @@
       "ns": "",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     }
   ]

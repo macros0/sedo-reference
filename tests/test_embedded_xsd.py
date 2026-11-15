@@ -21,6 +21,22 @@ def document():
     return out.getvalue()
 
 class EmbeddedSchemaTests(unittest.TestCase):
+    def test_embedded_inline_and_combined_archives_use_platform_independent_headers(self):
+        import html
+        schema = '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"></xs:schema>'
+        output = io.BytesIO()
+        with zipfile.ZipFile(output, 'w') as document_zip:
+            document_zip.writestr('word/embeddings/one.xsd', schema)
+            document_zip.writestr('word/embeddings/two.xsd', schema.replace('><', ' targetNamespace="urn:two"><'))
+            inline = html.escape(schema.replace('><', ' targetNamespace="urn:inline"><'))
+            document_zip.writestr('word/document.xml', f'<w:document xmlns:w="{W}"><w:body><w:p><w:r><w:t>{inline}</w:t></w:r></w:p></w:body></w:document>')
+        packages, issues = extract_archives(output.getvalue())
+        self.assertFalse(issues)
+        self.assertEqual(len(packages), 4)
+        for package in packages:
+            with zipfile.ZipFile(io.BytesIO(package['content'])) as archive:
+                self.assertTrue(all(item.create_system == 3 for item in archive.infolist()), package['container'])
+
     def test_embedded_xsd_is_deterministic_and_retains_original_bytes(self):
         first,issues=extract_archives(document());second,_=extract_archives(document())
         self.assertFalse(issues);self.assertEqual(len(first),1)

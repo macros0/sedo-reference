@@ -32,6 +32,7 @@
       "ns": "http://www.fss.ru/integration/bp/BpDocumentsAsv/v01",
       "file": "BpDocumentsAsv.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/DocumentType/v01",
       "typeFile": "DocumentType.xsd",
       "contentModel": [
         "sequence",
@@ -70,6 +71,7 @@
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/fssDepartment/v01",
       "typeFile": "FssDepartment.xsd",
       "contentModel": [
         "sequence",
@@ -123,6 +125,7 @@
       "ns": "http://www.fss.ru/integration/types/fssDepartment/v01",
       "file": "FssDepartment.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/fssDepartment/v01",
       "typeFile": "FssDepartment.xsd"
     },
     {
@@ -147,6 +150,7 @@
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -171,6 +175,7 @@
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -195,6 +200,7 @@
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -213,7 +219,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -231,7 +238,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "requestDocs",
@@ -295,7 +303,8 @@
       "children": [],
       "ns": "",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@description",
@@ -405,7 +414,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -423,7 +433,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -441,7 +452,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -513,7 +525,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "signatureFund",
@@ -531,7 +544,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "application",
@@ -614,7 +628,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -632,7 +647,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -650,7 +666,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -722,7 +739,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "signatureFund",
@@ -740,7 +758,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dateDeadline",
@@ -758,7 +777,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "organizationSize",
@@ -809,6 +829,7 @@
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -833,6 +854,7 @@
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -1018,7 +1040,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "offsetPurposeId",
@@ -1036,7 +1059,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "overKbkCode",
@@ -1077,7 +1101,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "offsetSum",
@@ -1255,7 +1280,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refundSum",

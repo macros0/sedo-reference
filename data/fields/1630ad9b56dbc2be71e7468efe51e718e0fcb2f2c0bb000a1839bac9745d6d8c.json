@@ -148,6 +148,7 @@
       "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -176,6 +177,7 @@
       "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -233,7 +235,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "assignedSumm",
@@ -265,6 +268,7 @@
       "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -297,6 +301,7 @@
       "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -325,6 +330,7 @@
       "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -367,6 +373,7 @@
       "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -419,6 +426,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -554,6 +562,7 @@
       "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -578,6 +587,7 @@
       "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -596,7 +606,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

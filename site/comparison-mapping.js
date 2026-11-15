@@ -155,12 +155,40 @@
   return {suggestions:[...pending.values(),...descendants],conflicts:relative.conflicts.filter(available),excelCount:pending.size,descendantCount:descendants.length};
  }
  const storageKey=(left,right)=>"sedo-field-mappings:v1:"+[left.revision_id,right.revision_id].sort().map(encodeURIComponent).join(":");
+ function mergeDraft(base,draft,current){
+  const key=p=>JSON.stringify([p.beforePath,p.afterPath]),map=pairs=>new Map(pairs.map(p=>[key(p),p])),equal=(a,b)=>a?.comment===b?.comment&&!!a===!!b;
+  const original=map(base),local=map(draft),latest=map(current),changes=next=>[...new Set([...original.keys(),...next.keys()])].filter(k=>!equal(original.get(k),next.get(k)));
+  const ours=changes(local),theirs=changes(latest),conflicts=new Map(),sources=new Map(),targets=new Map();
+  const add=(index,path,key)=>{if(!index.has(path))index.set(path,[]);index.get(path).push(key)};
+  for(const k of theirs){const p=latest.get(k)||original.get(k);add(sources,p.beforePath,k);add(targets,p.afterPath,k)}
+  for(const a of ours){
+   const x=local.get(a)||original.get(a),conflict=b=>a!==b||!equal(local.get(a),latest.get(b));
+   if((sources.get(x.beforePath)||[]).some(conflict)||(targets.get(x.afterPath)||[]).some(conflict))conflicts.set(a,x);
+  }
+  if(conflicts.size){
+   const describe=(pairs,field)=>{const variants=pairs.filter(p=>p.beforePath===field.beforePath||p.afterPath===field.afterPath);return variants.length?variants.map(p=>p.beforePath+' → '+p.afterPath+' · комментарий: '+JSON.stringify(p.comment)).join('; '):'соответствие удалено'};
+   const details=[...conflicts.values()].slice(0,5).map(field=>'Конфликт: '+field.beforePath+' → '+field.afterPath+'. Сохранено в другой вкладке: '+describe(current,field)+'. В этом черновике: '+describe(draft,field)+'.');
+   if(conflicts.size>5)details.push('Остальные конфликтующие правки: '+(conflicts.size-5)+'.');
+   throw Error('Соответствия изменены в другой вкладке. '+details.join('\n')+' Черновик сохранён в этом окне. Сверьте изменения перед повторным применением.');
+  }
+  for(const k of ours){if(local.has(k))latest.set(k,local.get(k));else latest.delete(k)}
+  return [...latest.values()];
+ }
  function createStore(getStorage){
-  const lastKnown=new Map(),sessionOnly=new Map();
+  const lastKnown=new Map(),sessionOnly=new Map(),compatibilityNotices=new Map();
+  function transaction(options,update){
+   const key=storageKey(options.left,options.right),locks=globalThis.navigator?.locks;
+   // Every normal write (apply, reset and card undo) shares this lock. Check
+   // navigation after acquisition; keep the final read and write synchronous.
+   const run=()=>{if(options.isCurrent&&!options.isCurrent())throw Error("Выбранная пара редакций изменилась. Откройте предпросмотр снова.");return update()};
+   if(locks?.request){compatibilityNotices.delete(key);return locks.request(key,run)}
+   compatibilityNotices.set(key,"Для одновременной работы в нескольких вкладках нужен современный браузер. Применяйте изменения по очереди.");
+   return run();
+  }
   return {
    load(options){
     const key=storageKey(options.left,options.right);
-    let raw=lastKnown.get(key),notice=sessionOnly.get(key)||"";
+    let raw=lastKnown.get(key),notice=sessionOnly.get(key)||compatibilityNotices.get(key)||"";
     if(!sessionOnly.has(key)){
      try{raw=getStorage().getItem(key);lastKnown.set(key,raw)}
      catch{notice="Хранилище браузера недоступно. Соответствия будут действовать в текущем сеансе."}
@@ -179,6 +207,14 @@
     try{getStorage().setItem(key,raw);sessionOnly.delete(key);return ""}
     catch{const notice="Не удалось сохранить соответствия в браузере. Они действуют только в текущем сеансе; сохраните Excel для повторной загрузки.";sessionOnly.set(key,notice);return notice}
    },
+   async apply(options,base,pairs){
+    validatePairs(base,options.before,options.after);validatePairs(pairs,options.before,options.after);
+    return transaction(options,()=>{
+     const current=this.load(options),merged=mergeDraft(base,pairs,current.pairs);
+     validatePairs(merged,options.before,options.after);return this.save(options,merged);
+    });
+   },
+   async reset(options){return transaction(options,()=>this.clear(options))},
    clear(options){
     const key=storageKey(options.left,options.right);lastKnown.set(key,null);
     try{getStorage().removeItem(key);sessionOnly.delete(key);return ""}
@@ -194,13 +230,14 @@
   await workbook.xlsx.load(bytes);return parseWorkbook(workbook,options);
  }
  function mount(container,options,saved,onChange){
+  const baseline=saved.pairs.map(p=>({...p}));
   const el=(tag,cls,value)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(value!==undefined)e.textContent=value;return e},button=(cls,value)=>{const e=el("button",cls,value);e.type="button";return e};
   const panel=el("section","mapping-panel"),status=el("p","meta"),preview=el("div","mapping-preview"),controls=el("div","mapping-controls"),notice=el("div","mapping-draft-notice");notice.hidden=true;
   panel.append(el("h2","","Ручные соответствия"),el("p","meta","Редактируйте пары в браузере или загрузите Excel. Правки остаются в черновике до кнопки «Применить и обновить сравнение». Файлы обрабатываются в браузере."));status.setAttribute("role","status");
   const restoreStatus=()=>{status.textContent="Применено пар: "+saved.pairs.length+(saved.notice?". "+saved.notice:"")};restoreStatus();
   const input=el("input","mapping-file");input.type="file";input.accept=".xlsx";input.hidden=true;
   const upload=button("swap","Загрузить сопоставления из Excel"),reset=button("swap","Сбросить сопоставления"),add=button("swap mapping-add","Добавить соответствие");reset.disabled=!saved.pairs.length&&!saved.notice;
-  let active=null,activeReport=null,generation=0;
+  let active=null,activeReport=null,generation=0,resetting=false;
   const savedReport=()=>({pairs:saved.pairs,candidates:[],errors:[],warnings:[],ignored:0,duplicates:0,reversed:false});
   function showPreview(report,label){
    const prepared=preparePreview(report,options.before,options.after),entries=[...report.pairs.map(p=>({...p,origin:"confirmed",selected:true})),...prepared.suggestions.map(p=>({...p,selected:p.defaultSelected}))];
@@ -208,11 +245,16 @@
    active?.destroy();activeReport=report;
    active=Editor.mount({container:preview,notice,status,options,report,draft,manualLabel:label,onCancel:()=>{active?.destroy();active=null;activeReport=null;preview.replaceChildren();restoreStatus()},onApply:async pairs=>{
     if(!options.isCurrent())throw Error("Выбранная пара редакций изменилась. Откройте предпросмотр снова.");
-    store.save(options,pairs);const result=await onChange();if(result===false)throw Error("Пары сохранены, но обновить результат не удалось. Повторите открытие сравнения.");
+    await store.apply(options,baseline,pairs);const result=await onChange();if(result===false)throw Error("Пары сохранены, но обновить результат не удалось. Повторите открытие сравнения.");
    }});
   }
   upload.onclick=()=>input.click();
-  reset.onclick=async()=>{if(options.isCurrent()){active?.destroy();store.clear(options);try{await onChange()}catch(e){status.textContent="Не удалось обновить сравнение. "+e.message}}};
+  reset.onclick=async()=>{
+   if(resetting||!options.isCurrent())return;resetting=true;reset.disabled=upload.disabled=add.disabled=true;if(savedSuggest)savedSuggest.disabled=true;
+   try{await store.reset(options);active?.destroy();const result=await onChange();if(result===false)throw Error("Соответствия сброшены, но обновить результат не удалось. Откройте сравнение снова.")}
+   catch(e){status.textContent="Не удалось обновить сравнение. "+e.message}
+   finally{resetting=false;reset.disabled=!saved.pairs.length&&!saved.notice;upload.disabled=add.disabled=false;if(savedSuggest)savedSuggest.disabled=false}
+  };
   add.onclick=()=>{if(options.isCurrent()){if(!active||activeReport.errors.length)showPreview(savedReport(),"Ранее применено");active.openEditor()}};
   controls.append(upload,reset,input,add);panel.append(controls,status,preview);container.append(notice,panel);
   let savedSuggest=null;

@@ -21,6 +21,7 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/additionalVacationStatement",
       "typeFile": "inline-1.xsd",
       "contentModel": [
         "sequence",
@@ -50,6 +51,7 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/additionalVacationStatement",
       "typeFile": "inline-1.xsd",
       "contentModel": [
         "sequence",
@@ -75,7 +77,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docDate",
@@ -93,7 +96,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docComment",
@@ -111,7 +115,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "attachment",
@@ -136,6 +141,7 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/additionalVacationStatement",
       "typeFile": "inline-1.xsd",
       "contentModel": [
         "sequence",
@@ -162,7 +168,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -180,7 +187,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -198,7 +206,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -216,7 +225,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "name",
@@ -234,7 +244,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "statementUuid",
@@ -258,6 +269,7 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/additionalVacationStatement",
       "typeFile": "inline-1.xsd"
     }
   ]

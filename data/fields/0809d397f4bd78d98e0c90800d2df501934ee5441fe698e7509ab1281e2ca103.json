@@ -20,6 +20,7 @@
       "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "typeFile": "SedoArm_ЕЦП.xsd",
       "contentModel": [
         "sequence",
@@ -48,6 +49,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "typeFile": "SedoArm_ЕЦП.xsd",
       "contentModel": [
         "sequence",
@@ -79,6 +81,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
       "typeFile": "Sedo.xsd"
     },
     {
@@ -107,6 +110,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "typeFile": "SedoArm_ЕЦП.xsd"
     },
     {
@@ -130,6 +134,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -154,7 +159,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -172,7 +178,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -190,7 +197,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "warn",
@@ -213,6 +221,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -237,7 +246,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -255,7 +265,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -273,7 +284,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

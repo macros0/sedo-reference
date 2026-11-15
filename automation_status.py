@@ -52,7 +52,7 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None, conf
         complete = False
         if check_info['state'] == 'success':
             check_info['state'] = 'waiting'
-    revisions = report.get('new_revisions')
+    revisions = report.get('new_schema_revisions', report.get('new_revisions'))
     versions = dict(count=len(revisions) if complete and isinstance(revisions, list) else None,
                     checked_at=report.get('checked_at') if complete else None)
     target = reports.get('publication-target.json') or {}

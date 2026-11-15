@@ -29,6 +29,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "typeFile": "Notice.xsd",
       "contentModel": [
         "sequence",
@@ -66,6 +67,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/fssDepartment/v01",
       "typeFile": "FssDepartment.xsd"
     },
     {
@@ -90,6 +92,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -114,6 +117,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -132,7 +136,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -150,7 +155,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "batchNum",
@@ -174,6 +180,7 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -192,7 +199,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "registrRowNums",
@@ -234,7 +242,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "attachment",
@@ -259,6 +268,7 @@
       "ns": "http://www.fss.ru/integration/types/commonUq/v01",
       "file": "CommonUQ.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/commonUq/v01",
       "typeFile": "CommonUQ.xsd",
       "contentModel": [
         "sequence",
@@ -285,7 +295,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -303,7 +314,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -321,7 +333,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -339,7 +352,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "name",
@@ -357,7 +371,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "file",
@@ -382,6 +397,7 @@
       "ns": "http://www.fss.ru/integration/types/commonUq/v01",
       "file": "CommonUQ.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/commonUq/v01",
       "typeFile": "CommonUQ.xsd",
       "contentModel": [
         "sequence",
@@ -408,7 +424,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -426,7 +443,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -444,7 +462,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -462,7 +481,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "name",
@@ -480,7 +500,8 @@
       "children": [],
       "ns": "",
       "file": "CommonUQ.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

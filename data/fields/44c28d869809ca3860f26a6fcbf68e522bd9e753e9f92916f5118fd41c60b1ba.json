@@ -65,6 +65,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
       "file": "EventLifeResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
       "typeFile": "EventLifeResult.xsd"
     },
     {
@@ -93,6 +94,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
       "file": "EventLifeResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -140,6 +142,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
       "file": "EventLifeResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -274,6 +277,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLifeResult:v3.0",
       "file": "EventLifeResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -389,6 +393,7 @@
       "ns": "",
       "file": "EventLifeResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -413,6 +418,7 @@
       "ns": "",
       "file": "EventLifeResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -431,7 +437,8 @@
       "children": [],
       "ns": "",
       "file": "EventLifeResult.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

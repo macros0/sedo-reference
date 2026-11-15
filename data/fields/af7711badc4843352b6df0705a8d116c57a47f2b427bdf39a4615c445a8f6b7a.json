@@ -20,6 +20,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd",
       "contentModel": [
         "sequence",
@@ -48,6 +49,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     }
   ]
