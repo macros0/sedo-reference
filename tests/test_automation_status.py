@@ -77,3 +77,30 @@ class AutomationStatusTests(unittest.TestCase):
                            target=dict(update_run_id='1',head_sha='a'*40))
         self.assertEqual(result['github']['check']['state'],'failure')
         self.assertEqual(result['github']['publication']['state'],'success')
+
+    def test_final_refresh_reads_finished_run_when_workflow_list_still_shows_processing(self):
+        from unittest.mock import patch
+        from automation_status import collect_status
+        check = run(1)
+        pending = run(2, status='in_progress', conclusion=None)
+        for conclusion in ('success', 'failure', 'cancelled'):
+            with self.subTest(conclusion=conclusion):
+                final = run(2, conclusion=conclusion)
+                responses = {
+                    'actions/workflows/check-sfr.yml/runs?branch=main&per_page=10': {'workflow_runs': [check]},
+                    'actions/workflows/pages.yml/runs?branch=main&per_page=10': {'workflow_runs': [pending]},
+                    'actions/runs/2': iter([pending, final]),
+                }
+
+                def read(path):
+                    value = responses[path]
+                    return next(value) if path == 'actions/runs/2' else value
+
+                reports = {'publication-target.json': {'update_run_id': 1, 'head_sha': check['head_sha']},
+                           'update-report.json': {'status': 'ok', 'new_revisions': []}}
+                with patch('automation_status.api', side_effect=read), patch('time.sleep'), \
+                     patch('automation_status.sourcecraft_status', return_value={}), \
+                     patch('automation_status.run_reports', return_value=reports):
+                    publication = collect_status(publication_run_id=2)['github']['publication']
+                self.assertEqual(publication['state'], conclusion)
+                self.assertEqual(publication['finished_at'], final['updated_at'])

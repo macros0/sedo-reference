@@ -2,8 +2,10 @@
 import base64
 import io
 import json
+import os
 import re
 import subprocess
+import time
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
@@ -121,7 +123,19 @@ def run_reports(run):
     return reports
 
 
-def collect_status():
+def collect_status(publication_run_id=None):
+    finished_run = None
+    if publication_run_id is not None:
+        # The final Pages job dispatches us just before its own run becomes terminal.
+        for attempt in range(24):
+            current = api(f'actions/runs/{int(publication_run_id)}')
+            if current['status'] == 'completed':
+                finished_run = current
+                break
+            if attempt < 23:
+                time.sleep(5)
+        else:
+            raise RuntimeError(f'Pages run {publication_run_id} did not finish in time')
     errors = []
     try:
         source = sourcecraft_status()
@@ -130,6 +144,9 @@ def collect_status():
         errors.append('SourceCraft: '+str(error)[:350])
     checks = api('actions/workflows/check-sfr.yml/runs?branch=main&per_page=10')['workflow_runs']
     pages = api('actions/workflows/pages.yml/runs?branch=main&per_page=10')['workflow_runs']
+    if finished_run:
+        # The listing may still show the previous state. Preserve its ordering and scope.
+        pages = [finished_run if page['id'] == finished_run['id'] else page for page in pages]
     try:
         reports = run_reports(checks[0] if checks else None)
     except Exception as error:
@@ -175,7 +192,7 @@ def publish_status(status):
 
 
 if __name__ == '__main__':
-    status = collect_status()
+    status = collect_status(os.environ.get('PUBLICATION_RUN_ID') or None)
     Path('automation-status-report.json').write_text(json.dumps(status, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')
     publish_status(status)
     print(json.dumps(dict(sourcecraft=status['sourcecraft']['state'],

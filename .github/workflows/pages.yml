@@ -126,3 +126,14 @@ jobs:
       - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+  refresh-status:
+    needs: [build, deploy]
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Refresh the public status after automatic publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run automation-status.yml --repo "$GITHUB_REPOSITORY" --ref main -f publication_run_id="$GITHUB_RUN_ID"
