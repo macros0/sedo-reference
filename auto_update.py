@@ -11,6 +11,7 @@ import build_site
 from catalog import export
 from collector_snapshots import collector_source
 from fields import build
+from edition_groups import display_updates, group_editions, source_updates
 from sync import encode, sync, write
 
 
@@ -25,6 +26,13 @@ def validate_history(previous, current, directory):
     for event in previous.get("updates", []):
         if events.get(event["revision_id"])!=event:
             raise ValueError("Изменилось ранее сохранённое событие журнала")
+    for rid, source in previous.get("update_sources", {}).items():
+        if current.get("update_sources", {}).get(rid) != source:
+            raise ValueError("Изменился ранее сохранённый источник события журнала")
+    observations = current.get("source_observations", [])
+    old_observations = previous.get("source_observations", [])
+    if observations[:len(old_observations)] != old_observations:
+        raise ValueError("Изменились ранее сохранённые наблюдения источников")
     revisions={r["revision_id"]:r for r in current["revisions"]}
     for rid,event in events.items():
         before=event["previous_revision_id"]
@@ -133,6 +141,25 @@ def run(root):
         _run(locked_root)
 
 
+def edition_changes(previous, current, fields_directory):
+    """Use the browser journal's grouping while preserving legacy source rows."""
+    statuses = json.loads((fields_directory / "index.json").read_bytes())
+    ready = {row["revision_id"] for row in statuses if row["status"] == "ready"}
+    fields = {}
+    def load(rid):
+        if rid not in fields:
+            fields[rid] = json.loads((fields_directory / (rid + ".json")).read_bytes())["fields"]
+        return fields[rid]
+    def grouped(catalog):
+        return group_editions(dict(catalog, revisions=[dict(row, ready=row["revision_id"] in ready)
+                                                       for row in catalog["revisions"]]), load)
+    old, new = grouped(previous), grouped(current)
+    old_schemas = {event["revision_id"] for event in display_updates(old)}
+    old_sources = {event["event_id"] for event in source_updates(old)}
+    return ([event for event in display_updates(new) if event["revision_id"] not in old_schemas],
+            [event for event in source_updates(new) if event["event_id"] not in old_sources])
+
+
 def _run(root):
     report = root / "update-report.json"
     previous = json.loads((root / "data/catalog.json").read_bytes())
@@ -160,6 +187,7 @@ def _run(root):
             old_ids = {r["revision_id"] for r in previous["revisions"]}
             added = [dict(number=r["number"], environment=r["environment"], version=r["document_version"], revision_id=r["revision_id"])
                      for r in current["revisions"] if r["revision_id"] not in old_ids]
+            schema_events, source_events = edition_changes(previous, current, stage / "data/fields")
             known = {(r["environment"], r["number"]) for r in previous["registry"]+previous["revisions"]}
             new_messages = sorted({(r["environment"], r["number"]) for r in current["registry"]+current["revisions"]}-known)
             snapshot=json.loads((stage/"state/snapshots"/(json.loads((stage/"state/current.json").read_bytes())["snapshot"]+".json")).read_bytes())
@@ -178,6 +206,7 @@ def _run(root):
             write(stage/"data/schema-coverage.json",encode(dict(checked_at=current["checked_at"],numbers_with_trees=len({n for e,n in ready_pairs}),source_checks=wsdl_status,missing=missing)))
             promote(root, stage)
             result = dict(status="ok", collector_source=collector_source(), checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics, wsdl_status=wsdl_status, missing_trees=missing,
+                          new_schema_revisions=schema_events, new_source_events=source_events,
                           new_messages=[dict(environment=e, number=n) for e,n in new_messages],
                           total_revisions=len(current["revisions"]))
             write(report, encode(result))

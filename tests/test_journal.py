@@ -57,6 +57,15 @@ class JournalTests(unittest.TestCase):
         self.assertFalse(event["initial_import"])
         self.assertEqual(event["observed_at"], "2026-11-14T04:17:00+00:00")
 
+    def test_third_10110_edition_uses_immediately_previous_even_after_retirement(self):
+        self.add('A', [self.revision('A'), self.revision('test', 'test')])
+        self.add('B', [self.revision('B'), self.revision('test', 'test')])
+        self.add('retired', [self.revision('test', 'test')])
+        self.add('C', [self.revision('C'), self.revision('test', 'test')])
+        events = self.export()
+        self.assertEqual(events[-1]['previous_revision_id'], 'B')
+        self.assertEqual([e['revision_id'] for e in events], ['A', 'test', 'B', 'C'])
+
     def test_removed_and_returned_edition_is_not_a_new_appearance(self):
         self.add("first", [self.revision("p1")])
         first = self.export()
@@ -65,15 +74,31 @@ class JournalTests(unittest.TestCase):
         self.assertEqual(self.export(), first)
 
     def test_return_to_saved_snapshot_restores_current_metadata_and_keeps_events(self):
-        first = dict(self.revision("same"), document_url="/A", document_version="1.0")
+        from edition_groups import display_updates, group_editions, source_updates
+        first = dict(self.revision("same"), document_url="/A", document_version="1.0", document_sha256="same-bytes")
         second = dict(first, document_url="/B", document_version="1.1")
         self.add("A", [first])
         self.add("B", [second])
         events = self.export()
+        catalog = json.loads((self.state / "catalog.json").read_bytes())
+        source = display_updates(catalog)[0]["event_sources"][0]
+        self.assertEqual(source["document_url"], "/A")
+        self.assertEqual(source["document_version"], "1.0")
+        self.assertEqual(source["environment"], "prod")
+        grouped = group_editions(catalog, lambda rid: [])
+        self.assertEqual([s['document_url'] for s in grouped['revisions'][0]['edition_sources']], ['/A', '/B'])
+        added_sources = source_updates(grouped)
+        self.assertEqual(len(added_sources), 1)
+        self.assertEqual(added_sources[0]['source']['document_url'], '/B')
+        self.assertEqual(added_sources[0]['source']['document_version'], '1.1')
         write(self.state / "current.json", encode(dict(snapshot="A")))
         self.assertEqual(self.export(), events)
-        listed = json.loads((self.state / "catalog.json").read_bytes())["revisions"]
+        returned = json.loads((self.state / "catalog.json").read_bytes())
+        listed = returned['revisions']
         self.assertEqual(listed, [dict(first, listed_now=True)])
+        restored_sources = source_updates(group_editions(returned, lambda rid: []))
+        self.assertEqual([event['event_id'] for event in restored_sources], [event['event_id'] for event in added_sources])
+        self.assertEqual([s['listed_now'] for s in group_editions(returned, lambda rid: [])['revisions'][0]['edition_sources']], [True, False])
 
     def test_missing_observation_stays_unknown(self):
         self.add("first", [self.revision("p1")])

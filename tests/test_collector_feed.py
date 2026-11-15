@@ -2,6 +2,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from tests import test_wsdl_sources as fixtures
 from collector_snapshots import make_manifest, load_library
@@ -115,7 +116,7 @@ class FeedTests(unittest.TestCase):
                 import_feed(local, lambda p: (remote / p).read_bytes())
             self.assertEqual(list(local.iterdir()), [])
 
-    def test_invalid_index_and_immutable_collision_rejected(self):
+    def test_invalid_index_rejected_and_truncated_object_repaired_from_verified_bytes(self):
         a, objects = self.capture()
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
@@ -126,5 +127,46 @@ class FeedTests(unittest.TestCase):
             store_feed(root, [a], objects)
             target = root / "objects" / a["library"]["sha256"]
             target.write_bytes(b"broken existing object")
-            with self.assertRaises(ValueError):
-                store_feed(root, [a], objects)
+            self.assertTrue(store_feed(root, [a], objects))
+            self.assertEqual(target.read_bytes(), objects[a["library"]["sha256"]])
+
+    def test_import_recovers_truncated_objects_and_manifests(self):
+        manifest, objects = self.capture()
+        with tempfile.TemporaryDirectory() as remote, tempfile.TemporaryDirectory() as local:
+            remote, local = Path(remote), Path(local)
+            store_feed(remote, [manifest], objects)
+            import_feed(local, lambda name: (remote / name).read_bytes())
+            target = local / "objects" / manifest["library"]["sha256"]
+            target.write_bytes(target.read_bytes()[:12])
+            saved = local / "collector/test" / (manifest["content_id"] + ".json")
+            saved.write_bytes(saved.read_bytes()[:12])
+            import_feed(local, lambda name: (remote / name).read_bytes())
+            self.assertEqual(target.read_bytes(), objects[manifest["library"]["sha256"]])
+            self.assertEqual(load_library(local, "test"), manifest["library"])
+
+    def test_interrupted_object_or_manifest_write_leaves_final_files_valid_and_retryable(self):
+        a, ao = self.capture()
+        b, bo = self.capture(True)
+        for interrupted in (bo[b["library"]["sha256"]], json.dumps(b, ensure_ascii=False, indent=2).encode("utf8")):
+            with self.subTest(kind="object" if interrupted.startswith(b"PK") else "manifest"), \
+                    tempfile.TemporaryDirectory() as remote, tempfile.TemporaryDirectory() as local:
+                remote, local = Path(remote), Path(local)
+                store_feed(remote, [a], ao)
+                import_feed(local, lambda name: (remote / name).read_bytes())
+                before = (local / "collector/feed.json").read_bytes()
+                store_feed(remote, [b], bo)
+                object_write = interrupted.startswith(b"PK")
+                target = local / ("objects/" + b["library"]["sha256"] if object_write else
+                                  "collector/test/" + b["content_id"] + ".json")
+                original = Path.write_bytes
+                def fail(path, raw):
+                    if (object_write and raw == bo[b["library"]["sha256"]]) or (not object_write and raw == (remote / "collector/test" / (b["content_id"] + ".json")).read_bytes()):
+                        original(path, raw[:12])
+                        raise OSError("interrupted write")
+                    return original(path, raw)
+                with patch.object(Path, "write_bytes", fail), self.assertRaisesRegex(OSError, "interrupted"):
+                    import_feed(local, lambda name: (remote / name).read_bytes())
+                self.assertEqual((local / "collector/feed.json").read_bytes(), before)
+                self.assertFalse(target.exists(), "partial bytes must never become a published final file")
+                import_feed(local, lambda name: (remote / name).read_bytes())
+                self.assertEqual(load_library(local, "test"), b["library"])

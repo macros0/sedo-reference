@@ -110,6 +110,22 @@ class SchemaRecoveryTests(unittest.TestCase):
         self.assertEqual(schema.fields[1]['facets'],[['length','2']])
         self.assertEqual(schema.fields[2]['facets'],[])
 
+    def test_named_type_namespace_is_distinct_from_local_element_namespace(self):
+        xsd='<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:t="urn:test" targetNamespace="urn:test"><xs:complexType name="NoticeSendType"><xs:sequence><xs:element name="code" type="xs:string"/></xs:sequence></xs:complexType><xs:element name="root"><xs:complexType><xs:sequence><xs:element name="notice" type="t:NoticeSendType"/></xs:sequence></xs:complexType></xs:element></xs:schema>'
+        with zipfile.ZipFile(io.BytesIO(archive({'main.xsd':xsd}))) as z:
+            tree=Schema(z,'main.xsd','root');tree.field(tree.root)
+        self.assertEqual(tree.fields[1]['ns'],'')
+        self.assertEqual(tree.fields[1].get('typeNs'),'urn:test')
+
+    def test_union_variants_share_the_schema_expansion_budget(self):
+        from unittest.mock import patch
+        xsd='<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:simpleType name="Pair"><xs:union memberTypes="xs:string xs:int"/></xs:simpleType><xs:element name="root"><xs:simpleType><xs:union memberTypes="Pair Pair"/></xs:simpleType></xs:element></xs:schema>'
+        with zipfile.ZipFile(io.BytesIO(archive({'main.xsd':xsd}))) as z:
+            tree=Schema(z,'main.xsd','root')
+            with patch('schema.MAX_FIELDS',5):
+                with self.assertRaisesRegex(ValueError,'Слишком большой каталог'):
+                    tree.field(tree.root)
+
     def test_union_keeps_alternative_constraints_separate(self):
         xsd='<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:element name="root"><xs:simpleType><xs:union><xs:simpleType><xs:restriction base="xs:string"><xs:maxLength value="3"/></xs:restriction></xs:simpleType><xs:simpleType><xs:restriction base="xs:int"><xs:maxInclusive value="10"/></xs:restriction></xs:simpleType></xs:union></xs:simpleType></xs:element></xs:schema>'
         with zipfile.ZipFile(io.BytesIO(archive({'main.xsd':xsd}))) as z:

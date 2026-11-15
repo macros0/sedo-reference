@@ -5,6 +5,7 @@ import concurrent.futures
 import hashlib
 import io
 import json
+import posixpath
 import re
 import sys
 import ssl
@@ -12,13 +13,15 @@ import time
 import zipfile
 from datetime import datetime, timezone
 from html.parser import HTMLParser
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from urllib.parse import urljoin, urlsplit, urlunsplit, quote, unquote
-from urllib.request import Request, urlopen
+from urllib.request import Request, build_opener, HTTPSHandler, HTTPRedirectHandler
 from xml.etree import ElementTree as ET
 
 SITES = {"prod":"https://lk.sfr.gov.ru/sedo.html","test":"https://lk-test.fss.ru/sedo.html"}
 MAX_BYTES = 96 * 1024 * 1024
+MAX_ARCHIVE_BYTES = 256 * 1024 * 1024
+MAX_ARCHIVE_FILES = 4000
 WORD = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 XS = "{http://www.w3.org/2001/XMLSchema}"
 def sha(b): return hashlib.sha256(b).hexdigest()
@@ -56,7 +59,38 @@ def get(url, timeout=30, attempts=3):
     return _get(url, timeout=timeout, attempts=attempts)
 
 
+def source_kind(url):
+    return PurePosixPath(unquote(urlsplit(url).path)).suffix.lower().lstrip('.')
+
+
+def source_url(url, seed):
+    """Validate the actual next request before any network operation."""
+    from wsdl_sources import HOSTS, _allowed
+    u, origin = urlsplit(url), urlsplit(seed)
+    if (u.scheme != 'https' or u.hostname != origin.hostname or
+            u.port not in (None, 443) or u.username or u.password or u.fragment):
+        raise ValueError('Source outside approved HTTPS endpoint: ' + url)
+    if origin.hostname in {host for hosts in HOSTS.values() for host in hosts}:
+        _allowed(url, seed)
+        return
+    path = posixpath.normpath(unquote(u.path))
+    pages = {'/sedo.html', '/prab.html', '/mchd.html', '/eln.html'}
+    if (origin.hostname not in {urlsplit(site).hostname for site in SITES.values()} or
+            '\\' in path or not (path in pages or path.startswith(('/specs_sedo/', '/prab/', '/mchd/', '/eln/')))):
+        raise ValueError('Source outside approved catalog path: ' + url)
+
+
+class SourceRedirect(HTTPRedirectHandler):
+    def __init__(self, seed):
+        self.seed = seed
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        source_url(newurl, self.seed)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
 def _get(url, timeout=30, attempts=3):
+    source_url(url, url)
     u=urlsplit(url)
     safe=urlunsplit((u.scheme,u.netloc,quote(unquote(u.path),safe="/"),u.query,""))
     context = ssl.create_default_context()
@@ -66,7 +100,8 @@ def _get(url, timeout=30, attempts=3):
             context.load_verify_locations(cafile=str(bundle))
     for attempt in range(attempts):
         try:
-            with urlopen(Request(safe,headers={"User-Agent":"SEDO-reference/1.0"}),timeout=timeout,context=context) as r:
+            opener = build_opener(SourceRedirect(url), HTTPSHandler(context=context))
+            with opener.open(Request(safe,headers={"User-Agent":"SEDO-reference/1.0"}),timeout=timeout) as r:
                 b=r.read(MAX_BYTES+1)
                 if len(b)>MAX_BYTES: raise ValueError("file exceeds limit")
                 return b
@@ -81,6 +116,11 @@ _polite_fetch = PoliteFetch(_get, max_requests=1000)
 def inspect_file(b,kind):
     if kind not in ("docx","zip"): return {}
     with zipfile.ZipFile(io.BytesIO(b)) as z:
+        members = z.infolist()
+        if len({item.filename for item in members}) != len(members):
+            raise ValueError('Duplicate archive member names')
+        if len(members) > MAX_ARCHIVE_FILES or sum(item.file_size for item in members) > MAX_ARCHIVE_BYTES:
+            raise ValueError('Expanded archive exceeds limit')
         def xml(n):
             if z.getinfo(n).file_size>MAX_BYTES: raise ValueError("XML exceeds limit")
             return ET.fromstring(z.read(n))
@@ -88,8 +128,11 @@ def inspect_file(b,kind):
             result=[]
             for n in sorted(z.namelist()):
                 if n.lower().endswith(".xsd"):
-                    r=xml(n)
-                    result.append(dict(path=n,namespace=r.get("targetNamespace"),sha256=sha(z.read(n)),
+                    if z.getinfo(n).file_size > MAX_BYTES:
+                        raise ValueError('XML exceeds limit')
+                    raw = z.read(n)
+                    r=ET.fromstring(raw)
+                    result.append(dict(path=n,namespace=r.get("targetNamespace"),sha256=sha(raw),
                          dependencies=[e.get("schemaLocation") for e in r if e.tag in (XS+"import",XS+"include")],
                          imports=[dict(location=e.get("schemaLocation"),namespace=e.get("namespace") if e.tag==XS+"import" else r.get("targetNamespace")) for e in r if e.tag in (XS+"import",XS+"include")],
                          roots=[dict(name=e.get("name"),description=norm(" ".join(t for a in e.findall(XS+"annotation/"+XS+"documentation") for t in a.itertext()))) for e in r.findall(XS+"element")]))
@@ -140,7 +183,7 @@ def sync(base):
         for href,label in parser.items:
             u=urljoin(url,href.strip()); parts=urlsplit(u)
             if u in lookup: continue
-            ext=Path(unquote(parts.path)).suffix.lower().lstrip(".")
+            ext=source_kind(u)
             r=dict(environment=env,url=u,label=label,kind=ext or "link");lookup[u]=r;entries.append(r)
             if parts.hostname==urlsplit(url).hostname and parts.path.startswith("/specs_sedo/") and ext in ("docx","zip","pdf","crt","xsd","doc","xlsx"):
                 tasks.append(r)

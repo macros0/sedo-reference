@@ -119,10 +119,8 @@ class Comparison:
                 if len(candidates) == 1:
                     matches = self.by_type[candidates[0]]
             # A type card can describe an imported type sharing its name with the local type.
-            # The field export has no namespace for a named type distinct from its declaration.
             if props.get('Пространство имен'):
-                matches = [f for f in matches if f.get('ns') == props['Пространство имен']
-                           and f.get('typeFile', f.get('file')) == f.get('file')]
+                matches = [f for f in matches if f.get('typeNs', f.get('ns')) == props['Пространство имен']]
         else:
             matches = self.by_name.get(trail[-1], [])
             if len(trail) == 1:
@@ -141,8 +139,12 @@ class Comparison:
                 matches = [f for f in matches if f.get('ns') == props['Пространство имен']]
         # A shared named type or a local declaration can be reused at multiple XML paths.
         # Compare a single instance only if its definition is unambiguous.
-        definitions = {(f.get('ns'), f.get('typeFile'), f.get('file'), f.get('type'),
-                        tuple(self.fields[k]['name'] for k in f['children'])) for f in matches}
+        if kind == 'типа':
+            definitions = {(f.get('typeNs', f.get('ns')), f.get('typeFile', f.get('file')),
+                            local_name(f.get('type', '')), tuple(self.fields[k]['name'] for k in f['children'])) for f in matches}
+        else:
+            definitions = {(f.get('ns'), f.get('typeFile'), f.get('file'), f.get('type'),
+                            tuple(self.fields[k]['name'] for k in f['children'])) for f in matches}
         return matches[:1] if len(definitions) == 1 else []
 
     def compare_field(self, field, where, typ, occurrence):

@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 from urllib.parse import urlsplit
 from urllib.request import url2pathname
+from types import SimpleNamespace
 
 
 def compile_schema(entry, package_root):
@@ -38,7 +39,73 @@ def compile_schema(entry, package_root):
     document=etree.parse(entry.as_uri(),parser)
     if document.docinfo.doctype:
         raise ValueError('DTD в XSD не поддерживается')
-    return etree.XMLSchema(document)
+    primary=etree.XMLSchema(document)
+    manifest_file=base/'manifest.json'
+    if manifest_file.is_file():
+        manifest=json.loads(manifest_file.read_text('utf-8-sig'))
+        if entry==(base/manifest.get('entrypoint','')).resolve() and (manifest.get('attribute_checks') or manifest.get('attribute_type_checks')):
+            supplement=compile_schema(base/manifest['supplementary_schema'],base)
+            return AttributeUseValidator(primary,supplement,manifest)
+    return primary
+
+
+class AttributeUseValidator:
+    """Apply libxml2's typed fixed comparison to each actual constrained use."""
+    def __init__(self, primary, supplementary, manifest):
+        self.primary=primary;self.supplementary=supplementary
+        self.namespace=manifest['supplementary_namespace']
+        self.rules=manifest['attribute_checks'];self.error_log=[]
+        self.by_path={}
+        for rule in self.rules:self.by_path.setdefault(tuple(map(tuple,rule['path'])),[]).append(rule)
+        self.by_type={tuple(profile['type']):{} for profile in manifest.get('attribute_type_checks',[])}
+        for profile in manifest.get('attribute_type_checks',[]):
+            for rule in profile['checks']:self.by_type[tuple(profile['type'])].setdefault(tuple(map(tuple,rule['path'])),[]).append(rule)
+
+    def validate(self, document):
+        from lxml import etree
+        if not self.primary.validate(document):
+            self.error_log=self.primary.error_log;return False
+        root=document.getroot() if hasattr(document,'getroot') else document
+        prefix='sedoprobe'
+        while any(prefix in node.nsmap for node in root.iter() if isinstance(node.tag,str)):prefix+='x'
+        probes=etree.Element('{'+self.namespace+'}checks',nsmap={prefix:self.namespace})
+        subjects={}
+        def visit(node,path,scopes):
+            if not isinstance(node.tag,str):return
+            qname=etree.QName(node);path=path+((qname.namespace or '',qname.localname),)
+            xtype=node.get('{http://www.w3.org/2001/XMLSchema-instance}type')
+            if xtype:
+                prefix,_,name=xtype.strip().rpartition(':');namespace=node.nsmap.get(prefix or None,'')
+                profile=self.by_type.get((namespace,name))
+                if profile:scopes=(*scopes,(len(path),profile))
+            applicable=list(self.by_path.get(path,[]))
+            for depth,profile in scopes:applicable.extend(profile.get(path[depth:],[]))
+            seen=set()
+            for rule in applicable:
+                identity=(tuple(rule['attribute']),rule['element'])
+                if identity in seen:continue
+                seen.add(identity)
+                ns,name=rule['attribute'];value=node.get(('{'+ns+'}' if ns else '')+name)
+                if value is None:continue
+                probe=etree.SubElement(probes,'{'+self.namespace+'}'+rule['element'],nsmap=node.nsmap)
+                probe.set('value',value);probe.sourceline=node.sourceline
+                subjects[probe]=(node,rule)
+            for child in node:visit(child,path,scopes)
+        visit(root,(),())
+        valid=self.supplementary.validate(probes);self.error_log=[]
+        if not valid:
+            probe_tree=probes.getroottree()
+            by_probe_path={probe_tree.getpath(probe):subject for probe,subject in subjects.items()}
+            for error in self.supplementary.error_log:
+                # One declaration can be reused at several XML paths and on the
+                # same line. The generated probe XPath identifies its exact use.
+                subject=by_probe_path.get(error.path)
+                if subject:
+                    node,rule=subject;ns,name=rule['attribute'];attribute=('{'+ns+'}' if ns else '')+name
+                    message="Element '"+node.tag+"', attribute '"+attribute+"': "+error.message
+                else:message=error.message
+                self.error_log.append(SimpleNamespace(line=error.line,column=error.column,message=message))
+        return valid
 
 
 def main(argv=None):

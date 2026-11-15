@@ -23,6 +23,14 @@ class AutomationStatusTests(unittest.TestCase):
         self.assertEqual(result['github']['publication']['state'],'waiting')
         self.assertEqual(result['github']['versions']['count'],0)
 
+    def test_version_count_uses_schema_events_with_legacy_report_fallback(self):
+        for report, expected in ((dict(new_schema_revisions=[], new_revisions=[{'revision_id':'new-source'}]), 0),
+                                 (dict(new_schema_revisions=[{'revision_id':'schema'}], new_revisions=[{},{}]), 1),
+                                 (dict(new_revisions=[{}]), 1)):
+            with self.subTest(report=report):
+                result = self.result(report=dict(status='ok', **report))
+                self.assertEqual(result['github']['versions']['count'], expected)
+
     def test_matching_publication_success_failure_and_processing(self):
         for status,conclusion,state in [('completed','success','success'),('completed','failure','failure'),('in_progress',None,'processing')]:
             result=self.result(pages=[run(2,status=status,conclusion=conclusion)],

@@ -119,9 +119,13 @@ async function renderComparison(m,params,applied=false,view=null){
       if(mappingPanel?.hasUnapplied()){error.textContent="Сначала примените или отмените черновик соответствий выше, чтобы не потерять правки.";return}
       cancelling=true;undo.disabled=true;
       try{
-       const current=SedoMapping.store.load(mappingOptions).pairs,remaining=current.filter(p=>p.beforePath!==r.beforePath||p.afterPath!==r.afterPath);
-       if(current.length===remaining.length)throw Error("Эта пара уже изменилась. Откройте сравнение снова.");
-       SedoMapping.store.save(mappingOptions,remaining);
+       const remaining=mappings.filter(p=>p.beforePath!==r.beforePath||p.afterPath!==r.afterPath);
+       const undoOptions={...mappingOptions,isCurrent:()=>{
+        if(!mappingOptions.isCurrent())return false;
+        if(mappingPanel?.hasUnapplied())throw Error("Сначала примените или отмените черновик соответствий выше, чтобы не потерять правки.");
+        return true;
+       }};
+       await SedoMapping.store.apply(undoOptions,mappings,remaining);
        const updated=await renderComparison(m,params,"cancelled",{search:search.value,kind:kind.value});
        if(updated===false)throw Error("Пара отменена, но обновить сравнение не удалось. Откройте его снова.");
       }catch(e){cancelling=false;undo.disabled=false;error.textContent="Не удалось отменить сопоставление. "+e.message}

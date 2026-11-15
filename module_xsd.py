@@ -191,7 +191,9 @@ def extract_archives(document):
                 if not files:continue
                 output=io.BytesIO()
                 with zipfile.ZipFile(output,"w",compression=zipfile.ZIP_STORED) as archive:
-                    for name,data in sorted(files.items()):archive.writestr(zipfile.ZipInfo(name,(1980,1,1,0,0,0)),data)
+                    for name,data in sorted(files.items()):
+                        info=zipfile.ZipInfo(name,(1980,1,1,0,0,0));info.create_system=3
+                        archive.writestr(info,data)
                 packages.append(dict(container=path,filename=filename,original_sha256=key,content=output.getvalue()))
             except Exception as exc:issues.append(dict(container=path,reason=str(exc)))
     # Some modules publish the full XSD as paragraphs rather than OLE objects.
@@ -208,7 +210,9 @@ def extract_archives(document):
             seen.add(key);filename="inline-"+str(index)+".xsd"
             files=unpack_schemas(filename,payload,budget);output=io.BytesIO()
             with zipfile.ZipFile(output,"w",compression=zipfile.ZIP_STORED) as archive:
-                for name,data in files.items():archive.writestr(zipfile.ZipInfo(name,(1980,1,1,0,0,0)),data)
+                for name,data in files.items():
+                    info=zipfile.ZipInfo(name,(1980,1,1,0,0,0));info.create_system=3
+                    archive.writestr(info,data)
             packages.append(dict(container="word/document.xml#schema-"+str(index),filename=filename,original_sha256=key,content=output.getvalue()))
         except Exception as exc:issues.append(dict(container="word/document.xml#schema-"+str(index),reason=str(exc)))
     if len(packages)>1:
@@ -218,7 +222,9 @@ def extract_archives(document):
                 for name in archive.namelist():combined["package-"+str(index)+"/"+name]=archive.read(name)
         output=io.BytesIO()
         with zipfile.ZipFile(output,"w",compression=zipfile.ZIP_STORED) as archive:
-            for name,data in sorted(combined.items()):archive.writestr(zipfile.ZipInfo(name,(1980,1,1,0,0,0)),data)
+            for name,data in sorted(combined.items()):
+                info=zipfile.ZipInfo(name,(1980,1,1,0,0,0));info.create_system=3
+                archive.writestr(info,data)
         packages.append(dict(container="word/document.xml#combined",filename="Схемы одного DOCX.zip",original_sha256=digest(document),content=output.getvalue()))
     return packages,issues
 

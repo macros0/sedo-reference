@@ -7,6 +7,7 @@ from urllib.parse import unquote
 from sync import encode,sha,write
 
 from schema import dependency_set
+from edition_groups import SOURCE_KEYS
 
 def derive(snapshot):
     if snapshot.get("source_type")=="manual":
@@ -92,17 +93,25 @@ def export(state,target):
     history=json.loads((state/"history.json").read_bytes()) if (state/"history.json").exists() else [ptr]
     observation_file=state/"observations.json"
     observations=json.loads(observation_file.read_bytes())["snapshots"] if observation_file.exists() else {}
-    updates=[];previous_by_message={}
+    updates=[];update_sources={};source_observations=[];seen_sources=set();previous_by_message={}
     versions={};current_ids=set();registry={};current_registry=set()
     for batch,key in enumerate(dict.fromkeys([*history,ptr])):
         d=derive(json.loads((state/"snapshots"/(key+".json")).read_bytes()))
         added={}
         for row in d["revisions"]:
             identity=(row["number"],row["environment"])
+            source = {name: row[name] for name in SOURCE_KEYS
+                      if name in row and name not in ("listed_now", "document_download", "document_filename")}
+            source_identity = (row["revision_id"], row.get("document_sha256"), row.get("document_url"))
+            if row.get("document_sha256") and source_identity not in seen_sources:
+                source_observations.append(dict(revision_id=row["revision_id"], snapshot=key,
+                    observed_at=observations.get(key), initial_import=batch==0, source=source))
+                seen_sources.add(source_identity)
             if row["revision_id"] not in versions:
                 updates.append(dict(revision_id=row["revision_id"],snapshot=key,
                                     observed_at=observations.get(key),initial_import=batch==0,
                                     previous_revision_id=previous_by_message.get(identity)))
+                update_sources[row["revision_id"]] = source
                 added[identity]=row["revision_id"]
             old=versions.get(row["revision_id"])
             # A previously observed snapshot can become current again. Keep its
@@ -123,6 +132,10 @@ def export(state,target):
     latest["revisions"]=[dict(r,listed_now=i in current_ids) for i,r in versions.items()]
     latest["registry"]=[dict(row,listed_now=identity in current_registry) for identity,row in registry.items()]
     latest["updates"]=updates
+    # Keep the legacy events unchanged; provenance is fixed at first observation
+    # and reconstructed from archived snapshots, rather than the mutable row.
+    latest["update_sources"]=update_sources
+    latest["source_observations"]=source_observations
     report_file=state/"last-run.json"
     if report_file.exists():
         report=json.loads(report_file.read_bytes())

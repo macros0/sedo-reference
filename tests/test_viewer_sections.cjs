@@ -2,8 +2,8 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const root=path.resolve(__dirname,'..'),viewer=fs.readFileSync(path.join(root,'viewer-template.html'),'utf8');
 const catalog=JSON.parse(fs.readFileSync(path.join(root,'data/catalog.json'),'utf8'));
 class Element{constructor(tag){this.tagName=tag;this.children=[];this.value='';this.textContent='';this.className='';this.style={setProperty(){}}}append(...nodes){this.children.push(...nodes)}replaceChildren(...nodes){this.children=[...nodes]}setAttribute(){}add(node){this.append(node)}querySelector(){return null}}
-function app(number){
- const r=catalog.revisions.find(r=>r.number===number&&r.environment==='prod'),fields=JSON.parse(fs.readFileSync(path.join(root,'data/fields',r.revision_id+'.json'),'utf8')).fields;
+function app(number,environment='prod',transform=fields=>fields){
+ const r=catalog.revisions.find(r=>r.number===number&&r.environment===environment),fields=transform(JSON.parse(fs.readFileSync(path.join(root,'data/fields',r.revision_id+'.json'),'utf8')).fields);
  const nodes=new Map(),data={fields,version:'test',date:'test',archive:'test',files:1,sha256:'test'};
  const document={createElement:tag=>new Element(tag),createTextNode:text=>({textContent:text}),querySelector:()=>({textContent:JSON.stringify(data)}),getElementById:id=>{if(!nodes.has(id))nodes.set(id,new Element(id));return nodes.get(id)}};
  const context=vm.createContext({document,Option:class extends Element{constructor(label,value){super('option');this.textContent=label;this.value=value}},Set,Map,JSON,console});
@@ -32,4 +32,14 @@ for(const number of ['86','10110','611']){
  assert.ok(content(nodes.get('detail')).includes('пустая строка'),'empty union option must be visible');
  assert.ok(content(nodes.get('detail')).includes('Всего цифр, до: 1'),'integer alternative restriction');
 }
-console.log('Viewer sections verified on 86, 10110 and 611: actual blocks, nested paths, scoped search, navigation and reset.');
+{
+ const content=node=>typeof node==='string'?node:(node.textContent||'')+(node.children||[]).map(content).join(' ');
+ const {nodes,context,fields}=app('10010','test');
+ for(const name of ['parentProcessNum','subProcessReasonCode','subProcessReasonDetails']){
+  const index=fields.findIndex(f=>f.name===name);assert.ok(index>=0);vm.runInContext('select('+index+',true)',context);
+  const detail=content(nodes.get('detail'));assert.ok(!detail.includes('Вариант выбора'),name+' belongs to optional sequence, not choice');assert.match(detail,/Обязательно внутри блока/);assert.match(detail,/sequence \[0\.\.1\]/);assert.ok(!detail.includes('номером варианта'));
+ }
+ const choice=fields.findIndex(f=>/Выбор \d+, вариант/.test(f.group));assert.ok(choice>=0);vm.runInContext('select('+choice+',true)',context);assert.match(content(nodes.get('detail')),/Вариант выбора/);assert.match(content(nodes.get('detail')),/номером варианта/);
+ const nested=app('10010','test',rows=>{rows.find(f=>f.name==='parentProcessNum').group='sequence [0..1] / Выбор 9, вариант 2';return rows});vm.runInContext('select('+nested.fields.findIndex(f=>f.name==='parentProcessNum')+',true)',nested.context);assert.match(content(nested.nodes.get('detail')),/Вариант выбора/,'optional sequence must preserve nested choice meaning');
+}
+console.log('Viewer sections verified: actual blocks, nested paths, scoped search, navigation, optional sequences and nested choices.');

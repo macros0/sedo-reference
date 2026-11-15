@@ -14,6 +14,7 @@ from urllib.parse import parse_qs, urlsplit, unquote
 XS = "http://www.w3.org/2001/XMLSchema"
 X = "{" + XS + "}"
 HERE = Path(__file__).resolve().parent
+MAX_FIELDS = 50000
 FACETS = set("length minLength maxLength pattern enumeration maxInclusive minInclusive maxExclusive minExclusive totalDigits fractionDigits whiteSpace".split())
 
 def import_basename(location):
@@ -55,6 +56,8 @@ class Schema:
         self.prefixes = {}
         self.symbol = {}
         self.fields = []
+        self.field_declarations = {}
+        self.expanded_fields = 0
         self.main = entry
         self.inventory = None
         self.load(archive, self.main)
@@ -154,8 +157,9 @@ class Schema:
         self.fields=compact
 
     def field(self, decl, parent=-1, group="", chain=()):
-        if len(self.fields) >= 50000:
+        if self.expanded_fields >= MAX_FIELDS:
             raise ValueError("Слишком большой каталог.")
+        self.expanded_fields += 1
         tag = local(decl)
         src = decl
         if decl.get("ref"):
@@ -168,19 +172,28 @@ class Schema:
                  max=decl.get("maxOccurs","unbounded" if tag=="anyAttribute" else "1"),type=src.get("type",""),base="",facets=[],values=[],children=[],
                  ns=self.instance_namespace(src),
                  file=self.owner[src].split("/")[-1],flags={k:v for k,v in src.attrib.items() if k in ("fixed","default","nillable","namespace","processContents")})
+        if tag == "attribute" and src is not decl and any(k in decl.attrib for k in ("fixed", "default")):
+            # An attribute use owns its value constraint; the referenced global
+            # declaration supplies the type and QName, not the local fixed/default.
+            for key in ("fixed", "default"): d["flags"].pop(key, None)
+            d["flags"].update({k:decl.get(k) for k in ("fixed", "default") if k in decl.attrib})
+        self.field_declarations[id(d)] = (decl, src)
         self.fields.append(d)
         if parent >= 0:
             self.fields[parent]["children"].append(idx)
         nodegroups = 0
         content = []
         def expand_type(q,elem,stack,particles):
+            if elem is src and q == src.get("type"):
+                prefix, _, _name = q.rpartition(":")
+                d["typeNs"] = self.prefixes[elem].get(prefix, "")
             obj = self.resolve(q,elem,["simpleType","complexType"])
             if obj is None:
                 d["base"]=q
             else:
                 if obj in stack:
                     raise ValueError("Рекурсивный тип в "+path)
-                d["typeFile"]=self.owner[obj].split("/")[-1]
+                d.setdefault("typeFile", self.owner[obj].split("/")[-1])
                 walk(obj, "", stack+(obj,),particles)
         def walk(e,group,stack,particles):
             nonlocal nodegroups

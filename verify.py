@@ -40,22 +40,27 @@ def verify(state,data):
     urls.update({r["url"]:r["sha256"] for r in snapshot["entries"] if "sha256" in r})
     for row in snapshot["entries"]:
         for source in row.get("source_files",[]):urls[source["url"]]=source["sha256"]
-    if all((state/"objects"/v).exists() for v in urls.values()):
-        def cached(u,**kwargs):return (state/"objects"/urls[u]).read_bytes()
-        with TemporaryDirectory() as tmp:
-            base=Path(tmp)
-            with patch("sync.get",side_effect=cached) as downloads:
-                sync(base);first=(base/"current.json").read_bytes();sync(base)
-            assert first==(base/"current.json").read_bytes() and not any(json.loads((base/"last-run.json").read_bytes())["diff"].values())
-            probe_url = failure_probe_url(snapshot, (call.args[0] for call in downloads.call_args_list))
-            def failed(u,**kwargs):
-                if u == probe_url:raise OSError("simulated failure")
-                return cached(u)
-            with patch("sync.get",side_effect=failed):
-                try:sync(base)
-                except (ValueError, OSError):pass
-                else:raise AssertionError("failed download accepted")
-            assert first==(base/"current.json").read_bytes()
+    missing = sorted({digest for digest in urls.values() if not (state/"objects"/digest).is_file()})
+    if missing:
+        raise ValueError("Missing required replay objects: " + ", ".join(missing))
+    def cached(u,**kwargs):return (state/"objects"/urls[u]).read_bytes()
+    with TemporaryDirectory() as tmp:
+        base=Path(tmp)
+        with patch("sync.get",side_effect=cached) as downloads:
+            sync(base);first=(base/"current.json").read_bytes()
+            if snapshot.get("format") == 1:
+                assert json.loads(first)["snapshot"] == current, "Replayed snapshot differs from expected current snapshot " + current
+            sync(base)
+        assert first==(base/"current.json").read_bytes() and not any(json.loads((base/"last-run.json").read_bytes())["diff"].values())
+        probe_url = failure_probe_url(snapshot, (call.args[0] for call in downloads.call_args_list))
+        def failed(u,**kwargs):
+            if u == probe_url:raise OSError("simulated failure")
+            return cached(u)
+        with patch("sync.get",side_effect=failed):
+            try:sync(base)
+            except (ValueError, OSError):pass
+            else:raise AssertionError("failed download accepted")
+        assert first==(base/"current.json").read_bytes()
     print("Verified revision isolation, field trees and code 46.")
 if __name__=="__main__":
     import argparse

@@ -81,10 +81,10 @@ restoreField();
         rid=r["revision_id"]
         if not r["ready"]:continue
         fields=field_cache[rid]
-        (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8")
+        (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8",newline="\n")
         r["review_sources"]=review_sources(catalog,r)
         data=dict(fields=fields,review_sources=r["review_sources"],revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=r.get("archive_name") or unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
-        (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
+        (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8",newline="\n")
         r["viewer_sha256"]=sha((editions/(rid+".html")).read_bytes())
     if catalog.get("updates"):
         try:
@@ -98,7 +98,7 @@ restoreField();
         # the browser journal consumes only the grouped schema events.
         catalog["schema_updates"]=display_updates(catalog)
         catalog["source_updates"]=source_updates(catalog)
-    (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
+    (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8",newline="\n")
     assets=("review-journal.js","app.js","app.css","automation-status.js","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg","validation.js","validation-core.js","validation-frame.js","validation-worker.js","validation-paths.js","validation-source.js","validation-messages.js","vendor/xmllint/xmllint-browser.mjs","vendor/xmllint/xmllint.wasm","vendor/xmllint/COPYING","vendor/xmllint/README.md")
     for file in assets:
         (site/file).parent.mkdir(parents=True,exist_ok=True)
@@ -107,13 +107,13 @@ restoreField();
         ('engine','vendor/xmllint/xmllint-browser.mjs'),('wasm','vendor/xmllint/xmllint.wasm'),
         ('source','validation-source.js'),('messages','validation-messages.js'),('core','validation-core.js'),('paths','validation-paths.js'),('worker','validation-worker.js'),('frame','validation-frame.js'))]
     loader=(site/'validation.js').read_text('utf8').replace('__VALIDATOR_ASSETS__',packed(validator_assets))
-    (site/'validation.js').write_text(loader,encoding='utf8')
+    (site/'validation.js').write_text(loader,encoding='utf8',newline='\n')
     # Content versions prevent cached old routing code from breaking new navigation.
     html=(HERE/"web/index.html").read_text("utf8")
     for file in (*assets,"catalog-data.js"):
         version=sha((site/file).read_bytes())[:16]
         html=html.replace('"'+file+'"','"'+file+'?v='+version+'"')
-    (site/"index.html").write_text(html,encoding="utf8")
+    (site/"index.html").write_text(html,encoding="utf8",newline="\n")
     (site/".nojekyll").touch()
     print(f"Built {len(catalog['revisions'])} revisions in {site}")
 if __name__=="__main__":main()
