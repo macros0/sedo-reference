@@ -20,6 +20,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "typeFile": "PaymentState.xsd",
       "contentModel": [
         "sequence",
@@ -48,6 +49,7 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "typeFile": "PaymentState.xsd"
     }
   ]

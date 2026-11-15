@@ -20,6 +20,7 @@
       "flags": {
         "nillable": "true"
       },
+      "typeNs": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "typeFile": "SedoArm_ЕЦП.xsd",
       "contentModel": [
         "sequence"

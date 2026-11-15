@@ -24,6 +24,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:v3.0",
       "file": "RefundUnemplRefuse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:v3.0",
       "typeFile": "RefundUnemplRefuse.xsd",
       "contentModel": [
         "sequence",
@@ -50,6 +51,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:v3.0",
       "file": "RefundUnemplRefuse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "typeFile": "RefundUnemplStatement.xsd",
       "contentModel": [
         "choice",
@@ -82,6 +84,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "typeFile": "RefundUnemplStatement.xsd",
       "contentModel": [
         "sequence",
@@ -126,6 +129,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -150,6 +154,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -178,6 +183,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -206,6 +212,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -234,6 +241,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -319,6 +327,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -343,6 +352,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -371,6 +381,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -437,6 +448,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -465,6 +477,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -493,6 +506,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -521,6 +535,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -593,7 +608,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "soglasie",
@@ -611,7 +627,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ip",
@@ -639,6 +656,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "typeFile": "RefundUnemplStatement.xsd",
       "contentModel": [
         "sequence",
@@ -681,6 +699,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -709,6 +728,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -737,6 +757,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -765,6 +786,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -793,6 +815,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -821,6 +844,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -849,6 +873,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -907,6 +932,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -979,7 +1005,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -1007,6 +1034,7 @@
       "ns": "",
       "file": "RefundUnemplRefuse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1035,6 +1063,7 @@
       "ns": "",
       "file": "RefundUnemplRefuse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1063,6 +1092,7 @@
       "ns": "",
       "file": "RefundUnemplRefuse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1095,6 +1125,7 @@
       "ns": "",
       "file": "RefundUnemplRefuse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     }
   ]

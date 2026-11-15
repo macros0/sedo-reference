@@ -48,7 +48,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "procClosedOpenNew",
@@ -115,7 +116,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "receivedConfirmationOtherInsurer",
@@ -193,6 +195,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/proactive/type/v01",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -235,7 +238,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

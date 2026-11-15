@@ -83,6 +83,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/notice/v01",
       "file": "Notice.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/ins/v01",
       "typeFile": "FileOperationsLnIns.xsd",
       "contentModel": [
         "all",
@@ -178,6 +179,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v01",
       "typeFile": "Person.xsd"
     },
     {
@@ -202,6 +204,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -226,6 +229,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -250,6 +254,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -274,6 +279,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -298,6 +304,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -316,7 +323,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "duplicateFlag",
@@ -334,7 +342,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lnDate",
@@ -358,6 +367,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -382,6 +392,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -406,6 +417,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -430,6 +442,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -454,6 +467,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -478,6 +492,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -496,7 +511,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "reason1",
@@ -520,6 +536,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -544,6 +561,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -568,6 +586,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -592,6 +611,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -610,7 +630,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "voucherOgrn",
@@ -634,6 +655,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -735,6 +757,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -759,6 +782,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -783,6 +807,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -807,6 +832,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -831,6 +857,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -855,6 +882,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -879,6 +907,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -903,6 +932,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -927,6 +957,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -955,6 +986,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v01",
       "typeFile": "Person.xsd"
     },
     {
@@ -973,7 +1005,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "servMm",
@@ -991,7 +1024,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "pregn12wFlag",
@@ -1009,7 +1043,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "hospitalDt1",
@@ -1033,6 +1068,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1057,6 +1093,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1079,6 +1116,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd",
       "contentModel": [
         "sequence",
@@ -1108,6 +1146,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1132,6 +1171,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1156,6 +1196,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1180,6 +1221,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1204,6 +1246,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1222,7 +1265,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mseInvalidLoss",
@@ -1240,7 +1284,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "treatPeriods",
@@ -1287,6 +1332,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd",
       "contentModel": [
         "sequence",
@@ -1317,6 +1363,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1341,6 +1388,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1366,6 +1414,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd",
       "contentModel": [
         "all",
@@ -1398,6 +1447,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1422,6 +1472,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1440,7 +1491,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "treatDoctorRole",
@@ -1464,6 +1516,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1488,6 +1541,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1512,6 +1566,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd",
       "contentModel": [
         "all",
@@ -1543,6 +1598,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1567,6 +1623,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1591,6 +1648,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1615,6 +1673,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/v01",
       "file": "Eln.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1639,6 +1698,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1663,6 +1723,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v01",
       "typeFile": "Person.xsd"
     },
     {
@@ -1687,6 +1748,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1705,7 +1767,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplRegNo",
@@ -1729,6 +1792,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -1747,7 +1811,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplRegNo2",
@@ -1771,6 +1836,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -1789,7 +1855,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "approve2",
@@ -1807,7 +1874,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "baseAvgSal",
@@ -1825,7 +1893,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "baseAvgDailySal",
@@ -1843,7 +1912,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurYy",
@@ -1861,7 +1931,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurMm",
@@ -1879,7 +1950,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notInsurYy",
@@ -1897,7 +1969,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notInsurMm",
@@ -1915,7 +1988,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calcCondition1",
@@ -1939,6 +2013,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1963,6 +2038,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -1987,6 +2063,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -2011,6 +2088,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -2035,6 +2113,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -2059,6 +2138,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -2083,6 +2163,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -2107,6 +2188,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -2125,7 +2207,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fssPayment",
@@ -2143,7 +2226,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "payment",
@@ -2161,7 +2245,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "correctionReason",
@@ -2179,7 +2264,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "correctionNote",
@@ -2203,6 +2289,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -2227,6 +2314,7 @@
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/eln/v01",
       "typeFile": "Eln.xsd"
     },
     {
@@ -2245,7 +2333,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "isProactive",
@@ -2263,7 +2352,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/eln/ins/v01",
       "file": "FileOperationsLnIns.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

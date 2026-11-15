@@ -100,6 +100,7 @@
       "ns": "",
       "file": "PaymentStatusRequest.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     }
   ]

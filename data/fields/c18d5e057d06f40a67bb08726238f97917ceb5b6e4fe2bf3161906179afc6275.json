@@ -21,6 +21,7 @@
       "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "typeFile": "SedoArm_ЕЦП.xsd",
       "contentModel": [
         "sequence",
@@ -47,6 +48,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "typeFile": "SedoArm_ЕЦП.xsd",
       "contentModel": [
         "sequence",
@@ -73,6 +75,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "typeFile": "SedoArm_ЕЦП.xsd",
       "contentModel": [
         "sequence",
@@ -106,6 +109,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -134,6 +138,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -155,6 +160,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "typeFile": "SedoArm_ЕЦП.xsd",
       "contentModel": [
         "sequence",
@@ -182,6 +188,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "typeFile": "SedoArm_ЕЦП.xsd",
       "contentModel": [
         "sequence",
@@ -216,6 +223,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -244,6 +252,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -268,6 +277,7 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     }
   ]

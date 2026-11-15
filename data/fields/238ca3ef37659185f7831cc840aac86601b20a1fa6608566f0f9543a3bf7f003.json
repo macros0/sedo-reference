@@ -23,6 +23,7 @@
       "ns": "http://www.fss.ru/integration/kp/KpResponseDocsAsv/v01",
       "file": "KpResponseDocsAsv.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "typeFile": "ResponseDocType.xsd",
       "contentModel": [
         "sequence",
@@ -54,6 +55,7 @@
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -78,6 +80,7 @@
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -128,7 +131,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -146,7 +150,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -164,7 +169,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -299,7 +305,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "count",
@@ -376,7 +383,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -394,7 +402,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -412,7 +421,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -484,7 +494,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -502,7 +513,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "description",

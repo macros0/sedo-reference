@@ -51,7 +51,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "procClosedOpenNew",
@@ -118,7 +119,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "receivedConfirmationOtherInsurer",
@@ -196,6 +198,7 @@
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -238,7 +241,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -266,6 +270,7 @@
       "ns": "",
       "file": "proactiveNotification.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -284,7 +289,8 @@
       "children": [],
       "ns": "",
       "file": "proactiveNotification.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

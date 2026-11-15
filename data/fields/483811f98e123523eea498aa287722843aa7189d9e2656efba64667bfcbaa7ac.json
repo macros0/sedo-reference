@@ -85,6 +85,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -103,7 +104,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "idMessage",
@@ -127,6 +129,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -151,6 +154,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -220,6 +224,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -244,6 +249,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -331,7 +337,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -491,6 +498,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -515,6 +523,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -539,6 +548,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {

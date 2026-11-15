@@ -58,6 +58,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "AppResult.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -82,6 +83,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "AppResult.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -100,7 +102,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "AppResult.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "idMessage",
@@ -124,6 +127,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "AppResult.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -148,6 +152,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "AppResult.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -166,7 +171,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "AppResult.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -190,6 +196,7 @@
       "ns": "",
       "file": "AppResult.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     }
   ]

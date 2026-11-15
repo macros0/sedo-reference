@@ -84,6 +84,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -134,6 +135,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -158,6 +160,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -214,6 +217,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -237,6 +241,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -271,6 +276,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -299,6 +305,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -327,6 +334,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -345,7 +353,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredWorksSeveralInsurers",
@@ -363,7 +372,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentMethod",
@@ -415,6 +425,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/proactive/type/v01",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -462,6 +473,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "typeFile": "Notifications.xsd",
       "contentModel": [
         "sequence",
@@ -496,6 +508,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "typeFile": "Notifications.xsd"
     },
     {
@@ -738,7 +751,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@messageDateTime",
@@ -756,7 +770,8 @@
       "children": [],
       "ns": "",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

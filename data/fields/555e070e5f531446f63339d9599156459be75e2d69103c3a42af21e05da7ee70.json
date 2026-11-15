@@ -32,6 +32,7 @@
       "ns": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd",
       "contentModel": [
         "sequence",
@@ -88,6 +89,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd"
     },
     {
@@ -143,6 +145,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -203,6 +206,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -231,6 +235,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -259,6 +264,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -278,6 +284,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -306,6 +313,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -330,6 +338,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd",
       "contentModel": [
         "sequence",
@@ -377,6 +386,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd"
     },
     {
@@ -395,7 +405,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -417,6 +428,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -440,7 +452,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -458,7 +471,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -507,6 +521,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd",
       "contentModel": [
         "sequence",
@@ -562,6 +577,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd"
     },
     {
@@ -580,7 +596,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -602,6 +619,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -625,7 +643,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -643,7 +662,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -698,6 +718,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -730,6 +751,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -756,6 +778,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd",
       "contentModel": [
         "sequence",
@@ -811,6 +834,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd"
     },
     {
@@ -829,7 +853,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -851,6 +876,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -874,7 +900,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -892,7 +919,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -947,6 +975,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -979,6 +1008,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1005,6 +1035,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd",
       "contentModel": [
         "sequence",
@@ -1060,6 +1091,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd"
     },
     {
@@ -1078,7 +1110,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -1100,6 +1133,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -1123,7 +1157,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -1141,7 +1176,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -1231,6 +1267,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd",
       "contentModel": [
         "sequence",
@@ -1278,6 +1315,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:paymentStatusNotice:v3.0",
       "typeFile": "PaymentStatusNotice.xsd"
     },
     {
@@ -1296,7 +1334,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -1318,6 +1357,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -1341,7 +1381,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -1359,7 +1400,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -1430,6 +1472,7 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1448,7 +1491,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

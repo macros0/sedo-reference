@@ -23,6 +23,7 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/additionalVacationStatement",
       "typeFile": "inline-1.xsd",
       "contentModel": [
         "sequence",
@@ -54,6 +55,7 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/additionalVacationStatement",
       "typeFile": "inline-1.xsd"
     },
     {
@@ -72,7 +74,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "status",
@@ -90,7 +93,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errors",
@@ -112,6 +116,7 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/additionalVacationStatement",
       "typeFile": "inline-1.xsd",
       "contentModel": [
         "sequence",
@@ -135,7 +140,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorMessage",
@@ -153,7 +159,8 @@
       "children": [],
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

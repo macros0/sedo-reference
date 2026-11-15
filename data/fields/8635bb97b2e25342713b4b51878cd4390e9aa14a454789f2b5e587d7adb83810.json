@@ -86,6 +86,7 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -140,6 +141,7 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -158,7 +160,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodInfo",
@@ -236,6 +239,7 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "typeFile": "InsuredPersonSalaryRequest.xsd"
     },
     {
@@ -334,7 +338,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "agreementInsuredPerson",
@@ -358,6 +363,7 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -406,6 +412,7 @@
       "ns": "",
       "file": "InsuredPersonSalaryRequest.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     }
   ]

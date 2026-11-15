@@ -58,7 +58,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "id",
@@ -82,6 +83,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -106,6 +108,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -130,6 +133,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -154,6 +158,7 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -172,7 +177,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -190,7 +196,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "attachment",
@@ -246,7 +253,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -264,7 +272,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -282,7 +291,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -354,7 +364,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "signatureFund",
@@ -372,7 +383,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "application",
@@ -455,7 +467,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -473,7 +486,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -491,7 +505,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -563,7 +578,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "signatureFund",
@@ -581,7 +597,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "signature",
@@ -599,7 +616,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Inquiry.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -623,6 +641,7 @@
       "ns": "",
       "file": "Inquiry.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     }
   ]

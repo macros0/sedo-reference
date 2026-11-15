@@ -119,6 +119,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -194,6 +195,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:salary:v01",
       "typeFile": "InsuredPersonSalary.xsd",
       "contentModel": [
         "sequence",
@@ -230,6 +232,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:salary:v01",
       "typeFile": "InsuredPersonSalary.xsd"
     },
     {
@@ -258,6 +261,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -286,6 +290,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -314,6 +319,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -342,6 +348,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -391,6 +398,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:salary:v01",
       "typeFile": "InsuredPersonSalary.xsd",
       "contentModel": [
         "sequence",
@@ -427,6 +435,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:salary:v01",
       "typeFile": "InsuredPersonSalary.xsd"
     },
     {
@@ -455,6 +464,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -483,6 +493,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -511,6 +522,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -539,6 +551,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -586,6 +599,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -610,7 +624,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -628,7 +643,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -646,7 +662,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -670,6 +687,7 @@
       "ns": "",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     }
   ]

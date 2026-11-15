@@ -25,6 +25,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:result:v3.0",
       "file": "RefundUnemplRefuseResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:result:v3.0",
       "typeFile": "RefundUnemplRefuseResult.xsd",
       "contentModel": [
         "sequence",
@@ -113,6 +114,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:result:v3.0",
       "file": "RefundUnemplRefuseResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:result:v3.0",
       "typeFile": "RefundUnemplRefuseResult.xsd"
     },
     {
@@ -156,6 +158,7 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:result:v3.0",
       "file": "RefundUnemplRefuseResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -271,6 +274,7 @@
       "ns": "",
       "file": "RefundUnemplRefuseResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -295,6 +299,7 @@
       "ns": "",
       "file": "RefundUnemplRefuseResult.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -313,7 +318,8 @@
       "children": [],
       "ns": "",
       "file": "RefundUnemplRefuseResult.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

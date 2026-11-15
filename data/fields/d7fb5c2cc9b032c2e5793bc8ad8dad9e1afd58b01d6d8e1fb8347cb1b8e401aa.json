@@ -93,6 +93,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -118,6 +119,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "choice",
@@ -178,6 +180,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -211,6 +214,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -267,6 +271,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -295,6 +300,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -316,6 +322,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -348,6 +355,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -371,6 +379,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -423,6 +432,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -446,7 +456,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -464,7 +475,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -532,7 +544,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -550,7 +563,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerAndGPHcontract",
@@ -622,6 +636,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -645,7 +660,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -663,7 +679,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -681,7 +698,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit2",
@@ -735,6 +753,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -768,6 +787,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -824,6 +844,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -852,6 +873,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -873,6 +895,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -905,6 +928,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -928,6 +952,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -952,7 +977,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -998,6 +1024,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -1021,7 +1048,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -1039,7 +1067,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerAndGPHcontract",
@@ -1057,7 +1086,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -1079,6 +1109,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -1102,7 +1133,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -1120,7 +1152,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit4",
@@ -1175,6 +1208,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -1209,6 +1243,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1265,6 +1300,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -1283,7 +1319,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsInfo",
@@ -1306,6 +1343,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -1330,7 +1368,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -1348,7 +1387,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerAndGPHcontract",
@@ -1366,7 +1406,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childInfo",
@@ -1390,6 +1431,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -1425,6 +1467,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1451,6 +1494,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -1497,6 +1541,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1521,6 +1566,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1549,6 +1595,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1573,6 +1620,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1601,6 +1649,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1625,6 +1674,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1643,7 +1693,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -1671,6 +1722,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -1707,6 +1759,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -1784,6 +1837,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -1818,6 +1872,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -1836,7 +1891,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refType",
@@ -1889,6 +1945,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -1957,6 +2014,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -2027,6 +2085,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -2062,6 +2121,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -2090,6 +2150,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3140,6 +3201,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:OKSM:v3.0",
       "typeFile": "OKSM.xsd"
     },
     {
@@ -3199,6 +3261,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -3233,6 +3296,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -3289,6 +3353,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -3307,7 +3372,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "changeYears",
@@ -3328,6 +3394,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -3360,6 +3427,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -3383,6 +3451,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -3407,7 +3476,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -3453,6 +3523,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -3476,7 +3547,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -3494,7 +3566,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerAndGPHcontract",
@@ -3512,7 +3585,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -3534,6 +3608,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -3557,7 +3632,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -3575,7 +3651,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childInfo",
@@ -3599,6 +3676,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -3634,6 +3712,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -3660,6 +3739,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -3706,6 +3786,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -3730,6 +3811,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3758,6 +3840,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -3782,6 +3865,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3810,6 +3894,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -3834,6 +3919,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3852,7 +3938,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -3880,6 +3967,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -3916,6 +4004,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -3970,6 +4059,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -4004,6 +4094,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -4032,6 +4123,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -4050,7 +4142,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthRecord",
@@ -4072,6 +4165,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -4142,6 +4236,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -4177,6 +4272,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -4205,6 +4301,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5255,6 +5352,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:OKSM:v3.0",
       "typeFile": "OKSM.xsd"
     },
     {
@@ -5307,6 +5405,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -5340,6 +5439,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -5396,6 +5496,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -5424,6 +5525,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5445,6 +5547,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -5477,6 +5580,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -5500,6 +5604,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -5552,6 +5657,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -5575,7 +5681,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -5593,7 +5700,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -5663,7 +5771,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -5681,7 +5790,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHinsurancePaymentObligation",
@@ -5705,6 +5815,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5777,6 +5888,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -5800,7 +5912,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -5818,7 +5931,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -5836,7 +5950,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "recalculationFlag",
@@ -5860,6 +5975,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5908,6 +6024,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "typeFile": "EventLife.xsd"
     },
     {
@@ -5930,6 +6047,7 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -5963,6 +6081,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -5981,7 +6100,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -6009,6 +6129,7 @@
       "ns": "",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     }
   ]

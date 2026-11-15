@@ -52,6 +52,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd",
       "contentModel": [
         "choice",
@@ -84,6 +85,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd",
       "contentModel": [
         "sequence",
@@ -120,6 +122,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -138,7 +141,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -166,6 +170,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -190,6 +195,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -218,6 +224,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -238,7 +245,8 @@
       "file": "PowerOfAttorney.xsd",
       "flags": {
         "fixed": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "legalPerson",
@@ -265,6 +273,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd",
       "contentModel": [
         "sequence",
@@ -303,6 +312,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -331,6 +341,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -359,6 +370,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -378,6 +390,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -406,6 +419,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -434,6 +448,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -462,6 +477,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -535,6 +551,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -563,6 +580,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -591,6 +609,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -610,6 +629,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -638,6 +658,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -666,6 +687,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -790,6 +812,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -870,7 +893,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "uuid",
@@ -894,6 +918,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -918,6 +943,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -950,6 +976,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd"
     },
     {
@@ -968,7 +995,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "endDate",
@@ -986,7 +1014,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "principal",
@@ -1004,7 +1033,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "representative",
@@ -1022,7 +1052,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "protocol",
@@ -1043,6 +1074,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd",
       "contentModel": [
         "sequence",
@@ -1071,6 +1103,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd",
       "contentModel": [
         "sequence",
@@ -1102,6 +1135,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd"
     },
     {
@@ -1134,6 +1168,7 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:mchd:v01",
       "typeFile": "PowerOfAttorney.xsd"
     },
     {
@@ -1152,7 +1187,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "recommendation",
@@ -1170,7 +1206,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -1194,6 +1231,7 @@
       "ns": "",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     }
   ]

@@ -56,7 +56,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit1Approve",
@@ -84,6 +85,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "typeFile": "Benefit1.xsd",
       "contentModel": [
         "sequence",
@@ -172,7 +174,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -190,7 +195,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mseInvalidLoss",
@@ -235,7 +243,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -253,7 +264,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -271,7 +285,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -289,7 +306,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurerInfo",
@@ -364,7 +384,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -382,7 +405,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -426,7 +452,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "partTime",
@@ -477,7 +506,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -495,7 +527,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "parentNo",
@@ -542,7 +577,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -560,7 +598,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -661,7 +702,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -679,7 +723,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -728,7 +775,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -746,7 +796,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -797,7 +850,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -815,7 +871,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -876,6 +935,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -904,6 +964,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -932,6 +993,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -950,7 +1012,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -968,7 +1033,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -1009,7 +1077,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -1027,7 +1098,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -1078,7 +1152,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -1096,7 +1173,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "taxpayer",
@@ -1186,6 +1266,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/TaxpayerStatusType/v01",
       "typeFile": "TaxpayerStatusType.xsd"
     },
     {
@@ -1236,6 +1317,7 @@
       "flags": {
         "nillable": "true"
       },
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -1274,6 +1356,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -1298,6 +1381,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -1322,6 +1406,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -1346,6 +1431,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -1370,6 +1456,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -1436,7 +1523,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -1454,7 +1544,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "id",
@@ -1618,6 +1711,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/identtityDoc/v01",
       "typeFile": "IdentityDocuments.xsd"
     },
     {
@@ -1686,7 +1780,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dept",
@@ -1727,7 +1822,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -1745,7 +1841,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -1763,7 +1862,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "residenceDocument",
@@ -1786,6 +1888,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -1880,7 +1983,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workContract",
@@ -1929,7 +2033,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -1947,7 +2052,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -1965,7 +2071,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -1983,7 +2092,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personPhone",
@@ -2069,6 +2181,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -2126,6 +2239,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -2158,6 +2272,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -2182,6 +2297,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -2212,6 +2328,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -2249,6 +2366,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -2273,6 +2391,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -2305,6 +2424,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -2491,6 +2611,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -2529,6 +2650,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -2553,6 +2675,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -2577,6 +2700,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -2601,6 +2725,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -2625,6 +2750,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -2666,7 +2792,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -2684,7 +2813,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calculationData",
@@ -2797,7 +2929,8 @@
       "file": "Benefit1.xsd",
       "flags": {
         "fixed": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "year",
@@ -2864,7 +2997,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -2882,7 +3018,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "baseSum",
@@ -2933,7 +3072,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -2951,7 +3093,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumType",
@@ -3011,7 +3156,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kfReg",
@@ -3119,7 +3267,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -3137,7 +3288,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kfShortDays",
@@ -3192,7 +3346,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -3210,7 +3367,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "experience",
@@ -3295,7 +3455,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -3313,7 +3476,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurMM",
@@ -3364,7 +3530,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -3382,7 +3551,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notInsurYY",
@@ -3433,7 +3605,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -3451,7 +3626,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notInsurMM",
@@ -3502,7 +3680,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -3520,7 +3701,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -3538,7 +3722,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -3556,7 +3743,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calcConditionList",
@@ -3663,7 +3853,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -3681,7 +3874,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "causeRadiation",
@@ -3717,6 +3913,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/CauseRadiationExposure/v01",
       "typeFile": "CauseRadiationExposure.xsd"
     },
     {
@@ -3784,7 +3981,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -3802,7 +4002,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -3843,7 +4046,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -3861,7 +4067,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "excludePeriodList",
@@ -3951,6 +4160,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/exclperiodstypes/v01",
       "typeFile": "ExcludePeriodsType.xsd"
     },
     {
@@ -3973,6 +4183,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -3996,7 +4207,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -4014,7 +4226,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -4032,7 +4245,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -4050,7 +4266,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "downPeriodList",
@@ -4126,6 +4345,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -4149,7 +4369,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -4167,7 +4388,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "idleAverage",
@@ -4195,6 +4417,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -4213,7 +4436,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -4231,7 +4457,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mobilPeriods",
@@ -4285,6 +4514,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:v01",
       "typeFile": "Confirmation.xsd"
     },
     {
@@ -4323,7 +4553,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "assignmentParams",
@@ -4393,7 +4626,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "twoPrevYearsInsurers",
@@ -4445,7 +4681,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentMethod",
@@ -4517,7 +4756,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "choiceInsurerConfirmedByInsured",
@@ -4538,6 +4780,7 @@
       "flags": {
         "fixed": "true"
       },
+      "typeNs": "urn:ru:fss:integration:types:proactive:v01",
       "typeFile": "Confirmation.xsd"
     },
     {
@@ -4610,7 +4853,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuranceCase",
@@ -4660,7 +4906,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "n1",
@@ -4730,7 +4977,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -4768,7 +5018,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "profIllnessAct",
@@ -4830,7 +5083,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "freeFormAct",
@@ -4900,7 +5156,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -4938,7 +5197,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "courtDecision",
@@ -5008,7 +5270,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -5046,7 +5311,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notice",
@@ -5100,6 +5368,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -5118,7 +5387,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit2Approve",
@@ -5146,6 +5416,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "typeFile": "Benefit2.xsd",
       "contentModel": [
         "sequence",
@@ -5234,7 +5505,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -5252,7 +5526,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mseInvalidLoss",
@@ -5297,7 +5574,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -5315,7 +5595,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -5333,7 +5616,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -5351,7 +5637,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurerInfo",
@@ -5426,7 +5715,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -5444,7 +5736,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -5488,7 +5783,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "partTime",
@@ -5539,7 +5837,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -5557,7 +5858,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "parentNo",
@@ -5604,7 +5908,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -5622,7 +5929,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -5723,7 +6033,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -5741,7 +6054,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -5790,7 +6106,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -5808,7 +6127,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -5859,7 +6181,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -5877,7 +6202,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -5938,6 +6266,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -5966,6 +6295,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -5994,6 +6324,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -6012,7 +6343,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -6030,7 +6364,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -6071,7 +6408,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -6089,7 +6429,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -6140,7 +6483,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -6158,7 +6504,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "taxpayer",
@@ -6248,6 +6597,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/TaxpayerStatusType/v01",
       "typeFile": "TaxpayerStatusType.xsd"
     },
     {
@@ -6298,6 +6648,7 @@
       "flags": {
         "nillable": "true"
       },
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -6336,6 +6687,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -6360,6 +6712,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -6384,6 +6737,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -6408,6 +6762,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -6432,6 +6787,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -6498,7 +6854,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -6516,7 +6875,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "id",
@@ -6680,6 +7042,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/identtityDoc/v01",
       "typeFile": "IdentityDocuments.xsd"
     },
     {
@@ -6748,7 +7111,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dept",
@@ -6789,7 +7153,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -6807,7 +7172,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -6825,7 +7193,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "residenceDocument",
@@ -6848,6 +7219,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -6942,7 +7314,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personPhone",
@@ -7014,7 +7387,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -7032,7 +7406,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -7050,7 +7425,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -7068,7 +7446,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "receivePayment",
@@ -7131,6 +7512,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -7188,6 +7570,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -7220,6 +7603,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -7244,6 +7628,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -7274,6 +7659,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -7311,6 +7697,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -7335,6 +7722,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -7367,6 +7755,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -7553,6 +7942,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -7591,6 +7981,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -7615,6 +8006,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -7639,6 +8031,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -7663,6 +8056,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -7687,6 +8081,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -7728,7 +8123,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -7746,7 +8144,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calculationData",
@@ -7853,7 +8254,8 @@
       "file": "Benefit2.xsd",
       "flags": {
         "fixed": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "year",
@@ -7920,7 +8322,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -7938,7 +8343,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "baseSum",
@@ -7989,7 +8397,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -8007,7 +8418,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumType",
@@ -8067,7 +8481,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kfReg",
@@ -8175,7 +8592,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -8193,7 +8613,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kfShortDays",
@@ -8234,7 +8657,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -8252,7 +8678,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "experience",
@@ -8337,7 +8766,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -8355,7 +8787,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurMM",
@@ -8406,7 +8841,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -8424,7 +8862,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notInsurYY",
@@ -8475,7 +8916,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -8493,7 +8937,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notInsurMM",
@@ -8544,7 +8991,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -8562,7 +9012,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -8580,7 +9033,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -8598,7 +9054,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calcConditionList",
@@ -8705,7 +9164,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -8723,7 +9185,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "causeRadiation",
@@ -8759,6 +9224,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/CauseRadiationExposure/v01",
       "typeFile": "CauseRadiationExposure.xsd"
     },
     {
@@ -8829,7 +9295,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "twoPrevYearsInsurers",
@@ -8881,7 +9350,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentMethod",
@@ -8953,7 +9425,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "choiceInsurerConfirmedByInsured",
@@ -8974,6 +9449,7 @@
       "flags": {
         "fixed": "true"
       },
+      "typeNs": "urn:ru:fss:integration:types:proactive:v01",
       "typeFile": "Confirmation.xsd"
     },
     {
@@ -9046,7 +9522,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "vacation",
@@ -9121,7 +9600,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -9139,7 +9621,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -9180,7 +9665,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -9198,7 +9686,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "beginDate",
@@ -9239,7 +9730,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -9257,7 +9751,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "endDate",
@@ -9298,7 +9795,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -9316,7 +9816,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -9334,7 +9837,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -9352,7 +9858,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notice",
@@ -9406,6 +9915,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -9424,7 +9934,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit4Approve",
@@ -9455,6 +9966,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "typeFile": "Benefit4.xsd",
       "contentModel": [
         "sequence",
@@ -9547,7 +10059,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -9565,7 +10080,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -9609,7 +10127,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "partTime",
@@ -9660,7 +10181,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -9678,7 +10202,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "parentNo",
@@ -9725,7 +10252,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -9743,7 +10273,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -9846,7 +10379,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -9864,7 +10400,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -9913,7 +10452,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -9931,7 +10473,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -9982,7 +10527,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -10000,7 +10548,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -10061,6 +10612,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -10089,6 +10641,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -10117,6 +10670,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -10135,7 +10689,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -10153,7 +10710,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -10194,7 +10754,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -10212,7 +10775,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -10263,7 +10829,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -10281,7 +10850,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "taxpayer",
@@ -10371,6 +10943,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/TaxpayerStatusType/v01",
       "typeFile": "TaxpayerStatusType.xsd"
     },
     {
@@ -10421,6 +10994,7 @@
       "flags": {
         "nillable": "true"
       },
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -10459,6 +11033,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -10483,6 +11058,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -10507,6 +11083,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -10531,6 +11108,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -10555,6 +11133,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -10621,7 +11200,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -10639,7 +11221,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "id",
@@ -10803,6 +11388,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/identtityDoc/v01",
       "typeFile": "IdentityDocuments.xsd"
     },
     {
@@ -10871,7 +11457,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dept",
@@ -10912,7 +11499,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -10930,7 +11518,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -10948,7 +11539,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "residenceDocument",
@@ -10971,6 +11565,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -11065,7 +11660,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workContract",
@@ -11112,7 +11708,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -11130,7 +11727,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -11148,7 +11746,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -11166,7 +11767,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childRelType",
@@ -11229,7 +11833,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -11247,7 +11854,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personPhone",
@@ -11333,6 +11943,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -11390,6 +12001,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -11422,6 +12034,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -11446,6 +12059,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -11476,6 +12090,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -11513,6 +12128,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -11537,6 +12153,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -11569,6 +12186,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -11755,6 +12373,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -11793,6 +12412,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -11817,6 +12437,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -11841,6 +12462,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -11865,6 +12487,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -11889,6 +12512,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -11930,7 +12554,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -11948,7 +12575,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calculationData",
@@ -12082,7 +12712,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -12100,7 +12733,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "assignmentParams",
@@ -12198,7 +12834,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsType",
@@ -12270,7 +12909,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "wardInfo",
@@ -12351,7 +12993,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -12369,7 +13014,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "num",
@@ -12410,7 +13058,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -12428,7 +13079,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -12469,7 +13123,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -12487,7 +13144,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -12505,7 +13165,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -12523,7 +13186,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refFamilyInfo",
@@ -12590,7 +13256,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -12608,7 +13277,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -12649,7 +13321,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -12667,7 +13342,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthInfo",
@@ -12789,7 +13467,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -12807,7 +13488,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -12848,7 +13532,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -12866,7 +13553,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "cert",
@@ -12941,7 +13631,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -12959,7 +13652,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -12998,7 +13694,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13016,7 +13715,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "otherDoc",
@@ -13091,7 +13793,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13109,7 +13814,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "series",
@@ -13160,7 +13868,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13178,7 +13889,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -13219,7 +13933,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13237,7 +13954,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthReference",
@@ -13316,7 +14036,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13334,7 +14057,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -13375,7 +14101,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13393,7 +14122,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refType",
@@ -13448,7 +14180,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13466,7 +14201,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -13507,7 +14245,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13525,7 +14266,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -13586,6 +14330,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -13614,6 +14359,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -13642,6 +14388,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -13660,7 +14407,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13678,7 +14428,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -13727,7 +14480,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13745,7 +14501,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -13773,6 +14532,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -13791,7 +14551,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13809,7 +14572,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refNpayOther",
@@ -13859,7 +14625,8 @@
       "file": "Benefit4.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -13879,7 +14646,8 @@
       "file": "Benefit4.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -13897,7 +14665,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13915,7 +14686,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "otherMissing",
@@ -13956,7 +14730,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -13974,7 +14751,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notice",
@@ -14028,6 +14808,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -14046,7 +14827,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit5Approve",
@@ -14081,6 +14863,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "typeFile": "Benefit5.xsd",
       "contentModel": [
         "sequence",
@@ -14174,7 +14957,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -14192,7 +14978,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -14236,7 +15025,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "partTime",
@@ -14287,7 +15079,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -14305,7 +15100,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "parentNo",
@@ -14352,7 +15150,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -14370,7 +15171,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -14473,7 +15277,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -14491,7 +15298,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -14540,7 +15350,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -14558,7 +15371,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -14609,7 +15425,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -14627,7 +15446,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -14688,6 +15510,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -14716,6 +15539,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -14744,6 +15568,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -14762,7 +15587,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -14780,7 +15608,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -14821,7 +15652,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -14839,7 +15673,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -14890,7 +15727,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -14908,7 +15748,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "taxpayer",
@@ -15019,7 +15862,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -15037,7 +15883,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "countryCode",
@@ -15078,7 +15927,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -15096,7 +15948,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "address",
@@ -15163,6 +16018,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -15187,6 +16043,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -15211,6 +16068,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -15235,6 +16093,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -15259,6 +16118,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -15277,7 +16137,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -15295,7 +16158,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "postalCode",
@@ -15507,6 +16373,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/identtityDoc/v01",
       "typeFile": "IdentityDocuments.xsd"
     },
     {
@@ -15575,7 +16442,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dept",
@@ -15616,7 +16484,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -15634,7 +16503,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -15652,7 +16524,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "residenceDocument",
@@ -15675,6 +16550,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -15769,7 +16645,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workContract",
@@ -15818,7 +16695,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -15836,7 +16714,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -15854,7 +16733,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -15872,7 +16754,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childRelType",
@@ -15935,7 +16820,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -15953,7 +16841,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personPhone",
@@ -16039,6 +16930,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -16096,6 +16988,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -16128,6 +17021,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -16152,6 +17046,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -16182,6 +17077,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -16219,6 +17115,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -16243,6 +17140,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -16275,6 +17173,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -16461,6 +17360,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -16499,6 +17399,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -16523,6 +17424,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -16547,6 +17449,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -16571,6 +17474,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -16595,6 +17499,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -16636,7 +17541,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -16654,7 +17562,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calculationData",
@@ -16773,6 +17684,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -16819,7 +17731,8 @@
       "file": "Benefit5.xsd",
       "flags": {
         "fixed": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "year",
@@ -16886,7 +17799,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -16904,7 +17820,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "baseSum",
@@ -16955,7 +17874,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -16973,7 +17895,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumType",
@@ -17033,7 +17958,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kfReg",
@@ -17141,7 +18069,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -17159,7 +18090,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kfShortDays",
@@ -17200,7 +18134,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -17218,7 +18155,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "experience",
@@ -17301,7 +18241,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -17319,7 +18262,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurMM",
@@ -17370,7 +18316,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -17388,7 +18337,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notInsurYY",
@@ -17439,7 +18391,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -17457,7 +18412,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notInsurMM",
@@ -17508,7 +18466,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -17526,7 +18487,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calcConditionList",
@@ -17624,6 +18588,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/CauseRadiationExposure/v01",
       "typeFile": "CauseRadiationExposure.xsd"
     },
     {
@@ -17694,7 +18659,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "twoPrevYearsInsurers",
@@ -17746,7 +18714,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentMethod",
@@ -17818,7 +18789,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "choiceInsurerConfirmedByInsured",
@@ -17839,6 +18813,7 @@
       "flags": {
         "fixed": "true"
       },
+      "typeNs": "urn:ru:fss:integration:types:proactive:v01",
       "typeFile": "Confirmation.xsd"
     },
     {
@@ -17911,7 +18886,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "wardInfo",
@@ -17992,7 +18970,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18010,7 +18991,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "num",
@@ -18051,7 +19035,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18069,7 +19056,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -18110,7 +19100,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18128,7 +19121,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -18146,7 +19142,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18164,7 +19163,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childInfo",
@@ -18214,7 +19216,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -18237,6 +19240,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -18271,6 +19275,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -18299,6 +19304,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -18327,6 +19333,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -18378,7 +19385,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18396,7 +19406,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -18424,6 +19437,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -18525,7 +19539,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18543,7 +19560,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -18584,7 +19604,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18602,7 +19625,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidORD",
@@ -18675,7 +19701,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18693,7 +19722,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -18732,7 +19764,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18750,7 +19785,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidChORD",
@@ -18823,7 +19861,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18841,7 +19882,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -18880,7 +19924,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -18898,7 +19945,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "identifyDocument",
@@ -19006,7 +20056,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19024,7 +20077,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -19071,7 +20127,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19089,7 +20148,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -19130,7 +20192,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19148,7 +20213,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDocOtherCountry",
@@ -19221,7 +20289,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19239,7 +20310,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -19286,7 +20360,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19304,7 +20381,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -19345,7 +20425,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19363,7 +20446,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthRecord",
@@ -19438,7 +20524,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19456,7 +20545,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -19497,7 +20589,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19515,7 +20610,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refNpay",
@@ -19600,7 +20698,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19618,7 +20719,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "num",
@@ -19659,7 +20763,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19677,7 +20784,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -19718,7 +20828,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19736,7 +20849,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notice",
@@ -19790,6 +20906,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -19808,7 +20925,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childSer",
@@ -19855,7 +20973,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -19873,7 +20994,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "motherOut",
@@ -19891,7 +21015,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "homeWorkInfo",
@@ -19909,7 +21034,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "otherChild",
@@ -20024,7 +21150,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20042,7 +21171,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit6Approve",
@@ -20070,6 +21202,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "typeFile": "Benefit6.xsd",
       "contentModel": [
         "sequence",
@@ -20158,7 +21291,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20176,7 +21312,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mseInvalidLoss",
@@ -20221,7 +21360,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20239,7 +21381,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -20257,7 +21402,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20275,7 +21423,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurerInfo",
@@ -20350,7 +21501,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20368,7 +21522,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -20412,7 +21569,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "partTime",
@@ -20463,7 +21623,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20481,7 +21644,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "parentNo",
@@ -20528,7 +21694,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20546,7 +21715,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -20647,7 +21819,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20665,7 +21840,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -20714,7 +21892,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20732,7 +21913,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -20783,7 +21967,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20801,7 +21988,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -20862,6 +22052,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -20890,6 +22081,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -20918,6 +22110,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -20936,7 +22129,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -20954,7 +22150,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -20995,7 +22194,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -21013,7 +22215,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -21064,7 +22269,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -21082,7 +22290,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "taxpayer",
@@ -21172,6 +22383,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/TaxpayerStatusType/v01",
       "typeFile": "TaxpayerStatusType.xsd"
     },
     {
@@ -21222,6 +22434,7 @@
       "flags": {
         "nillable": "true"
       },
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -21260,6 +22473,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -21284,6 +22498,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -21308,6 +22523,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -21332,6 +22548,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -21356,6 +22573,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -21422,7 +22640,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -21440,7 +22661,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "id",
@@ -21604,6 +22828,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/identtityDoc/v01",
       "typeFile": "IdentityDocuments.xsd"
     },
     {
@@ -21672,7 +22897,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dept",
@@ -21713,7 +22939,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -21731,7 +22958,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -21749,7 +22979,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "residenceDocument",
@@ -21772,6 +23005,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -21866,7 +23100,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workContract",
@@ -21915,7 +23150,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -21933,7 +23169,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -21951,7 +23188,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -21969,7 +23209,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personPhone",
@@ -22055,6 +23298,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -22112,6 +23356,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -22144,6 +23389,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -22168,6 +23414,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -22198,6 +23445,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -22235,6 +23483,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -22259,6 +23508,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -22291,6 +23541,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -22477,6 +23728,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -22515,6 +23767,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -22539,6 +23792,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -22563,6 +23817,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -22587,6 +23842,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -22611,6 +23867,7 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -22652,7 +23909,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -22670,7 +23930,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calculationData",
@@ -22783,7 +24046,8 @@
       "file": "Benefit6.xsd",
       "flags": {
         "fixed": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "year",
@@ -22850,7 +24114,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -22868,7 +24135,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "baseSum",
@@ -22919,7 +24189,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -22937,7 +24210,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumType",
@@ -22997,7 +24273,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kfReg",
@@ -23105,7 +24384,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -23123,7 +24405,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kfShortDays",
@@ -23178,7 +24463,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -23196,7 +24484,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "experience",
@@ -23281,7 +24572,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -23299,7 +24593,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurMM",
@@ -23350,7 +24647,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -23368,7 +24668,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notInsurYY",
@@ -23419,7 +24722,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -23437,7 +24743,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notInsurMM",
@@ -23488,7 +24797,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -23506,7 +24818,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -23524,7 +24839,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -23542,7 +24860,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calcConditionList",
@@ -23649,7 +24970,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -23667,7 +24991,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "causeRadiation",
@@ -23703,6 +25030,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/CauseRadiationExposure/v01",
       "typeFile": "CauseRadiationExposure.xsd"
     },
     {
@@ -23770,7 +25098,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -23788,7 +25119,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -23829,7 +25163,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -23847,7 +25184,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "excludePeriodList",
@@ -23937,6 +25277,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/dic/exclperiodstypes/v01",
       "typeFile": "ExcludePeriodsType.xsd"
     },
     {
@@ -23959,6 +25300,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -23982,7 +25324,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -24000,7 +25343,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@editable",
@@ -24018,7 +25362,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -24036,7 +25383,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "downPeriodList",
@@ -24077,7 +25427,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@required",
@@ -24095,7 +25448,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mobilPeriods",
@@ -24149,6 +25505,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:v01",
       "typeFile": "Confirmation.xsd"
     },
     {
@@ -24187,7 +25544,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "assignmentParams",
@@ -24287,7 +25647,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsType",
@@ -24359,7 +25722,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "true"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurancePaymentObligation",
@@ -24377,7 +25743,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuranceCase",
@@ -24427,7 +25794,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "n1",
@@ -24497,7 +25865,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -24535,7 +25906,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "profIllnessAct",
@@ -24597,7 +25971,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "freeFormAct",
@@ -24667,7 +26044,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -24705,7 +26085,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "courtDecision",
@@ -24775,7 +26158,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -24813,7 +26199,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {
+        "fixed": "false"
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notice",
@@ -24867,6 +26256,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -24885,7 +26275,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "recalculation",
@@ -24906,6 +26297,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:v01",
       "typeFile": "Confirmation.xsd",
       "contentModel": [
         "sequence",
@@ -24934,6 +26326,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:v01",
       "typeFile": "Confirmation.xsd"
     }
   ]

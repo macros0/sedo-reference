@@ -66,7 +66,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit1",
@@ -121,6 +122,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -153,6 +155,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -174,6 +177,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -206,6 +210,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -230,6 +235,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -259,6 +265,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -292,6 +299,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -320,6 +328,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -352,6 +361,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -379,6 +389,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -417,6 +428,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -445,6 +457,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -473,6 +486,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -501,6 +515,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -529,6 +544,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -557,6 +573,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -585,6 +602,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -608,6 +626,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -643,6 +662,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -682,6 +702,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -706,6 +727,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -734,6 +756,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -762,6 +785,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -790,6 +814,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -818,6 +843,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -846,6 +872,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -874,6 +901,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -958,6 +986,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -976,7 +1005,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "choiceInsurerConfirmedByInsured",
@@ -996,7 +1026,8 @@
       "file": "BenefitResponse.xsd",
       "flags": {
         "fixed": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsInfo",
@@ -1019,6 +1050,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -1071,6 +1103,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -1094,7 +1127,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -1112,7 +1146,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -1180,7 +1215,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -1198,7 +1234,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerAndGPHcontract",
@@ -1270,6 +1307,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -1293,7 +1331,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -1311,7 +1350,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -1329,7 +1369,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "*",
@@ -1415,6 +1456,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -1466,6 +1508,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -1499,6 +1542,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -1531,6 +1575,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -1609,6 +1654,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -1655,6 +1701,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -1688,6 +1735,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -1720,6 +1768,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -1748,6 +1797,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -1829,6 +1879,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:regionRate:v3.0",
       "typeFile": "RegionRate.xsd"
     },
     {
@@ -1865,6 +1916,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -1933,6 +1985,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:conditionsCalc:v3.0",
       "typeFile": "ConditionsCalc.xsd"
     },
     {
@@ -1969,6 +2022,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:causeRadiationExposure:v3.0",
       "typeFile": "CauseRadiationExposure.xsd"
     },
     {
@@ -1990,6 +2044,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -2072,6 +2127,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:exclperiodstypes:v3.0",
       "typeFile": "ExcludePeriodsType.xsd"
     },
     {
@@ -2094,6 +2150,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -2117,7 +2174,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -2135,7 +2193,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "downPeriodList",
@@ -2156,6 +2215,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -2208,6 +2268,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -2231,7 +2292,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -2249,7 +2311,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "idleAverage",
@@ -2281,6 +2344,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -2305,6 +2369,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -2340,6 +2405,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -2368,6 +2434,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -2396,6 +2463,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -2424,6 +2492,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -2469,6 +2538,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -2492,7 +2562,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -2510,7 +2581,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -2576,6 +2648,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -2620,6 +2693,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -2676,6 +2750,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -2699,6 +2774,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -2793,7 +2869,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "taxpayer",
@@ -2815,6 +2892,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -2880,6 +2958,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:taxpayerStatusType:v3.0",
       "typeFile": "TaxpayerStatusType.xsd"
     },
     {
@@ -2938,6 +3017,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -2956,7 +3036,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "id",
@@ -3118,6 +3199,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -3186,7 +3268,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dept",
@@ -3227,7 +3310,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit2",
@@ -3284,6 +3368,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -3316,6 +3401,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3337,6 +3423,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -3369,6 +3456,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -3393,6 +3481,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -3422,6 +3511,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -3455,6 +3545,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -3483,6 +3574,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -3515,6 +3607,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3542,6 +3635,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -3580,6 +3674,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -3608,6 +3703,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -3636,6 +3732,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -3664,6 +3761,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3692,6 +3790,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3720,6 +3819,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3748,6 +3848,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -3771,6 +3872,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -3806,6 +3908,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -3845,6 +3948,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3869,6 +3973,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3897,6 +4002,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3925,6 +4031,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3953,6 +4060,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -3981,6 +4089,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -4009,6 +4118,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -4037,6 +4147,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -4119,6 +4230,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -4137,7 +4249,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontractPeriod",
@@ -4159,6 +4272,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -4182,7 +4296,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -4200,7 +4315,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "choiceInsurerConfirmedByInsured",
@@ -4220,7 +4336,8 @@
       "file": "BenefitResponse.xsd",
       "flags": {
         "fixed": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calculationData",
@@ -4278,6 +4395,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -4329,6 +4447,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -4362,6 +4481,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -4394,6 +4514,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -4472,6 +4593,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -4518,6 +4640,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -4551,6 +4674,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -4583,6 +4707,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -4664,6 +4789,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:regionRate:v3.0",
       "typeFile": "RegionRate.xsd"
     },
     {
@@ -4700,6 +4826,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -4752,6 +4879,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:conditionsCalc:v3.0",
       "typeFile": "ConditionsCalc.xsd"
     },
     {
@@ -4788,6 +4916,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:causeRadiationExposure:v3.0",
       "typeFile": "CauseRadiationExposure.xsd"
     },
     {
@@ -4812,6 +4941,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -4847,6 +4977,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -4875,6 +5006,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -4903,6 +5035,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -4931,6 +5064,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5052,6 +5186,7 @@
       "flags": {
         "nillable": "true"
       },
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5134,6 +5269,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -5178,6 +5314,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -5234,6 +5371,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -5257,6 +5395,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -5351,7 +5490,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personPhone",
@@ -5379,6 +5519,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5397,7 +5538,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit4",
@@ -5457,6 +5599,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -5489,6 +5632,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -5513,6 +5657,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -5542,6 +5687,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -5575,6 +5721,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -5603,6 +5750,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -5635,6 +5783,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5662,6 +5811,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -5700,6 +5850,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -5728,6 +5879,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -5756,6 +5908,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -5784,6 +5937,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5812,6 +5966,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5840,6 +5995,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5868,6 +6024,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -5891,6 +6048,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -5926,6 +6084,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -5965,6 +6124,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -5989,6 +6149,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6017,6 +6178,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6045,6 +6207,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6073,6 +6236,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6101,6 +6265,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6129,6 +6294,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6157,6 +6323,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6262,6 +6429,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:regionRate:v3.0",
       "typeFile": "RegionRate.xsd"
     },
     {
@@ -6346,6 +6514,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -6372,6 +6541,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -6418,6 +6588,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -6442,6 +6613,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6470,6 +6642,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -6494,6 +6667,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6522,6 +6696,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -6546,6 +6721,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6564,7 +6740,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -6592,6 +6769,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -6671,6 +6849,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -6705,6 +6884,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6723,7 +6903,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refType",
@@ -6776,6 +6957,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -6871,6 +7053,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -6905,6 +7088,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6933,6 +7117,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -6951,7 +7136,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthRecord",
@@ -6973,6 +7159,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -7041,6 +7228,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -7111,6 +7299,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -7146,6 +7335,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -7174,6 +7364,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -8224,6 +8415,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:OKSM:v3.0",
       "typeFile": "OKSM.xsd"
     },
     {
@@ -8246,6 +8438,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -8305,6 +8498,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -8377,6 +8571,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -8416,6 +8611,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -8474,6 +8670,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -8554,6 +8751,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -8598,6 +8796,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -8654,6 +8853,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -8677,6 +8877,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -8771,7 +8972,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personPhone",
@@ -8799,6 +9001,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -8835,6 +9038,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -8903,6 +9107,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -8935,6 +9140,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -8959,6 +9165,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -8988,6 +9195,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -9021,6 +9229,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -9049,6 +9258,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -9081,6 +9291,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9108,6 +9319,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -9146,6 +9358,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -9174,6 +9387,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -9202,6 +9416,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -9230,6 +9445,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9258,6 +9474,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9286,6 +9503,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9314,6 +9532,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -9337,6 +9556,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -9372,6 +9592,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -9411,6 +9632,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9435,6 +9657,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9463,6 +9686,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9491,6 +9715,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9519,6 +9744,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9547,6 +9773,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9575,6 +9802,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9603,6 +9831,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -9683,6 +9912,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -9701,7 +9931,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontractPeriod",
@@ -9723,6 +9954,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -9746,7 +9978,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -9764,7 +9997,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calculationData",
@@ -9843,6 +10077,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -9894,6 +10129,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -9927,6 +10163,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -9959,6 +10196,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -10037,6 +10275,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -10083,6 +10322,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -10116,6 +10356,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -10148,6 +10389,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -10229,6 +10471,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:regionRate:v3.0",
       "typeFile": "RegionRate.xsd"
     },
     {
@@ -10265,6 +10508,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -10323,6 +10567,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -10347,6 +10592,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -10382,6 +10628,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -10410,6 +10657,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -10438,6 +10686,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -10466,6 +10715,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -10524,6 +10774,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -10550,6 +10801,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -10596,6 +10848,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -10620,6 +10873,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -10648,6 +10902,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -10672,6 +10927,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -10700,6 +10956,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -10724,6 +10981,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -10742,7 +11000,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -10770,6 +11029,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -10922,6 +11182,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -10992,6 +11253,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -11066,6 +11328,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -11100,6 +11363,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -11128,6 +11392,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -11146,7 +11411,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthRecord",
@@ -11168,6 +11434,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -11238,6 +11505,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -11273,6 +11541,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -11301,6 +11570,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -12351,6 +12621,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:OKSM:v3.0",
       "typeFile": "OKSM.xsd"
     },
     {
@@ -12373,6 +12644,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -12432,6 +12704,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -12504,6 +12777,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -12543,6 +12817,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -12601,6 +12876,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -12785,6 +13061,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -12829,6 +13106,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -12885,6 +13163,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -12908,6 +13187,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -13002,7 +13282,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personPhone",
@@ -13030,6 +13311,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13048,7 +13330,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childRelType",
@@ -13084,6 +13367,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -13141,6 +13425,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -13173,6 +13458,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13194,6 +13480,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -13226,6 +13513,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -13250,6 +13538,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -13279,6 +13568,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -13312,6 +13602,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -13340,6 +13631,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -13372,6 +13664,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13399,6 +13692,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -13437,6 +13731,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -13465,6 +13760,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -13493,6 +13789,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -13521,6 +13818,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13549,6 +13847,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13577,6 +13876,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13605,6 +13905,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
       "typeFile": "Organization.xsd"
     },
     {
@@ -13628,6 +13929,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "choice",
@@ -13663,6 +13965,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -13702,6 +14005,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13726,6 +14030,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13754,6 +14059,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13782,6 +14088,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13810,6 +14117,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13838,6 +14146,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13866,6 +14175,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13894,6 +14204,7 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -13978,6 +14289,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -13996,7 +14308,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "choiceInsurerConfirmedByInsured",
@@ -14016,7 +14329,8 @@
       "file": "BenefitResponse.xsd",
       "flags": {
         "fixed": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurancePaymentObligation",
@@ -14034,7 +14348,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsInfo",
@@ -14057,6 +14372,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -14109,6 +14425,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -14132,7 +14449,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -14150,7 +14468,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -14220,7 +14539,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -14238,7 +14558,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHinsurancePaymentObligation",
@@ -14262,6 +14583,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -14334,6 +14656,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -14357,7 +14680,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -14375,7 +14699,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -14393,7 +14718,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "calculationData",
@@ -14457,6 +14783,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "choice",
@@ -14508,6 +14835,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -14541,6 +14869,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -14573,6 +14902,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -14651,6 +14981,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -14697,6 +15028,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -14730,6 +15062,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -14762,6 +15095,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -14790,6 +15124,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -14871,6 +15206,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:regionRate:v3.0",
       "typeFile": "RegionRate.xsd"
     },
     {
@@ -14907,6 +15243,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -14963,6 +15300,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:conditionsCalc:v3.0",
       "typeFile": "ConditionsCalc.xsd"
     },
     {
@@ -14999,6 +15337,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:causeRadiationExposure:v3.0",
       "typeFile": "CauseRadiationExposure.xsd"
     },
     {
@@ -15020,6 +15359,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -15102,6 +15442,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:exclperiodstypes:v3.0",
       "typeFile": "ExcludePeriodsType.xsd"
     },
     {
@@ -15124,6 +15465,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -15147,7 +15489,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -15165,7 +15508,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "experience",
@@ -15189,6 +15533,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -15224,6 +15569,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -15252,6 +15598,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -15280,6 +15627,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -15308,6 +15656,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -15353,6 +15702,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd",
       "contentModel": [
         "sequence",
@@ -15376,7 +15726,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -15394,7 +15745,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuranceCase",
@@ -15444,7 +15796,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "n1",
@@ -15756,6 +16109,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -15800,6 +16154,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -15856,6 +16211,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -15879,6 +16235,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -15973,7 +16330,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "taxpayer",
@@ -15995,6 +16353,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -16060,6 +16419,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:taxpayerStatusType:v3.0",
       "typeFile": "TaxpayerStatusType.xsd"
     },
     {
@@ -16118,6 +16478,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -16136,7 +16497,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "id",
@@ -16298,6 +16660,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -16366,7 +16729,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dept",
@@ -16407,7 +16771,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refusal",
@@ -16459,6 +16824,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -16507,6 +16873,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:dic:changeReasons:v3.0",
       "typeFile": "ChangeReasons.xsd"
     },
     {
@@ -16529,6 +16896,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -16562,6 +16930,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -16580,7 +16949,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "note",
@@ -16608,6 +16978,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd"
     },
     {
@@ -16631,6 +17002,7 @@
       "ns": "urn:ru:ecp:integration:proactive:benefitResponse:v3.0",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "typeFile": "Proactive.xsd",
       "contentModel": [
         "sequence",
@@ -16663,6 +17035,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -16709,6 +17082,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -16733,6 +17107,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -16761,6 +17136,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -16785,6 +17161,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -16813,6 +17190,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
       "typeFile": "Person.xsd"
     },
     {
@@ -16837,6 +17215,7 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -16869,6 +17248,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -16897,6 +17277,7 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -16925,6 +17306,7 @@
       "ns": "",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     },
     {
@@ -16949,6 +17331,7 @@
       "ns": "",
       "file": "BenefitResponse.xsd",
       "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
       "typeFile": "Common.xsd"
     }
   ]

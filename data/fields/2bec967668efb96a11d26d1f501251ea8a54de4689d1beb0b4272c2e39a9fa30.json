@@ -24,6 +24,7 @@
       "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd",
       "contentModel": [
         "sequence",
@@ -55,6 +56,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd"
     },
     {
@@ -91,6 +93,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd"
     },
     {
@@ -115,6 +118,7 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
+      "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "typeFile": "Poved.xsd"
     },
     {
@@ -156,7 +160,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

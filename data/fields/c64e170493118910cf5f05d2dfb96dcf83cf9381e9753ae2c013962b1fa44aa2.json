@@ -77,7 +77,8 @@
       "children": [],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noticeNumber",
@@ -95,7 +96,8 @@
       "children": [],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "moData",
@@ -151,6 +153,7 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "",
       "typeFile": "inline-1.xsd"
     },
     {
@@ -175,6 +178,7 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "",
       "typeFile": "inline-1.xsd"
     },
     {
@@ -199,6 +203,7 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "",
       "typeFile": "inline-1.xsd"
     },
     {
@@ -247,6 +252,7 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "",
       "typeFile": "inline-1.xsd"
     },
     {
@@ -295,7 +301,8 @@
       "children": [],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "employeeRole",
@@ -313,7 +320,8 @@
       "children": [],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "phone",
@@ -331,7 +339,8 @@
       "children": [],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "tofName",
@@ -349,7 +358,8 @@
       "children": [],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "signatoryData",
@@ -393,7 +403,8 @@
       "children": [],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "signatoryRole",
@@ -411,7 +422,8 @@
       "children": [],
       "ns": "",
       "file": "inline-1.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fixData",
@@ -463,6 +475,7 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
+      "typeNs": "",
       "typeFile": "inline-1.xsd"
     }
   ]

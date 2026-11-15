@@ -90,6 +90,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -114,6 +115,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -142,6 +144,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -166,6 +169,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd"
     },
     {
@@ -224,6 +228,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -247,6 +252,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -281,6 +287,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -309,6 +316,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -337,6 +345,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -355,7 +364,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -383,6 +393,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -512,6 +523,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:salary:v01",
       "typeFile": "InsuredPersonSalary.xsd"
     },
     {
@@ -564,6 +576,7 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:proactive:salary:v01",
       "typeFile": "InsuredPersonSalary.xsd"
     },
     {
@@ -584,7 +597,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {
         "fixed": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "eln3days",
@@ -630,7 +644,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {
         "fixed": "true"
-      }
+      },
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fired",
@@ -672,7 +687,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

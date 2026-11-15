@@ -94,6 +94,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:dic:InsuredCategories:v01",
       "typeFile": "InsuredCategories.xsd"
     },
     {
@@ -148,6 +149,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -183,6 +185,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -206,6 +209,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -240,6 +244,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -268,6 +273,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -296,6 +302,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -314,7 +321,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childRelType",
@@ -354,6 +362,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -378,6 +387,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -411,6 +421,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -445,6 +456,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -473,6 +485,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -501,6 +514,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -519,7 +533,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -547,6 +562,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -575,6 +591,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -645,7 +662,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -663,7 +681,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "identityDocument",
@@ -718,6 +737,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -836,6 +856,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -956,6 +977,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -1054,6 +1076,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd"
     },
     {
@@ -1108,6 +1131,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -1143,6 +1167,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1166,6 +1191,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -1200,6 +1226,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1228,6 +1255,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1256,6 +1284,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1274,7 +1303,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childRelType",
@@ -1314,6 +1344,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1338,6 +1369,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -1371,6 +1403,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd",
       "contentModel": [
         "sequence",
@@ -1405,6 +1438,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1433,6 +1467,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1461,6 +1496,7 @@
       "ns": "http://www.fss.ru/integration/types/person/v02",
       "file": "Person.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1479,7 +1515,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -1507,6 +1544,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1535,6 +1573,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -1725,6 +1764,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd"
     },
     {
@@ -1749,6 +1789,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -1869,6 +1910,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd",
       "contentModel": [
         "sequence",
@@ -1967,6 +2009,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd"
     },
     {
@@ -2049,6 +2092,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/person/v02",
       "typeFile": "Person.xsd"
     },
     {
@@ -2073,6 +2117,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "http://www.fss.ru/integration/types/common/v01",
       "typeFile": "Common.xsd"
     },
     {
@@ -2091,7 +2136,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsType",
@@ -2143,6 +2189,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd"
     },
     {
@@ -2191,6 +2238,7 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
+      "typeNs": "urn:ru:fss:integration:types:information:EventLife:v01",
       "typeFile": "EventLife.xsd"
     }
   ]
