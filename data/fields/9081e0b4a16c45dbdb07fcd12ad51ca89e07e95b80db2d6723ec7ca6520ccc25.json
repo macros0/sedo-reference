@@ -28,7 +28,16 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:responseResult:v3.0",
       "file": "BenefitResponseResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "processNum",
+        "status",
+        "batchNo",
+        "responseInfo",
+        "errorList",
+        "warnList"
+      ]
     },
     {
       "name": "processNum",
@@ -150,7 +159,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:responseResult:v3.0",
       "file": "BenefitResponseResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -173,7 +186,13 @@
       "ns": "urn:ru:ecp:integration:proactive:responseResult:v3.0",
       "file": "BenefitResponseResult.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -274,7 +293,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:responseResult:v3.0",
       "file": "BenefitResponseResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "warn"
+      ]
     },
     {
       "name": "warn",
@@ -297,7 +320,13 @@
       "ns": "urn:ru:ecp:integration:proactive:responseResult:v3.0",
       "file": "BenefitResponseResult.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -464,7 +493,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:proactive:responseResult:v3.0",
+      "ns": "",
       "file": "BenefitResponseResult.xsd",
       "flags": {
         "processContents": "skip"

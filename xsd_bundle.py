@@ -9,7 +9,7 @@ import tempfile
 import zipfile
 from pathlib import Path, PurePosixPath
 from lxml import etree
-from schema import import_basename, Schema, local
+from schema import import_basename, Schema
 from sync import sha, write
 from xsd_validate import compile_schema
 
@@ -155,24 +155,12 @@ manifest.json содержит контрольные суммы и список
 
 
 def _field_namespaces(archive, row, paths):
-    class NavigationSchema(Schema):
-        def __init__(self, *args):
-            self.addresses = {}
-            super().__init__(*args)
-
-        def field(self, decl, parent=-1, group="", chain=()):
-            tag = local(decl)
-            src = self.resolve(decl.get('ref'), decl, [tag]) if decl.get('ref') else decl
-            name = ('@' if tag in ('attribute', 'anyAttribute') else '') + src.get('name', '*')
-            path = (self.fields[parent]['path']+'/' if parent >= 0 else '')+name
-            owner = self.files[self.owner[src]]
-            qualified = src in list(owner[0]) or bool(decl.get('ref')) or src.get('form', owner[0].get(('attribute' if tag == 'attribute' else 'element')+'FormDefault', 'unqualified')) == 'qualified'
-            self.addresses.setdefault(path, set()).add(owner[2] if qualified else '')
-            return super().field(decl, parent, group, chain)
-
-    schema = NavigationSchema(archive, row['schema_path'], row['root'])
+    schema = Schema(archive, row['schema_path'], row['root'])
     schema.field(schema.root)
-    return [sorted(schema.addresses.get(path, set())) for path in paths]
+    addresses = {}
+    for field in schema.fields:
+        addresses.setdefault(field['path'], set()).add(field['ns'])
+    return [sorted(addresses.get(path, set())) for path in paths]
 
 
 def publish_bundles(catalog,state,site,navigation=None):

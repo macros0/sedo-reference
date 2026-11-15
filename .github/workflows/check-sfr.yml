@@ -61,10 +61,12 @@ jobs:
           node tests/test_validation_messages.cjs
           node tests/test_validation_navigation.cjs
       - name: Import verified SourceCraft WSDL snapshots
+        if: vars.SEDO_COLLECTOR_SOURCE != 'home'
         run: python sourcecraft_pull.py
       - name: Collect both contours and validate candidate
         env:
           SEDO_SFR_POLITE: '1'
+          SEDO_COLLECTOR_SOURCE: ${{ vars.SEDO_COLLECTOR_SOURCE || 'sourcecraft' }}
         run: |
           python auto_update.py
           node tests/test_browser_validation.cjs --all-editions

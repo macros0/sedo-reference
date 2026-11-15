@@ -35,6 +35,7 @@ class DocumentArchiveTests(unittest.TestCase):
 
     def test_exact_bytes_shared_by_editions_and_offline_rebuild(self):
         self.build()
+        self.assertTrue((self.root / "site/.nojekyll").is_file())
         published = json.loads((self.root / "site/catalog-data.js").read_text("utf8").removeprefix("window.SEDO_CATALOG=").removesuffix(";"))
         for r in published["revisions"]:
             self.assertEqual((self.root / "site" / r["document_download"]).read_bytes(), self.document)

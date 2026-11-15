@@ -20,7 +20,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "RefundUnempl.xsd"
+      "typeFile": "RefundUnempl.xsd",
+      "contentModel": [
+        "sequence",
+        "sttmntNumber"
+      ]
     },
     {
       "name": "sttmntNumber",

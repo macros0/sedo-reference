@@ -22,7 +22,13 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "uuid",
+        "revokeChain",
+        "reason"
+      ]
     },
     {
       "name": "uuid",

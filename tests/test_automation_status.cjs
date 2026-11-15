@@ -15,6 +15,24 @@ d=structuredClone(data);d.generated_at='bad';assert.equal(model(d,now).tone,'unk
 assert.equal(safeLink('javascript:alert(1)'),null);assert.equal(safeLink('https://evil.test'),null);
 assert.equal(model(null,now).tone,'unknown');
 
+// Home mode records GitHub's processing time, independent of SourceCraft's heartbeat.
+const home=structuredClone(data);
+home.collector_source='home';
+home.github.check.url='https://github.com/macros0/sedo-reference/actions/runs/42';
+home.sourcecraft.state='failure';
+home.sourcecraft.error='inactive heartbeat unavailable';
+let homeView=model(home,now);
+assert.equal(homeView.tone,'success');
+assert.match(homeView.cards[0].title,/Домашний сборщик/);
+assert.equal(homeView.cards[0].url,home.github.check.url);
+assert.match(homeView.cards[0].lines.join(' '),/GitHub.*11:00 МСК/);
+assert.doesNotMatch(homeView.cards[0].lines.join(' '),/SourceCraft|inactive|07:00/);
+home.github.check.state='processing';
+home.github.versions={count:null,checked_at:null};
+homeView=model(home,now);
+assert.equal(homeView.cards[0].state,'processing');
+assert.equal(homeView.tone,'processing');
+
 // The next scheduled run depends on the current time, never on a stale report
 // or the visitor's time zone. 04:00/04:17 UTC are 07:00/07:17 Moscow.
 let next=model(data,Date.parse('2026-11-13T03:59:59Z'));

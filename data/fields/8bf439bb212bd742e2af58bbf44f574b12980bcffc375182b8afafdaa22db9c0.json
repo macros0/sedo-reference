@@ -24,7 +24,24 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insurerInfo",
+        [
+          "choice",
+          [
+            "sequence",
+            "benefitInfo",
+            "recalculationFlag"
+          ],
+          [
+            "sequence",
+            "recalculation"
+          ]
+        ],
+        "notice"
+      ]
     },
     {
       "name": "insurerInfo",
@@ -44,7 +61,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNumSFR"
+      ]
     },
     {
       "name": "regNumSFR",
@@ -97,7 +118,15 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "choice",
+        "benefit1",
+        "benefit2",
+        "benefit4",
+        "benefit5",
+        "benefit6"
+      ]
     },
     {
       "name": "benefit1",
@@ -120,7 +149,14 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredInfo",
+        "lnNumber",
+        "changeYears",
+        "contractsInfo"
+      ]
     },
     {
       "name": "insuredInfo",
@@ -142,7 +178,12 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "category"
+      ]
     },
     {
       "name": "snils",
@@ -275,7 +316,11 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "year"
+      ]
     },
     {
       "name": "year",
@@ -326,7 +371,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "contentModel": [
+        "choice",
+        "workerContract",
+        "GPHcontract",
+        "workerAndGPHcontract"
+      ]
     },
     {
       "name": "workerContract",
@@ -346,7 +397,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "period"
+      ]
     },
     {
       "name": "period",
@@ -368,7 +423,12 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -424,7 +484,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "period"
+      ]
     },
     {
       "name": "period",
@@ -445,7 +509,12 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -502,7 +571,12 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "workerContract",
+        "GPHcontract"
+      ]
     },
     {
       "name": "workerContract",
@@ -522,7 +596,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "period"
+      ]
     },
     {
       "name": "period",
@@ -544,7 +622,12 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -622,7 +705,15 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredInfo",
+        "lnNumber",
+        "changeYears",
+        "contractsInfo",
+        "period"
+      ]
     },
     {
       "name": "insuredInfo",
@@ -644,7 +735,12 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "category"
+      ]
     },
     {
       "name": "snils",
@@ -777,7 +873,11 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "year"
+      ]
     },
     {
       "name": "year",
@@ -828,7 +928,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "contentModel": [
+        "choice",
+        "workerContract",
+        "GPHcontract",
+        "workerAndGPHcontract"
+      ]
     },
     {
       "name": "workerContract",
@@ -866,7 +972,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "period"
+      ]
     },
     {
       "name": "period",
@@ -888,7 +998,12 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -964,7 +1079,12 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -1024,7 +1144,15 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredInfo",
+        "contractsInfo",
+        "childInfo",
+        "childRelType",
+        "baseDocuments"
+      ]
     },
     {
       "name": "insuredInfo",
@@ -1047,7 +1175,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "category",
+        "birthDate"
+      ]
     },
     {
       "name": "snils",
@@ -1172,7 +1306,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "contentModel": [
+        "choice",
+        "workerContract",
+        "GPHcontract",
+        "workerAndGPHcontract"
+      ]
     },
     {
       "name": "workerContract",
@@ -1250,7 +1390,14 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "birthDate",
+        "gender"
+      ]
     },
     {
       "name": "snils",
@@ -1304,7 +1451,25 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "lastName",
+          "noLastName"
+        ],
+        [
+          "choice",
+          "firstName",
+          "noFirstName"
+        ],
+        [
+          "choice",
+          "middleName",
+          "noMiddleName"
+        ]
+      ]
     },
     {
       "name": "lastName",
@@ -1564,7 +1729,13 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        "birthReferenceDocs",
+        "birthRecord",
+        "birthDocOtherCountry"
+      ]
     },
     {
       "name": "birthReferenceDocs",
@@ -1585,7 +1756,12 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "birthReference",
+        "birthRecord"
+      ]
     },
     {
       "name": "birthReference",
@@ -1608,7 +1784,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "number",
+        "issueDate",
+        "refType"
+      ]
     },
     {
       "name": "number",
@@ -1707,7 +1889,12 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "number",
@@ -1770,7 +1957,12 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "number",
@@ -1835,7 +2027,14 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "issueDate",
+        "country"
+      ]
     },
     {
       "name": "series",
@@ -2967,7 +3166,17 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredInfo",
+        "changeYears",
+        "contractsInfo",
+        "period",
+        "childInfo",
+        "childRelType",
+        "baseDocuments"
+      ]
     },
     {
       "name": "insuredInfo",
@@ -2990,7 +3199,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "category",
+        "birthDate"
+      ]
     },
     {
       "name": "snils",
@@ -3113,7 +3328,11 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "year"
+      ]
     },
     {
       "name": "year",
@@ -3164,7 +3383,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "contentModel": [
+        "choice",
+        "workerContract",
+        "GPHcontract",
+        "workerAndGPHcontract"
+      ]
     },
     {
       "name": "workerContract",
@@ -3202,7 +3427,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "period"
+      ]
     },
     {
       "name": "period",
@@ -3224,7 +3453,12 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -3300,7 +3534,12 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -3360,7 +3599,14 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "birthDate",
+        "gender"
+      ]
     },
     {
       "name": "snils",
@@ -3414,7 +3660,25 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "lastName",
+          "noLastName"
+        ],
+        [
+          "choice",
+          "firstName",
+          "noFirstName"
+        ],
+        [
+          "choice",
+          "middleName",
+          "noMiddleName"
+        ]
+      ]
     },
     {
       "name": "lastName",
@@ -3674,7 +3938,16 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        [
+          "sequence",
+          "birthCertificate",
+          "birthRecord"
+        ],
+        "birthDocOtherCountry"
+      ]
     },
     {
       "name": "birthCertificate",
@@ -3697,7 +3970,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "series",
@@ -3793,7 +4072,12 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "number",
@@ -3858,7 +4142,14 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "issueDate",
+        "country"
+      ]
     },
     {
       "name": "series",
@@ -4987,7 +5278,14 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredInfo",
+        "lnNumber",
+        "changeYears",
+        "contractsInfo"
+      ]
     },
     {
       "name": "insuredInfo",
@@ -5009,7 +5307,12 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "category"
+      ]
     },
     {
       "name": "snils",
@@ -5142,7 +5445,11 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        "year"
+      ]
     },
     {
       "name": "year",
@@ -5193,7 +5500,13 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "contentModel": [
+        "choice",
+        "workerContract",
+        "GPHcontract",
+        "workerAndGPHcontract"
+      ]
     },
     {
       "name": "workerContract",
@@ -5213,7 +5526,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "period"
+      ]
     },
     {
       "name": "period",
@@ -5235,7 +5552,12 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -5292,7 +5614,12 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "period",
+        "GPHinsurancePaymentObligation"
+      ]
     },
     {
       "name": "period",
@@ -5313,7 +5640,12 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -5394,7 +5726,12 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "workerContract",
+        "GPHcontract"
+      ]
     },
     {
       "name": "workerContract",
@@ -5414,7 +5751,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "period"
+      ]
     },
     {
       "name": "period",
@@ -5436,7 +5777,12 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -5534,7 +5880,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "batchNo"
+      ]
     },
     {
       "name": "batchNo",
@@ -5580,7 +5930,12 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "contentModel": [
+        "sequence",
+        "number",
+        "date"
+      ]
     },
     {
       "name": "number",

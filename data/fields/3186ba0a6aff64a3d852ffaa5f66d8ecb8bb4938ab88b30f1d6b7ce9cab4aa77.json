@@ -27,7 +27,17 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "msgDateTime",
+        "tof",
+        "batch_no",
+        "insurerInfo",
+        "receiversRow",
+        "rejectionInfo",
+        "attachment"
+      ]
     },
     {
       "name": "msgDateTime",
@@ -67,7 +77,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "FssDepartment.xsd"
+      "typeFile": "FssDepartment.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "name"
+      ]
     },
     {
       "name": "code",
@@ -159,7 +174,12 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "regNumSFR"
+      ]
     },
     {
       "name": "regNum",
@@ -229,7 +249,13 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "parentInfo",
+        "childInfo",
+        "periods"
+      ]
     },
     {
       "name": "parentInfo",
@@ -252,7 +278,13 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "snils",
+        "childRelType"
+      ]
     },
     {
       "name": "fullName",
@@ -275,7 +307,13 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -444,7 +482,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "disabilityChildrenStatement.xsd"
+      "typeFile": "disabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "birthDate"
+      ]
     },
     {
       "name": "snils",
@@ -516,7 +559,12 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "daysAmount",
+        "TotalHour"
+      ]
     },
     {
       "name": "daysAmount",
@@ -574,7 +622,13 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/disabilitychildren/v01",
       "file": "disabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "number",
+        "date",
+        "reason"
+      ]
     },
     {
       "name": "number",
@@ -663,7 +717,15 @@
       "ns": "http://www.fss.ru/integration/types/commonUq/v01",
       "file": "CommonUQ.xsd",
       "flags": {},
-      "typeFile": "CommonUQ.xsd"
+      "typeFile": "CommonUQ.xsd",
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ]
     },
     {
       "name": "content",
@@ -679,7 +741,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -697,7 +759,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -715,7 +777,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -733,7 +795,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -751,7 +813,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },

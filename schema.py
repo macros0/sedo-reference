@@ -52,6 +52,7 @@ class Schema:
     def __init__(self, archive, entry, root_name):
         self.files = {}
         self.owner = {}
+        self.prefixes = {}
         self.symbol = {}
         self.fields = []
         self.main = entry
@@ -65,12 +66,24 @@ class Schema:
         if path in self.files:
             return
         data = archive.read(path)
-        ns = dict(n for _, n in ET.iterparse(io.BytesIO(data), events=("start-ns",)))
-        root = ET.fromstring(data)
+        parser = ET.iterparse(io.BytesIO(data), events=("start-ns", "start", "end"))
+        scopes = [{}]
+        declarations = {}
+        for event, value in parser:
+            if event == "start-ns":
+                prefix, uri = value
+                declarations[prefix] = uri
+            elif event == "start":
+                scope = scopes[-1] | declarations if declarations else scopes[-1]
+                scopes.append(scope)
+                declarations.clear()
+                self.prefixes[value] = scope
+                self.owner[value] = path
+            else:
+                scopes.pop()
+        root = parser.root
         target = root.get("targetNamespace", "")
-        self.files[path] = (root, ns, target)
-        for e in root.iter():
-            self.owner[e] = path
+        self.files[path] = (root, self.prefixes[root], target)
         for e in root:
             if e.get("name"):
                 key = (target, local(e), e.get("name"))
@@ -88,13 +101,24 @@ class Schema:
 
     def resolve(self, qname, source, kinds):
         prefix, _, name = qname.rpartition(":")
-        uri = self.files[self.owner[source]][1].get(prefix, "")
+        scope = self.prefixes[source]
+        if prefix and prefix not in scope:
+            raise ValueError("Необъявленный префикс "+prefix+" в "+self.owner[source])
+        uri = scope.get(prefix, "")
         if uri == XS:
             return None
         for k in kinds:
             if (uri,k,name) in self.symbol:
                 return self.symbol[(uri,k,name)]
         raise ValueError("Не удалось раскрыть тип или ссылку "+qname+" в "+self.owner[source])
+
+    def instance_namespace(self, declaration):
+        schema, _, target = self.files[self.owner[declaration]]
+        kind = local(declaration)
+        if self.symbol.get((target, kind, declaration.get("name"))) is declaration:
+            return target
+        default = "attributeFormDefault" if kind in ("attribute", "anyAttribute") else "elementFormDefault"
+        return target if declaration.get("form", schema.get(default, "unqualified")) == "qualified" else ""
 
     def coalesce_choice_leaves(self):
         """One XML path can be the same leaf in alternative choice branches.
@@ -142,13 +166,14 @@ class Schema:
         d = dict(name=name,path=path,parent=parent,group=group,doc=notes(src),kind=tag,
                  min=decl.get("minOccurs","0" if tag in ("attribute","anyAttribute") and decl.get("use")!="required" else "1"),
                  max=decl.get("maxOccurs","unbounded" if tag=="anyAttribute" else "1"),type=src.get("type",""),base="",facets=[],values=[],children=[],
-                 ns=self.files[self.owner[src]][2] if tag!="attribute" else "",
+                 ns=self.instance_namespace(src),
                  file=self.owner[src].split("/")[-1],flags={k:v for k,v in src.attrib.items() if k in ("fixed","default","nillable","namespace","processContents")})
         self.fields.append(d)
         if parent >= 0:
             self.fields[parent]["children"].append(idx)
         nodegroups = 0
-        def expand_type(q,elem,stack):
+        content = []
+        def expand_type(q,elem,stack,particles):
             obj = self.resolve(q,elem,["simpleType","complexType"])
             if obj is None:
                 d["base"]=q
@@ -156,9 +181,14 @@ class Schema:
                 if obj in stack:
                     raise ValueError("Рекурсивный тип в "+path)
                 d["typeFile"]=self.owner[obj].split("/")[-1]
-                walk(obj, "", stack+(obj,))
-        def walk(e,group,stack):
+                walk(obj, "", stack+(obj,),particles)
+        def walk(e,group,stack,particles):
             nonlocal nodegroups
+            kind = local(e)
+            if kind in ("choice", "sequence", "all"):
+                model = [kind]
+                particles.append(model)
+                particles = model
             if local(e)=="choice":
                 nodegroups+=1
                 choice_id=nodegroups
@@ -166,7 +196,9 @@ class Schema:
             if local(e) in ("choice","sequence","all") and (e.get("minOccurs","1"),e.get("maxOccurs","1"))!=("1","1"):
                 group=(group+" / " if group else "")+local(e)+" ["+e.get("minOccurs","1")+".."+e.get("maxOccurs","1")+"]"
             if local(e) in ("restriction","extension") and e.get("base"):
-                expand_type(e.get("base"),e,stack)
+                expand_type(e.get("base"),e,stack,particles)
+                if kind == "restriction" and e.find(X+"enumeration") is not None:
+                    d["values"].clear()
             for c in e:
                 t=local(c)
                 if t=="annotation":
@@ -177,16 +209,18 @@ class Schema:
                     label=f"Выбор {choice_id}, вариант {option}"
                     child_group=f"{group} / {label}" if group else label
                 if t in ("element","attribute","any","anyAttribute"):
-                    self.field(c,idx,child_group,stack)
+                    child = self.field(c,idx,child_group,stack)
+                    if t in ("element", "any"):
+                        particles.append(self.fields[child]["name"])
                 elif t in ("complexType","simpleType","complexContent","simpleContent","extension","restriction","sequence","choice","all"):
-                    walk(c,child_group,stack)
+                    walk(c,child_group,stack,particles)
                 elif t in ("attributeGroup","group"):
                     obj=self.resolve(c.get("ref"),c,[t]) if c.get("ref") else c
                     if obj in stack:raise ValueError("Рекурсивная группа в "+path)
                     group_label=child_group
                     if t=="group" and (c.get("minOccurs","1"),c.get("maxOccurs","1"))!=("1","1"):
                         group_label+=(" / " if group_label else "")+"group ["+c.get("minOccurs","1")+".."+c.get("maxOccurs","1")+"]"
-                    walk(obj,group_label,stack+(obj,))
+                    walk(obj,group_label,stack+(obj,),particles)
                 elif t=="union":
                     alternatives=[]
                     variants=[(q,None) for q in c.get("memberTypes","").split()]+[(None,n) for n in c.findall(X+"simpleType")]
@@ -194,6 +228,7 @@ class Schema:
                     for q,obj in variants:
                         temporary=ET.Element(X+"element",dict(name="unionOption",**({"type":q} if q else {})))
                         self.owner[temporary]=self.owner[c]
+                        self.prefixes[temporary]=self.prefixes[c]
                         if obj is not None:temporary.append(obj)
                         original=self.fields
                         try:
@@ -210,9 +245,11 @@ class Schema:
                 else:
                     raise ValueError("Неподдерживаемая конструкция "+t+" в "+path)
         if src.get("type"):
-            expand_type(src.get("type"),src,chain)
+            expand_type(src.get("type"),src,chain,content)
         else:
-            walk(src,"",chain)
+            walk(src,"",chain,content)
+        if content:
+            d["contentModel"] = content[0] if len(content) == 1 else ["sequence", *content]
         if parent==-1:self.coalesce_choice_leaves()
         return idx
 

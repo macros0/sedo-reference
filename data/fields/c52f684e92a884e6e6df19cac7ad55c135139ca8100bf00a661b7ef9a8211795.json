@@ -23,7 +23,23 @@
       "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "uuid"
+        ],
+        [
+          "sequence",
+          [
+            "choice",
+            "resultList",
+            "resultOrgList",
+            "error"
+          ]
+        ]
+      ]
     },
     {
       "name": "uuid",
@@ -59,10 +75,14 @@
       "children": [
         3
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "SedoArm_ЕЦП.xsd"
+      "typeFile": "SedoArm_ЕЦП.xsd",
+      "contentModel": [
+        "sequence",
+        "result"
+      ]
     },
     {
       "name": "result",
@@ -82,10 +102,16 @@
         5,
         6
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "SedoArm_ЕЦП.xsd"
+      "typeFile": "SedoArm_ЕЦП.xsd",
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "status",
+        "error"
+      ]
     },
     {
       "name": "regNum",
@@ -106,7 +132,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -134,7 +160,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
       "typeFile": "SedoArm_ЕЦП.xsd"
@@ -157,10 +183,16 @@
         8,
         9
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -232,10 +264,14 @@
       "children": [
         11
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "SedoArm_ЕЦП.xsd"
+      "typeFile": "SedoArm_ЕЦП.xsd",
+      "contentModel": [
+        "sequence",
+        "resultOrg"
+      ]
     },
     {
       "name": "resultOrg",
@@ -255,10 +291,19 @@
         19,
         20
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "SedoArm_ЕЦП.xsd"
+      "typeFile": "SedoArm_ЕЦП.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "org"
+        ],
+        "status",
+        "error"
+      ]
     },
     {
       "name": "org",
@@ -281,10 +326,36 @@
         17,
         18
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "contentModel": [
+        "choice",
+        [
+          "sequence",
+          "ogrn",
+          "inn",
+          "kpp"
+        ],
+        [
+          "sequence",
+          "ogrnip",
+          "inn",
+          "snils"
+        ],
+        [
+          "sequence",
+          "snils",
+          "inn",
+          "regnum"
+        ],
+        [
+          "sequence",
+          "inn",
+          "kpp"
+        ]
+      ]
     },
     {
       "name": "ogrn",
@@ -309,7 +380,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -340,7 +411,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -368,7 +439,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -396,7 +467,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -423,7 +494,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -451,7 +522,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/v01",
+      "ns": "",
       "file": "Sedo.xsd",
       "flags": {}
     },
@@ -478,7 +549,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
       "typeFile": "SedoArm_ЕЦП.xsd"
@@ -501,10 +572,16 @@
         22,
         23
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -578,10 +655,16 @@
         26,
         27
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",

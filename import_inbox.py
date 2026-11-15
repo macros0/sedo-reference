@@ -7,7 +7,7 @@ import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from auto_update import validate_history
+from auto_update import update_lock, validate_history
 from catalog import dependency_set
 from manual_import import fingerprint, inspect_upload, prepare_import, promote_import
 from sync import MAX_BYTES, encode, sha, write
@@ -88,7 +88,11 @@ def collect(root):
 
 
 def process_inbox(root,check=False):
-    root=Path(root).resolve()
+    with update_lock(root) as locked_root:
+        return _process_inbox(locked_root, check)
+
+
+def _process_inbox(root, check):
     original_fingerprint=fingerprint(root)
     tasks,inputs=collect(root)
     ledger_path=root/"state/inbox.json"

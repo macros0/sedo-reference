@@ -15,6 +15,46 @@ from verify import verify
 PROJECT = Path(__file__).resolve().parents[1]
 
 
+class OfflineReplayTests(unittest.TestCase):
+    def test_failure_probe_uses_a_replayed_catalog_page_without_standalone_zips(self):
+        from sync import SITES
+        from verify import failure_probe_url
+
+        snapshot = dict(pages={'test': 'example'}, entries=[])
+        self.assertEqual(failure_probe_url(snapshot, [SITES['test']]), SITES['test'])
+
+    def test_failure_probe_uses_an_archive_from_current_snapshot(self):
+        from sync import SITES
+
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            state = root / "state"
+            data = root / "data"
+            archive = io.BytesIO()
+            with zipfile.ZipFile(archive, "w"):
+                pass
+            body = archive.getvalue()
+            pages, entries = {}, []
+            revisions = []
+            for environment, site in SITES.items():
+                href = "/specs_sedo/new-edition.zip"
+                page = f'<a href="{href}">Current editions</a>'.encode()
+                pages[environment] = sha(page)
+                write(state / "objects" / sha(page), page)
+                entries.append(dict(environment=environment, url=site.rsplit("/", 1)[0] + href,
+                                    kind="zip", sha256=sha(body)))
+                revisions.append(dict(number="10110", environment=environment, revision_id=environment,
+                                      status="document_only", source_type="manual", root="example"))
+            write(state / "objects" / sha(body), body)
+            snapshot = encode(dict(pages=pages, entries=entries))
+            digest = sha(snapshot)
+            write(state / "snapshots" / (digest + ".json"), snapshot)
+            write(state / "history.json", encode([digest]))
+            write(state / "current.json", encode(dict(snapshot=digest)))
+            write(data / "catalog.json", encode(dict(revisions=revisions)))
+            verify(state, data)
+
+
 class UpdateAcceptanceTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -62,7 +102,10 @@ class UpdateAcceptanceTests(unittest.TestCase):
 
     def test_new_document_and_imported_schema_preserve_old_revisions(self):
         snapshot = copy.deepcopy(self.snapshot)
-        archive = next(r for r in snapshot["entries"] if r["environment"] == "prod" and r["kind"] == "zip" and "19_09" in r["url"])
+        current = next(r for r in self.original["revisions"]
+                       if r["environment"] == "prod" and r["number"] == "10110" and r["listed_now"])
+        archive = next(r for r in snapshot["entries"]
+                       if r["environment"] == "prod" and r["url"] == current["archive_url"])
         source = self.root / "state/objects" / archive["sha256"]
         buffer = io.BytesIO()
         with zipfile.ZipFile(source) as old, zipfile.ZipFile(buffer, "w") as new:

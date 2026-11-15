@@ -23,7 +23,19 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "status",
+          "errorList"
+        ],
+        [
+          "sequence",
+          "socialAssistNum"
+        ]
+      ]
     },
     {
       "name": "status",
@@ -71,7 +83,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -94,7 +110,13 @@
       "ns": "urn:ru:fss:integration:types:information:EventLife:v01",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",

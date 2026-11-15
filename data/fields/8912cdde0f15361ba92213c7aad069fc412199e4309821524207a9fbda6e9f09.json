@@ -24,7 +24,15 @@
       "ns": "http://www.fss.ru/integration/kp/KpNotificationDocsAsv/v01",
       "file": "KpNotificationDocsAsv.xsd",
       "flags": {},
-      "typeFile": "NotificationDocType.xsd"
+      "typeFile": "NotificationDocType.xsd",
+      "contentModel": [
+        "sequence",
+        "responseOn",
+        "idMessage",
+        "date",
+        "insurer",
+        "statusDocument"
+      ]
     },
     {
       "name": "responseOn",
@@ -111,7 +119,12 @@
       ],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        "insurerName",
+        "FIO"
+      ]
     },
     {
       "name": "insurerName",
@@ -177,7 +190,15 @@
       ],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "idDocumentsGroup",
+        "typeDocument",
+        "count",
+        "status",
+        "reason"
+      ]
     },
     {
       "name": "idDocumentsGroup",
@@ -297,7 +318,12 @@
       ],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "codeError",
+        "description"
+      ]
     },
     {
       "name": "codeError",

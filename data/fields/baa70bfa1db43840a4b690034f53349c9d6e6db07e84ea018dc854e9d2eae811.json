@@ -37,7 +37,20 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "batch_no",
+        "changeRecalcFlag",
+        "prim_batch_no",
+        "recalc_reason",
+        "insurerInfo",
+        "refundSum",
+        "numberRecipients",
+        "certifiedCopiesOrders",
+        "receiversRow",
+        "addInfo"
+      ]
     },
     {
       "name": "batch_no",
@@ -151,7 +164,19 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        "emplKPP",
+        "emplINN",
+        "Empl_Flag",
+        "bankInfo"
+      ]
     },
     {
       "name": "regNum",
@@ -304,7 +329,16 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "bik",
+        "accountNum",
+        "accountNumInFederalExchequer",
+        "kbk",
+        "transitAccount",
+        "transitName"
+      ]
     },
     {
       "name": "bik",
@@ -501,7 +535,13 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "totalSum",
+        "sumForNonBudgetFunds",
+        "sumForAdditionalDays"
+      ]
     },
     {
       "name": "totalSum",
@@ -674,7 +714,14 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "parentInfo",
+        "childInfo",
+        "ORD",
+        "periods"
+      ]
     },
     {
       "name": "parentInfo",
@@ -697,7 +744,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "snils",
+        "childRelType"
+      ]
     },
     {
       "name": "fullName",
@@ -720,7 +773,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -891,7 +950,20 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "fullName",
+          "snils",
+          "birthDate"
+        ],
+        [
+          "sequence",
+          "certificateOfDisability"
+        ]
+      ]
     },
     {
       "name": "fullName",
@@ -914,7 +986,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -1073,7 +1151,15 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "certificateDate",
+        "disabilityBeginDate",
+        "disabilityEndDate"
+      ]
     },
     {
       "name": "series",
@@ -1184,7 +1270,12 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        "notLimited",
+        "endDate"
+      ]
     },
     {
       "name": "notLimited",
@@ -1248,7 +1339,12 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "number",
+        "date"
+      ]
     },
     {
       "name": "number",
@@ -1314,7 +1410,12 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "additionalPeriods",
+        "accumulatedPeriods"
+      ]
     },
     {
       "name": "additionalPeriods",
@@ -1337,7 +1438,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "periodAndCalculationData",
+        "providedDays",
+        "providedTotalHour"
+      ]
     },
     {
       "name": "periodAndCalculationData",
@@ -1361,7 +1468,14 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "month",
+        "daysAmount",
+        "dailyAverageSal"
+      ]
     },
     {
       "name": "year",
@@ -1565,7 +1679,16 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "accumulatedPeriodData",
+        "accumulatedDays",
+        "accumulatedTotalHour",
+        "accumulatedProvidedPeriodData",
+        "accumulatedProvidedDays",
+        "accumulatedProvidedTotalHour"
+      ]
     },
     {
       "name": "accumulatedPeriodData",
@@ -1588,7 +1711,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "month",
+        "daysAmount"
+      ]
     },
     {
       "name": "year",
@@ -1758,7 +1887,14 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "month",
+        "daysAmount",
+        "dailyAverageSal"
+      ]
     },
     {
       "name": "year",

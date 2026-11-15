@@ -38,6 +38,17 @@ const validXml = `<${result.root} xmlns="${result.namespace}" specVersion="${res
   <status>RECEIVED</status>
 </${result.root}>`;
 
+test('an unqualified field displays its XML instance namespace', async ({ page }) => {
+  const revision = edition('1001', 'test');
+  const route = new URLSearchParams({ message: '1001', env: 'test', rev: revision.revision_id,
+    field: 'sedoAppealRequest/appealTitle' });
+  await page.goto(`#${route}`);
+  const detail = page.frameLocator('#frame').getByRole('region', { name: 'Карточка поля' });
+  await expect(detail.getByRole('heading', { name: 'appealTitle', exact: true })).toBeVisible();
+  await detail.getByText('Источник в XSD', { exact: true }).click();
+  await expect(detail).toContainText('Пространство имён: без пространства имён');
+});
+
 async function openValidator(page, revision) {
   const params = new URLSearchParams({ message: revision.number, env: revision.environment,
     rev: revision.revision_id, validate: '1' });

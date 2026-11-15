@@ -23,7 +23,13 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "owner",
+        "list",
+        "protocol"
+      ]
     },
     {
       "name": "owner",
@@ -46,7 +52,13 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "choice",
+        "legalOrganization",
+        "legalPerson",
+        "person"
+      ]
     },
     {
       "name": "legalOrganization",
@@ -72,7 +84,19 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "jurAddress",
+        "inn",
+        "kpp",
+        [
+          "choice",
+          "ogrn",
+          "foreign"
+        ]
+      ]
     },
     {
       "name": "fullName",
@@ -241,7 +265,17 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName",
+        "birthDate",
+        "snils",
+        "inn",
+        "ogrnip"
+      ]
     },
     {
       "name": "firstName",
@@ -456,7 +490,24 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "firstName",
+          "lastName",
+          "middleName",
+          "birthDate",
+          "snils",
+          "inn"
+        ],
+        [
+          "choice",
+          "insurer",
+          "volunteer"
+        ]
+      ]
     },
     {
       "name": "firstName",
@@ -635,7 +686,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum"
+      ]
     },
     {
       "name": "regNum",
@@ -679,7 +734,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "kpsNum"
+      ]
     },
     {
       "name": "regNum",
@@ -750,7 +810,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "powerOfAttorney"
+      ]
     },
     {
       "name": "powerOfAttorney",
@@ -777,7 +841,18 @@
       ],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "createDate",
+        "uuid",
+        "parentUuid",
+        "paStatus",
+        "startDate",
+        "endDate",
+        "principal",
+        "representative"
+      ]
     },
     {
       "name": "createDate",
@@ -968,7 +1043,11 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "message"
+      ]
     },
     {
       "name": "message",
@@ -992,7 +1071,14 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "mnemonic",
+        "level",
+        "comment",
+        "recommendation"
+      ]
     },
     {
       "name": "mnemonic",

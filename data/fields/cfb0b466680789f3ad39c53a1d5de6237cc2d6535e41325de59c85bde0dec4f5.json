@@ -29,7 +29,20 @@
       "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "tofCode",
+        "regNum",
+        "regNumSFR",
+        "date",
+        "number",
+        "batchNum",
+        "socialAssistNum",
+        "registrRowNums",
+        "attachment",
+        "file"
+      ]
     },
     {
       "name": "tofCode",
@@ -50,7 +63,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "FssDepartment.xsd"
@@ -74,7 +87,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -98,7 +111,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -117,7 +130,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -135,7 +148,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -158,7 +171,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -177,7 +190,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -197,9 +210,13 @@
       "children": [
         9
       ],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "rowNumber"
+      ]
     },
     {
       "name": "rowNumber",
@@ -215,7 +232,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/pvso/notice/v01",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {}
     },
@@ -242,7 +259,15 @@
       "ns": "http://www.fss.ru/integration/types/commonUq/v01",
       "file": "CommonUQ.xsd",
       "flags": {},
-      "typeFile": "CommonUQ.xsd"
+      "typeFile": "CommonUQ.xsd",
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ]
     },
     {
       "name": "content",
@@ -258,7 +283,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -276,7 +301,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -294,7 +319,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -312,7 +337,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -330,7 +355,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -357,7 +382,15 @@
       "ns": "http://www.fss.ru/integration/types/commonUq/v01",
       "file": "CommonUQ.xsd",
       "flags": {},
-      "typeFile": "CommonUQ.xsd"
+      "typeFile": "CommonUQ.xsd",
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ]
     },
     {
       "name": "content",
@@ -373,7 +406,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -391,7 +424,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -409,7 +442,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -427,7 +460,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -445,7 +478,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     }

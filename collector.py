@@ -1,6 +1,7 @@
 """Small Python 3.9 collector: HTTPS from Russia, atomic Git Data API commits."""
 import argparse
 import base64
+import hashlib
 import json
 import sys
 from datetime import datetime, timezone
@@ -41,9 +42,16 @@ class GitHub:
 
 def publish_inputs(api, manifests, objects):
     files = {}
+    pointers = {}
     for manifest in manifests:
         row = validate_manifest(manifest, objects.__getitem__)
-        files["state/collector/" + manifest["environment"] + "/" + manifest["content_id"] + ".json"] = encode(manifest)
+        prefix = "state/collector/" + manifest["environment"] + "/"
+        files[prefix + manifest["content_id"] + ".json"] = encode(manifest)
+        raw = (manifest["content_id"] + "\n").encode("ascii")
+        files[prefix + "current"] = raw
+        pointers[prefix + "current"] = hashlib.sha1(
+            b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw, usedforsecurity=False
+        ).hexdigest()
         for digest in [row["sha256"], *(s["sha256"] for s in row["source_files"])]:
             files["state/objects/" + digest] = objects[digest]
     blobs = {}
@@ -53,10 +61,18 @@ def publish_inputs(api, manifests, objects):
         listing = api("GET", "git/trees/" + tree + "?recursive=1")
         if listing.get("truncated"):
             raise ValueError("GitHub tree is truncated; refusing partial comparison")
-        existing = {r["path"] for r in listing["tree"] if r["type"] == "blob"}
+        existing = {r["path"]: r["sha"] for r in listing["tree"] if r["type"] == "blob"}
         # A manifest is immutable; seeing its path means this exact content was
         # already collected. Keep the first observation date instead of churn.
-        new = {p: raw for p, raw in files.items() if p not in existing}
+        new = {p: raw for p, raw in files.items() if p not in existing and p not in pointers}
+        if attempt == 0:
+            original_pointers = {p: existing.get(p) for p in pointers}
+        for path, desired in pointers.items():
+            current = existing.get(path)
+            # Keep a concurrent observation of this contour. The immutable files
+            # from our capture still belong in the archive.
+            if current == original_pointers[path] and current != desired:
+                new[path] = files[path]
         if not new:
             return False
         entries = []
@@ -122,6 +138,9 @@ def main():
                 write(target, encode(manifest))
         for digest, raw in objects.items():
             write(args.capture_to / "objects" / digest, raw)
+        for manifest in manifests:
+            write(args.capture_to / "collector" / manifest["environment"] / "current",
+                  (manifest["content_id"] + "\n").encode("ascii"))
     elif manifests:
         token = args.token_file.read_text().strip()
         if not token.startswith("github_pat_") or any(c.isspace() for c in token):

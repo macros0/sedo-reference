@@ -30,7 +30,7 @@ def run_info(run):
                 started_at=run.get('created_at'), finished_at=run.get('updated_at') if state != 'processing' else None)
 
 
-def build_status(source, checks, pages, reports, legacy_catalogs, now=None):
+def build_status(source, checks, pages, reports, legacy_catalogs, now=None, configured_source="sourcecraft"):
     latest = (source or {}).get('latest') or {}
     sc = dict(state=latest.get('state') if latest.get('state') in ('success','failure','processing') else 'success' if latest.get('complete') else 'failure' if latest else 'unknown',
               started_at=latest.get('started_at'), finished_at=latest.get('finished_at'),
@@ -45,7 +45,9 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None):
     complete = check_info['state'] == 'success' and report.get('status') == 'ok'
     imported = (reports.get('sourcecraft-report.json') or {}).get('latest', {})
     expected_sources = {env:c['content_id'] for env,c in sc['contours'].items() if c.get('content_id')}
-    source_synced = not (latest.get('complete') and expected_sources and any(imported.get(env) != digest for env,digest in expected_sources.items()))
+    collector_source = report.get('collector_source') or ('sourcecraft' if imported else configured_source)
+    source_synced = (collector_source == 'home' or not latest.get('complete')
+                     or all(imported.get(env) == digest for env, digest in expected_sources.items()))
     if not source_synced:
         complete = False
         if check_info['state'] == 'success':
@@ -65,7 +67,7 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None):
         if matched:
             publication = run_info(matched)
     previous = next((p for p in pages if run_info(p)['state'] == 'success'), None)
-    return dict(format=1, generated_at=now or utcnow(), sourcecraft=sc,
+    return dict(format=1, generated_at=now or utcnow(), collector_source=collector_source, sourcecraft=sc,
                 github=dict(check=check_info, versions=versions, publication=publication,
                             last_successful_publication=run_info(previous)))
 
@@ -129,6 +131,8 @@ def collect_status(publication_run_id=None):
         # The final Pages job dispatches us just before its own run becomes terminal.
         for attempt in range(24):
             current = api(f'actions/runs/{int(publication_run_id)}')
+            if current.get('head_branch') != 'main' or current.get('path') != '.github/workflows/pages.yml':
+                break
             if current['status'] == 'completed':
                 finished_run = current
                 break
@@ -145,8 +149,13 @@ def collect_status(publication_run_id=None):
     checks = api('actions/workflows/check-sfr.yml/runs?branch=main&per_page=10')['workflow_runs']
     pages = api('actions/workflows/pages.yml/runs?branch=main&per_page=10')['workflow_runs']
     if finished_run:
-        # The listing may still show the previous state. Preserve its ordering and scope.
-        pages = [finished_run if page['id'] == finished_run['id'] else page for page in pages]
+        # Each rerun shares its run ID with older attempts. A listing can lag
+        # the direct lookup, omit the run, or already include a newer attempt.
+        by_id = {page['id']: page for page in pages}
+        listed = by_id.get(finished_run['id'])
+        if listed is None or listed.get('run_attempt', 1) <= finished_run.get('run_attempt', 1):
+            by_id[finished_run['id']] = finished_run
+        pages = sorted(by_id.values(), key=lambda page: (page['created_at'], page['id']), reverse=True)
     try:
         reports = run_reports(checks[0] if checks else None)
     except Exception as error:
@@ -164,7 +173,8 @@ def collect_status(publication_run_id=None):
                 legacy[digest] = catalog.get('checked_at')
             except Exception:
                 legacy[digest] = None
-    result = build_status(source, checks, pages, reports, legacy)
+    result = build_status(source, checks, pages, reports, legacy,
+                          configured_source=os.environ.get('SEDO_COLLECTOR_SOURCE') or 'sourcecraft')
     result['errors'] = errors
     return result
 

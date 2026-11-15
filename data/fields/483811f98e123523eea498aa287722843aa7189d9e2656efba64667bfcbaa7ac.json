@@ -21,7 +21,13 @@
       ],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "CommonDataType",
+        "SvedSostRaschPhysRequest",
+        "SvedSostRaschJurRequest"
+      ]
     },
     {
       "name": "CommonDataType",
@@ -44,7 +50,14 @@
       ],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "kpsNum",
+        "dateStart",
+        "idMessage",
+        "id"
+      ]
     },
     {
       "name": "kpsNum",
@@ -167,7 +180,23 @@
       ],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        "firstNameCiv",
+        "lastNameCiv",
+        "middleNameCiv",
+        "docDatCiv",
+        "inn",
+        "docTypeCiv",
+        "docSeries",
+        "docNumber"
+      ]
     },
     {
       "name": "regNum",
@@ -427,7 +456,18 @@
       ],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        "fullName",
+        "inn",
+        "kpp"
+      ]
     },
     {
       "name": "regNum",

@@ -25,7 +25,12 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:result:v3.0",
       "file": "RefundUnemplRefuseResult.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplRefuseResult.xsd"
+      "typeFile": "RefundUnemplRefuseResult.xsd",
+      "contentModel": [
+        "sequence",
+        "result",
+        "errorList"
+      ]
     },
     {
       "name": "result",
@@ -47,7 +52,13 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:result:v3.0",
       "file": "RefundUnemplRefuseResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sttmntNumber",
+        "status",
+        "*"
+      ]
     },
     {
       "name": "sttmntNumber",
@@ -145,7 +156,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:result:v3.0",
       "file": "RefundUnemplRefuseResult.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -312,7 +329,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:result:v3.0",
+      "ns": "",
       "file": "RefundUnemplRefuseResult.xsd",
       "flags": {
         "processContents": "skip"

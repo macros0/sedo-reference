@@ -32,7 +32,19 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatementReject.xsd"
+      "typeFile": "DisabilityChildrenStatementReject.xsd",
+      "contentModel": [
+        "sequence",
+        "tof",
+        "batch_no",
+        "insurerInfo",
+        "receiversRow",
+        "rejectionInfo",
+        "attachment",
+        "senderInfo",
+        "signatoryInfo",
+        "*"
+      ]
     },
     {
       "name": "tof",
@@ -54,7 +66,12 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "name"
+      ]
     },
     {
       "name": "code",
@@ -152,7 +169,12 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
       "file": "DisabilityChildrenStatementReject.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "regNumSFR"
+      ]
     },
     {
       "name": "regNum",
@@ -231,7 +253,14 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
       "file": "DisabilityChildrenStatementReject.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "parentInfo",
+        "childInfo",
+        "periods",
+        "*"
+      ]
     },
     {
       "name": "parentInfo",
@@ -254,7 +283,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "snils",
+        "childRelType"
+      ]
     },
     {
       "name": "fullName",
@@ -277,7 +312,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -446,7 +487,12 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatementReject.xsd"
+      "typeFile": "DisabilityChildrenStatementReject.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "birthDate"
+      ]
     },
     {
       "name": "snils",
@@ -519,7 +565,13 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
       "file": "DisabilityChildrenStatementReject.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "daysAmount",
+        "TotalHour",
+        "*"
+      ]
     },
     {
       "name": "daysAmount",
@@ -641,7 +693,14 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
       "file": "DisabilityChildrenStatementReject.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "number",
+        "date",
+        "reason",
+        "*"
+      ]
     },
     {
       "name": "number",
@@ -758,7 +817,15 @@
       "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
       "file": "Attachment.xsd",
       "flags": {},
-      "typeFile": "Attachment.xsd"
+      "typeFile": "Attachment.xsd",
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ]
     },
     {
       "name": "content",
@@ -870,7 +937,13 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
       "file": "DisabilityChildrenStatementReject.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "role",
+        "phone"
+      ]
     },
     {
       "name": "fullName",
@@ -975,7 +1048,12 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
       "file": "DisabilityChildrenStatementReject.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "role"
+      ]
     },
     {
       "name": "fullName",
@@ -1131,7 +1209,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "ns": "",
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {
         "processContents": "skip"

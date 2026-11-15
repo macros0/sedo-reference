@@ -32,14 +32,50 @@ function index(fields){
  }
  return map;
 }
+// Compare the compositor for shared children. Added and removed children
+// already have separate rows. Attributes are outside the XSD content model.
+function modelNames(model,names=new Set()){
+ if(typeof model==="string")names.add(model);
+ else for(const item of model.slice(1))modelNames(item,names);
+ return names;
+}
+function commonModel(model,names){
+ if(typeof model==="string")return names.has(model)?model:null;
+ const [kind,...entries]=model;
+ const children=entries.map(entry=>commonModel(entry,names)).filter(entry=>entry!==null);
+ if(children.length<2)return children[0]??null;
+ if(kind==="sequence"){
+  const ordered=[];
+  for(const child of children){
+   if(Array.isArray(child)&&child[0]==="sequence")ordered.push(...child.slice(1));
+   else ordered.push(child);
+  }
+  return [kind,...ordered];
+ }
+ return [kind,...sorted(children)];
+}
+function describeModel(model){
+ if(typeof model==="string")return model;
+ const [kind,...children]=model;
+ const caption={sequence:"Последовательность",all:"В любом порядке",choice:"Выбор"}[kind];
+ return caption+" ("+children.map(describeModel).join(", ")+")";
+}
 function differences(before,after){
- return properties.filter(([key,,get])=>{
+ const changes=properties.filter(([key,,get])=>{
   if(key==="valueDescriptions"){
    const common=(f,other)=>sorted((f.values||[]).filter(([v])=>(other.values||[]).some(([w])=>v===w)));
    return stable(common(before,after))!==stable(common(after,before));
   }
   return stable(get(before))!==stable(get(after));
  }).map(([key,label,get])=>({key,label,before:get(before),after:get(after)}));
+ if(before.contentModel&&after.contentModel){
+  const left=commonModel(before.contentModel,modelNames(after.contentModel));
+  const right=commonModel(after.contentModel,modelNames(before.contentModel));
+  if(stable(left)!==stable(right)){
+   changes.push({key:"contentModel",label:"Порядок и группировка дочерних элементов",before:describeModel(left),after:describeModel(right)});
+  }
+ }
+ return changes;
 }
 function compare(left,right,mappings=[]){
  const a=index(left),b=index(right),results=[],usedBefore=new Set(),usedAfter=new Set(),seen=new Set();

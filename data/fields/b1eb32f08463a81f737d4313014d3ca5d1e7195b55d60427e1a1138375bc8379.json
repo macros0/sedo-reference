@@ -23,7 +23,20 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "status",
+        [
+          "choice",
+          [
+            "sequence",
+            "insuredInfo",
+            "periodInfo"
+          ],
+          "errorList"
+        ]
+      ]
     },
     {
       "name": "status",
@@ -74,7 +87,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils"
+      ]
     },
     {
       "name": "snils",
@@ -123,7 +140,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "twoPrevYears",
+        "additionalYears"
+      ]
     },
     {
       "name": "twoPrevYears",
@@ -143,7 +165,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "yearSum"
+      ]
     },
     {
       "name": "yearSum",
@@ -168,7 +194,15 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
-      "typeFile": "InsuredPersonSalary.xsd"
+      "typeFile": "InsuredPersonSalary.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "amountForAllInsurers",
+        "amountForAllInsurersGph",
+        "amountForCurrentInsurer",
+        "amountForCurrentInsurerGph"
+      ]
     },
     {
       "name": "year",
@@ -328,7 +362,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "yearSum"
+      ]
     },
     {
       "name": "yearSum",
@@ -353,7 +391,15 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
-      "typeFile": "InsuredPersonSalary.xsd"
+      "typeFile": "InsuredPersonSalary.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "amountForAllInsurers",
+        "amountForAllInsurersGph",
+        "amountForCurrentInsurer",
+        "amountForCurrentInsurerGph"
+      ]
     },
     {
       "name": "year",
@@ -513,7 +559,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -536,7 +586,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",

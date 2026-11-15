@@ -27,7 +27,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "contentModel": [
+        "sequence",
+        "row"
+      ]
     },
     {
       "name": "row",
@@ -71,7 +75,35 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "notificationID",
+        "batchNo",
+        "docDt1",
+        "SNILS",
+        "surname",
+        "name",
+        "patronimic",
+        "employer",
+        "emplRegNo",
+        "regNumSFR",
+        "emplParentNo",
+        "emplKPP",
+        "emplINN",
+        "birthday",
+        "SNILSChild",
+        "patronimicChild",
+        "nameChild",
+        "surnameChild",
+        "birthdayChild",
+        "holidType",
+        "holidTypeInfo",
+        "holidNo",
+        "holidDt",
+        "holidDtEx",
+        "holidDocNum"
+      ]
     },
     {
       "name": "notificationID",

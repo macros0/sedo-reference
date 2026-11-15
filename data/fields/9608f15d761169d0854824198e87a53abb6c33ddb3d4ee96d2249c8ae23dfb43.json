@@ -23,7 +23,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "RefundUnempl.xsd"
+      "typeFile": "RefundUnempl.xsd",
+      "contentModel": [
+        "sequence",
+        "orgInfo"
+      ]
     },
     {
       "name": "orgInfo",
@@ -45,7 +49,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "RefundUnempl.xsd"
+      "typeFile": "RefundUnempl.xsd",
+      "contentModel": [
+        "choice",
+        "legalEntity",
+        "ip"
+      ]
     },
     {
       "name": "legalEntity",
@@ -73,7 +82,24 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "RefundUnempl.xsd"
+      "typeFile": "RefundUnempl.xsd",
+      "contentModel": [
+        "sequence",
+        "nameOrg",
+        "inn",
+        "kpp",
+        "ogrn",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        [
+          "choice",
+          "publicOrganizationDisability",
+          "founderFizlicoDocument"
+        ]
+      ]
     },
     {
       "name": "nameOrg",
@@ -248,7 +274,14 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "name",
+        "inn",
+        "kpp",
+        "ogrn"
+      ]
     },
     {
       "name": "name",
@@ -382,7 +415,18 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "lastName",
+        "firstName",
+        "middleName",
+        "seria",
+        "number",
+        "certificateDate",
+        "soglasie"
+      ]
     },
     {
       "name": "snils",
@@ -603,7 +647,24 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "RefundUnempl.xsd"
+      "typeFile": "RefundUnempl.xsd",
+      "contentModel": [
+        "sequence",
+        "lastName",
+        "firstName",
+        "middleName",
+        "inn",
+        "ogrn",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        [
+          "sequence",
+          "founderDisabilityDocument"
+        ]
+      ]
     },
     {
       "name": "lastName",
@@ -814,7 +875,14 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "seria",
+        "number",
+        "certificateDate"
+      ]
     },
     {
       "name": "snils",

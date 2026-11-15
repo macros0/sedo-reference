@@ -25,7 +25,20 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "socialAssistNum",
+        [
+          "choice",
+          "benefit1Approve",
+          "benefit2Approve",
+          "benefit4Approve",
+          "benefit5Approve",
+          "benefit6Approve"
+        ],
+        "recalculation"
+      ]
     },
     {
       "name": "socialAssistNum",
@@ -71,7 +84,18 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
-      "typeFile": "Benefit1.xsd"
+      "typeFile": "Benefit1.xsd",
+      "contentModel": [
+        "sequence",
+        "elnInfo",
+        "insurerInfo",
+        "insuredInfo",
+        "receivePayment",
+        "calculationData",
+        "assignmentParams",
+        "insuranceCase",
+        "notice"
+      ]
     },
     {
       "name": "elnInfo",
@@ -94,7 +118,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "code",
+        "mseInvalidLoss"
+      ]
     },
     {
       "name": "code",
@@ -141,7 +170,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -159,7 +188,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -204,7 +233,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -222,7 +251,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -240,7 +269,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -258,7 +287,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -283,7 +312,14 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "regNumSFR",
+        "partTime",
+        "parentNo"
+      ]
     },
     {
       "name": "regNum",
@@ -326,7 +362,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -344,7 +380,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -388,7 +424,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -439,7 +475,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -457,7 +493,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -504,7 +540,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -522,7 +558,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -554,7 +590,21 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "category",
+        "snils",
+        "inn",
+        "fullName",
+        "birthDate",
+        "gender",
+        "taxpayer",
+        "id",
+        "residenceDocument",
+        "workContract",
+        "personPhone"
+      ]
     },
     {
       "name": "category",
@@ -609,7 +659,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -627,7 +677,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -676,7 +726,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -694,7 +744,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -745,7 +795,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -763,7 +813,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -792,7 +842,13 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -892,7 +948,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -910,7 +966,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -951,7 +1007,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -969,7 +1025,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -1020,7 +1076,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -1038,7 +1094,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -1068,7 +1124,21 @@
       "file": "Benefit1.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "taxpayerStatus",
+        "countryCode",
+        [
+          "choice",
+          [
+            "sequence",
+            "address",
+            "postalCode"
+          ],
+          "foreignAddress"
+        ]
+      ]
     },
     {
       "name": "taxpayerStatus",
@@ -1170,7 +1240,21 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -1354,7 +1438,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -1372,7 +1456,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -1404,7 +1488,16 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "series",
+        "num",
+        "issueDate",
+        "dept",
+        "endDate"
+      ]
     },
     {
       "name": "type",
@@ -1654,7 +1747,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -1672,7 +1765,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -1697,7 +1790,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "type",
@@ -1811,7 +1910,12 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -1863,7 +1967,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -1881,7 +1985,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -1935,7 +2039,18 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "choice",
+        "bankInfo",
+        "cardMir",
+        "otherOrg",
+        [
+          "sequence",
+          "currentFiasAddress",
+          "postalCode"
+        ]
+      ]
     },
     {
       "name": "bankInfo",
@@ -1958,7 +2073,13 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "bankName",
+        "bik",
+        "accountNum"
+      ]
     },
     {
       "name": "bankName",
@@ -2095,7 +2216,20 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "nameOrg",
+        "bik",
+        "accountNum",
+        "personalOrgAccount",
+        "personalInsuredAccount",
+        "kbk",
+        "regNumCorrectionalFacility",
+        "regNumSFRCorrectionalFacility",
+        "innCorrectionalFacility",
+        "kppCorrectionalFacility"
+      ]
     },
     {
       "name": "nameOrg",
@@ -2361,7 +2495,21 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -2520,7 +2668,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -2538,7 +2686,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -2570,7 +2718,21 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "baseCalcDays",
+        "years",
+        "kfReg",
+        "kfShortDays",
+        "experience",
+        "calcConditionList",
+        "causeRadiation",
+        "payPeriodFSS",
+        "excludePeriodList",
+        "downPeriodList",
+        "mobilPeriods"
+      ]
     },
     {
       "name": "baseCalcDays",
@@ -2614,7 +2776,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "changeYear",
+        "year"
+      ]
     },
     {
       "name": "changeYear",
@@ -2656,7 +2823,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "calc",
+        "baseSum",
+        "sumType"
+      ]
     },
     {
       "name": "calc",
@@ -2693,7 +2866,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -2711,7 +2884,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -2762,7 +2935,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -2780,7 +2953,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -2840,7 +3013,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -2948,7 +3121,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -2966,7 +3139,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3021,7 +3194,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3039,7 +3212,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3068,7 +3241,14 @@
       "file": "Benefit1.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "insurYY",
+        "insurMM",
+        "notInsurYY",
+        "notInsurMM"
+      ]
     },
     {
       "name": "insurYY",
@@ -3117,7 +3297,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3135,7 +3315,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3186,7 +3366,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3204,7 +3384,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3255,7 +3435,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3273,7 +3453,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3324,7 +3504,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3342,7 +3522,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3360,7 +3540,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3378,7 +3558,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3402,7 +3582,11 @@
       "file": "Benefit1.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "calcCondition"
+      ]
     },
     {
       "name": "calcCondition",
@@ -3481,7 +3665,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3499,7 +3683,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3558,7 +3742,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -3597,7 +3786,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3615,7 +3804,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3656,7 +3845,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3674,7 +3863,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3700,7 +3889,11 @@
       "file": "Benefit1.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "excludePeriod"
+      ]
     },
     {
       "name": "excludePeriod",
@@ -3721,7 +3914,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "type",
+        "period"
+      ]
     },
     {
       "name": "type",
@@ -3779,7 +3977,12 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -3831,7 +4034,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3849,7 +4052,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -3875,7 +4078,11 @@
       "file": "Benefit1.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "downPeriod"
+      ]
     },
     {
       "name": "downPeriod",
@@ -3896,7 +4103,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "period",
+        "idleAverage"
+      ]
     },
     {
       "name": "period",
@@ -3918,7 +4130,12 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -3998,7 +4215,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4016,7 +4233,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4039,7 +4256,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "periodType",
+        "sumDays"
+      ]
     },
     {
       "name": "periodType",
@@ -4103,7 +4325,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4129,7 +4351,15 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredWorksSeveralInsurers",
+        "twoPrevYearsInsurers",
+        "paymentMethod",
+        "choiceInsurerConfirmedByInsured",
+        "contractsType"
+      ]
     },
     {
       "name": "insuredWorksSeveralInsurers",
@@ -4165,7 +4395,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4217,7 +4447,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4289,7 +4519,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4332,7 +4562,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "contractType"
+      ]
     },
     {
       "name": "contractType",
@@ -4378,7 +4612,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4404,7 +4638,15 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuranceCaseState",
+        "n1",
+        "profIllnessAct",
+        "freeFormAct",
+        "courtDecision"
+      ]
     },
     {
       "name": "insuranceCaseState",
@@ -4443,7 +4685,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -4485,7 +4732,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4523,7 +4770,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4545,7 +4792,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "issueDate"
+      ]
     },
     {
       "name": "issueDate",
@@ -4581,7 +4832,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4604,7 +4855,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -4646,7 +4902,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4684,7 +4940,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4707,7 +4963,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -4749,7 +5010,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4787,7 +5048,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4810,7 +5071,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit1:v01",
       "file": "Benefit1.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "date"
+      ]
     },
     {
       "name": "num",
@@ -4884,7 +5150,18 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
       "flags": {},
-      "typeFile": "Benefit2.xsd"
+      "typeFile": "Benefit2.xsd",
+      "contentModel": [
+        "sequence",
+        "elnInfo",
+        "insurerInfo",
+        "insuredInfo",
+        "receivePayment",
+        "calculationData",
+        "assignmentParams",
+        "vacation",
+        "notice"
+      ]
     },
     {
       "name": "elnInfo",
@@ -4907,7 +5184,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "code",
+        "mseInvalidLoss"
+      ]
     },
     {
       "name": "code",
@@ -4954,7 +5236,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -4972,7 +5254,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5017,7 +5299,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5035,7 +5317,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5053,7 +5335,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5071,7 +5353,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5096,7 +5378,14 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "regNumSFR",
+        "partTime",
+        "parentNo"
+      ]
     },
     {
       "name": "regNum",
@@ -5139,7 +5428,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5157,7 +5446,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5201,7 +5490,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5252,7 +5541,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5270,7 +5559,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5317,7 +5606,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5335,7 +5624,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5367,7 +5656,21 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "category",
+        "snils",
+        "inn",
+        "fullName",
+        "birthDate",
+        "gender",
+        "taxpayer",
+        "id",
+        "residenceDocument",
+        "personPhone",
+        "workContract"
+      ]
     },
     {
       "name": "category",
@@ -5422,7 +5725,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5440,7 +5743,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5489,7 +5792,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5507,7 +5810,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5558,7 +5861,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5576,7 +5879,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5605,7 +5908,13 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -5705,7 +6014,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5723,7 +6032,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5764,7 +6073,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5782,7 +6091,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5833,7 +6142,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5851,7 +6160,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -5881,7 +6190,21 @@
       "file": "Benefit2.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "taxpayerStatus",
+        "countryCode",
+        [
+          "choice",
+          [
+            "sequence",
+            "address",
+            "postalCode"
+          ],
+          "foreignAddress"
+        ]
+      ]
     },
     {
       "name": "taxpayerStatus",
@@ -5983,7 +6306,21 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -6167,7 +6504,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -6185,7 +6522,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -6217,7 +6554,16 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "series",
+        "num",
+        "issueDate",
+        "dept",
+        "endDate"
+      ]
     },
     {
       "name": "type",
@@ -6467,7 +6813,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -6485,7 +6831,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -6510,7 +6856,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "type",
@@ -6647,7 +6999,12 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -6699,7 +7056,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -6717,7 +7074,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -6748,7 +7105,18 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "choice",
+        "bankInfo",
+        "cardMir",
+        "otherOrg",
+        [
+          "sequence",
+          "currentFiasAddress",
+          "postalCode"
+        ]
+      ]
     },
     {
       "name": "bankInfo",
@@ -6771,7 +7139,13 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "bankName",
+        "bik",
+        "accountNum"
+      ]
     },
     {
       "name": "bankName",
@@ -6908,7 +7282,20 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "nameOrg",
+        "bik",
+        "accountNum",
+        "personalOrgAccount",
+        "personalInsuredAccount",
+        "kbk",
+        "regNumCorrectionalFacility",
+        "regNumSFRCorrectionalFacility",
+        "innCorrectionalFacility",
+        "kppCorrectionalFacility"
+      ]
     },
     {
       "name": "nameOrg",
@@ -7174,7 +7561,21 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -7333,7 +7734,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7351,7 +7752,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7381,7 +7782,17 @@
       "file": "Benefit2.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "baseCalcDays",
+        "years",
+        "kfReg",
+        "kfShortDays",
+        "experience",
+        "calcConditionList",
+        "causeRadiation"
+      ]
     },
     {
       "name": "baseCalcDays",
@@ -7425,7 +7836,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "changeYear",
+        "year"
+      ]
     },
     {
       "name": "changeYear",
@@ -7467,7 +7883,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "calc",
+        "baseSum",
+        "sumType"
+      ]
     },
     {
       "name": "calc",
@@ -7504,7 +7926,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7522,7 +7944,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7573,7 +7995,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7591,7 +8013,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7651,7 +8073,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7759,7 +8181,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7777,7 +8199,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7818,7 +8240,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7836,7 +8258,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7865,7 +8287,14 @@
       "file": "Benefit2.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "insurYY",
+        "insurMM",
+        "notInsurYY",
+        "notInsurMM"
+      ]
     },
     {
       "name": "insurYY",
@@ -7914,7 +8343,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7932,7 +8361,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -7983,7 +8412,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8001,7 +8430,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8052,7 +8481,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8070,7 +8499,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8121,7 +8550,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8139,7 +8568,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8157,7 +8586,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8175,7 +8604,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8199,7 +8628,11 @@
       "file": "Benefit2.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "calcCondition"
+      ]
     },
     {
       "name": "calcCondition",
@@ -8278,7 +8711,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8296,7 +8729,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8358,7 +8791,15 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredWorksSeveralInsurers",
+        "twoPrevYearsInsurers",
+        "paymentMethod",
+        "choiceInsurerConfirmedByInsured",
+        "contractsType"
+      ]
     },
     {
       "name": "insuredWorksSeveralInsurers",
@@ -8394,7 +8835,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8446,7 +8887,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8518,7 +8959,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8561,7 +9002,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "contractType"
+      ]
     },
     {
       "name": "contractType",
@@ -8607,7 +9052,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8636,7 +9081,14 @@
       "file": "Benefit2.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate",
+        "beginDate",
+        "endDate"
+      ]
     },
     {
       "name": "num",
@@ -8675,7 +9127,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8693,7 +9145,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8734,7 +9186,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8752,7 +9204,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8793,7 +9245,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8811,7 +9263,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8852,7 +9304,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8870,7 +9322,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8888,7 +9340,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8906,7 +9358,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -8929,7 +9381,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit2:v01",
       "file": "Benefit2.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "date"
+      ]
     },
     {
       "name": "num",
@@ -9006,7 +9463,24 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
       "flags": {},
-      "typeFile": "Benefit4.xsd"
+      "typeFile": "Benefit4.xsd",
+      "contentModel": [
+        "sequence",
+        "insurerInfo",
+        "insuredInfo",
+        "receivePayment",
+        "calculationData",
+        "assignmentParams",
+        "wardInfo",
+        "refFamilyInfo",
+        "birthInfo",
+        [
+          "choice",
+          "refNpayOther",
+          "otherMissing"
+        ],
+        "notice"
+      ]
     },
     {
       "name": "insurerInfo",
@@ -9029,7 +9503,14 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "regNumSFR",
+        "partTime",
+        "parentNo"
+      ]
     },
     {
       "name": "regNum",
@@ -9072,7 +9553,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9090,7 +9571,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9134,7 +9615,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9185,7 +9666,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9203,7 +9684,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9250,7 +9731,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9268,7 +9749,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9301,7 +9782,22 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "category",
+        "snils",
+        "inn",
+        "fullName",
+        "birthDate",
+        "gender",
+        "taxpayer",
+        "id",
+        "residenceDocument",
+        "workContract",
+        "childRelType",
+        "personPhone"
+      ]
     },
     {
       "name": "category",
@@ -9356,7 +9852,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9374,7 +9870,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9423,7 +9919,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9441,7 +9937,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9492,7 +9988,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9510,7 +10006,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9539,7 +10035,13 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -9639,7 +10141,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9657,7 +10159,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9698,7 +10200,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9716,7 +10218,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9767,7 +10269,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9785,7 +10287,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -9815,7 +10317,21 @@
       "file": "Benefit4.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "taxpayerStatus",
+        "countryCode",
+        [
+          "choice",
+          [
+            "sequence",
+            "address",
+            "postalCode"
+          ],
+          "foreignAddress"
+        ]
+      ]
     },
     {
       "name": "taxpayerStatus",
@@ -9917,7 +10433,21 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -10101,7 +10631,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -10119,7 +10649,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -10151,7 +10681,16 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "series",
+        "num",
+        "issueDate",
+        "dept",
+        "endDate"
+      ]
     },
     {
       "name": "type",
@@ -10401,7 +10940,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -10419,7 +10958,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -10444,7 +10983,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "type",
@@ -10556,7 +11101,12 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -10608,7 +11158,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -10626,7 +11176,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -10689,7 +11239,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -10707,7 +11257,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -10761,7 +11311,18 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "choice",
+        "bankInfo",
+        "cardMir",
+        "otherOrg",
+        [
+          "sequence",
+          "currentFiasAddress",
+          "postalCode"
+        ]
+      ]
     },
     {
       "name": "bankInfo",
@@ -10784,7 +11345,13 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "bankName",
+        "bik",
+        "accountNum"
+      ]
     },
     {
       "name": "bankName",
@@ -10921,7 +11488,20 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "nameOrg",
+        "bik",
+        "accountNum",
+        "personalOrgAccount",
+        "personalInsuredAccount",
+        "kbk",
+        "regNumCorrectionalFacility",
+        "regNumSFRCorrectionalFacility",
+        "innCorrectionalFacility",
+        "kppCorrectionalFacility"
+      ]
     },
     {
       "name": "nameOrg",
@@ -11187,7 +11767,21 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -11346,7 +11940,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11364,7 +11958,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11388,7 +11982,11 @@
       "file": "Benefit4.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "kfReg"
+      ]
     },
     {
       "name": "kfReg",
@@ -11494,7 +12092,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11512,7 +12110,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11535,7 +12133,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "paymentMethod",
+        "contractsType"
+      ]
     },
     {
       "name": "paymentMethod",
@@ -11605,7 +12208,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11627,7 +12230,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "contractType"
+      ]
     },
     {
       "name": "contractType",
@@ -11673,7 +12280,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11699,7 +12306,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "type",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "type",
@@ -11748,7 +12361,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11766,7 +12379,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11807,7 +12420,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11825,7 +12438,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11866,7 +12479,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11884,7 +12497,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11902,7 +12515,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11920,7 +12533,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -11943,7 +12556,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -11982,7 +12600,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12000,7 +12618,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12041,7 +12659,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12059,7 +12677,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12092,7 +12710,21 @@
       "file": "Benefit4.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "zagsAct",
+        [
+          "choice",
+          "cert",
+          "otherDoc",
+          "birthReference"
+        ],
+        "birthDate",
+        "fullName",
+        "snils",
+        "gender"
+      ]
     },
     {
       "name": "zagsAct",
@@ -12113,7 +12745,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -12162,7 +12799,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12180,7 +12817,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12221,7 +12858,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12239,7 +12876,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12262,7 +12899,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -12309,7 +12951,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12327,7 +12969,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12366,7 +13008,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12384,7 +13026,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12408,7 +13050,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "series",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -12453,7 +13101,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12471,7 +13119,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12522,7 +13170,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12540,7 +13188,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12581,7 +13229,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12599,7 +13247,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12623,7 +13271,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "number",
+        "issueDate",
+        "refType"
+      ]
     },
     {
       "name": "number",
@@ -12672,7 +13326,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12690,7 +13344,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12731,7 +13385,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12749,7 +13403,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12804,7 +13458,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12822,7 +13476,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12863,7 +13517,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12881,7 +13535,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -12910,7 +13564,13 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -13010,7 +13670,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13028,7 +13688,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13077,7 +13737,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13095,7 +13755,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13141,7 +13801,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13159,7 +13819,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13186,7 +13846,12 @@
       "file": "Benefit4.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -13242,7 +13907,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13260,7 +13925,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13301,7 +13966,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13319,7 +13984,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13342,7 +14007,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit4:v02",
       "file": "Benefit4.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "date"
+      ]
     },
     {
       "name": "num",
@@ -13423,7 +14093,25 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
       "flags": {},
-      "typeFile": "Benefit5.xsd"
+      "typeFile": "Benefit5.xsd",
+      "contentModel": [
+        "sequence",
+        "insurerInfo",
+        "insuredInfo",
+        "receivePayment",
+        "calculationData",
+        "assignmentParams",
+        "wardInfo",
+        "childInfo",
+        "baseDocuments",
+        "refNpay",
+        "notice",
+        "childSer",
+        "motherOut",
+        "homeWorkInfo",
+        "otherChild",
+        "expirationDate"
+      ]
     },
     {
       "name": "insurerInfo",
@@ -13446,7 +14134,14 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "regNumSFR",
+        "partTime",
+        "parentNo"
+      ]
     },
     {
       "name": "regNum",
@@ -13489,7 +14184,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13507,7 +14202,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13551,7 +14246,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13602,7 +14297,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13620,7 +14315,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13667,7 +14362,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13685,7 +14380,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13718,7 +14413,22 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "category",
+        "snils",
+        "inn",
+        "fullName",
+        "birthDate",
+        "gender",
+        "taxpayer",
+        "id",
+        "residenceDocument",
+        "workContract",
+        "childRelType",
+        "personPhone"
+      ]
     },
     {
       "name": "category",
@@ -13773,7 +14483,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13791,7 +14501,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13840,7 +14550,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13858,7 +14568,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13909,7 +14619,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13927,7 +14637,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -13956,7 +14666,13 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -14056,7 +14772,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14074,7 +14790,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14115,7 +14831,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14133,7 +14849,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14184,7 +14900,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14202,7 +14918,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14230,7 +14946,21 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "taxpayerStatus",
+        "countryCode",
+        [
+          "choice",
+          [
+            "sequence",
+            "address",
+            "postalCode"
+          ],
+          "foreignAddress"
+        ]
+      ]
     },
     {
       "name": "taxpayerStatus",
@@ -14303,7 +15033,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14321,7 +15051,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14362,7 +15092,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14380,7 +15110,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14411,7 +15141,21 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -14547,7 +15291,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14565,7 +15309,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14645,7 +15389,16 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "series",
+        "num",
+        "issueDate",
+        "dept",
+        "endDate"
+      ]
     },
     {
       "name": "type",
@@ -14895,7 +15648,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14913,7 +15666,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -14938,7 +15691,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "type",
@@ -15052,7 +15811,12 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -15104,7 +15868,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -15122,7 +15886,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -15185,7 +15949,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -15203,7 +15967,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -15257,7 +16021,18 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "choice",
+        "bankInfo",
+        "cardMir",
+        "otherOrg",
+        [
+          "sequence",
+          "currentFiasAddress",
+          "postalCode"
+        ]
+      ]
     },
     {
       "name": "bankInfo",
@@ -15280,7 +16055,13 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "bankName",
+        "bik",
+        "accountNum"
+      ]
     },
     {
       "name": "bankName",
@@ -15417,7 +16198,20 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "nameOrg",
+        "bik",
+        "accountNum",
+        "personalOrgAccount",
+        "personalInsuredAccount",
+        "kbk",
+        "regNumCorrectionalFacility",
+        "regNumSFRCorrectionalFacility",
+        "innCorrectionalFacility",
+        "kppCorrectionalFacility"
+      ]
     },
     {
       "name": "nameOrg",
@@ -15683,7 +16477,21 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -15842,7 +16650,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -15860,7 +16668,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -15892,7 +16700,19 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "baseCalcDays",
+        "multipart",
+        "years",
+        "kfReg",
+        "kfShortDays",
+        "experience",
+        "calcConditionList",
+        "liveCond",
+        "causeRadiation"
+      ]
     },
     {
       "name": "baseCalcDays",
@@ -15937,7 +16757,11 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "avgSal"
+      ]
     },
     {
       "name": "avgSal",
@@ -15986,7 +16810,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "changeYear",
+        "year"
+      ]
     },
     {
       "name": "changeYear",
@@ -16028,7 +16857,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "calc",
+        "baseSum",
+        "sumType"
+      ]
     },
     {
       "name": "calc",
@@ -16065,7 +16900,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16083,7 +16918,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16134,7 +16969,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16152,7 +16987,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16212,7 +17047,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16320,7 +17155,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16338,7 +17173,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16379,7 +17214,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16397,7 +17232,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16424,7 +17259,14 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "insurYY",
+        "insurMM",
+        "notInsurYY",
+        "notInsurMM"
+      ]
     },
     {
       "name": "insurYY",
@@ -16473,7 +17315,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16491,7 +17333,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16542,7 +17384,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16560,7 +17402,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16611,7 +17453,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16629,7 +17471,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16680,7 +17522,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16698,7 +17540,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16822,7 +17664,15 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuredWorksSeveralInsurers",
+        "twoPrevYearsInsurers",
+        "paymentMethod",
+        "choiceInsurerConfirmedByInsured",
+        "contractsType"
+      ]
     },
     {
       "name": "insuredWorksSeveralInsurers",
@@ -16858,7 +17708,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16910,7 +17760,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -16982,7 +17832,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17025,7 +17875,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "contractType"
+      ]
     },
     {
       "name": "contractType",
@@ -17071,7 +17925,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17097,7 +17951,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "type",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "type",
@@ -17146,7 +18006,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17164,7 +18024,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17205,7 +18065,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17223,7 +18083,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17264,7 +18124,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17282,7 +18142,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17300,7 +18160,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17318,7 +18178,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17345,7 +18205,14 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "birthDate",
+        "fullName",
+        "snils",
+        "gender"
+      ]
     },
     {
       "name": "birthDate",
@@ -17386,7 +18253,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -17519,7 +18392,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17537,7 +18410,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17590,7 +18463,12 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "vacation",
+        "identifyDocument"
+      ]
     },
     {
       "name": "vacation",
@@ -17615,7 +18493,14 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end",
+        "holidORD",
+        "holidChORD"
+      ]
     },
     {
       "name": "begin",
@@ -17654,7 +18539,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17672,7 +18557,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17713,7 +18598,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17731,7 +18616,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17756,7 +18641,12 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -17799,7 +18689,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17817,7 +18707,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17856,7 +18746,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17874,7 +18764,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17899,7 +18789,12 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -17942,7 +18837,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17960,7 +18855,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -17999,7 +18894,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18017,7 +18912,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18043,7 +18938,16 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "birthCertificate",
+          "birthDocOtherCountry"
+        ],
+        "birthRecord"
+      ]
     },
     {
       "name": "birthCertificate",
@@ -18067,7 +18971,13 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "series",
@@ -18110,7 +19020,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18128,7 +19038,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18175,7 +19085,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18193,7 +19103,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18234,7 +19144,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18252,7 +19162,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18276,7 +19186,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "series",
@@ -18319,7 +19235,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18337,7 +19253,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18384,7 +19300,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18402,7 +19318,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18443,7 +19359,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18461,7 +19377,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18486,7 +19402,12 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -18531,7 +19452,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18549,7 +19470,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18590,7 +19511,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18608,7 +19529,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18634,7 +19555,13 @@
       "file": "Benefit5.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "refType",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "refType",
@@ -18687,7 +19614,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18705,7 +19632,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18746,7 +19673,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18764,7 +19691,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18805,7 +19732,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18823,7 +19750,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18846,7 +19773,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "date"
+      ]
     },
     {
       "name": "num",
@@ -18937,7 +19869,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -18955,7 +19887,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19014,7 +19946,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit5:v01",
       "file": "Benefit5.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "otherChildFlagBirth",
+        "otherChildFlagDeath"
+      ]
     },
     {
       "name": "otherChildFlagBirth",
@@ -19101,7 +20038,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19119,7 +20056,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19149,7 +20086,18 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
-      "typeFile": "Benefit6.xsd"
+      "typeFile": "Benefit6.xsd",
+      "contentModel": [
+        "sequence",
+        "elnInfo",
+        "insurerInfo",
+        "insuredInfo",
+        "receivePayment",
+        "calculationData",
+        "assignmentParams",
+        "insuranceCase",
+        "notice"
+      ]
     },
     {
       "name": "elnInfo",
@@ -19172,7 +20120,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "code",
+        "mseInvalidLoss"
+      ]
     },
     {
       "name": "code",
@@ -19219,7 +20172,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19237,7 +20190,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19282,7 +20235,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19300,7 +20253,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19318,7 +20271,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19336,7 +20289,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19361,7 +20314,14 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "regNumSFR",
+        "partTime",
+        "parentNo"
+      ]
     },
     {
       "name": "regNum",
@@ -19404,7 +20364,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19422,7 +20382,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19466,7 +20426,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19517,7 +20477,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19535,7 +20495,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19582,7 +20542,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19600,7 +20560,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19632,7 +20592,21 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "category",
+        "snils",
+        "inn",
+        "fullName",
+        "birthDate",
+        "gender",
+        "taxpayer",
+        "id",
+        "residenceDocument",
+        "workContract",
+        "personPhone"
+      ]
     },
     {
       "name": "category",
@@ -19687,7 +20661,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19705,7 +20679,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19754,7 +20728,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19772,7 +20746,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19823,7 +20797,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19841,7 +20815,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19870,7 +20844,13 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -19970,7 +20950,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -19988,7 +20968,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -20029,7 +21009,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -20047,7 +21027,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -20098,7 +21078,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -20116,7 +21096,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -20146,7 +21126,21 @@
       "file": "Benefit6.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "taxpayerStatus",
+        "countryCode",
+        [
+          "choice",
+          [
+            "sequence",
+            "address",
+            "postalCode"
+          ],
+          "foreignAddress"
+        ]
+      ]
     },
     {
       "name": "taxpayerStatus",
@@ -20248,7 +21242,21 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -20432,7 +21440,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -20450,7 +21458,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -20482,7 +21490,16 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "series",
+        "num",
+        "issueDate",
+        "dept",
+        "endDate"
+      ]
     },
     {
       "name": "type",
@@ -20732,7 +21749,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -20750,7 +21767,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -20775,7 +21792,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "type",
@@ -20889,7 +21912,12 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -20941,7 +21969,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -20959,7 +21987,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -21013,7 +22041,18 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "choice",
+        "bankInfo",
+        "cardMir",
+        "otherOrg",
+        [
+          "sequence",
+          "currentFiasAddress",
+          "postalCode"
+        ]
+      ]
     },
     {
       "name": "bankInfo",
@@ -21036,7 +22075,13 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "bankName",
+        "bik",
+        "accountNum"
+      ]
     },
     {
       "name": "bankName",
@@ -21173,7 +22218,20 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "nameOrg",
+        "bik",
+        "accountNum",
+        "personalOrgAccount",
+        "personalInsuredAccount",
+        "kbk",
+        "regNumCorrectionalFacility",
+        "regNumSFRCorrectionalFacility",
+        "innCorrectionalFacility",
+        "kppCorrectionalFacility"
+      ]
     },
     {
       "name": "nameOrg",
@@ -21439,7 +22497,21 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -21598,7 +22670,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -21616,7 +22688,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -21648,7 +22720,21 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "baseCalcDays",
+        "years",
+        "kfReg",
+        "kfShortDays",
+        "experience",
+        "calcConditionList",
+        "causeRadiation",
+        "payPeriodFSS",
+        "excludePeriodList",
+        "downPeriodList",
+        "mobilPeriods"
+      ]
     },
     {
       "name": "baseCalcDays",
@@ -21692,7 +22778,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "changeYear",
+        "year"
+      ]
     },
     {
       "name": "changeYear",
@@ -21734,7 +22825,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "calc",
+        "baseSum",
+        "sumType"
+      ]
     },
     {
       "name": "calc",
@@ -21771,7 +22868,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -21789,7 +22886,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -21840,7 +22937,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -21858,7 +22955,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -21918,7 +23015,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22026,7 +23123,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22044,7 +23141,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22099,7 +23196,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22117,7 +23214,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22146,7 +23243,14 @@
       "file": "Benefit6.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "insurYY",
+        "insurMM",
+        "notInsurYY",
+        "notInsurMM"
+      ]
     },
     {
       "name": "insurYY",
@@ -22195,7 +23299,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22213,7 +23317,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22264,7 +23368,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22282,7 +23386,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22333,7 +23437,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22351,7 +23455,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22402,7 +23506,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22420,7 +23524,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22438,7 +23542,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22456,7 +23560,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22480,7 +23584,11 @@
       "file": "Benefit6.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "calcCondition"
+      ]
     },
     {
       "name": "calcCondition",
@@ -22559,7 +23667,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22577,7 +23685,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22636,7 +23744,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -22675,7 +23788,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22693,7 +23806,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22734,7 +23847,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22752,7 +23865,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22778,7 +23891,11 @@
       "file": "Benefit6.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "sequence",
+        "excludePeriod"
+      ]
     },
     {
       "name": "excludePeriod",
@@ -22799,7 +23916,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "type",
+        "period"
+      ]
     },
     {
       "name": "type",
@@ -22857,7 +23979,12 @@
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -22909,7 +24036,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22927,7 +24054,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22968,7 +24095,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -22986,7 +24113,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23009,7 +24136,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "periodType",
+        "sumDays"
+      ]
     },
     {
       "name": "periodType",
@@ -23073,7 +24205,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23097,7 +24229,13 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "paymentMethod",
+        "contractsType",
+        "insurancePaymentObligation"
+      ]
     },
     {
       "name": "paymentMethod",
@@ -23167,7 +24305,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23189,7 +24327,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "contractType"
+      ]
     },
     {
       "name": "contractType",
@@ -23235,7 +24377,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23279,7 +24421,15 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insuranceCaseState",
+        "n1",
+        "profIllnessAct",
+        "freeFormAct",
+        "courtDecision"
+      ]
     },
     {
       "name": "insuranceCaseState",
@@ -23318,7 +24468,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -23360,7 +24515,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23398,7 +24553,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23420,7 +24575,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "issueDate"
+      ]
     },
     {
       "name": "issueDate",
@@ -23456,7 +24615,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23479,7 +24638,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -23521,7 +24685,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23559,7 +24723,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23582,7 +24746,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "issueDate"
+      ]
     },
     {
       "name": "num",
@@ -23624,7 +24793,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23662,7 +24831,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "",
+      "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {}
     },
@@ -23685,7 +24854,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:benefit6:v01",
       "file": "Benefit6.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "num",
+        "date"
+      ]
     },
     {
       "name": "num",
@@ -23752,7 +24926,11 @@
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {},
-      "typeFile": "Confirmation.xsd"
+      "typeFile": "Confirmation.xsd",
+      "contentModel": [
+        "sequence",
+        "batchNum"
+      ]
     },
     {
       "name": "batchNum",

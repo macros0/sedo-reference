@@ -24,7 +24,12 @@
       ],
       "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
       "file": "PaymentStatusResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        "paymentStatusList",
+        "errorInfo"
+      ]
     },
     {
       "name": "paymentStatusList",
@@ -42,9 +47,13 @@
       "children": [
         2
       ],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "paymentStatusDetail"
+      ]
     },
     {
       "name": "paymentStatusDetail",
@@ -70,9 +79,21 @@
         10,
         11
       ],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "batchNo",
+        "processNum",
+        "lnNumber",
+        "paymentState",
+        "paymentDate",
+        "assignedSumm",
+        "dutySumm",
+        "snils",
+        "*"
+      ]
     },
     {
       "name": "batchNo",
@@ -97,7 +118,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {}
     },
@@ -124,7 +145,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -152,7 +173,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -192,7 +213,7 @@
         ]
       ],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {}
     },
@@ -210,7 +231,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {}
     },
@@ -241,7 +262,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -273,7 +294,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -301,7 +322,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -320,7 +341,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {
         "processContents": "skip"
@@ -343,10 +364,15 @@
         13,
         18
       ],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "errorList",
+        "*"
+      ]
     },
     {
       "name": "errorList",
@@ -366,7 +392,11 @@
       ],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -389,7 +419,13 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -576,7 +612,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:paymentStatus:response:v3.0",
+      "ns": "",
       "file": "PaymentStatusResponse.xsd",
       "flags": {
         "processContents": "skip"

@@ -22,7 +22,12 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "authorities",
+        "protocol"
+      ]
     },
     {
       "name": "authorities",
@@ -42,7 +47,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "authority"
+      ]
     },
     {
       "name": "authority",
@@ -68,7 +77,16 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "mnemonic",
+        "name",
+        "parentMnemonic",
+        "dateStart",
+        "dateEnd",
+        "description"
+      ]
     },
     {
       "name": "mnemonic",
@@ -217,7 +235,11 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "message"
+      ]
     },
     {
       "name": "message",
@@ -241,7 +263,14 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeFile": "PowerOfAttorney.xsd"
+      "typeFile": "PowerOfAttorney.xsd",
+      "contentModel": [
+        "sequence",
+        "mnemonic",
+        "level",
+        "comment",
+        "recommendation"
+      ]
     },
     {
       "name": "mnemonic",

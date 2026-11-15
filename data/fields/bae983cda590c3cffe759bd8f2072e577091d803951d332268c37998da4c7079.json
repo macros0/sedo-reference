@@ -20,7 +20,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "socialAssistNum",
+        "missingResponseToRequest"
+      ]
     },
     {
       "name": "socialAssistNum",

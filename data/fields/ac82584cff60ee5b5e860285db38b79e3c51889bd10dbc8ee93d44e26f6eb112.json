@@ -23,7 +23,14 @@
       "ns": "http://www.fss.ru/integration/bp/BpResponseDocsAsv/v01",
       "file": "BpResponseDocsAsv.xsd",
       "flags": {},
-      "typeFile": "ResponseDocType.xsd"
+      "typeFile": "ResponseDocType.xsd",
+      "contentModel": [
+        "sequence",
+        "responseOn",
+        "idMessage",
+        "letter",
+        "provideDocs"
+      ]
     },
     {
       "name": "responseOn",
@@ -95,7 +102,15 @@
       ],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ]
     },
     {
       "name": "content",
@@ -229,7 +244,17 @@
       ],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "idDocumentsGroup",
+        "typeDocument",
+        "count",
+        "attachment",
+        "date",
+        "number",
+        "description"
+      ]
     },
     {
       "name": "idDocumentsGroup",
@@ -325,7 +350,15 @@
       ],
       "ns": "http://www.fss.ru/integration/type/ResponseDocType/v01",
       "file": "ResponseDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ]
     },
     {
       "name": "content",

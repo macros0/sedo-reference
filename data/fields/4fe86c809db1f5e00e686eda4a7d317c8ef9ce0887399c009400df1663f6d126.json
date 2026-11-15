@@ -25,7 +25,16 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "socialAssistNum",
+        "status",
+        "responseInfo",
+        "registryNum",
+        "errorList",
+        "warnList"
+      ]
     },
     {
       "name": "socialAssistNum",
@@ -131,7 +140,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -154,7 +167,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -228,7 +247,11 @@
       ],
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "warn"
+      ]
     },
     {
       "name": "warn",
@@ -251,7 +274,13 @@
       "ns": "urn:ru:fss:integration:types:proactive:v01",
       "file": "Confirmation.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",

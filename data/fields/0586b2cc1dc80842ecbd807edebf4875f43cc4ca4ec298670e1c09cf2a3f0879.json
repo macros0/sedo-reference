@@ -20,7 +20,11 @@
       "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "SedoArm_ЕЦП.xsd"
+      "typeFile": "SedoArm_ЕЦП.xsd",
+      "contentModel": [
+        "sequence",
+        "confirmResults"
+      ]
     },
     {
       "name": "confirmResults",
@@ -41,10 +45,17 @@
         4,
         8
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "SedoArm_ЕЦП.xsd"
+      "typeFile": "SedoArm_ЕЦП.xsd",
+      "contentModel": [
+        "sequence",
+        "uuid",
+        "status",
+        "error",
+        "warn"
+      ]
     },
     {
       "name": "uuid",
@@ -65,7 +76,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
       "typeFile": "Sedo.xsd"
@@ -93,7 +104,7 @@
         ]
       ],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
       "typeFile": "SedoArm_ЕЦП.xsd"
@@ -116,10 +127,16 @@
         6,
         7
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -193,10 +210,16 @@
         10,
         11
       ],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",

@@ -23,7 +23,14 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "RefundUnempl.xsd"
+      "typeFile": "RefundUnempl.xsd",
+      "contentModel": [
+        "sequence",
+        "sttmntNumber",
+        "status",
+        "errorList",
+        "workerStatusList"
+      ]
     },
     {
       "name": "sttmntNumber",
@@ -82,7 +89,13 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -157,7 +170,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "RefundUnempl.xsd"
+      "typeFile": "RefundUnempl.xsd",
+      "contentModel": [
+        "sequence",
+        "workerStatus"
+      ]
     },
     {
       "name": "workerStatus",
@@ -179,7 +196,13 @@
       ],
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "rowNum",
+        "status",
+        "errorList"
+      ]
     },
     {
       "name": "rowNum",
@@ -243,7 +266,13 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",

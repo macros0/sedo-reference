@@ -25,7 +25,12 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
       "file": "RefundUnemplStatementResult.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatementResult.xsd"
+      "typeFile": "RefundUnemplStatementResult.xsd",
+      "contentModel": [
+        "sequence",
+        "result",
+        "errorList"
+      ]
     },
     {
       "name": "result",
@@ -47,7 +52,13 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
       "file": "RefundUnemplStatementResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sttmntNumber",
+        "status",
+        "*"
+      ]
     },
     {
       "name": "sttmntNumber",
@@ -146,7 +157,13 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
       "file": "RefundUnemplStatementResult.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ]
     },
     {
       "name": "code",
@@ -313,7 +330,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
+      "ns": "",
       "file": "RefundUnemplStatementResult.xsd",
       "flags": {
         "processContents": "skip"

@@ -31,7 +31,31 @@
       "ns": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "contentModel": [
+        "sequence",
+        "responseOn",
+        [
+          "choice",
+          [
+            "sequence",
+            "lastName",
+            "firstName",
+            "middleName",
+            [
+              "choice",
+              "birthDate",
+              "birthDateSpecial"
+            ],
+            "snils",
+            "identificationDocument",
+            "inn",
+            "executionFact",
+            "executionDuration"
+          ],
+          "notIdentified"
+        ]
+      ]
     },
     {
       "name": "responseOn",
@@ -168,7 +192,13 @@
       "ns": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "contentModel": [
+        "sequence",
+        "day",
+        "month",
+        "year"
+      ]
     },
     {
       "name": "day",
@@ -309,7 +339,17 @@
       "ns": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "contentModel": [
+        "sequence",
+        "Code",
+        "Series",
+        "Number",
+        "issueDate",
+        "issuedBy",
+        "unitCode",
+        "expiredOn"
+      ]
     },
     {
       "name": "Code",

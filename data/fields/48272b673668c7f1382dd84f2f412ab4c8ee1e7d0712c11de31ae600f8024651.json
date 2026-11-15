@@ -24,7 +24,11 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:v3.0",
       "file": "RefundUnemplRefuse.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplRefuse.xsd"
+      "typeFile": "RefundUnemplRefuse.xsd",
+      "contentModel": [
+        "sequence",
+        "orgInfo"
+      ]
     },
     {
       "name": "orgInfo",
@@ -46,7 +50,12 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:refuse:v3.0",
       "file": "RefundUnemplRefuse.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "choice",
+        "legalEntity",
+        "ip"
+      ]
     },
     {
       "name": "legalEntity",
@@ -73,7 +82,23 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "inn",
+        "kpp",
+        "ogrn",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        [
+          "choice",
+          "publicOrganizationDisability",
+          "founderFizlicoDocument"
+        ]
+      ]
     },
     {
       "name": "inn",
@@ -232,7 +257,14 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "name",
+        "inn",
+        "kpp",
+        "ogrn"
+      ]
     },
     {
       "name": "name",
@@ -366,7 +398,18 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "lastName",
+        "firstName",
+        "middleName",
+        "seria",
+        "number",
+        "certificateDate",
+        "soglasie"
+      ]
     },
     {
       "name": "snils",
@@ -596,7 +639,21 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "contentModel": [
+        "sequence",
+        "lastName",
+        "firstName",
+        "middleName",
+        "inn",
+        "ogrn",
+        [
+          "choice",
+          "regNum",
+          "regNumSFR"
+        ],
+        "founderDisabilityDocument"
+      ]
     },
     {
       "name": "lastName",
@@ -815,7 +872,14 @@
       ],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "seria",
+        "number",
+        "certificateDate"
+      ]
     },
     {
       "name": "snils",

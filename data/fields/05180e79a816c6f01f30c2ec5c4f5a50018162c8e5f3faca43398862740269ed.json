@@ -22,7 +22,13 @@
       "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeFile": "SedoArm_ЕЦП.xsd"
+      "typeFile": "SedoArm_ЕЦП.xsd",
+      "contentModel": [
+        "sequence",
+        "appealAnswerUuid",
+        "date",
+        "status"
+      ]
     },
     {
       "name": "appealAnswerUuid",
@@ -38,7 +44,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {}
     },
@@ -56,7 +62,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {}
     },
@@ -74,7 +80,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/sedo/arm/v01",
+      "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {}
     }

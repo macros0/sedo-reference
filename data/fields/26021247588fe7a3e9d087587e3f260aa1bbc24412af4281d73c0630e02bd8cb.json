@@ -34,7 +34,22 @@
       ],
       "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
       "file": "Refusal.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "refusalNumber",
+        "refusalDate",
+        "tof",
+        "registryNum",
+        "insuredInfo",
+        "insurerInfo",
+        "benefitInfo",
+        "refusalText",
+        "attachments",
+        "senderInfo",
+        "signatoryInfo",
+        "*"
+      ]
     },
     {
       "name": "refusalNumber",
@@ -59,7 +74,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Refusal.xsd"
@@ -78,7 +93,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {}
     },
@@ -99,10 +114,15 @@
         4,
         5
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "name"
+      ]
     },
     {
       "name": "code",
@@ -181,7 +201,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {}
     },
@@ -203,10 +223,16 @@
         9,
         13
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "*"
+      ]
     },
     {
       "name": "snils",
@@ -231,7 +257,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -254,10 +280,16 @@
         11,
         12
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -357,7 +389,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -380,10 +412,15 @@
         15,
         16
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "regNumSFR",
+        "*"
+      ]
     },
     {
       "name": "regNumSFR",
@@ -408,7 +445,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -427,7 +464,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "ns": "",
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
@@ -456,10 +493,24 @@
         36,
         39
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
-      "typeFile": "Refusal.xsd"
+      "typeFile": "Refusal.xsd",
+      "contentModel": [
+        "sequence",
+        "proactiveProcessNum",
+        "rowNumber",
+        [
+          "choice",
+          "benefit1",
+          "benefit2",
+          "benefit4",
+          "benefit5",
+          "benefit6"
+        ],
+        "*"
+      ]
     },
     {
       "name": "proactiveProcessNum",
@@ -484,7 +535,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -512,7 +563,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {}
     },
@@ -533,9 +584,14 @@
         21,
         22
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber",
+        "*"
+      ]
     },
     {
       "name": "lnNumber",
@@ -560,7 +616,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -579,7 +635,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
@@ -602,9 +658,14 @@
         24,
         25
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber",
+        "*"
+      ]
     },
     {
       "name": "lnNumber",
@@ -629,7 +690,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -648,7 +709,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
@@ -672,9 +733,15 @@
         28,
         29
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "childSnils",
+        "childBirthDate",
+        "*"
+      ]
     },
     {
       "name": "childSnils",
@@ -699,7 +766,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -718,7 +785,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {}
     },
@@ -736,7 +803,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
@@ -760,9 +827,15 @@
         32,
         35
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "childSnils",
+        "vacationPeriod",
+        "*"
+      ]
     },
     {
       "name": "childSnils",
@@ -787,7 +860,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -809,10 +882,15 @@
         33,
         34
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ]
     },
     {
       "name": "begin",
@@ -864,7 +942,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
@@ -887,9 +965,14 @@
         37,
         38
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber",
+        "*"
+      ]
     },
     {
       "name": "lnNumber",
@@ -914,7 +997,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -933,7 +1016,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
@@ -953,7 +1036,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
@@ -982,7 +1065,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Refusal.xsd"
@@ -1003,9 +1086,13 @@
       "children": [
         42
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "attachment"
+      ]
     },
     {
       "name": "attachment",
@@ -1027,10 +1114,18 @@
         46,
         47
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
-      "typeFile": "Attachment.xsd"
+      "typeFile": "Attachment.xsd",
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ]
     },
     {
       "name": "content",
@@ -1140,9 +1235,15 @@
         50,
         51
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "role",
+        "phone"
+      ]
     },
     {
       "name": "fullName",
@@ -1167,7 +1268,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -1195,7 +1296,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -1223,7 +1324,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -1245,9 +1346,14 @@
         53,
         54
       ],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "role"
+      ]
     },
     {
       "name": "fullName",
@@ -1272,7 +1378,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -1300,7 +1406,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -1319,7 +1425,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
@@ -1409,7 +1515,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "ns": "",
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"

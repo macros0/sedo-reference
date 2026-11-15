@@ -22,7 +22,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
-      "typeFile": "PaymentState.xsd"
+      "typeFile": "PaymentState.xsd",
+      "contentModel": [
+        "sequence",
+        "paymentStatusList",
+        "errorList"
+      ]
     },
     {
       "name": "paymentStatusList",
@@ -43,7 +48,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
-      "typeFile": "PaymentState.xsd"
+      "typeFile": "PaymentState.xsd",
+      "contentModel": [
+        "sequence",
+        "paymentStatusDetail"
+      ]
     },
     {
       "name": "paymentStatusDetail",
@@ -70,7 +79,17 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
-      "typeFile": "PaymentState.xsd"
+      "typeFile": "PaymentState.xsd",
+      "contentModel": [
+        "sequence",
+        "batchNo",
+        "socialAssistNum",
+        "SNILS",
+        "LNCode",
+        "stateDate",
+        "paymentSum",
+        "paymentState"
+      ]
     },
     {
       "name": "batchNo",
@@ -253,7 +272,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
-      "typeFile": "PaymentState.xsd"
+      "typeFile": "PaymentState.xsd",
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -275,7 +298,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
       "file": "PaymentState.xsd",
       "flags": {},
-      "typeFile": "PaymentState.xsd"
+      "typeFile": "PaymentState.xsd",
+      "contentModel": [
+        "sequence",
+        "errorCode",
+        "errorDescription"
+      ]
     },
     {
       "name": "errorCode",

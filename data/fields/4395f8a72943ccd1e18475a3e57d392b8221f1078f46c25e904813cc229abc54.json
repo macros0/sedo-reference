@@ -25,7 +25,16 @@
       ],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "AppResult.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNum",
+        "regNumSFR",
+        "dateStart",
+        "idMessage",
+        "id",
+        "date"
+      ]
     },
     {
       "name": "regNum",

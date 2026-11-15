@@ -31,7 +31,28 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "birthDate",
+        "gender",
+        "snils",
+        [
+          "choice",
+          "fired",
+          [
+            "sequence",
+            "inn",
+            "identityDocument",
+            "residenceDocumentType",
+            "otherInfo",
+            "regAddress",
+            "methodReceivePayment"
+          ],
+          "isNotWorker"
+        ]
+      ]
     },
     {
       "name": "fullName",
@@ -54,7 +75,13 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -234,7 +261,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        "date",
+        "contractCancelDate"
+      ]
     },
     {
       "name": "date",
@@ -321,7 +353,13 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "contentModel": [
+        "choice",
+        "passport",
+        "tempIdentDocType",
+        "otherIdentDocType"
+      ]
     },
     {
       "name": "passport",
@@ -345,7 +383,14 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "issueDate",
+        "whoIssued"
+      ]
     },
     {
       "name": "series",
@@ -457,7 +502,14 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "contentModel": [
+        "sequence",
+        "number",
+        "issueDate",
+        "whoIssued",
+        "expirationDate"
+      ]
     },
     {
       "name": "number",
@@ -565,7 +617,14 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "contentModel": [
+        "sequence",
+        "type",
+        "series",
+        "number",
+        "expirationDate"
+      ]
     },
     {
       "name": "type",
@@ -770,7 +829,12 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "contentModel": [
+        "choice",
+        "residentCard",
+        "tempResidencePermit"
+      ]
     },
     {
       "name": "residentCard",
@@ -793,7 +857,13 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "passportIssueDate"
+      ]
     },
     {
       "name": "series",
@@ -882,7 +952,13 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "contentModel": [
+        "sequence",
+        "series",
+        "number",
+        "issueDate"
+      ]
     },
     {
       "name": "series",
@@ -970,7 +1046,16 @@
       ],
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "workplace",
+          "livingPlace"
+        ],
+        "causeRadiation"
+      ]
     },
     {
       "name": "workplace",
@@ -1091,7 +1176,12 @@
       ],
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fiasAddress",
+        "postalCode"
+      ]
     },
     {
       "name": "fiasAddress",
@@ -1116,7 +1206,21 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -1284,7 +1388,18 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "choice",
+        "bankInfo",
+        "cardMir",
+        "otherOrg",
+        [
+          "sequence",
+          "currentFiasAddress",
+          "postalCode"
+        ]
+      ]
     },
     {
       "name": "bankInfo",
@@ -1307,7 +1422,13 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "bankName",
+        "bik",
+        "accountNum"
+      ]
     },
     {
       "name": "bankName",
@@ -1444,7 +1565,20 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "nameOrg",
+        "bik",
+        "accountNum",
+        "personalOrgAccount",
+        "personalInsuredAccount",
+        "kbk",
+        "regNumCorrectionalFacility",
+        "regNumSFRCorrectionalFacility",
+        "innCorrectionalFacility",
+        "kppCorrectionalFacility"
+      ]
     },
     {
       "name": "nameOrg",
@@ -1710,7 +1844,21 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",

@@ -25,7 +25,16 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "insurerInfo",
+        "insuredInfo",
+        "periodInfo",
+        "fired",
+        "agreementInsuredPerson",
+        "*"
+      ]
     },
     {
       "name": "insurerInfo",
@@ -45,7 +54,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNumSFR"
+      ]
     },
     {
       "name": "regNumSFR",
@@ -94,7 +107,12 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "birthDate"
+      ]
     },
     {
       "name": "snils",
@@ -161,7 +179,12 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "twoPrevYears",
+        "additionalYears"
+      ]
     },
     {
       "name": "twoPrevYears",
@@ -181,7 +204,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "year"
+      ]
     },
     {
       "name": "year",
@@ -229,7 +256,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "year"
+      ]
     },
     {
       "name": "year",
@@ -281,7 +312,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
       "file": "InsuredPersonSalaryRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "firstElnStartDate"
+      ]
     },
     {
       "name": "firstElnStartDate",

@@ -24,7 +24,15 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "contentModel": [
+        "sequence",
+        "dateTimeReceive",
+        "recriveID",
+        "statusGeneral",
+        "errorList",
+        "protocol"
+      ]
     },
     {
       "name": "dateTimeReceive",
@@ -118,7 +126,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -140,7 +152,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "contentModel": [
+        "sequence",
+        "errorCode",
+        "errorDescription"
+      ]
     },
     {
       "name": "errorCode",
@@ -202,7 +219,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "contentModel": [
+        "sequence",
+        "failedList"
+      ]
     },
     {
       "name": "failedList",
@@ -223,7 +244,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "contentModel": [
+        "sequence",
+        "failedBatchNoDetail"
+      ]
     },
     {
       "name": "failedBatchNoDetail",
@@ -245,7 +270,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "contentModel": [
+        "sequence",
+        "notificationID",
+        "errorList"
+      ]
     },
     {
       "name": "notificationID",
@@ -290,7 +320,11 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "contentModel": [
+        "sequence",
+        "error"
+      ]
     },
     {
       "name": "error",
@@ -312,7 +346,12 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "contentModel": [
+        "sequence",
+        "errorCode",
+        "errorDescription"
+      ]
     },
     {
       "name": "errorCode",

@@ -5,6 +5,15 @@ from tempfile import TemporaryDirectory
 from unittest.mock import patch
 from sync import SITES,sync
 from catalog import dependency_set,derive
+
+def failure_probe_url(snapshot, requests):
+    requested = set(requests)
+    for entry in snapshot["entries"]:
+        if entry.get("kind") == "zip" and "sha256" in entry and entry["url"] in requested:
+            return entry["url"]
+    return next(SITES[env] for env in snapshot["pages"] if SITES[env] in requested)
+
+
 def verify(state,data):
     current=json.loads((state/"current.json").read_bytes())["snapshot"]
     snapshot=json.loads((state/"snapshots"/(current+".json")).read_bytes())
@@ -35,15 +44,16 @@ def verify(state,data):
         def cached(u,**kwargs):return (state/"objects"/urls[u]).read_bytes()
         with TemporaryDirectory() as tmp:
             base=Path(tmp)
-            with patch("sync.get",side_effect=cached):
+            with patch("sync.get",side_effect=cached) as downloads:
                 sync(base);first=(base/"current.json").read_bytes();sync(base)
             assert first==(base/"current.json").read_bytes() and not any(json.loads((base/"last-run.json").read_bytes())["diff"].values())
+            probe_url = failure_probe_url(snapshot, (call.args[0] for call in downloads.call_args_list))
             def failed(u,**kwargs):
-                if u.endswith("xsd_19_09_26.zip"):raise OSError("simulated failure")
+                if u == probe_url:raise OSError("simulated failure")
                 return cached(u)
             with patch("sync.get",side_effect=failed):
                 try:sync(base)
-                except ValueError:pass
+                except (ValueError, OSError):pass
                 else:raise AssertionError("failed download accepted")
             assert first==(base/"current.json").read_bytes()
     print("Verified revision isolation, field trees and code 46.")

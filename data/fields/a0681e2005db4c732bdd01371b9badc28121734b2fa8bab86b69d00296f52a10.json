@@ -29,7 +29,18 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "elnInfo",
+        "insurerInfo",
+        "insuredInfo",
+        "insuredWorksSeveralInsurers",
+        "paymentMethod",
+        "mobilDaysAmount",
+        "salaryInfo",
+        "*"
+      ]
     },
     {
       "name": "elnInfo",
@@ -50,7 +61,12 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber",
+        "*"
+      ]
     },
     {
       "name": "lnNumber",
@@ -119,7 +135,12 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNumSFR",
+        "*"
+      ]
     },
     {
       "name": "regNumSFR",
@@ -190,7 +211,14 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "birthDate",
+        "*"
+      ]
     },
     {
       "name": "snils",
@@ -244,7 +272,25 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "lastName",
+          "noLastName"
+        ],
+        [
+          "choice",
+          "firstName",
+          "noFirstName"
+        ],
+        [
+          "choice",
+          "middleName",
+          "noMiddleName"
+        ]
+      ]
     },
     {
       "name": "lastName",
@@ -556,7 +602,11 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "yearSum"
+      ]
     },
     {
       "name": "yearSum",
@@ -579,7 +629,13 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
-      "typeFile": "InsuredPersonSalaryProactive.xsd"
+      "typeFile": "InsuredPersonSalaryProactive.xsd",
+      "contentModel": [
+        "sequence",
+        "year",
+        "salaryByCurrentInsurer",
+        "salaryByAllInsurers"
+      ]
     },
     {
       "name": "year",
@@ -633,7 +689,13 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sumOPS",
+        "sumGPH",
+        "sumOPS-GPH"
+      ]
     },
     {
       "name": "sumOPS",
@@ -739,7 +801,13 @@
       ],
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sumOPS",
+        "sumGPH",
+        "sumOPS-GPH"
+      ]
     },
     {
       "name": "sumOPS",
@@ -905,7 +973,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
+      "ns": "",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {
         "processContents": "skip"

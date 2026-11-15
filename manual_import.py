@@ -11,7 +11,7 @@ from unittest.mock import patch
 from urllib.parse import quote
 
 import build_site
-from auto_update import validate_history
+from auto_update import promote as promote_import, update_lock, validate_history
 from catalog import derive, export
 from fields import build
 from sync import MAX_BYTES, encode, inspect_file, record_observation, sha, write
@@ -40,21 +40,6 @@ def inspect_upload(content, kind):
         raise ValueError("Не удалось прочитать " + kind.upper() + ": " + str(exc)) from exc
 
 
-def promote_import(root, directory):
-    """Promote a validated manual-import stage; caller must check its fingerprint."""
-    for folder in ("objects", "snapshots"):
-        for source in (directory / "state" / folder).iterdir():
-            target = root / "state" / folder / source.name
-            if not target.exists():
-                write(target, source.read_bytes())
-    shutil.copytree(directory / "data/fields", root / "data/fields", dirs_exist_ok=True)
-    shutil.copytree(directory / "site", root / "site", dirs_exist_ok=True)
-    for name in ("history.json", "observations.json", "inbox.json"):
-        source=directory / "state" / name
-        if source.exists():write(root / "state" / name, source.read_bytes())
-    write(root / "data/catalog.json", (directory / "data/catalog.json").read_bytes())
-
-
 class ImportPreview:
     def __init__(self, root):
         self.root = Path(root).resolve()
@@ -68,16 +53,20 @@ class ImportPreview:
         self._temp.cleanup()
 
     def save(self):
-        if fingerprint(self.root) != self.original_fingerprint:
-            raise ValueError("Проект изменился. Повторите предпросмотр перед сохранением.")
-        if not self.changed:
-            return
-        promote_import(self.root,self.directory)
-        self.original_fingerprint = fingerprint(self.root)
+        with update_lock(self.root):
+            if fingerprint(self.root) != self.original_fingerprint:
+                raise ValueError("Проект изменился. Повторите предпросмотр перед сохранением.")
+            if self.changed:
+                promote_import(self.root, self.directory)
+                self.original_fingerprint = fingerprint(self.root)
 
 
 def prepare_import(root, document, filename, metadata, archive=None, archive_filename="schemas.zip"):
-    root = Path(root).resolve()
+    with update_lock(root) as locked_root:
+        return _prepare_import(locked_root, document, filename, metadata, archive, archive_filename)
+
+
+def _prepare_import(root, document, filename, metadata, archive, archive_filename):
     number = str(metadata.get("number", "")).strip()
     env = metadata.get("environment")
     if not re.fullmatch(r"\d{1,8}", number) or env not in ("prod", "test"):

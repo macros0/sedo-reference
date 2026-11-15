@@ -26,7 +26,16 @@
       ],
       "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
       "file": "NoticeResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "noticeNumber",
+        "insuredInfo",
+        "insurerInfo",
+        "informationResponse",
+        "note",
+        "senderInfo"
+      ]
     },
     {
       "name": "noticeNumber",
@@ -51,7 +60,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeFile": "Notice.xsd"
@@ -72,9 +81,13 @@
       "children": [
         3
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "snils"
+      ]
     },
     {
       "name": "snils",
@@ -99,7 +112,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeFile": "Person.xsd"
@@ -120,9 +133,13 @@
       "children": [
         5
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "regNumSFR"
+      ]
     },
     {
       "name": "regNumSFR",
@@ -147,7 +164,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeFile": "Organization.xsd"
@@ -171,9 +188,16 @@
         38,
         39
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "choice",
+        "information",
+        "noInformation",
+        "refusal",
+        "responseWillBeSentNewDoc"
+      ]
     },
     {
       "name": "information",
@@ -192,9 +216,14 @@
         8,
         31
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "receivePayment",
+        "insuredInfo"
+      ]
     },
     {
       "name": "receivePayment",
@@ -215,10 +244,17 @@
         13,
         21
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "choice",
+        "bankInfo",
+        "cardMir",
+        "otherOrg",
+        "postalAddress"
+      ]
     },
     {
       "name": "bankInfo",
@@ -240,7 +276,12 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "bik",
+        "accountNum"
+      ]
     },
     {
       "name": "bik",
@@ -355,7 +396,17 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "orgName",
+        "bik",
+        "accountNum",
+        "personalOrgAccount",
+        "personalInsuredAccount",
+        "kbk",
+        "regNumSFRCorrectionalFacility"
+      ]
     },
     {
       "name": "orgName",
@@ -574,7 +625,16 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "choice",
+        [
+          "sequence",
+          "addressGar",
+          "postalCode"
+        ],
+        "foreignAddress"
+      ]
     },
     {
       "name": "addressGar",
@@ -600,7 +660,22 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "choice",
+          "houseGuid",
+          [
+            "sequence",
+            "guid",
+            "house",
+            "stroenie",
+            "building"
+          ]
+        ],
+        "flat"
+      ]
     },
     {
       "name": "houseGuid",
@@ -835,9 +910,14 @@
         32,
         36
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "birthDate"
+      ]
     },
     {
       "name": "fullName",
@@ -857,10 +937,16 @@
         34,
         35
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -960,7 +1046,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {}
     },
@@ -983,7 +1069,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -1007,7 +1093,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -1031,7 +1117,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -1059,7 +1145,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeFile": "NoticeResponse.xsd"
@@ -1082,10 +1168,16 @@
         46,
         47
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
-      "typeFile": "NoticeResponse.xsd"
+      "typeFile": "NoticeResponse.xsd",
+      "contentModel": [
+        "sequence",
+        "author",
+        "email",
+        "phoneNumber"
+      ]
     },
     {
       "name": "author",
@@ -1105,10 +1197,16 @@
         44,
         45
       ],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ]
     },
     {
       "name": "firstName",
@@ -1221,7 +1319,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeFile": "Common.xsd"
@@ -1249,7 +1347,7 @@
       ],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
+      "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeFile": "Common.xsd"

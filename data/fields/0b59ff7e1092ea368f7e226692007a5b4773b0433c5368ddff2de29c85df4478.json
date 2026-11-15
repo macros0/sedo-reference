@@ -26,7 +26,22 @@
       "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
       "file": "Poved.xsd",
       "flags": {},
-      "typeFile": "CommonUQ.xsd"
+      "typeFile": "CommonUQ.xsd",
+      "contentModel": [
+        "sequence",
+        [
+          "sequence",
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name"
+        ],
+        [
+          "sequence",
+          "signature"
+        ]
+      ]
     },
     {
       "name": "content",
@@ -42,7 +57,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -60,7 +75,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -78,7 +93,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -96,7 +111,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -114,7 +129,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://www.fss.ru/integration/types/commonUq/v01",
+      "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {}
     },
@@ -132,7 +147,7 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "http://ws.fss.ru/integration/types/rust/poved/v01",
+      "ns": "",
       "file": "Poved.xsd",
       "flags": {}
     },
