@@ -67,7 +67,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:salary:v01",
       "file": "InsuredPersonSalary.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -120,7 +121,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodInfo",
@@ -233,7 +235,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:proactive:salary:v01",
-      "typeFile": "InsuredPersonSalary.xsd"
+      "typeFile": "InsuredPersonSalary.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "amountForAllInsurers",
@@ -262,7 +265,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "amountForAllInsurersGph",
@@ -291,7 +295,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "amountForCurrentInsurer",
@@ -320,7 +325,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "amountForCurrentInsurerGph",
@@ -349,7 +355,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "additionalYears",
@@ -436,7 +443,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:proactive:salary:v01",
-      "typeFile": "InsuredPersonSalary.xsd"
+      "typeFile": "InsuredPersonSalary.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "amountForAllInsurers",
@@ -465,7 +473,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "amountForAllInsurersGph",
@@ -494,7 +503,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "amountForCurrentInsurer",
@@ -523,7 +533,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "amountForCurrentInsurerGph",
@@ -552,7 +563,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorList",
@@ -625,7 +637,8 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -644,7 +657,8 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -663,7 +677,8 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -688,7 +703,8 @@
       "file": "InsuredPersonSalary.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

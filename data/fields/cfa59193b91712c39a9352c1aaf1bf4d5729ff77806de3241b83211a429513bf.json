@@ -49,7 +49,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "procClosedOpenNew",
@@ -98,7 +99,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "newSocialAssistNum",
@@ -117,7 +119,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "receivedConfirmationOtherInsurer",
@@ -196,7 +199,8 @@
       "file": "Notifications.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/proactive/type/v01",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "years",
@@ -239,7 +243,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

@@ -127,7 +127,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -156,7 +157,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kpp",
@@ -181,7 +183,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ogrn",
@@ -210,7 +213,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNum",
@@ -235,7 +239,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -260,7 +265,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "publicOrganizationDisability",
@@ -317,7 +323,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -346,7 +353,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kpp",
@@ -371,7 +379,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ogrn",
@@ -400,7 +409,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "founderFizlicoDocument",
@@ -467,7 +477,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v01",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -496,7 +507,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v01",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -525,7 +537,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v01",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -554,7 +567,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v01",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "seria",
@@ -572,7 +586,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -599,7 +614,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certificateDate",
@@ -618,7 +634,8 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "soglasie",
@@ -637,7 +654,8 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ip",
@@ -712,7 +730,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v01",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -741,7 +760,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v01",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -770,7 +790,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v01",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -799,7 +820,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ogrn",
@@ -828,7 +850,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNum",
@@ -853,7 +876,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -878,7 +902,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "founderDisabilityDocument",
@@ -937,7 +962,8 @@
       "file": "RefundUnempl.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v01",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "seria",
@@ -964,7 +990,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -991,7 +1018,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certificateDate",
@@ -1010,7 +1038,8 @@
       "ns": "http://www.fss.ru/integration/types/pvso/refund/unempl/v01",
       "file": "RefundUnempl.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@author",
@@ -1033,7 +1062,8 @@
       "children": [],
       "ns": "",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@phone",
@@ -1056,7 +1086,8 @@
       "children": [],
       "ns": "",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@email",
@@ -1083,7 +1114,8 @@
       "children": [],
       "ns": "",
       "file": "RefundUnempl.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

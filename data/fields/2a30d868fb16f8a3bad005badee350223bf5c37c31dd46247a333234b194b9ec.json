@@ -58,7 +58,8 @@
       "file": "NotificationDocType.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "idMessage",
@@ -83,7 +84,8 @@
       "file": "NotificationDocType.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "date",
@@ -102,7 +104,8 @@
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurer",
@@ -153,7 +156,8 @@
       "file": "NotificationDocType.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "FIO",
@@ -172,7 +176,8 @@
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "statusDocument",
@@ -231,7 +236,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "typeDocument",
@@ -250,7 +256,8 @@
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "count",
@@ -277,7 +284,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "status",
@@ -304,7 +312,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "reason",
@@ -353,7 +362,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "description",
@@ -380,7 +390,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/type/NotificationDocType/v01",
       "file": "NotificationDocType.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

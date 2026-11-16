@@ -66,7 +66,8 @@
       "file": "BenefitResponseResult.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "status",
@@ -99,7 +100,8 @@
       "file": "BenefitResponseResult.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "batchNo",
@@ -124,7 +126,8 @@
       "file": "BenefitResponseResult.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:proactive:responseResult:v3.0",
-      "typeFile": "BenefitResponseResult.xsd"
+      "typeFile": "BenefitResponseResult.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "responseInfo",
@@ -142,7 +145,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:responseResult:v3.0",
       "file": "BenefitResponseResult.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorList",
@@ -223,7 +227,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -250,7 +255,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -277,7 +283,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "warnList",
@@ -358,7 +365,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -385,7 +393,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -412,7 +421,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -441,7 +451,8 @@
       "file": "BenefitResponseResult.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -466,7 +477,8 @@
       "file": "BenefitResponseResult.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@messageDateTime",
@@ -485,7 +497,8 @@
       "ns": "",
       "file": "BenefitResponseResult.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

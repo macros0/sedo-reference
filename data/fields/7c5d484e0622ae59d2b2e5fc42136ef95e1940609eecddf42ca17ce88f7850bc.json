@@ -129,7 +129,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "batchNo",
@@ -154,7 +155,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docDt1",
@@ -173,7 +175,8 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SNILS",
@@ -198,7 +201,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "surname",
@@ -221,7 +225,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "name",
@@ -244,7 +249,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "patronimic",
@@ -269,7 +275,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "employer",
@@ -292,7 +299,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplRegNo",
@@ -317,7 +325,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -342,7 +351,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplParentNo",
@@ -365,7 +375,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplKPP",
@@ -392,7 +403,8 @@
         "nillable": "true"
       },
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplINN",
@@ -417,7 +429,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthday",
@@ -436,7 +449,8 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SNILSChild",
@@ -466,7 +480,8 @@
       "flags": {
         "nillable": "true"
       },
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "patronimicChild",
@@ -491,7 +506,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "nameChild",
@@ -514,7 +530,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "surnameChild",
@@ -537,7 +554,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthdayChild",
@@ -556,7 +574,8 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidType",
@@ -610,7 +629,8 @@
             ]
           ],
           "values": [],
-          "flags": {}
+          "flags": {},
+          "baseNs": "http://www.w3.org/2001/XMLSchema"
         },
         {
           "type": "",
@@ -622,7 +642,8 @@
               ""
             ]
           ],
-          "flags": {}
+          "flags": {},
+          "baseNs": "http://www.w3.org/2001/XMLSchema"
         }
       ]
     },
@@ -647,7 +668,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidNo",
@@ -672,7 +694,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidDt",
@@ -693,7 +716,8 @@
       "flags": {
         "nillable": "true"
       },
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidDtEx",
@@ -714,7 +738,8 @@
       "flags": {
         "nillable": "true"
       },
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidDocNum",
@@ -737,7 +762,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@software",
@@ -760,7 +786,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@version_software",
@@ -783,7 +810,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@author",
@@ -806,7 +834,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@phone",
@@ -829,7 +858,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@email",
@@ -856,7 +886,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@emplRegNo",
@@ -881,7 +912,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@regNumSFR",
@@ -906,7 +938,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

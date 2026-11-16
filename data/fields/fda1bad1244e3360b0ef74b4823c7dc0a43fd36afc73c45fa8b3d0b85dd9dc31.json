@@ -80,7 +80,8 @@
       "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "messageList",
@@ -153,7 +154,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "messageType",
@@ -172,7 +174,8 @@
       "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "recipientId",
@@ -201,7 +204,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSfr",
@@ -226,7 +230,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "org",
@@ -306,7 +311,8 @@
       "children": [],
       "ns": "",
       "file": "Sedo.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -339,7 +345,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kpp",
@@ -368,7 +375,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ogrnip",
@@ -395,7 +403,8 @@
       "children": [],
       "ns": "",
       "file": "Sedo.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -424,7 +433,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regnum",
@@ -451,7 +461,8 @@
       "children": [],
       "ns": "",
       "file": "Sedo.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "subAbonentId",
@@ -478,7 +489,8 @@
       "children": [],
       "ns": "",
       "file": "Sedo.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "expiryDate",
@@ -497,7 +509,8 @@
       "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "needConfirm",
@@ -516,7 +529,8 @@
       "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "messageDate",
@@ -535,7 +549,8 @@
       "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorList",
@@ -596,7 +611,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSfr",
@@ -621,7 +637,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "code",
@@ -640,7 +657,8 @@
       "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -659,7 +677,8 @@
       "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "broadcastMessageList",
@@ -738,7 +757,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -757,7 +777,8 @@
       "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dateOfRelevance",
@@ -776,7 +797,8 @@
       "ns": "",
       "file": "Sedo.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorList",
@@ -825,7 +847,8 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -844,7 +867,8 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -863,7 +887,8 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

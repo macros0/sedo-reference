@@ -54,7 +54,8 @@
       "file": "PowerOfAttorney.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "revokeChain",
@@ -75,7 +76,8 @@
       "flags": {
         "fixed": "true"
       },
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "reason",
@@ -94,7 +96,8 @@
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

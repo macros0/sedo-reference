@@ -28,6 +28,8 @@ function digitPattern(pattern,value){
 }
 function explain(message){
  const text=String(message||'');
+ if(/^namespace error\s*:\s*xml namespace prefix mapped to wrong URI(?:\n|$)/.test(text))return 'Префикс xml зарезервирован для пространства имён http://www.w3.org/XML/1998/namespace. Исправьте его объявление.';
+ if(/^namespace error\s*:/.test(text))return 'Некорректное объявление или использование пространства имён XML. Точная причина — в «Подробнее».';
  if(/^Неверный корневой элемент или пространство имён\./.test(text))return 'Корневой элемент или его пространство имён не соответствует выбранному сообщению.';
  if(/^DTD и объявления ENTITY запрещены:/.test(text))return 'XML содержит запрещённое объявление DTD или ENTITY.';
  const subject=text.match(/^(?:Schemas validity error\s*:\s*)?Element '[^'\n]+'(?:, attribute '[^'\n]+')?:\s*([^\n]+)$/);if(!subject)return neutral;

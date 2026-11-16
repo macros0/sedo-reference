@@ -57,7 +57,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "requestStatus",
@@ -94,7 +95,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "note",
@@ -119,7 +121,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorMessage",
@@ -142,7 +145,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -161,7 +165,8 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

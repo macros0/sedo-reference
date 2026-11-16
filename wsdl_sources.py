@@ -178,12 +178,12 @@ def bridge(document, support, read_object):
                     continue
                 namespace = reference.get("namespace") if reference.tag == XS + "import" else root.get("targetNamespace")
                 try:
-                    resolve_import({n: inventory[n] for n in files}, name, location, namespace)
+                    resolve_import({n: inventory[n] for n in files}, name, location, namespace, reference.tag.rsplit('}',1)[-1])
                     continue
                 except ValueError:
                     pass
                 try:
-                    target = resolve_import(inventory, name, location, namespace)
+                    target = resolve_import(inventory, name, location, namespace, reference.tag.rsplit('}',1)[-1])
                 except ValueError:
                     # Preserve conflicting candidates so the matching pass can
                     # distinguish ambiguity from a genuinely missing dependency.

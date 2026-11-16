@@ -10,6 +10,122 @@ from collector_feed import store_feed, import_feed
 
 
 class FeedTests(unittest.TestCase):
+    def test_replay_uses_historical_docx_and_reports_an_unrecoverable_pair(self):
+        import io
+        import zipfile
+        from catalog import derive
+        from collector_snapshots import replay_history
+        from sync import encode, inspect_file, record_observation, sha, write
+        a, ao = self.capture()
+        b, bo = self.capture(True)
+        b["observed_at"] = "2026-11-14T12:00:00+00:00"
+        archive = io.BytesIO()
+        with zipfile.ZipFile(archive, "w") as bundle:
+            bundle.writestr("word/document.xml", '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:r><w:t>Тип сообщения 999: Fixture</w:t></w:r></w:p><w:p><w:r><w:t>&lt;m:response xmlns:m="urn:main"&gt;&lt;/m:response&gt;</w:t></w:r></w:p></w:body></w:document>')
+        document = archive.getvalue()
+        doc = dict(environment="test", kind="docx", label="Fixture v1.0", url="https://lk-test.fss.ru/specs_sedo/fixture.docx",
+                   sha256=sha(document), **inspect_file(document, "docx"))
+        snapshot = dict(format=1, pages={}, entries=[doc, a["library"]])
+        for confirmed, active in ((True, a), (True, b), (False, a)):
+            with self.subTest(confirmed=confirmed, active=active["content_id"]), tempfile.TemporaryDirectory() as remote, tempfile.TemporaryDirectory() as local:
+                remote, state = Path(remote), Path(local)
+                def blob(raw):
+                    digest = sha(raw)
+                    write(state / "objects" / digest, raw)
+                    return digest
+                blob(document)
+                if confirmed:
+                    key = sha(encode(snapshot))
+                    write(state / "snapshots" / (key + ".json"), encode(snapshot))
+                    write(state / "history.json", encode([key]))
+                    write(state / "current.json", encode(dict(snapshot=key)))
+                    record_observation(state, key, a["observed_at"])
+                store_feed(remote, [a], ao)
+                store_feed(remote, [b], bo)
+                store_feed(remote, [active], ao if active is a else bo)
+                import_feed(state, lambda path: (remote / path).read_bytes())
+                current = dict(snapshot, entries=[dict(doc, sha256=blob(document+b"new bytes")), active["library"]])
+                replayed, ledger = replay_history(state, current, blob)
+                record = ledger["manifests"]["test"][b["content_id"]]
+                if confirmed:
+                    self.assertEqual(record["status"], "replayed")
+                    self.assertEqual(record["observed_at"], b["observed_at"])
+                    self.assertEqual(len(replayed), 1)
+                    past = json.loads((state / "snapshots" / (replayed[0] + ".json")).read_bytes())
+                    rows = derive(past)["revisions"]
+                    self.assertEqual(rows[0]["document_sha256"], sha(document))
+                    self.assertEqual(rows[0]["archive_sha256"], b["library"]["sha256"])
+                else:
+                    self.assertEqual(replayed, [])
+                    self.assertEqual(record["status"], "unavailable")
+                    self.assertIn("DOCX", record["reason"])
+
+    def test_replay_a_b_a_retains_intermediate_edition_and_retries_after_failure(self):
+        from datetime import datetime, timezone
+        from catalog import export
+        from collector_snapshots import pending
+        from sync import sync, encode, write
+        import io
+        import zipfile
+        a, ao = self.capture()
+        b, bo = self.capture(True)
+        b["observed_at"] = "2026-11-14T12:00:00+00:00"
+        resources = {}
+        archive = io.BytesIO()
+        with zipfile.ZipFile(archive, "w"):
+            pass
+        document = io.BytesIO()
+        with zipfile.ZipFile(document, "w") as bundle:
+            bundle.writestr("word/document.xml", '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:p><w:r><w:t>Тип сообщения 999: Fixture</w:t></w:r></w:p><w:p><w:r><w:t>&lt;m:response xmlns:m="urn:main"&gt;&lt;/m:response&gt;</w:t></w:r></w:p></w:body></w:document>')
+        for host in ("https://lk.sfr.gov.ru", "https://lk-test.fss.ru"):
+            resources[host+"/sedo.html"] = b'<a href="/specs_sedo/schemas.zip">XSD</a>'
+            resources[host+"/specs_sedo/schemas.zip"] = archive.getvalue()
+        resources["https://lk-test.fss.ru/sedo.html"] += b'<a href="/specs_sedo/fixture.docx">Fixture v1.0</a>'
+        resources["https://lk-test.fss.ru/specs_sedo/fixture.docx"] = document.getvalue()
+        with tempfile.TemporaryDirectory() as remote, tempfile.TemporaryDirectory() as local:
+            remote, root = Path(remote), Path(local)
+            state = root / "state"
+            store_feed(remote, [a], ao)
+            import_feed(state, lambda path: (remote / path).read_bytes())
+            with patch("sync.get", side_effect=lambda url, **kwargs: resources[url]), patch("sync.datetime") as clock:
+                clock.now.return_value = datetime(2026, 11, 13, 12, tzinfo=timezone.utc)
+                sync(state)
+            before = (state / "current.json").read_bytes()
+            store_feed(remote, [b], bo)
+            store_feed(remote, [a], ao)
+            import_feed(state, lambda path: (remote / path).read_bytes())
+            self.assertTrue(pending(root), "an intermediate manifest must trigger replay even when latest returned to A")
+            original_write = __import__("sync").write
+            def fail(path, raw):
+                if path.name == "history.json":
+                    raise OSError("interrupted replay")
+                return original_write(path, raw)
+            with patch("sync.get", side_effect=lambda url, **kwargs: resources[url]), \
+                    patch("sync.write", side_effect=fail), self.assertRaisesRegex(OSError, "interrupted"):
+                sync(state)
+            self.assertEqual((state / "current.json").read_bytes(), before)
+            self.assertTrue(pending(root))
+            with patch("sync.get", side_effect=lambda url, **kwargs: resources[url]):
+                sync(state)
+            export(state, root / "catalog.json")
+            catalog = json.loads((root / "catalog.json").read_bytes())
+            self.assertEqual(len(catalog["revisions"]), 2)
+            self.assertEqual(sum(r["listed_now"] for r in catalog["revisions"]), 1)
+            current = next(r for r in catalog["revisions"] if r["listed_now"])
+            self.assertEqual(current["archive_sha256"], a["library"]["sha256"])
+            intermediate = next(r for r in catalog["revisions"] if not r["listed_now"])
+            event = next(e for e in catalog["updates"] if e["revision_id"] == intermediate["revision_id"])
+            self.assertEqual(event["observed_at"], b["observed_at"])
+            captured = json.loads((state / "snapshots" / (event["snapshot"] + ".json")).read_bytes())
+            self.assertEqual(captured["collector_observation"]["content_id"], b["content_id"])
+            self.assertFalse(pending(root))
+            history = (state / "history.json").read_bytes()
+            with patch("sync.get", side_effect=lambda url, **kwargs: resources[url]):
+                sync(state)
+            self.assertEqual((state / "history.json").read_bytes(), history)
+            export(state, root / "catalog.json")
+            self.assertEqual(json.loads((root / "catalog.json").read_bytes())["updates"], catalog["updates"])
+
     def test_invalid_cached_manifest_envelope_is_replaced_and_retry_is_idempotent(self):
         manifest, objects = self.capture()
         with tempfile.TemporaryDirectory() as remote, tempfile.TemporaryDirectory() as local:

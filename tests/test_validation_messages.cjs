@@ -2,6 +2,8 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 assert.ok(fs.existsSync(path.join(__dirname,'../web/validation-messages.js')),'Russian XSD explanation module is missing');
 const {explain}=require('../web/validation-messages.js');
+assert.match(explain('namespace error : xml namespace prefix mapped to wrong URI\n<r xmlns:xml="urn:wrong"/>\n                       ^'),/Префикс xml зарезервирован/);
+assert.match(explain('namespace error : Namespace prefix p on r is not defined'),/пространства имён XML/);
 const message=body=>"Schemas validity error : Element '{urn:test}code': "+body;
 assert.equal(explain(message("[facet 'length'] The value has a length of '16'; this differs from the allowed length of '12'.")),'Точная длина по XSD — 12; фактическая — 16.');
 assert.equal(explain(message("[facet 'minLength'] The value has a length of '1'; this underruns the allowed minimum length of '2'.")),'Минимальная длина по XSD — 2; фактическая — 1.');

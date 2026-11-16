@@ -12,7 +12,8 @@
   }
   function refresh(force){
    for(const row of rows){check(row);if(row.origin==="relative")auto.set(key(row),{id:row.id,selected:row.selected})}
-   const explicit=rows.filter(r=>r.origin!=="relative"),parents=new Set(explicit.filter(r=>r.selected).map(key)),usedIds=new Set(explicit.map(r=>r.id)),proposal=suggest(explicit.map(clean),before,after);
+   // Unconfirmed Excel rows reserve their branches but cannot infer child pairs.
+   const explicit=rows.filter(r=>r.origin!=="relative"),parents=new Set(explicit.filter(r=>r.selected&&r.origin!=="workbook").map(key)),usedIds=new Set(explicit.map(r=>r.id)),proposal=suggest(explicit.map(clean),before,after);
    const relative=proposal.suggestions.filter(p=>!blocked.has(p.beforePath)&&parents.has(key({beforePath:p.parentBeforePath,afterPath:p.parentAfterPath}))).map(p=>{
     const state=auto.get(key(p)),selected=typeof force==="boolean"?force:state?.selected??true,id=state&&!usedIds.has(state.id)?state.id:++serial;usedIds.add(id);auto.set(key(p),{id,selected});return {...p,id,origin:"relative",selected};
    });

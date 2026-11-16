@@ -84,7 +84,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "secondName",
@@ -107,7 +108,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "patronymic",
@@ -130,7 +132,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -149,7 +152,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -174,7 +178,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentNotice",
@@ -258,7 +263,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "batchNo",
@@ -281,7 +287,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "socialAssistNum",
@@ -300,7 +307,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "registerRecieve",
@@ -367,7 +375,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docType",
@@ -432,7 +441,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -479,7 +489,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodEnd",
@@ -498,7 +509,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -523,7 +535,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurerName",
@@ -542,7 +555,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentSend",
@@ -601,7 +615,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docType",
@@ -666,7 +681,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -713,7 +729,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodEnd",
@@ -732,7 +749,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -757,7 +775,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentDone",
@@ -828,7 +847,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docType",
@@ -893,7 +913,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -940,7 +961,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodEnd",
@@ -959,7 +981,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -984,7 +1007,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "summa",
@@ -1011,7 +1035,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sum",
@@ -1038,7 +1063,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dutySum",
@@ -1065,7 +1091,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentCanceling",
@@ -1134,7 +1161,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docType",
@@ -1199,7 +1227,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -1246,7 +1275,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodEnd",
@@ -1265,7 +1295,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -1290,7 +1321,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sum",
@@ -1317,7 +1349,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentState",
@@ -1340,7 +1373,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noticeSend",
@@ -1407,7 +1441,8 @@
       "children": [],
       "ns": "",
       "file": "Notice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docType",
@@ -1472,7 +1507,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -1519,7 +1555,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periodEnd",
@@ -1538,7 +1575,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInformation",
@@ -1563,7 +1601,8 @@
       "file": "Notice.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/notice/v01",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurerName",
@@ -1582,7 +1621,8 @@
       "ns": "",
       "file": "Notice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

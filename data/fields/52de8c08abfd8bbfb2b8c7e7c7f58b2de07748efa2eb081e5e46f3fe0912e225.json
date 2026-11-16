@@ -49,7 +49,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "receiveId",
@@ -72,7 +73,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusRequest.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -101,7 +103,8 @@
       "file": "PaymentStatusRequest.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

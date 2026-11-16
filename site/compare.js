@@ -2,18 +2,20 @@
 const comparisonData=new Map();
 let comparisonRequest=0;
 function loadComparisonData(revision){
- if(!comparisonData.has(revision)){
+ const version=catalog.revisions.find(row=>row.revision_id===revision)?.fields_sha256;
+ const cacheKey=revision+(version?"?v="+version:"");
+ if(!comparisonData.has(cacheKey)){
   const promise=new Promise((resolve,reject)=>{
    window.SEDO_FIELDS=window.SEDO_FIELDS||{};
    const script=document.createElement("script");
-   script.src="fields/"+revision+".js";
+   script.src="fields/"+revision+".js"+(version?"?v="+version:"");
    script.onload=()=>{script.remove();const fields=window.SEDO_FIELDS[revision];fields?resolve(fields):reject(Error("В файле редакции нет дерева тегов."))};
-   script.onerror=()=>{script.remove();comparisonData.delete(revision);reject(Error("Не удалось загрузить дерево. Проверьте, что папка fields находится рядом с index.html."))};
+   script.onerror=()=>{script.remove();comparisonData.delete(cacheKey);reject(Error("Не удалось загрузить дерево. Проверьте, что папка fields находится рядом с index.html."))};
    document.head.append(script);
   });
-  comparisonData.set(revision,promise);
+  comparisonData.set(cacheKey,promise);
  }
- return comparisonData.get(revision);
+ return comparisonData.get(cacheKey);
 }
 function comparisonRoute(number,left,right){return new URLSearchParams({message:number,compare:"1",left,right}).toString()}
 function comparisonLabel(r){return "№ "+r.number+" · "+label(r)+" · "+r.revision_id.slice(0,8)}

@@ -6,6 +6,10 @@ const f=path=>({path,doc:"Поле "+path}),before=["old","old/a","old/sub","old
 const parent={beforePath:"old",afterPath:"new",comment:""},snapshot=JSON.stringify({before,after,parent});
 const create=entries=>drafts.create({before,after,savedPairs:[parent],entries:entries||[{...parent,origin:"confirmed",selected:true}],suggest:mapping.suggestDescendants});
 const draft=create();assert.equal(draft.rows.length,4);assert.equal(draft.summary().dirty,true,"proposed descendants are not saved yet");
+const unconfirmed=create([{...parent,origin:"workbook",selected:true,decision:"Не проверено"}]);
+assert.deepEqual(unconfirmed.summary().pairs,[parent],"unconfirmed Excel parents must not select their descendants");
+assert.equal(unconfirmed.rows.length,1,"unconfirmed Excel parents propose only themselves");
+unconfirmed.edit(unconfirmed.rows[0].id,parent);assert.equal(unconfirmed.rows.length,4,"explicit browser confirmation can propose descendants");
 draft.selectProposals(false);assert.deepEqual(draft.summary().pairs,[parent]);assert.equal(draft.summary().dirty,false);
 const parentId=draft.rows.find(r=>r.origin==="confirmed").id;
 draft.edit(parentId,{beforePath:"old",afterPath:"other",comment:"Исправлено"});

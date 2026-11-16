@@ -78,7 +78,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docDate",
@@ -97,7 +98,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docComment",
@@ -116,7 +118,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "attachment",
@@ -169,7 +172,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -188,7 +192,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -207,7 +212,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -226,7 +232,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "name",
@@ -245,7 +252,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "statementUuid",
@@ -270,7 +278,8 @@
       "file": "inline-1.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/additionalVacationStatement",
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

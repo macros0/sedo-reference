@@ -13,6 +13,13 @@ PROJECT = Path(__file__).resolve().parents[1]
 
 
 class InboxMetadataTests(unittest.TestCase):
+    def test_date_override_repairs_invalid_filename_and_final_date_is_validated(self):
+        name = "10110_v1.2_31.02.2026.docx"
+        self.assertEqual(detect_metadata(name, "prod", {"date": "2026-02-28"})["date"], "2026-02-28")
+        for override in (None, {"date": "2026-02-31"}, {"date": "nonsense"}):
+            with self.subTest(override=override), self.assertRaisesRegex(ValueError, "дата"):
+                detect_metadata(name, "prod", override)
+
     def test_official_and_short_names(self):
         data=detect_metadata("Приложение_6_Том_3_Тип_сообщения_12010_v3.3_08.06.26.docx", "prod")
         self.assertEqual(data["number"],"12010")

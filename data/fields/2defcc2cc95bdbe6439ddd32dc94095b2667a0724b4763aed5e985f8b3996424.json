@@ -56,7 +56,8 @@
       "file": "inline-1.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/additionalVacationStatement",
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "msgDate",
@@ -75,7 +76,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "status",
@@ -94,7 +96,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errors",
@@ -141,7 +144,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorMessage",
@@ -160,7 +164,8 @@
       "ns": "http://www.fss.ru/additionalVacationStatement",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

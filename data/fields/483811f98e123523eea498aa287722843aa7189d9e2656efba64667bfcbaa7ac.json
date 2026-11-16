@@ -86,7 +86,8 @@
       "file": "Application.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dateStart",
@@ -105,7 +106,8 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "idMessage",
@@ -130,7 +132,8 @@
       "file": "Application.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "id",
@@ -155,7 +158,8 @@
       "file": "Application.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SvedSostRaschPhysRequest",
@@ -225,7 +229,8 @@
       "file": "Application.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -250,7 +255,8 @@
       "file": "Application.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstNameCiv",
@@ -273,7 +279,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastNameCiv",
@@ -296,7 +303,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleNameCiv",
@@ -319,7 +327,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docDatCiv",
@@ -338,7 +347,8 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -370,7 +380,8 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docTypeCiv",
@@ -393,7 +404,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docSeries",
@@ -416,7 +428,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docNumber",
@@ -439,7 +452,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SvedSostRaschJurRequest",
@@ -499,7 +513,8 @@
       "file": "Application.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -524,7 +539,8 @@
       "file": "Application.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -549,7 +565,8 @@
       "file": "Application.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -581,7 +598,8 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kpp",
@@ -609,7 +627,8 @@
       "ns": "http://www.fss.ru/integration/types/ls/v01",
       "file": "Application.xsd",
       "flags": {},
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

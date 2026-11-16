@@ -80,7 +80,8 @@
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:paymentStatusNotice:v3.0",
-      "typeFile": "PaymentStatusNotice.xsd"
+      "typeFile": "PaymentStatusNotice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "batchNo",
@@ -103,7 +104,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "registerRecieve",
@@ -158,7 +160,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docType",
@@ -183,7 +186,8 @@
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:paymentStatusNotice:v3.0",
-      "typeFile": "PaymentStatusNotice.xsd"
+      "typeFile": "PaymentStatusNotice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentSend",
@@ -238,7 +242,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docType",
@@ -263,7 +268,8 @@
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:paymentStatusNotice:v3.0",
-      "typeFile": "PaymentStatusNotice.xsd"
+      "typeFile": "PaymentStatusNotice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentDone",
@@ -326,7 +332,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docType",
@@ -351,7 +358,8 @@
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:paymentStatusNotice:v3.0",
-      "typeFile": "PaymentStatusNotice.xsd"
+      "typeFile": "PaymentStatusNotice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "summa",
@@ -378,7 +386,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentCanceling",
@@ -443,7 +452,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "docType",
@@ -468,7 +478,8 @@
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:paymentStatusNotice:v3.0",
-      "typeFile": "PaymentStatusNotice.xsd"
+      "typeFile": "PaymentStatusNotice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sum",
@@ -495,7 +506,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentState",
@@ -518,7 +530,8 @@
       "children": [],
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "*",
@@ -567,7 +580,8 @@
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@messageDateTime",
@@ -586,7 +600,8 @@
       "ns": "",
       "file": "PaymentStatusNotice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

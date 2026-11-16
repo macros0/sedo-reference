@@ -62,24 +62,33 @@ def _schema(path, revision):
     if entry not in roots:
         raise ValueError("В архиве отсутствует входная XSD редакции.")
     urls = {name: f"sedo-memory:///schema-{i}.xsd" for i, name in enumerate(roots)}
-    pending = [entry]
+    pending = [(entry,None)]
     resources = {}
+    contexts=set()
+    locations={reference:reference.get('schemaLocation') for root in roots.values() for reference in root
+               if reference.tag in {X+'import',X+'include',X+'redefine'}}
+    targets={}
     while pending:
-        name = pending.pop()
+        name,inherited_namespace = pending.pop()
         url = urls[name]
-        if url in resources:
-            continue
         root = roots[name]
+        effective_namespace=root.get('targetNamespace') or inherited_namespace
+        if (name,effective_namespace) in contexts:
+            continue
+        contexts.add((name,effective_namespace))
         for imp in root:
             if imp.tag not in {X + "import", X + "include", X + "redefine"}:
                 continue
-            location = imp.get("schemaLocation")
+            location = locations[imp]
             if not location:
                 raise ValueError("Импорт XSD без schemaLocation.")
-            namespace = imp.get("namespace") if imp.tag == X + "import" else root.get("targetNamespace")
-            target = resolve_import(inventory, name, location, namespace)
+            namespace = imp.get("namespace") if imp.tag == X + "import" else effective_namespace
+            target = resolve_import(inventory, name, location, namespace, imp.tag.rsplit('}',1)[-1])
+            if imp in targets and targets[imp]!=target:
+                raise ValueError('Неоднозначная зависимость включаемой XSD: '+name)
+            targets[imp]=target
             imp.set("schemaLocation", urls[target])
-            pending.append(target)
+            pending.append((target,None if imp.tag==X+'import' else effective_namespace))
         resources[url] = etree.tostring(root)
     primary = etree.XMLSchema(_parse(resources[urls[entry]], resources, urls[entry]))
     if any(root.xpath(".//xs:attribute[@ref and @fixed] | xs:attribute[@fixed]",
@@ -138,17 +147,42 @@ def _examples(revision, rows):
 def _instances(parts):
     """Split at a complete root, preserving malformed XML for syntax diagnostics."""
     i = 0
+    declaration = []
+    declaration_length = 0
     while i < len(parts):
         line = parts[i]
         i += 1
+        declaration_inline = False
         if not line:
             continue
         if len(line) > MAX_EXAMPLE:
             yield None, "XML-пример превышает лимит объёма."
             return
-        # A declaration can be on the same line as the root. DOCX text is
-        # Unicode, so ignore its original byte-encoding declaration.
-        line = re.sub(r"^<\?xml\b[^?]*\?>\s*", "", line)
+        if declaration and not declaration[-1].endswith('?>') and not line.startswith('<'):
+            declaration_length += len(line)+1
+            if declaration_length > MAX_EXAMPLE:
+                yield None, "XML-пример превышает лимит объёма."
+                return
+            if '?>' not in line:
+                declaration.append(line)
+                continue
+            prefix,_,line=line.partition('?>')
+            declaration.append(prefix+'?>')
+            line=line.lstrip()
+            declaration_inline=bool(line)
+        # Retain the declaration for syntax checking, including when Word puts
+        # it in a separate paragraph from the root element.
+        if line.startswith('<?xml'):
+            match = re.match(r'<\?xml\b.*?\?>',line,re.S)
+            if match:
+                declaration=[match[0]]
+                declaration_length=len(match[0])
+                line=line[match.end():].lstrip()
+                declaration_inline=bool(line)
+            else:
+                declaration=[line]
+                declaration_length=len(line)
+                continue
         if not line:
             continue
         if line.startswith("<!DOCTYPE"):
@@ -162,8 +196,9 @@ def _instances(parts):
         # Also stop at a malformed close with a missing/wrong prefix. The XML
         # parser diagnoses the spelling; a later sample stays independent.
         end = re.compile(r"</(?:[\w.-]+:\s*)?" + re.escape(local) + r"\s*>")
-        lines = [line]
-        length = len(line)
+        lines = [*declaration[:-1],declaration[-1]+line] if declaration_inline else [*declaration,line]
+        declaration=[]
+        length = sum(map(len,lines))+len(lines)-1
         opening = line[match.start():]
         closing_candidates = 0
         while True:
@@ -174,7 +209,7 @@ def _instances(parts):
                     yield None, "Неоднозначные границы вложенного XML-примера."
                     return
                 try:
-                    _parse("\n".join(lines).encode("utf-8"))
+                    _parse(_xml_bytes("\n".join(lines)))
                 except etree.XMLSyntaxError as exc:
                     if "Premature end of data" not in exc.msg:
                         break
@@ -205,6 +240,23 @@ def _instances(parts):
         if close and re.fullmatch(r"(?:\s*</(?:[\w.-]+:)?(?:message|putMessageRequest|Body|Envelope)>)+\s*", lines[-1][close.end():]):
             lines[-1] = lines[-1][:close.end()]
         yield "\n".join(lines), None
+
+
+def _xml_bytes(text):
+    """Check XML declaration grammar before changing Unicode's byte encoding."""
+    if text.startswith('<?xml'):
+        declaration=re.match(r'<\?xml\b.*?\?>',text,re.S)
+        if declaration:
+            original=declaration[0]
+            # Preserve the declaration and its attribute order. Only replace a
+            # syntactically valid encoding value; malformed declarations still
+            # reach the XML parser intact and produce a located finding.
+            encoding=re.search(r'''\bencoding\s*=\s*(['"])([A-Za-z][A-Za-z0-9._-]*)\1''',original)
+            normalized=original
+            if encoding:normalized=original[:encoding.start(2)]+'UTF-8'+original[encoding.end(2):]
+            _parse((normalized+'<declaration-check/>').encode('utf-8'))
+            text=normalized+text[declaration.end():]
+    return text.encode('utf-8')
 
 
 def _payload(node, number):
@@ -339,7 +391,7 @@ def audit(revision, body, archive_path):
             template = ("шаблон" in heading.casefold() or "You have a CHOICE" in text or
                         "<!--Optional:" in text and re.search(r">string(?:string)*<", text))
             try:
-                node = _parse(text.encode("utf-8"))
+                node = _parse(_xml_bytes(text))
                 node = _payload(node, revision["number"])
             except etree.XMLSyntaxError as exc:
                 checked += 1

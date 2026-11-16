@@ -58,7 +58,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "status",
@@ -91,7 +92,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "protocol",
@@ -172,7 +174,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "level",
@@ -205,7 +208,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "text",
@@ -224,7 +228,8 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "description",
@@ -243,7 +248,8 @@
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -268,7 +274,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

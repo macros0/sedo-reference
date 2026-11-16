@@ -75,6 +75,17 @@ class DocumentArchiveTests(unittest.TestCase):
         self.assertEqual(published['source_updates'][0]['revision_id'],'edition1')
         self.assertEqual(published['source_updates'][0]['source']['document_url'],'https://example.test/edition2.docx')
         self.assertEqual(len(published['schema_updates'][0]['event_sources']),1)
+        first_hashes={r['revision_id']:r['fields_sha256'] for r in published['revisions']}
+        for rid,digest in first_hashes.items():
+            self.assertEqual(digest,sha((self.root/'site/fields'/(rid+'.js')).read_bytes()))
+        fields[0]['doc']='Updated schema description'
+        for row in catalog['revisions']:
+            write(self.root/'data/fields'/(row['revision_id']+'.json'),encode(dict(fields=fields)))
+        self.build()
+        rebuilt=json.loads((self.root/'site/catalog-data.js').read_text('utf8').removeprefix('window.SEDO_CATALOG=').removesuffix(';'))
+        for row in rebuilt['revisions']:
+            self.assertNotEqual(row['fields_sha256'],first_hashes[row['revision_id']])
+
 
     def test_missing_document_blocks_build(self):
         (self.root / "state/objects" / self.digest).unlink()

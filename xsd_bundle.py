@@ -80,7 +80,12 @@ def _attribute_checks(row, selected, files, local_paths):
         reference=node.get('ref')
         if node.tag!='{'+XS+'}attribute' or not reference:return False
         prefix,_,name=reference.rpartition(':')
-        return node.get('fixed') is not None or (node.nsmap.get(prefix or None,''),name) in fixed_globals
+        # A global attribute from a no-targetNamespace include adopts the
+        # including namespace. Its physical document alone cannot identify all
+        # effective QNames, so include that name in the inexpensive candidate
+        # check; the expanded Schema below selects the actual fixed uses.
+        return (node.get('fixed') is not None or (node.nsmap.get(prefix or None,''),name) in fixed_globals
+                or ('',name) in fixed_globals)
     if not any(affected(node) for _,root in files.values() for node in root.iter()):return {},{}
     archive_bytes=io.BytesIO()
     with zipfile.ZipFile(archive_bytes,'w') as archive:
@@ -88,7 +93,7 @@ def _attribute_checks(row, selected, files, local_paths):
     with zipfile.ZipFile(archive_bytes) as archive:
         tree=Schema(archive,row['schema_path'],row['root']);tree.field(tree.root)
     nodes={}
-    for name,(root,_,_) in tree.files.items():
+    for (name,_namespace),(root,_,_) in tree.documents.items():
         native=[e for e in files[name][1].iter() if isinstance(e.tag,str)]
         nodes.update(zip(root.iter(),native))
     namespace='urn:sedo:attribute-value-checks'
@@ -166,8 +171,9 @@ def _attribute_checks(row, selected, files, local_paths):
             if node in visited:continue
             visited.add(node)
             for child in node.iter():
-                native=nodes.get(child)
-                if native is not None and affected(native):return True
+                if child.tag=='{'+XS+'}attribute' and child.get('ref'):
+                    attribute=tree.resolve(child.get('ref'),child,['attribute'])
+                    if child.get('fixed') is not None or attribute.get('fixed') is not None:return True
                 qname=child.get('type') or child.get('base') or child.get('ref')
                 if not qname:continue
                 kinds=['simpleType','complexType'] if child.get('type') or child.get('base') else [child.tag.rsplit('}',1)[-1]]
@@ -205,6 +211,22 @@ def _prepare(row, selected):
     entry=row['schema_path'];root=files[entry][1]
     if root.get('targetNamespace')!=row.get('namespace') or not any(e.get('name')==row['root'] for e in root.findall('{'+XS+'}element')):
         raise Unavailable('Корень или namespace не соответствует выбранной редакции')
+    reference_targets={};contexts=set()
+    def visit(name,inherited_namespace=None):
+        document=files[name][1]
+        namespace=document.get('targetNamespace') or inherited_namespace
+        if (name,namespace) in contexts:return
+        contexts.add((name,namespace))
+        for reference in document:
+            if reference.tag not in REFERENCES:continue
+            target=_resolve(files,name,reference,namespace)
+            if reference in reference_targets and reference_targets[reference]!=target:
+                raise Unavailable('Неоднозначная зависимость включаемой XSD: '+name)
+            reference_targets[reference]=target
+            visit(target,None if reference.tag=='{'+XS+'}import' else namespace)
+    visit(entry)
+    for name in files:
+        if not any(path==name for path,_namespace in contexts):visit(name)
     local_paths={};original_paths={}
     for i,name in enumerate(files,1):
         basename=re.sub('[^A-Za-z0-9._-]','_',posixpath.basename(name))[:80]
@@ -217,7 +239,7 @@ def _prepare(row, selected):
         changes=[]
         for reference in root:
             if reference.tag not in REFERENCES:continue
-            target=_resolve(files,name,reference,root.get('targetNamespace'))
+            target=reference_targets[reference]
             old=reference.get('schemaLocation');new=posixpath.relpath(local_paths[target],posixpath.dirname(local_paths[name]) or '.')
             reference.set('schemaLocation',new)
             if old!=new:changes.append(dict(kind=etree.QName(reference).localname,before=old,after=new,target_source_path=target))

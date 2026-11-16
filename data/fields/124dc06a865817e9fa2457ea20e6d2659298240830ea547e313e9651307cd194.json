@@ -85,7 +85,8 @@
       "file": "Notifications.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurerInfo",
@@ -136,7 +137,8 @@
       "file": "Notifications.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -161,7 +163,8 @@
       "file": "Notifications.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -218,7 +221,8 @@
       "file": "Notifications.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -277,7 +281,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -306,7 +311,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -335,7 +341,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -354,7 +361,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredWorksSeveralInsurers",
@@ -373,7 +381,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentMethod",
@@ -426,7 +435,8 @@
       "file": "Notifications.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/proactive/type/v01",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "salaryInfo",
@@ -509,7 +519,8 @@
       "file": "Notifications.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:proactive:notifications:v01",
-      "typeFile": "Notifications.xsd"
+      "typeFile": "Notifications.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "salaryByCurrentInsurer",
@@ -565,7 +576,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumGPH",
@@ -593,7 +605,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumOPS-GPH",
@@ -621,7 +634,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "salaryByAllInsurers",
@@ -677,7 +691,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumGPH",
@@ -705,7 +720,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumOPS-GPH",
@@ -733,7 +749,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mobilDaysAmount",
@@ -752,7 +769,8 @@
       "ns": "urn:ru:fss:integration:types:proactive:notifications:v01",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@messageDateTime",
@@ -771,7 +789,8 @@
       "ns": "",
       "file": "Notifications.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

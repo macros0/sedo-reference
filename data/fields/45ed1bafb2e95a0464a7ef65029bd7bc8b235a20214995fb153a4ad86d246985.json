@@ -63,7 +63,8 @@
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "org",
@@ -143,7 +144,8 @@
       "children": [],
       "ns": "",
       "file": "Sedo.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -176,7 +178,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kpp",
@@ -205,7 +208,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ogrnip",
@@ -232,7 +236,8 @@
       "children": [],
       "ns": "",
       "file": "Sedo.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -261,7 +266,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regnum",
@@ -288,7 +294,8 @@
       "children": [],
       "ns": "",
       "file": "Sedo.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -333,7 +340,8 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dateTo",
@@ -352,7 +360,8 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

@@ -50,7 +50,8 @@
       "file": "PaymentState.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/paymentstate/v01",
-      "typeFile": "PaymentState.xsd"
+      "typeFile": "PaymentState.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

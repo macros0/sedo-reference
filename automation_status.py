@@ -183,6 +183,12 @@ def collect_status(publication_run_id=None):
                 legacy[digest] = None
     result = build_status(source, checks, pages, reports, legacy,
                           configured_source=os.environ.get('SEDO_COLLECTOR_SOURCE') or 'sourcecraft')
+    if result['github']['last_successful_publication']['state'] == 'unknown':
+        # The target SHA and the latest successful deployment are independent.
+        # A server-side filter can find a success outside the recent-run window.
+        successful = api('actions/workflows/pages.yml/runs?branch=main&status=success&per_page=1')['workflow_runs']
+        result['github']['last_successful_publication'] = run_info(next(
+            (page for page in successful if run_info(page)['state'] == 'success'), None))
     result['errors'] = errors
     return result
 

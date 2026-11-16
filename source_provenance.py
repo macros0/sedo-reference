@@ -7,9 +7,15 @@ from sync import SITES, sha, write
 
 
 def publish_sources(catalog, state, site):
-    publications = {}
-    for snapshot in sorted((state / "snapshots").glob("*.json")):
-        data = json.loads(snapshot.read_bytes())
+    publications, snapshots = {}, {}
+    history_file, current_file = state / "history.json", state / "current.json"
+    history = json.loads(history_file.read_bytes()) if history_file.exists() else []
+    current = json.loads(current_file.read_bytes())["snapshot"] if current_file.exists() else None
+    # The current pointer can return to a previously seen snapshot. Apply it last
+    # instead of inferring chronology from a content hash or first observation.
+    for key in [*dict.fromkeys(h for h in history if h != current), *([current] if current else [])]:
+        data = json.loads((state / "snapshots" / (key + ".json")).read_bytes())
+        snapshot_publications = {}
         for entry in data.get("entries", []):
             env = entry.get("environment")
             url = entry.get("url", "").split("#")[0]
@@ -21,7 +27,10 @@ def publish_sources(catalog, state, site):
             page = entry.get("source_page") or SITES[env]
             if urlsplit(page).hostname != urlsplit(SITES[env]).hostname:
                 continue
-            publications[(env, url, entry["sha256"])] = page
+            snapshot_publications[(env, url, entry["sha256"])] = page
+        snapshots[key] = snapshot_publications
+        publications.update(snapshot_publications)
+    first_snapshots = {event["revision_id"]: event.get("snapshot") for event in catalog.get("updates", [])}
     for row in catalog["revisions"]:
         row.pop("schema_publication_page", None)
         row.pop("schema_file_download", None)
@@ -33,7 +42,12 @@ def publish_sources(catalog, state, site):
         embedded = "#embedded=" in row.get("archive_url", "") or row.get("schema_source_type") in ("wsdl", "wsdl_bridge")
         resource = row.get("document_url") if embedded else origin
         digest = row.get("document_sha256") if embedded else row.get("archive_sha256")
-        page = publications.get((row["environment"], resource, digest))
+        identity = (row["environment"], resource, digest)
+        # Archived cards cite the publication recorded with their first event.
+        # Current cards prefer the current publication; fallback is the last
+        # confirmed occurrence of these exact bytes and URL.
+        event_sources = snapshots.get(first_snapshots.get(row.get("revision_id")), {})
+        page = (event_sources.get(identity) if not row.get("listed_now", True) else None) or publications.get(identity)
         if page:
             row["schema_publication_page"] = page
         source = state / "objects" / row["archive_sha256"]

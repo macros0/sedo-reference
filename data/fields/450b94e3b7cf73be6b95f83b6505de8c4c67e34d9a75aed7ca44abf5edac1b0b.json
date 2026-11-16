@@ -88,7 +88,8 @@
       "file": "RefundUnemplStatementResult.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
-      "typeFile": "RefundUnemplStatementResult.xsd"
+      "typeFile": "RefundUnemplStatementResult.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "status",
@@ -117,7 +118,8 @@
       "file": "RefundUnemplStatementResult.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
-      "typeFile": "RefundUnemplStatementResult.xsd"
+      "typeFile": "RefundUnemplStatementResult.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "*",
@@ -194,7 +196,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -221,7 +224,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "details",
@@ -248,7 +252,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -277,7 +282,8 @@
       "file": "RefundUnemplStatementResult.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -302,7 +308,8 @@
       "file": "RefundUnemplStatementResult.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@messageDateTime",
@@ -321,7 +328,8 @@
       "ns": "",
       "file": "RefundUnemplStatementResult.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

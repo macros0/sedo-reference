@@ -56,6 +56,22 @@ class OfflineReplayTests(unittest.TestCase):
 
 
 class UpdateAcceptanceTests(unittest.TestCase):
+    def test_archived_tree_does_not_hide_missing_current_mapping(self):
+        snapshot = copy.deepcopy(self.snapshot)
+        old = next(row for row in self.original["revisions"]
+                   if row["environment"] == "prod" and row["number"] == "6" and row["listed_now"])
+        for row in snapshot["entries"]:
+            if row["environment"] == "prod":
+                row["module_matches"] = [match for match in row.get("module_matches", []) if match["number"] != "6"]
+        current = self.execute(snapshot)
+        report = json.loads((self.root / "update-report.json").read_bytes())
+        coverage = json.loads((self.root / "data/schema-coverage.json").read_bytes())
+        self.assertIn(("prod", "6"), {(r["environment"], r["number"]) for r in report["missing_trees"]})
+        self.assertEqual(report["missing_trees"], coverage["missing"])
+        archived = next(row for row in current["revisions"] if row["revision_id"] == old["revision_id"])
+        self.assertFalse(archived["listed_now"])
+        self.assertTrue((self.root / "site/editions" / (old["revision_id"] + ".html")).is_file())
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

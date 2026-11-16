@@ -8,6 +8,9 @@ from schema import Schema
 SEED="https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl"
 BASE=SEED.split("?")[0]
 XS="http://www.w3.org/2001/XMLSchema"
+# These immutable editions introduced RegNumSfr; later contracts may change it.
+ARCHIVED_91_IDS={"7e6f8189b4b21434371ed568a364cdc59848bcbef0fb0cdf1dd68619a5bf5331",
+                 "12e1b7c0fb79734d27c96ac03a875bf71ec04dbd376fdfdad0fb2a61e96ab765"}
 
 class WsdlSourcesTests(unittest.TestCase):
  def test_bridge_restores_same_namespace_include_and_prefers_document_copy(self):
@@ -151,15 +154,39 @@ class WsdlSourcesTests(unittest.TestCase):
   selected=[r for r in catalog["revisions"] if r["number"] in numbers and r.get("schema_source_type")]
   self.assertEqual({r["number"] for r in selected},numbers)
   self.assertEqual({(r["environment"],r["number"]) for r in selected},{(env,n) for env in ("prod","test") for n in numbers})
+  self.assertTrue(ARCHIVED_91_IDS<={r["revision_id"] for r in selected})
   for revision in selected:
-   fields=json.loads((root/"data/fields"/(revision["revision_id"]+".json")).read_bytes())["fields"]
-   self.assertEqual(len(fields),len({f["path"] for f in fields}))
-   self.assertTrue(all(fields[child]["parent"]==i for i,f in enumerate(fields) for child in f["children"]))
-   for source in revision["schema_sources"]:self.assertEqual(sha((root/"state/objects"/source["sha256"]).read_bytes()),source["sha256"])
-   if revision["number"]=="91":
-    codes=[f for f in fields if f["type"]=="org:RegNumSfr"]
-    self.assertEqual(len(codes),2)
-    self.assertTrue(all(f["facets"]==[["length","10"]] for f in codes))
+   self.assert_service_tree(revision,root)
+ def assert_service_tree(self,revision,root):
+  import json
+  fields=json.loads((root/"data/fields"/(revision["revision_id"]+".json")).read_bytes())["fields"]
+  self.assertEqual(len(fields),len({f["path"] for f in fields}))
+  self.assertTrue(all(fields[child]["parent"]==i for i,f in enumerate(fields) for child in f["children"]))
+  for source in revision["schema_sources"]:self.assertEqual(sha((root/"state/objects"/source["sha256"]).read_bytes()),source["sha256"])
+  if revision["revision_id"] in ARCHIVED_91_IDS:
+   codes=[f for f in fields if f["type"]=="org:RegNumSfr"]
+   self.assertEqual(len(codes),2)
+   self.assertTrue(all(f["facets"]==[["length","10"]] for f in codes))
+ def test_service_tree_accepts_new_91_contract_but_protects_archive_and_integrity(self):
+  import json,tempfile
+  from pathlib import Path
+  fields=[dict(path="root",type="",parent=None,children=[1,2]),
+          dict(path="root/a",type="org:RegNumSfr",facets=[["length","11"]],parent=0,children=[]),
+          dict(path="root/b",type="org:RegNumSfr",facets=[["length","11"]],parent=0,children=[])]
+  with tempfile.TemporaryDirectory() as tmp:
+   root=Path(tmp);(root/"data/fields").mkdir(parents=True);(root/"state/objects").mkdir(parents=True)
+   content=b"fixture xsd";digest=sha(content);(root/"state/objects"/digest).write_bytes(content)
+   revision=dict(number="91",revision_id="future-edition",schema_sources=[dict(sha256=digest)])
+   def write(): (root/"data/fields"/(revision["revision_id"]+".json")).write_text(json.dumps(dict(fields=fields)))
+   write();self.assert_service_tree(revision,root)
+   revision["revision_id"]=next(iter(ARCHIVED_91_IDS));write()
+   with self.assertRaises(AssertionError):self.assert_service_tree(revision,root)
+   revision["revision_id"]="future-edition";fields[1]["parent"]=2;write()
+   with self.assertRaises(AssertionError):self.assert_service_tree(revision,root)
+   fields[1]["parent"]=0;fields[2]["path"]=fields[1]["path"];write()
+   with self.assertRaises(AssertionError):self.assert_service_tree(revision,root)
+   fields[2]["path"]="root/b";write();(root/"state/objects"/digest).write_bytes(b"damaged source")
+   with self.assertRaises(AssertionError):self.assert_service_tree(revision,root)
  def test_bridge_preserves_module_and_never_mixes_contours(self):
   support,objects=self.collect(self.bundle());out=io.BytesIO()
   arm=('<xs:schema xmlns:xs="'+XS+'" xmlns:c="urn:common" targetNamespace="urn:arm"><xs:import namespace="urn:common" schemaLocation="../type/Common.xsd"/><xs:element name="arm" type="c:Code"/></xs:schema>').encode()

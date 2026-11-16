@@ -52,7 +52,8 @@
       "file": "Fault.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "faultList",
@@ -125,7 +126,8 @@
       "ns": "http://www.fss.ru/integration/types/fault/v01",
       "file": "Fault.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "code",
@@ -144,7 +146,8 @@
       "ns": "http://www.fss.ru/integration/types/fault/v01",
       "file": "Fault.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -163,7 +166,8 @@
       "ns": "http://www.fss.ru/integration/types/fault/v01",
       "file": "Fault.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

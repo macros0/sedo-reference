@@ -1,16 +1,20 @@
 const {test,expect}=require('@playwright/test');
+const {rowFieldLinks}=require('./catalog-fixtures.cjs');
 test('notices open exact elements and attributes of their own contour',async({page})=>{
  for(const env of ['prod','test']){
   await page.goto('/site/#remarks=1&number=1010&env='+env);
-  const row=page.locator('.review-results tbody tr').filter({hasText:'rowNumber'});
-  const link=row.getByRole('link',{name:/Открыть поле XSD.*rowNumber/});
-  await expect(link).toHaveCount(1);const href=await link.getAttribute('href');
+  const field='notice/benefit/benefitInfo/rowNumber',expected=rowFieldLinks('1010',env,field);
+  const links=page.locator('.review-results').getByRole('link',{name:/Открыть поле XSD.*rowNumber/});
+  await expect(links).toHaveCount(expected.length);expect(expected.length).toBeGreaterThan(0);
+  const hrefs=await links.evaluateAll(nodes=>nodes.map(node=>node.getAttribute('href')));expect(hrefs).toEqual(expected.map(link=>link.href));
+  for(const href of hrefs){
   expect(new URLSearchParams(href.slice(1)).get('env')).toBe(env);
-  await link.click();
+  await page.goto('/site/'+href);
   const card=page.frameLocator('#frame').getByRole('region',{name:'Карточка поля'});
   await expect(card.getByRole('heading',{name:'rowNumber',exact:true})).toBeVisible();
-  await expect(card).toContainText('3');
+  await expect(card.locator('code').first()).toHaveText(field);
   await page.reload();await expect(card.getByRole('heading',{name:'rowNumber',exact:true})).toBeVisible();
+  }
  }
  await page.goto('/site/#remarks=1&number=12210&env=prod');
  await page.locator('.review-results').getByRole('link',{name:/Открыть поле XSD.*@responseOn/}).first().click();

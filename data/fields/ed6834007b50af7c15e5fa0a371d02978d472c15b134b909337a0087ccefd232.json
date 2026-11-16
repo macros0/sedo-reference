@@ -52,7 +52,8 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "recriveID",
@@ -75,7 +76,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "statusGeneral",
@@ -108,7 +110,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorList",
@@ -181,7 +184,8 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorDescription",
@@ -204,7 +208,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "protocol",
@@ -309,7 +314,8 @@
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
-      "typeFile": "NoticeTerminationType_05.xsd"
+      "typeFile": "NoticeTerminationType_05.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorList",
@@ -382,7 +388,8 @@
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "errorDescription",
@@ -405,7 +412,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/pvso/noticetermination/v01",
       "file": "NoticeTerminationType_05.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

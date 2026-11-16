@@ -112,7 +112,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -141,7 +142,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -170,7 +172,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -190,7 +193,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -219,7 +223,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -248,7 +253,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fired",
@@ -293,7 +299,8 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractCancelDate",
@@ -312,7 +319,8 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -341,7 +349,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "identityDocument",
@@ -426,7 +435,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -449,7 +459,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -468,7 +479,8 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "whoIssued",
@@ -493,7 +505,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "tempIdentDocType",
@@ -550,7 +563,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -569,7 +583,8 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "whoIssued",
@@ -594,7 +609,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "expirationDate",
@@ -613,7 +629,8 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "otherIdentDocType",
@@ -763,7 +780,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "series",
@@ -788,7 +806,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -813,7 +832,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "expirationDate",
@@ -832,7 +852,8 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "residenceDocumentType",
@@ -915,7 +936,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -940,7 +962,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "passportIssueDate",
@@ -959,7 +982,8 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "tempResidencePermit",
@@ -1014,7 +1038,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
-      "typeFile": "InsuredPerson.xsd"
+      "typeFile": "InsuredPerson.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -1039,7 +1064,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -1058,7 +1084,8 @@
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "otherInfo",
@@ -1122,7 +1149,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:dic:SpecialZone:v01",
-      "typeFile": "SpecialZone.xsd"
+      "typeFile": "SpecialZone.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "livingPlace",
@@ -1155,7 +1183,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "urn:ru:fss:integration:types:dic:SpecialZone:v01",
-      "typeFile": "SpecialZone.xsd"
+      "typeFile": "SpecialZone.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "causeRadiation",
@@ -1192,7 +1221,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/dic/CauseRadiationExposure/v01",
-      "typeFile": "CauseRadiationExposure.xsd"
+      "typeFile": "CauseRadiationExposure.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regAddress",
@@ -1283,7 +1313,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "guid",
@@ -1308,7 +1339,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "house",
@@ -1333,7 +1365,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "building",
@@ -1358,7 +1391,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "flat",
@@ -1383,7 +1417,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "postalCode",
@@ -1406,7 +1441,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "methodReceivePayment",
@@ -1500,7 +1536,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "bik",
@@ -1525,7 +1562,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accountNum",
@@ -1558,7 +1596,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "cardMir",
@@ -1583,7 +1622,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "otherOrg",
@@ -1652,7 +1692,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "bik",
@@ -1677,7 +1718,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accountNum",
@@ -1710,7 +1752,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personalOrgAccount",
@@ -1733,7 +1776,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personalInsuredAccount",
@@ -1756,7 +1800,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kbk",
@@ -1779,7 +1824,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumCorrectionalFacility",
@@ -1802,7 +1848,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFRCorrectionalFacility",
@@ -1825,7 +1872,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "innCorrectionalFacility",
@@ -1848,7 +1896,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kppCorrectionalFacility",
@@ -1871,7 +1920,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "currentFiasAddress",
@@ -1936,7 +1986,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "guid",
@@ -1961,7 +2012,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "house",
@@ -1986,7 +2038,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "building",
@@ -2011,7 +2064,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "flat",
@@ -2036,7 +2090,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/common/v01",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "postalCode",
@@ -2059,7 +2114,8 @@
       "children": [],
       "ns": "http://www.fss.ru/integration/types/common/v01",
       "file": "Common.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "isNotWorker",
@@ -2080,7 +2136,8 @@
       "flags": {
         "fixed": "true"
       },
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

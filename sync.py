@@ -145,7 +145,7 @@ def inspect_file(b,kind):
                     r=ET.fromstring(raw)
                     result.append(dict(path=n,namespace=r.get("targetNamespace"),sha256=sha(raw),
                          dependencies=[e.get("schemaLocation") for e in r if e.tag in (XS+"import",XS+"include")],
-                         imports=[dict(location=e.get("schemaLocation"),namespace=e.get("namespace") if e.tag==XS+"import" else r.get("targetNamespace")) for e in r if e.tag in (XS+"import",XS+"include")],
+                         imports=[dict(location=e.get("schemaLocation"),namespace=e.get("namespace") if e.tag==XS+"import" else r.get("targetNamespace"),**({"kind":"include"} if e.tag==XS+"include" else {})) for e in r if e.tag in (XS+"import",XS+"include")],
                          roots=[dict(name=e.get("name"),description=norm(" ".join(t for a in e.findall(XS+"annotation/"+XS+"documentation") for t in a.itertext()))) for e in r.findall(XS+"element")]))
             return {"schemas":result}
         doc=xml("word/document.xml")
@@ -180,6 +180,26 @@ def inspect_file(b,kind):
             bindings = document_bindings(doc)
             if bindings: info["module_bindings"] = bindings
         return info
+
+def match_modules(base, entries, supports, blob):
+    """Match documents with one explicitly selected set of contour libraries."""
+    from module_xsd import match_document
+    from wsdl_sources import bridge
+    for r in entries:
+        if not r.get("module_bindings"):continue
+        read_object=lambda h:(base/"objects"/h).read_bytes()
+        matches,issues=match_document(r,entries,read_object)
+        if {b["number"] for b in r["module_bindings"]}-{m["number"] for m in matches}:
+            archives=[]
+            for support in supports:
+                for archive in bridge(r,support,read_object):
+                    blob(archive.pop("content"));archives.append(archive)
+            if archives:
+                r["wsdl_archives"]=archives
+                matches,issues=match_document(r,entries,read_object)
+        if matches:r["module_matches"]=matches
+        if issues:r.setdefault("schema_diagnostics",[]).extend(issues)
+
 
 def sync(base, *, wsdl_entries=None):
     """Collect sources, optionally replaying the recorded WSDL observations offline."""
@@ -249,7 +269,7 @@ def sync(base, *, wsdl_entries=None):
                 futures[pool.submit(fetch, r)] = r
     # Only published, explicitly classified service hosts can provide a contour's
     # transport library. A test URL on the production page remains a test URL.
-    from wsdl_sources import discover, collect, bridge
+    from wsdl_sources import discover, collect
     previous={}
     pointer=base/"current.json"
     if pointer.exists():
@@ -280,21 +300,7 @@ def sync(base, *, wsdl_entries=None):
             if cached and (base/"objects"/cached["sha256"]).exists():
                 support=dict(cached,retrieval_status="cached")
                 entries.append(support);supports.append(support)
-    from module_xsd import match_document
-    for r in entries:
-        if not r.get("module_bindings"):continue
-        read_object=lambda h:(base/"objects"/h).read_bytes()
-        matches,issues=match_document(r,entries,read_object)
-        if {b["number"] for b in r["module_bindings"]}-{m["number"] for m in matches}:
-            archives=[]
-            for support in supports:
-                for archive in bridge(r,support,read_object):
-                    blob(archive.pop("content"));archives.append(archive)
-            if archives:
-                r["wsdl_archives"]=archives
-                matches,issues=match_document(r,entries,read_object)
-        if matches:r["module_matches"]=matches
-        if issues:r.setdefault("schema_diagnostics",[]).extend(issues)
+    match_modules(base, entries, supports, blob)
     result=dict(format=1,pages=pages,entries=entries)
     payload=encode(result);digest=sha(payload);write(base/"snapshots"/(digest+".json"),payload)
     pointer=base/"current.json"
@@ -310,13 +316,21 @@ def sync(base, *, wsdl_entries=None):
     report=dict(observed_at=datetime.now(timezone.utc).isoformat(),snapshot=digest,previous=previous.get("snapshot"),files=len(tasks),errors=errors,diff=diff)
     write(base/"last-run.json",encode(report))
     if errors: raise ValueError(f"{len(errors)} file errors, see last-run.json")
+    from collector_snapshots import replay_history
+    replayed, processed = replay_history(base, result, blob) if wsdl_entries is None else ([], None)
+    if processed is not None:
+        report["collector_replay"] = [dict(environment=env, content_id=key, **record)
+                                      for env, records in processed["manifests"].items() for key, record in records.items()]
+        write(base/"last-run.json", encode(report))
     record_observation(base, digest, report["observed_at"])
     history_file=base/"history.json"
     history=json.loads(history_file.read_bytes()) if history_file.exists() else []
-    for key in (previous.get("snapshot"),digest):
+    for key in (previous.get("snapshot"), *replayed, digest):
         if key and key not in history: history.append(key)
     write(history_file,encode(history))
     write(pointer,encode({"snapshot":digest}))
+    if processed is not None:
+        write(base/"collector/processed.json",encode(processed))
     print(f"{len(entries)} references, {len(tasks)} downloaded files; {digest}")
 if __name__=="__main__":
     p=argparse.ArgumentParser(description=__doc__);p.add_argument("--state",type=Path,default=Path("state"))

@@ -15,6 +15,16 @@ async function validate(xml,custom=pack,source){const w=new Worker(workerSource,
  assert.match(syntax.errors[0].message,/\^/);
  assert.equal(core.errors(Array.from({length:40},(_,i)=>'input.xml:'+i+': parser error : bad\n<r>\n^').join('\n')).length,30);
  let r=await validate('<request><code>ABC</code></request>');assert.equal(r.valid,true,JSON.stringify(r));
+ const reserved=await validate('<request\n xmlns:xml="urn:wrong"><code>ABC</code></request>');
+ assert.equal(reserved.valid,false,'zero-exit libxml2 namespace errors must reject XML');
+ assert.ok(reserved.errors.some(e=>e.line===2&&/xml namespace prefix mapped to wrong URI/.test(e.message)),JSON.stringify(reserved));
+ assert.equal((await validate('<request xmlns:xml="http://www.w3.org/XML/1998/namespace"><code>ABC</code></request>')).valid,true);
+ const namespacePack=JSON.parse(require('node:zlib').gunzipSync(fs.readFileSync(path.join(root,'site/schemas/0586b2cc1dc80842ecbd807edebf4875f43cc4ca4ec298670e1c09cf2a3f0879.validation.json.gz'))));
+ const namespaceXml='<'+namespacePack.root+' xmlns="'+namespacePack.namespace+'"\n xmlns:xml="http://www.w3.org/XML/1998/namespace"/>';
+ assert.equal((await validate(namespaceXml,namespacePack)).valid,true,'historical message 11 accepts its valid XML');
+ const namespaceResult=await validate(namespaceXml.replace('http://www.w3.org/XML/1998/namespace','urn:wrong'),namespacePack);
+ assert.equal(namespaceResult.valid,false);assert.equal(namespaceResult.errors[0].line,2);
+ assert.match(require('../web/validation-messages.js').explain(namespaceResult.errors[0].message),/Префикс xml зарезервирован/);
  for(const declaration of ['<?xml version="1.0" encoding=""?>','<?xml encoding="UTF-8" version="1.0"?>','<?xml version="1.0" encoding="8UTF"?>','<?xml version="1.0" encoding="UTF-8" encoding="UTF-8"?>','<?xml version="1.0" standalone="maybe"?>']){
   const malformed=await validate(declaration+'<request><code>ABC</code></request>');assert.equal(malformed.valid,false,'file declaration must be validated before transcoding: '+declaration);
  }

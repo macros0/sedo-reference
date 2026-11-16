@@ -2,6 +2,12 @@ const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("n
 const {compare}=require("../web/compare-core.js");
 function field(name,changes={}){return {name,path:"root/"+name,parent:0,children:[],kind:"element",type:"xs:string",base:"xs:string",min:"0",max:"1",group:"",ns:"urn:test",flags:{},facets:[],values:[],doc:"Описание",...changes}}
 const left=[field("old"),field("changed")],right=[field("added"),field("changed",{min:"1",facets:[["maxLength","12"]]})];
+assert.equal(compare([field("q",{type:"old:Code",typeNs:"urn:types",base:"xs:string",baseNs:"http://www.w3.org/2001/XMLSchema"})],[field("q",{type:"new:Code",typeNs:"urn:types",base:"xsd:string",baseNs:"http://www.w3.org/2001/XMLSchema"})]).length,0);
+const namespaceChange=compare([field("q",{type:"types:Code",typeNs:"urn:old"})],[field("q",{type:"types:Code",typeNs:"urn:new"})]);
+assert.deepEqual(namespaceChange[0].changes.map(c=>c.key),["type"]);
+assert.notEqual(namespaceChange[0].changes[0].before,namespaceChange[0].changes[0].after,"URI change stays visible to journal and Excel consumers");
+assert.equal(compare([field("q",{type:"types:Code"})],[field("q",{type:"types:Code",typeNs:"urn:new"})]).length,0,"legacy fields without QName metadata remain compatible");
+assert.equal(compare([field("q",{alternatives:[{type:"old:Code",typeNs:"urn:t",base:"xs:string"}]})],[field("q",{alternatives:[{type:"new:Code",typeNs:"urn:t",base:"xs:string"}]})]).length,0);
 let diff=compare(left,right);
 assert.deepEqual(diff.map(x=>[x.path,x.status]),[["root/added","added"],["root/changed","changed"],["root/old","removed"]]);
 assert.deepEqual(diff[1].changes.map(c=>c.key),["min","facets"]);

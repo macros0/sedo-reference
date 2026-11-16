@@ -56,7 +56,8 @@
       "file": "InsuredPerson.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/person/v02",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "protocol",
@@ -128,7 +129,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "message",
@@ -146,7 +148,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "description",
@@ -164,7 +167,8 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:rpu:InsuredPerson:v01",
       "file": "InsuredPerson.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

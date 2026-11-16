@@ -49,7 +49,8 @@
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveExpireNotice:v3.0",
       "file": "ProactiveExpireNotice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -78,7 +79,8 @@
       "file": "ProactiveExpireNotice.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "UUID",
@@ -103,7 +105,8 @@
       "file": "ProactiveExpireNotice.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "date",
@@ -122,7 +125,8 @@
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveExpireNotice:v3.0",
       "file": "ProactiveExpireNotice.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -151,7 +155,8 @@
       "file": "ProactiveExpireNotice.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }
