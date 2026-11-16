@@ -30,6 +30,23 @@ class AutomationStatusTests(unittest.TestCase):
             if matches:
                 self.assertEqual(result["last_successful_publication"]["run_id"], 9)
 
+    def test_later_standalone_pages_is_visible_after_cancelled_check(self):
+        check=run(1,conclusion='cancelled',created='2026-11-13T08:00:00Z')
+        for status,conclusion,state in [('completed','success','success'),('completed','failure','failure'),('in_progress',None,'processing')]:
+            page=run(2,sha='b'*40,status=status,conclusion=conclusion,created='2026-11-13T09:00:00Z')
+            result=build_status({},[check],[page],{}, {})
+            self.assertEqual(result['github']['check']['state'],'cancelled')
+            self.assertIsNone(result['github']['versions']['count'])
+            self.assertEqual(result['github']['publication']['state'],state)
+            self.assertEqual(result['github']['publication']['run_id'],2)
+
+    def test_cancelled_check_keeps_target_and_older_page_unconfirmed(self):
+        check=run(1,conclusion='cancelled')
+        for page,target in [(run(2,created='2026-11-13T07:00:00Z'),None),
+                            (run(2,sha='b'*40,created='2026-11-13T09:00:00Z'),dict(update_run_id=1,head_sha='a'*40))]:
+            result=build_status({},[check],[page],{'publication-target.json':target}, {})
+            self.assertEqual(result['github']['publication']['state'],'not_published')
+
     def test_published_target_is_found_after_ten_newer_runs(self):
         from automation_status import collect_status
         from unittest.mock import patch
