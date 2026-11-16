@@ -66,6 +66,13 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None, conf
              legacy_catalogs.get(p.get('head_sha')) == report['checked_at'])), None)
         if matched:
             publication = run_info(matched)
+    # A cancelled/failed check without a deployment target has no candidate to
+    # track. A later independent Pages run still has its own actual outcome.
+    has_target = check and str(target.get('update_run_id')) == str(check['id']) and target.get('head_sha')
+    if check and check_info['state'] in ('failure', 'cancelled') and publication['state'] == 'not_published' and not has_target:
+        independent = next((page for page in pages if page.get('created_at', '') > check.get('created_at', '')), None)
+        if independent:
+            publication = run_info(independent)
     previous = next((p for p in pages if run_info(p)['state'] == 'success'), None)
     return dict(format=1, generated_at=now or utcnow(), collector_source=collector_source, sourcecraft=sc,
                 github=dict(check=check_info, versions=versions, publication=publication,
