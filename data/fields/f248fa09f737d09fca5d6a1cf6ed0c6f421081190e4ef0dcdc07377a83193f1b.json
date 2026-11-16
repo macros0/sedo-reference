@@ -285,7 +285,10 @@
       ],
       "ns": "http://www.fss.ru/integration/types/DocumentType/v01",
       "file": "DocumentType.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "empty"
+      ]
     },
     {
       "name": "@typeDocument",

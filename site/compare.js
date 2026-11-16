@@ -97,7 +97,8 @@ async function renderComparison(m,params,applied=false,view=null){
   const count=node("p","meta");count.setAttribute("role","status");const list=node("div","differences");section.append(count,list);
   function draw(){
    const terms=normalize(search.value).split(/\s+/).filter(Boolean);
-   const visible=results.filter(r=>(!kind.value||r.status===kind.value)&&terms.every(t=>normalize([r.path,r.beforePath,r.afterPath,r.comment,r.before?.doc,r.after?.doc,...r.changes.map(c=>c.label+" "+formatDifference(c.before)+" "+formatDifference(c.after))].join(" ")).includes(t)));
+   const fieldText=f=>f?[f.type,f.base,f.doc,f.group,f.min,f.max,f.contentModel?.[0],...(f.facets||[]).flat(),...Object.entries(f.flags||{}).flat(),...(f.values||[]).flat(),...(f.alternatives||[]).map(fieldText)].join(" "):"";
+   const visible=results.filter(r=>(!kind.value||r.status===kind.value)&&terms.every(t=>normalize([r.path,r.beforePath,r.afterPath,r.comment,fieldText(r.before),fieldText(r.after),...r.changes.map(c=>c.label+" "+formatDifference(c.before)+" "+formatDifference(c.after))].join(" ")).includes(t)));
    count.textContent="Показано изменений · "+visible.length;list.replaceChildren();
    for(const r of visible){
     const card=node("article","difference "+r.status),head=node("div","difference-head");head.append(node("span","badge",({added:"Добавлено",removed:"Удалено",changed:"Изменено",mapped:"Сопоставлено без изменений"})[r.status]),node("code","",r.manual&&r.beforePath!==r.afterPath?r.beforePath+" → "+r.afterPath:r.path));if(r.manual)head.append(node("span","badge mapped","Ручное соответствие"));card.append(head);if(r.comment)card.append(node("p","mapping-comment",r.comment));

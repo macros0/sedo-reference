@@ -17,7 +17,10 @@
       "children": [],
       "ns": "urn:ru:fss:integration:types:mchd:v01",
       "file": "PowerOfAttorney.xsd",
-      "flags": {}
+      "flags": {},
+      "contentModel": [
+        "empty"
+      ]
     }
   ]
 }

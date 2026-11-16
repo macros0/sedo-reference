@@ -18518,7 +18518,7 @@
       "min": "0",
       "max": "1",
       "type": "",
-      "base": "",
+      "base": "xs:anyType",
       "facets": [],
       "values": [],
       "children": [],
@@ -25429,7 +25429,10 @@
       "file": "Benefit6.xsd",
       "flags": {
         "nillable": "true"
-      }
+      },
+      "contentModel": [
+        "empty"
+      ]
     },
     {
       "name": "@editable",

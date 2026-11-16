@@ -149,8 +149,9 @@ function replacementNotice(m,env,compact=false){
 function renderMessages(){
  const terms=normalize($("message-query").value.trim()).split(/\s+/).filter(Boolean),env=$("catalog-env").value;
  const candidates=[...messages.values()].filter(m=>{
-  if(env&&![...m.rows,...m.revisions].some(r=>r.environment===env))return false;
-  const text=normalize([m.number,...m.titles,...m.modules,...m.rows.map(r=>r.description)].join(" "));
+  const rows=[...m.rows,...m.revisions].filter(r=>!env||r.environment===env);
+  if(!rows.length)return false;
+  const text=normalize([m.number,...rows.flatMap(r=>[r.title,r.module,r.description])].join(" "));
   return terms.every(t=>text.includes(t));
  });
  const onlyCurrent=$('catalog-current-only').checked;

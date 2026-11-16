@@ -52,7 +52,7 @@
       "min": "1",
       "max": "unbounded",
       "type": "",
-      "base": "",
+      "base": "xs:anyType",
       "facets": [],
       "values": [],
       "children": [],
