@@ -78,6 +78,8 @@ jobs:
           python auto_update.py
           python verify.py
           node tests/test_browser_validation.cjs --all-editions
+      - name: Test generated candidate invariants
+        run: python -m unittest discover -s tests -q
       - name: Check candidate in Chromium before saving
         run: npm run test:browser
       - name: Save browser test report

@@ -64,7 +64,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:vnim:notice:v3.0",
-      "typeFile": "Notice.xsd"
+      "typeFile": "Notice.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -117,7 +118,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurerInfo",
@@ -170,7 +172,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "informationResponse",
@@ -315,7 +318,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accountNum",
@@ -344,7 +348,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "cardMir",
@@ -377,7 +382,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "otherOrg",
@@ -444,7 +450,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "bik",
@@ -473,7 +480,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accountNum",
@@ -502,7 +510,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personalOrgAccount",
@@ -531,7 +540,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "personalInsuredAccount",
@@ -560,7 +570,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kbk",
@@ -589,7 +600,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFRCorrectionalFacility",
@@ -618,7 +630,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "postalAddress",
@@ -718,7 +731,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "guid",
@@ -743,7 +757,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "house",
@@ -772,7 +787,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "stroenie",
@@ -801,7 +817,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "building",
@@ -830,7 +847,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "flat",
@@ -859,7 +877,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "postalCode",
@@ -888,7 +907,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "foreignAddress",
@@ -917,7 +937,8 @@
       "file": "Common.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -1002,7 +1023,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -1031,7 +1053,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -1060,7 +1083,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -1079,7 +1103,8 @@
       "ns": "",
       "file": "NoticeResponse.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noInformation",
@@ -1104,7 +1129,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refusal",
@@ -1129,7 +1155,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "responseWillBeSentNewDoc",
@@ -1154,7 +1181,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "note",
@@ -1183,7 +1211,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:vnim:notice:response:v3.0",
-      "typeFile": "NoticeResponse.xsd"
+      "typeFile": "NoticeResponse.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "senderInfo",
@@ -1272,7 +1301,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -1301,7 +1331,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -1330,7 +1361,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "email",
@@ -1363,7 +1395,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "phoneNumber",
@@ -1392,7 +1425,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -1421,7 +1455,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@responseOn",
@@ -1446,7 +1481,8 @@
       "file": "NoticeResponse.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

@@ -8,7 +8,26 @@ const canonical=value=>{
 };
 const stable=value=>JSON.stringify(canonical(value));
 const sorted=rows=>[...(rows||[])].sort((a,b)=>stable(a).localeCompare(stable(b)));
-const alternatives=rows=>sorted((rows||[]).map(r=>({type:r.type||"",base:r.base||"",flags:r.flags||{},facets:sorted(r.facets),values:sorted(r.values),alternatives:alternatives(r.alternatives)})));
+const lexicalType=value=>(value||"").replace(/^(?:xs|xsd):/,"{http://www.w3.org/2001/XMLSchema}");
+function sameType(a,b,key){
+ const left=a[key]||"",right=b[key]||"",ns=key+"Ns";
+ // Older trees have lexical QNames only. Use their original comparison until
+ // both sides carry namespace metadata; never infer a custom prefix's URI.
+ if(Object.hasOwn(a,ns)&&Object.hasOwn(b,ns))return a[ns]===b[ns]&&left.split(":").at(-1)===right.split(":").at(-1);
+ return lexicalType(left)===lexicalType(right);
+}
+const typeLabel=(f,key)=>f[key]?(f[key]+(Object.hasOwn(f,key+"Ns")?" ("+f[key+"Ns"]+")":"")):"";
+const alternatives=rows=>sorted((rows||[]).map(r=>({type:typeLabel(r,"type"),base:typeLabel(r,"base"),flags:r.flags||{},facets:sorted(r.facets),values:sorted(r.values),alternatives:alternatives(r.alternatives)})));
+function sameAlternatives(left=[],right=[]){
+ if(left.length!==right.length)return false;
+ const remaining=[...right];
+ for(const a of left){
+  const index=remaining.findIndex(b=>sameType(a,b,"type")&&sameType(a,b,"base")&&stable(a.flags||{})===stable(b.flags||{})&&stable(sorted(a.facets))===stable(sorted(b.facets))&&stable(sorted(a.values))===stable(sorted(b.values))&&sameAlternatives(a.alternatives,b.alternatives));
+  if(index<0)return false;
+  remaining.splice(index,1);
+ }
+ return true;
+}
 const properties=[
  ["kind","Вид узла",f=>f.kind],
  ["type","Тип",f=>f.type||""],
@@ -62,12 +81,17 @@ function describeModel(model){
 }
 function differences(before,after){
  const changes=properties.filter(([key,,get])=>{
+  if(key==="type"||key==="base")return !sameType(before,after,key);
+  if(key==="alternatives")return !sameAlternatives(before.alternatives,after.alternatives);
   if(key==="valueDescriptions"){
    const common=(f,other)=>sorted((f.values||[]).filter(([v])=>(other.values||[]).some(([w])=>v===w)));
    return stable(common(before,after))!==stable(common(after,before));
   }
   return stable(get(before))!==stable(get(after));
- }).map(([key,label,get])=>({key,label,before:get(before),after:get(after)}));
+ }).map(([key,label,get])=>{
+  const clarify=(key==="type"||key==="base")&&get(before)===get(after);
+  return {key,label,before:clarify?typeLabel(before,key):get(before),after:clarify?typeLabel(after,key):get(after)};
+ });
  if(before.contentModel&&after.contentModel){
   const left=commonModel(before.contentModel,modelNames(after.contentModel));
   const right=commonModel(after.contentModel,modelNames(before.contentModel));

@@ -78,7 +78,8 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noticeNumber",
@@ -97,7 +98,8 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "moData",
@@ -154,7 +156,8 @@
       "file": "inline-1.xsd",
       "flags": {},
       "typeNs": "",
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ogrn",
@@ -179,7 +182,8 @@
       "file": "inline-1.xsd",
       "flags": {},
       "typeNs": "",
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "moId",
@@ -204,7 +208,8 @@
       "file": "inline-1.xsd",
       "flags": {},
       "typeNs": "",
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lnData",
@@ -253,7 +258,8 @@
       "file": "inline-1.xsd",
       "flags": {},
       "typeNs": "",
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "senderData",
@@ -302,7 +308,8 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "employeeRole",
@@ -321,7 +328,8 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "phone",
@@ -340,7 +348,8 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "tofName",
@@ -359,7 +368,8 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "signatoryData",
@@ -404,7 +414,8 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "signatoryRole",
@@ -423,7 +434,8 @@
       "ns": "",
       "file": "inline-1.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fixData",
@@ -476,7 +488,8 @@
       "file": "inline-1.xsd",
       "flags": {},
       "typeNs": "",
-      "typeFile": "inline-1.xsd"
+      "typeFile": "inline-1.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

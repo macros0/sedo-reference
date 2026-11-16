@@ -94,7 +94,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefitInfo",
@@ -215,7 +216,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "category",
@@ -272,7 +274,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
-      "typeFile": "InsuredCategories.xsd"
+      "typeFile": "InsuredCategories.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lnNumber",
@@ -301,7 +304,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "changeYears",
@@ -356,7 +360,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsInfo",
@@ -457,7 +462,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -476,7 +482,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -545,7 +552,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -564,7 +572,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerAndGPHcontract",
@@ -661,7 +670,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -680,7 +690,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -699,7 +710,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit2",
@@ -788,7 +800,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "category",
@@ -845,7 +858,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
-      "typeFile": "InsuredCategories.xsd"
+      "typeFile": "InsuredCategories.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lnNumber",
@@ -874,7 +888,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "changeYears",
@@ -929,7 +944,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsInfo",
@@ -978,7 +994,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -1049,7 +1066,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -1068,7 +1086,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerAndGPHcontract",
@@ -1087,7 +1106,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -1134,7 +1154,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -1153,7 +1174,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit4",
@@ -1244,7 +1266,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "category",
@@ -1301,7 +1324,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
-      "typeFile": "InsuredCategories.xsd"
+      "typeFile": "InsuredCategories.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -1320,7 +1344,8 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsInfo",
@@ -1369,7 +1394,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -1388,7 +1414,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerAndGPHcontract",
@@ -1407,7 +1434,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childInfo",
@@ -1468,7 +1496,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -1542,7 +1571,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noLastName",
@@ -1567,7 +1597,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -1596,7 +1627,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noFirstName",
@@ -1621,7 +1653,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -1650,7 +1683,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noMiddleName",
@@ -1675,7 +1709,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -1694,7 +1729,8 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -1723,7 +1759,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childRelType",
@@ -1760,7 +1797,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "baseDocuments",
@@ -1873,7 +1911,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -1892,7 +1931,8 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refType",
@@ -1923,7 +1963,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthRecord",
@@ -1974,7 +2015,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -1992,7 +2034,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthRecord",
@@ -2043,7 +2086,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -2061,7 +2105,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDocOtherCountry",
@@ -2122,7 +2167,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -2151,7 +2197,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -2169,7 +2216,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "country",
@@ -3202,7 +3250,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:dic:OKSM:v3.0",
-      "typeFile": "OKSM.xsd"
+      "typeFile": "OKSM.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit5",
@@ -3297,7 +3346,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "category",
@@ -3354,7 +3404,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
-      "typeFile": "InsuredCategories.xsd"
+      "typeFile": "InsuredCategories.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -3373,7 +3424,8 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "changeYears",
@@ -3428,7 +3480,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsInfo",
@@ -3477,7 +3530,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -3548,7 +3602,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -3567,7 +3622,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerAndGPHcontract",
@@ -3586,7 +3642,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "period",
@@ -3633,7 +3690,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -3652,7 +3710,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childInfo",
@@ -3713,7 +3772,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -3787,7 +3847,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noLastName",
@@ -3812,7 +3873,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -3841,7 +3903,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noFirstName",
@@ -3866,7 +3929,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -3895,7 +3959,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noMiddleName",
@@ -3920,7 +3985,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -3939,7 +4005,8 @@
       "ns": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
       "file": "EventLife.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -3968,7 +4035,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childRelType",
@@ -4005,7 +4073,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "baseDocuments",
@@ -4095,7 +4164,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -4124,7 +4194,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -4143,7 +4214,8 @@
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthRecord",
@@ -4194,7 +4266,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -4212,7 +4285,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDocOtherCountry",
@@ -4273,7 +4347,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -4302,7 +4377,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -4320,7 +4396,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:types:person:v3.0",
       "file": "Person.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "country",
@@ -5353,7 +5430,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:dic:OKSM:v3.0",
-      "typeFile": "OKSM.xsd"
+      "typeFile": "OKSM.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "benefit6",
@@ -5440,7 +5518,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "category",
@@ -5497,7 +5576,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:dic:insuredCategories:v3.0",
-      "typeFile": "InsuredCategories.xsd"
+      "typeFile": "InsuredCategories.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lnNumber",
@@ -5526,7 +5606,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "changeYears",
@@ -5581,7 +5662,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractsInfo",
@@ -5682,7 +5764,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -5701,7 +5784,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -5772,7 +5856,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -5791,7 +5876,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHinsurancePaymentObligation",
@@ -5816,7 +5902,8 @@
       "file": "Proactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerAndGPHcontract",
@@ -5913,7 +6000,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "end",
@@ -5932,7 +6020,8 @@
       "ns": "urn:ru:ecp:integration:types:common:v3.0",
       "file": "Common.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "GPHcontract",
@@ -5951,7 +6040,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "recalculationFlag",
@@ -5976,7 +6066,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "recalculation",
@@ -6025,7 +6116,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:proactive:eventLife:v3.0",
-      "typeFile": "EventLife.xsd"
+      "typeFile": "EventLife.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "notice",
@@ -6082,7 +6174,8 @@
       "file": "Proactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "date",
@@ -6101,7 +6194,8 @@
       "ns": "urn:ru:ecp:integration:types:proactive:type:v3.0",
       "file": "Proactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -6130,7 +6224,8 @@
       "file": "EventLife.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

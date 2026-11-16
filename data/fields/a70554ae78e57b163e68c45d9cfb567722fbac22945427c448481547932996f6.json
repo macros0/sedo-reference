@@ -52,7 +52,8 @@
       "children": [],
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "appealBody",
@@ -75,7 +76,8 @@
       "children": [],
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "appealFile",
@@ -122,7 +124,8 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fileName",
@@ -141,7 +144,8 @@
       "ns": "",
       "file": "SedoArm_ЕЦП.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

@@ -85,7 +85,8 @@
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insuredInfo",
@@ -138,7 +139,8 @@
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childInfo",
@@ -195,7 +197,8 @@
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -269,7 +272,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noLastName",
@@ -294,7 +298,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -323,7 +328,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noFirstName",
@@ -348,7 +354,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -377,7 +384,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noMiddleName",
@@ -402,7 +410,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -421,7 +430,8 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "terminationInfo",
@@ -482,7 +492,8 @@
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0",
-      "typeFile": "NoticeTermination05Request.xsd"
+      "typeFile": "NoticeTermination05Request.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidType",
@@ -521,7 +532,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidTypeInfo",
@@ -548,7 +560,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidDtEx",
@@ -567,7 +580,8 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidDoc",
@@ -594,7 +608,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidNo",
@@ -621,7 +636,8 @@
       "children": [],
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "holidDt",
@@ -640,7 +656,8 @@
       "ns": "",
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "senderInfo",
@@ -744,7 +761,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noLastName",
@@ -769,7 +787,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -798,7 +817,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noFirstName",
@@ -823,7 +843,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -852,7 +873,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noMiddleName",
@@ -877,7 +899,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "email",
@@ -910,7 +933,8 @@
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "phoneNumber",
@@ -939,7 +963,8 @@
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -968,7 +993,8 @@
       "file": "NoticeTermination05Request.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

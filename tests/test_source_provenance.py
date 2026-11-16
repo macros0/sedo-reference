@@ -31,6 +31,8 @@ class ProvenanceTests(unittest.TestCase):
                                  schema_path="eln-xsd/xsd/v01/eln/Notice.xsd",
                                  dependencies=[["../type/Common.xsd",sha(raw+b"\n")]]))
             write(state/"snapshots"/"one.json",encode(dict(entries=entries)))
+            write(state/"history.json",encode(["one"]))
+            write(state/"current.json",encode(dict(snapshot="one")))
             publish_sources(dict(revisions=rows),state,root/"site")
             for row,entry in zip(rows,entries):
                 self.assertEqual(row["schema_publication_page"],entry["source_page"])
@@ -47,3 +49,33 @@ class ProvenanceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)
             publish_sources(dict(revisions=[dict(status="document_only")]),root,root/"site")
+
+    def test_only_confirmed_snapshots_and_pointer_determine_publication_page(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            state = root / "state"
+            data = io.BytesIO()
+            with zipfile.ZipFile(data, "w") as bundle:
+                bundle.writestr("main.xsd", b"schema")
+            digest = sha(data.getvalue())
+            write(state / "objects" / digest, data.getvalue())
+            url = "https://lk.sfr.gov.ru/specs_sedo/schemas.zip"
+            def snapshot(key, page):
+                write(state / "snapshots" / (key + ".json"), encode(dict(entries=[
+                    dict(environment="prod", url=url, sha256=digest, source_page=page)])))
+            old, new = "https://lk.sfr.gov.ru/sedo.html", "https://lk.sfr.gov.ru/prab.html"
+            snapshot("z-old", old)
+            snapshot("a-new", new)
+            snapshot("zz-unconfirmed", "https://lk.sfr.gov.ru/eln.html")
+            write(state / "history.json", encode(["z-old", "a-new"]))
+            write(state / "current.json", encode(dict(snapshot="a-new")))
+            row = dict(status="matched", environment="prod", revision_id="current", listed_now=True,
+                       archive_url=url, archive_sha256=digest, schema_path="main.xsd")
+            archived = dict(row, revision_id="archive", listed_now=False)
+            catalog = dict(revisions=[row, archived], updates=[dict(revision_id="archive", snapshot="z-old")])
+            publish_sources(catalog, state, root / "site")
+            self.assertEqual(row["schema_publication_page"], new)
+            self.assertEqual(archived["schema_publication_page"], old)
+            write(state / "current.json", encode(dict(snapshot="z-old")))
+            publish_sources(catalog, state, root / "site")
+            self.assertEqual(row["schema_publication_page"], old)

@@ -52,7 +52,8 @@
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "procClosedOpenNew",
@@ -101,7 +102,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "newSocialAssistNum",
@@ -120,7 +122,8 @@
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "receivedConfirmationOtherInsurer",
@@ -199,7 +202,8 @@
       "file": "proactiveNotification.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "years",
@@ -242,7 +246,8 @@
       "ns": "urn:ru:ecp:integration:proactive:notice:proactiveNotification:v3.0",
       "file": "proactiveNotification.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -271,7 +276,8 @@
       "file": "proactiveNotification.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@messageDateTime",
@@ -290,7 +296,8 @@
       "ns": "",
       "file": "proactiveNotification.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

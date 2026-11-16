@@ -26,6 +26,36 @@ def body(*paragraphs):
 
 
 class ExampleAuditTests(unittest.TestCase):
+    def test_nested_chameleon_dependencies_use_including_namespace(self):
+        xs='http://www.w3.org/2001/XMLSchema'
+        main=XSD.replace('targetNamespace=', 'xmlns:t="urn:example" targetNamespace=').replace(
+            '<xs:element name="request">','<xs:include schemaLocation="types.xsd"/><xs:element name="request">').replace('type="xs:int"','type="t:Code"')
+        self.write_schema(main, **{'types.xsd':f'<xs:schema xmlns:xs="{xs}"><xs:include schemaLocation="defs.xsd"/></xs:schema>',
+            'defs.xsd':f'<xs:schema xmlns:xs="{xs}" targetNamespace="urn:example"><xs:simpleType name="Code"><xs:restriction base="xs:int"/></xs:simpleType></xs:schema>'})
+        self.assertEqual(self.check('Пример',GOOD)[:2],(1,[]))
+
+    def test_xml_declaration_is_validated_before_unicode_encoding_is_normalized(self):
+        for encoding in ('UTF-8', 'windows-1251'):
+            for separator in ('', '\n'):
+                declaration = '<?xml version="1.0" encoding="'+encoding+'"?>'
+                paragraphs = [declaration, GOOD] if separator else [declaration+GOOD]
+                self.assertEqual(self.check('Пример', *paragraphs)[:2], (1, []))
+        for declaration in ('<?xml version="oops"?>', '<?xml encoding="UTF-8"?>', '<?xml version="1.0" standalone="oops"?>'):
+            for paragraphs in ([declaration+GOOD], [declaration, GOOD]):
+                count, findings, _ = self.check('Пример', *paragraphs)
+                self.assertEqual((count, len(findings)), (1, 1), declaration)
+                self.assertIn('пример 1', findings[0]['location'])
+                self.assertIn('Строка 1', findings[0]['spec'])
+
+    def test_xml_declaration_can_span_word_paragraphs(self):
+        for encoding in ('UTF-8','windows-1251'):
+            count,findings,_=self.check('Пример','<?xml version="1.0"',' encoding="'+encoding+'"?>',GOOD)
+            self.assertEqual((count,findings),(1,[]))
+        count,findings,_=self.check('Пример','<?xml version="oops"',' encoding="UTF-8"?>',GOOD)
+        self.assertEqual((count,len(findings)),(1,1))
+        count,findings,_=self.check('Пример','<?xml version="1.0"',GOOD)
+        self.assertEqual((count,len(findings)),(1,1))
+
     def test_required_attribute_diagnostic_links_to_attribute(self):
         self.write_schema(XSD.replace("</xs:sequence>", '</xs:sequence><xs:attribute name="stamp" use="required"/>'))
         _, findings, _ = self.check("Пример", GOOD)

@@ -177,6 +177,24 @@ test('a syntax diagnostic retains its source and caret in one card', async ({ pa
   await expect(cards.locator('pre')).toContainText('^');
 });
 
+test('message 11 rejects a reserved namespace redefinition even when xmllint exits zero', async ({ page }) => {
+  // Keep this fixture bound to the archived schema contract.
+  const revision = catalog.revisions.find(r => r.revision_id === '0586b2cc1dc80842ecbd807edebf4875f43cc4ca4ec298670e1c09cf2a3f0879');
+  expect(revision).toBeTruthy();
+  const validator = await openValidator(page, revision);
+  const xml = `<${revision.root} xmlns="${revision.namespace}"\n xmlns:xml="http://www.w3.org/XML/1998/namespace"/>`;
+  await validate(validator, xml);
+  await expect(validator.getByRole('status')).toHaveText('XML соответствует XSD выбранного сообщения и редакции.');
+  await validate(validator, xml.replace('http://www.w3.org/XML/1998/namespace', 'urn:wrong'));
+  await expect(validator.getByRole('status')).toContainText('не соответствует');
+  const card = validator.locator('#errors > li');
+  await expect(card).toHaveCount(1);
+  await expect(card).toContainText('Строка 2');
+  await expect(card).toContainText('Префикс xml зарезервирован');
+  await card.getByText('Подробнее', { exact: true }).click();
+  await expect(card.locator('pre')).toContainText('xml namespace prefix mapped to wrong URI');
+});
+
 test('two ELN restrictions share a card, path and navigation controls', async ({ page }) => {
   const fields = JSON.parse(fs.readFileSync(path.join(root, 'data/fields', `${response.revision_id}.json`), 'utf8')).fields;
   const eln = fields.find(f => f.path === `${response.root}/benefit1/elnInfo/lnNumber`);

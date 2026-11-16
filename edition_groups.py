@@ -53,9 +53,13 @@ def group_editions(catalog, load_fields):
         representative = members[0]["revision_id"]
         sources = {}
         observed = [source for row in members for source in observed_sources.get(row["revision_id"], [])]
+        current_sources = {(row.get("document_sha256"), row.get("document_url")): row
+                           for row in members if row.get("listed_now", True)}
         for row in [*observed, *members]:
             identity = (row.get("document_sha256"), row.get("document_url"))
-            source = _source_record(row, members)
+            # Labels on the card describe the current publication. Event labels
+            # remain in source_observations and are read separately below.
+            source = _source_record(current_sources.get(identity, row), members)
             if identity in sources:
                 sources[identity]["listed_now"] |= source["listed_now"]
             else:

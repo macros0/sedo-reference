@@ -10,6 +10,24 @@ from sync import encode, write
 
 
 class JournalTests(unittest.TestCase):
+    def test_current_label_updates_card_but_not_first_observation(self):
+        from edition_groups import group_editions, display_updates
+        row = dict(self.revision("same"), document_sha256="a"*64, document_url="https://example.test/doc.docx",
+                   label_date="01.01.2026", document_download="documents/doc.docx")
+        self.add("old", [row])
+        self.add("current", [dict(row, document_version="3.1", label_date="02.02.2026")])
+        self.export()
+        catalog = json.loads((self.state / "catalog.json").read_bytes())
+        grouped = group_editions(catalog, lambda rid: [])
+        source = grouped["revisions"][0]["edition_sources"][0]
+        self.assertEqual(source["document_version"], "3.1")
+        self.assertEqual(source["label_date"], "02.02.2026")
+        self.assertIn("-v3.1-", source["document_filename"])
+        original = display_updates(grouped)[0]["event_sources"][0]
+        self.assertEqual(original["document_version"], "3.0")
+        self.assertEqual(original["label_date"], "01.01.2026")
+        self.assertIn("-v3.0-", original["document_filename"])
+
     def test_two_current_urls_of_one_revision_remain_current_independently(self):
         from edition_groups import group_editions
         row = dict(self.revision("same"), document_sha256="doc", document_url="https://example.test/one.docx")

@@ -7,6 +7,9 @@ function runLint(args,inputFiles){return new Promise((resolve,reject)=>{
  const append=(old,text)=>(old+String(text)+'\n').slice(0,65536);
  Module({wasmBinary:self.SEDO_WASM,inputFiles,arguments:args,wasmMemory:new WebAssembly.Memory({initial:256,maximum:2048}),print:s=>{stdout=append(stdout,s)},printErr:s=>{stderr=append(stderr,s)},onExit:code=>resolve({code,stdout,stderr}),onAbort:()=>reject(Error('Недостаточно памяти или ошибка WASM.'))}).catch(reject);
 })}
+// libxml2 can emit namespace/parser errors while xmllint still exits with zero.
+// Keep success messages and warnings separate from diagnosed errors.
+const hasLintErrors=result=>/(?:parser|namespace|validity) error\s*:/i.test(result.stderr);
 // libxml2 skips fixed constraints placed on attribute refs. Validate all actual
 // uses in one auxiliary document with direct local-attribute declarations. The
 // scalar types and fixed values are compiled from the same exact XSD closure.
@@ -53,19 +56,19 @@ self.onmessage=async event=>{
   const xml=new TextEncoder().encode(text.replace(/\r\n?/g,'\n').replace(/^(<\?xml\s[^?]*\bencoding\s*=\s*)(["'])[^"']*\2/, '$1"UTF-8"'));
   const files=[{fileName:'input.xml',contents:xml},...Object.entries(pack.files).map(([fileName,value])=>({fileName,contents:core.decode64(value)}))];
   const parsed=await runLint(['--nonet','--xpath','concat(local-name(/*), "|", namespace-uri(/*))','input.xml'],files);
-  if(parsed.code!==0){self.postMessage({type:'result',valid:false,errors:core.errors(parsed.stderr)});return}
+  if(parsed.code!==0||hasLintErrors(parsed)){self.postMessage({type:'result',valid:false,errors:core.errors(parsed.stderr)});return}
   const locations=self.SedoValidationPaths,index=locations.index(typeof event.data.source==='string'&&event.data.source.length<=core.MAX_BYTES?event.data.source:text);
   if(parsed.stdout.trim()!==pack.root+'|'+(pack.namespace||'')){self.postMessage({type:'result',valid:false,errors:locations.locate([{root:true,line:index?.[0]?.line||1,message:'Неверный корневой элемент или пространство имён. Ожидается {'+(pack.namespace||'')+'}'+pack.root+'.'}],index,pack.fields||[],pack.field_namespaces||[])});return}
   const result=await runLint(['--nonet','--noout','--schema','message.xsd','input.xml'],files);
   if(![0,3,4].includes(result.code))throw Error('Не удалось выполнить XSD-проверку. '+result.stderr.slice(0,2000));
-  let valid=result.code===0,errors=valid?[]:core.errors(result.stderr);
+  let valid=result.code===0&&!hasLintErrors(result),errors=valid?[]:core.errors(result.stderr);
   if(valid){
    const probes=attributeProbes(pack,locations.index(text));
    if(probes&&probes.subjects.size){
     const probeFiles=files.map(file=>file.fileName==='input.xml'?{fileName:'input.xml',contents:new TextEncoder().encode(probes.xml)}:file);
     const checked=await runLint(['--nonet','--noout','--schema',pack.supplementary_schema,'input.xml'],probeFiles);
     if(![0,3,4].includes(checked.code))throw Error('Не удалось проверить fixed на ссылках атрибутов. '+checked.stderr.slice(0,2000));
-    valid=checked.code===0;
+    valid=checked.code===0&&!hasLintErrors(checked);
     errors=valid?[]:core.errors(checked.stderr).map(error=>{
      const subject=probes.subjects.get(error.line);if(!subject)return error;
      const {node,rule}=subject,element=(node.ns?'{'+node.ns+'}':'')+node.name,attribute=(rule.attribute[0]?'{'+rule.attribute[0]+'}':'')+rule.attribute[1];

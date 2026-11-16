@@ -114,7 +114,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kpsNum",
@@ -143,7 +144,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumFund",
@@ -176,7 +178,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "codeTerrOrg",
@@ -205,7 +208,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -234,7 +238,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ogrn",
@@ -263,7 +268,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kpp",
@@ -288,7 +294,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "startDate",
@@ -307,7 +314,8 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "registrationDate",
@@ -326,7 +334,8 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "registrationPlace",
@@ -351,7 +360,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "state",
@@ -370,7 +380,8 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "uncommercial",
@@ -389,7 +400,8 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "jurAddress",
@@ -414,7 +426,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ceoName",
@@ -439,7 +452,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "cfoName",
@@ -464,7 +478,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplCount",
@@ -483,7 +498,8 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "year",
@@ -510,7 +526,8 @@
       "children": [],
       "ns": "",
       "file": "Poved.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "okved",
@@ -569,7 +586,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "incomeDistribution",
@@ -634,7 +652,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "incomeVED",
@@ -653,7 +672,8 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "targetedIncome",
@@ -672,7 +692,8 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplCount",
@@ -691,7 +712,8 @@
       "ns": "",
       "file": "Poved.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "note",
@@ -744,7 +766,8 @@
       "file": "Poved.xsd",
       "flags": {},
       "typeNs": "http://ws.fss.ru/integration/types/rust/poved/v01",
-      "typeFile": "Poved.xsd"
+      "typeFile": "Poved.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noteFile",
@@ -797,7 +820,8 @@
       "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ext",
@@ -816,7 +840,8 @@
       "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mimeType",
@@ -835,7 +860,8 @@
       "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "size",
@@ -854,7 +880,8 @@
       "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "name",
@@ -873,7 +900,8 @@
       "ns": "",
       "file": "CommonUQ.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

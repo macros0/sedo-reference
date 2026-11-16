@@ -95,7 +95,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "*",
@@ -170,7 +171,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "*",
@@ -249,7 +251,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "fullName",
@@ -323,7 +326,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noLastName",
@@ -348,7 +352,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -377,7 +382,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noFirstName",
@@ -402,7 +408,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -431,7 +438,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "noMiddleName",
@@ -456,7 +464,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -475,7 +484,8 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "*",
@@ -514,7 +524,8 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentMethod",
@@ -567,7 +578,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "mobilDaysAmount",
@@ -596,7 +608,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:proactive:type:v3.0",
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "salaryInfo",
@@ -682,7 +695,8 @@
       "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
-      "typeFile": "Proactive.xsd"
+      "typeFile": "Proactive.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "salaryByCurrentInsurer",
@@ -739,7 +753,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumGPH",
@@ -768,7 +783,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumOPS-GPH",
@@ -797,7 +813,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "salaryByAllInsurers",
@@ -854,7 +871,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumGPH",
@@ -883,7 +901,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumOPS-GPH",
@@ -912,7 +931,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "*",
@@ -961,7 +981,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@messageDateTime",
@@ -980,7 +1001,8 @@
       "ns": "",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@*",

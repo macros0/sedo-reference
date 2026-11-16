@@ -29,3 +29,14 @@ console.log('Cross-type comparison verified: confirmed transitions, both directi
  const pair=context.comparisonDefaults({revisions:[row('prod','prod','01.03.2026'),row('test','test','01.04.2026')]});
  assert.equal(pair.left,'prod');assert.equal(pair.right,'test');
 }
+
+{
+ const scripts=[],catalog={revisions:[{revision_id:'same',fields_sha256:'aaa'}]};
+ const context=vm.createContext({catalog,window:{},document:{createElement:()=>({remove(){}}),head:{append(script){scripts.push(script);context.window.SEDO_FIELDS.same=[];script.onload()}}},Map,Promise});
+ vm.runInContext(fs.readFileSync(path.join(root,'web/compare.js'),'utf8'),context);
+ context.loadComparisonData('same');
+ assert.equal(scripts[0].src,'fields/same.js?v=aaa');
+ catalog.revisions[0].fields_sha256='bbb';
+ context.loadComparisonData('same');
+ assert.equal(scripts[1].src,'fields/same.js?v=bbb','rebuilt fields invalidate the in-memory cache too');
+}

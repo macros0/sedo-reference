@@ -91,7 +91,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orgInfo",
@@ -199,7 +200,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kpp",
@@ -224,7 +226,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ogrn",
@@ -253,7 +256,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNum",
@@ -282,7 +286,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -311,7 +316,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "publicOrganizationDisability",
@@ -368,7 +374,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -397,7 +404,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kpp",
@@ -422,7 +430,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ogrn",
@@ -451,7 +460,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "founderFizlicoDocument",
@@ -518,7 +528,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -547,7 +558,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -576,7 +588,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -605,7 +618,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "seria",
@@ -632,7 +646,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -659,7 +674,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certificateDate",
@@ -678,7 +694,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "soglasie",
@@ -697,7 +714,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ip",
@@ -769,7 +787,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -798,7 +817,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -827,7 +847,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -856,7 +877,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ogrn",
@@ -885,7 +907,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNum",
@@ -914,7 +937,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -943,7 +967,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "founderDisabilityDocument",
@@ -1002,7 +1027,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "seria",
@@ -1029,7 +1055,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -1056,7 +1083,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certificateDate",
@@ -1075,7 +1103,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "compliance",
@@ -1126,7 +1155,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orgDefinedAreas",
@@ -1145,7 +1175,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "avgRegion",
@@ -1164,7 +1195,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "largeProject",
@@ -1183,7 +1215,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentInfo",
@@ -1270,7 +1303,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "corAccNum",
@@ -1299,7 +1333,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accountNum",
@@ -1328,7 +1363,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "cardMir",
@@ -1361,7 +1397,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerList",
@@ -1460,7 +1497,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -1489,7 +1527,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -1518,7 +1557,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -1547,7 +1587,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -1566,7 +1607,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -1595,7 +1637,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -1624,7 +1667,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurenceSum",
@@ -1657,7 +1701,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regionRate",
@@ -1739,7 +1784,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderDate",
@@ -1757,7 +1803,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderNum",
@@ -1784,7 +1831,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractDate",
@@ -1803,7 +1851,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "beganWorking",
@@ -1822,7 +1871,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerListOPK",
@@ -1938,7 +1988,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -1967,7 +2018,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -1996,7 +2048,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -2025,7 +2078,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -2044,7 +2098,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -2073,7 +2128,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -2102,7 +2158,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurenceSum",
@@ -2135,7 +2192,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regionRate",
@@ -2217,7 +2275,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderDate",
@@ -2235,7 +2294,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderNum",
@@ -2262,7 +2322,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractDate",
@@ -2281,7 +2342,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "beganWorking",
@@ -2300,7 +2362,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SZNname",
@@ -2327,7 +2390,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SZNbegin",
@@ -2346,7 +2410,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SZNend",
@@ -2365,7 +2430,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "profession",
@@ -2392,7 +2458,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "confirmation",
@@ -2419,7 +2486,8 @@
         "fixed": "true"
       },
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "movingMoreThan50km",
@@ -2438,7 +2506,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerListDisability",
@@ -2544,7 +2613,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -2573,7 +2643,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -2602,7 +2673,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -2631,7 +2703,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -2650,7 +2723,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -2679,7 +2753,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -2708,7 +2783,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurenceSum",
@@ -2741,7 +2817,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regionRate",
@@ -2823,7 +2900,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderDate",
@@ -2841,7 +2919,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderNum",
@@ -2868,7 +2947,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractDate",
@@ -2887,7 +2967,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "beganWorking",
@@ -2906,7 +2987,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certificateOfDisability",
@@ -2961,7 +3043,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -2988,7 +3071,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certificateDate",
@@ -3007,7 +3091,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "note",
@@ -3036,7 +3121,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "recalcSttmnt",
@@ -3100,7 +3186,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
-      "typeFile": "RefundUnemplStatementResult.xsd"
+      "typeFile": "RefundUnemplStatementResult.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerList",
@@ -3199,7 +3286,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -3228,7 +3316,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -3257,7 +3346,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -3286,7 +3376,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -3305,7 +3396,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -3334,7 +3426,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -3363,7 +3456,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurenceSum",
@@ -3396,7 +3490,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regionRate",
@@ -3478,7 +3573,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderDate",
@@ -3496,7 +3592,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderNum",
@@ -3523,7 +3620,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractDate",
@@ -3542,7 +3640,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "beganWorking",
@@ -3561,7 +3660,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerListOPK",
@@ -3677,7 +3777,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -3706,7 +3807,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -3735,7 +3837,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -3764,7 +3867,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -3783,7 +3887,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -3812,7 +3917,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -3841,7 +3947,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurenceSum",
@@ -3874,7 +3981,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regionRate",
@@ -3956,7 +4064,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderDate",
@@ -3974,7 +4083,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderNum",
@@ -4001,7 +4111,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractDate",
@@ -4020,7 +4131,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "beganWorking",
@@ -4039,7 +4151,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SZNname",
@@ -4066,7 +4179,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SZNbegin",
@@ -4085,7 +4199,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "SZNend",
@@ -4104,7 +4219,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "profession",
@@ -4131,7 +4247,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "confirmation",
@@ -4158,7 +4275,8 @@
         "fixed": "true"
       },
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "movingMoreThan50km",
@@ -4177,7 +4295,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "workerListDisability",
@@ -4283,7 +4402,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -4312,7 +4432,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -4341,7 +4462,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -4370,7 +4492,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -4389,7 +4512,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "gender",
@@ -4418,7 +4542,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -4447,7 +4572,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurenceSum",
@@ -4480,7 +4606,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regionRate",
@@ -4562,7 +4689,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderDate",
@@ -4580,7 +4708,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "orderNum",
@@ -4607,7 +4736,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "contractDate",
@@ -4626,7 +4756,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "beganWorking",
@@ -4645,7 +4776,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certificateOfDisability",
@@ -4700,7 +4832,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -4727,7 +4860,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certificateDate",
@@ -4746,7 +4880,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "note",
@@ -4775,7 +4910,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "correctSttmnt",
@@ -4832,7 +4968,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
-      "typeFile": "RefundUnemplStatementResult.xsd"
+      "typeFile": "RefundUnemplStatementResult.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "paymentInfo",
@@ -4919,7 +5056,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "corAccNum",
@@ -4948,7 +5086,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accountNum",
@@ -4977,7 +5116,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "cardMir",
@@ -5010,7 +5150,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "note",
@@ -5039,7 +5180,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:v3.0",
-      "typeFile": "RefundUnemplStatement.xsd"
+      "typeFile": "RefundUnemplStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -5068,7 +5210,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@author",
@@ -5097,7 +5240,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@phone",
@@ -5126,7 +5270,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@email",
@@ -5159,7 +5304,8 @@
       "file": "RefundUnemplStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

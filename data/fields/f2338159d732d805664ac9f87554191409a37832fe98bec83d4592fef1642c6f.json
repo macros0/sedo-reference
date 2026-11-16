@@ -76,7 +76,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "changeRecalcFlag",
@@ -95,7 +96,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "prim_batch_no",
@@ -120,7 +122,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "recalc_reason",
@@ -143,7 +146,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "insurerInfo",
@@ -209,7 +213,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "regNumSFR",
@@ -238,7 +243,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplKPP",
@@ -265,7 +271,8 @@
         "nillable": "true"
       },
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "emplINN",
@@ -294,7 +301,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "Empl_Flag",
@@ -313,7 +321,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "bankInfo",
@@ -376,7 +385,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accountNum",
@@ -404,7 +414,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accountNumInFederalExchequer",
@@ -437,7 +448,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "kbk",
@@ -466,7 +478,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "transitAccount",
@@ -499,7 +512,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "transitName",
@@ -526,7 +540,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "refundSum",
@@ -587,7 +602,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumForNonBudgetFunds",
@@ -620,7 +636,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "sumForAdditionalDays",
@@ -653,7 +670,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "numberRecipients",
@@ -680,7 +698,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certifiedCopiesOrders",
@@ -707,7 +726,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "receiversRow",
@@ -826,7 +846,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -855,7 +876,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -884,7 +906,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -913,7 +936,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childRelType",
@@ -948,7 +972,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "childInfo",
@@ -1044,7 +1069,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "lastName",
@@ -1073,7 +1099,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -1102,7 +1129,8 @@
       "file": "Person.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -1134,7 +1162,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -1154,7 +1183,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
-      "typeFile": "Person.xsd"
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certificateOfDisability",
@@ -1213,7 +1243,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "number",
@@ -1240,7 +1271,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "certificateDate",
@@ -1259,7 +1291,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "disabilityBeginDate",
@@ -1278,7 +1311,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "disabilityEndDate",
@@ -1329,7 +1363,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "endDate",
@@ -1348,7 +1383,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "ORD",
@@ -1403,7 +1439,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "date",
@@ -1422,7 +1459,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "periods",
@@ -1535,7 +1573,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "month",
@@ -1564,7 +1603,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "daysAmount",
@@ -1591,7 +1631,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dailyAverageSal",
@@ -1623,7 +1664,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "providedDays",
@@ -1650,7 +1692,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "providedTotalHour",
@@ -1690,7 +1733,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accumulatedPeriods",
@@ -1781,7 +1825,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "month",
@@ -1810,7 +1855,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "daysAmount",
@@ -1837,7 +1883,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accumulatedDays",
@@ -1864,7 +1911,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accumulatedTotalHour",
@@ -1904,7 +1952,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accumulatedProvidedPeriodData",
@@ -1961,7 +2010,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "month",
@@ -1990,7 +2040,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "daysAmount",
@@ -2017,7 +2068,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "dailyAverageSal",
@@ -2050,7 +2102,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accumulatedProvidedDays",
@@ -2077,7 +2130,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "accumulatedProvidedTotalHour",
@@ -2117,7 +2171,8 @@
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
-      "typeFile": "DisabilityChildrenStatement.xsd"
+      "typeFile": "DisabilityChildrenStatement.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "addInfo",
@@ -2144,7 +2199,8 @@
       "children": [],
       "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:v3.0",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@specVersion",
@@ -2173,7 +2229,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@software",
@@ -2200,7 +2257,8 @@
       "children": [],
       "ns": "",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@version_software",
@@ -2227,7 +2285,8 @@
       "children": [],
       "ns": "",
       "file": "DisabilityChildrenStatement.xsd",
-      "flags": {}
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@author",
@@ -2256,7 +2315,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@phone",
@@ -2285,7 +2345,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@email",
@@ -2318,7 +2379,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
-      "typeFile": "Common.xsd"
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@emplRegNo",
@@ -2347,7 +2409,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "@regNumSFR",
@@ -2376,7 +2439,8 @@
       "file": "DisabilityChildrenStatement.xsd",
       "flags": {},
       "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
-      "typeFile": "Organization.xsd"
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

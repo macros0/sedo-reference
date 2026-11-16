@@ -191,10 +191,11 @@ def _run(root):
             known = {(r["environment"], r["number"]) for r in previous["registry"]+previous["revisions"]}
             new_messages = sorted({(r["environment"], r["number"]) for r in current["registry"]+current["revisions"]}-known)
             snapshot=json.loads((stage/"state/snapshots"/(json.loads((stage/"state/current.json").read_bytes())["snapshot"]+".json")).read_bytes())
+            collector_replay=json.loads((stage/"state/last-run.json").read_bytes()).get("collector_replay", [])
             schema_diagnostics=[dict(environment=r["environment"],source=r["url"],issues=r["schema_diagnostics"]) for r in snapshot["entries"] if r.get("schema_diagnostics")]
             wsdl_status=[dict(environment=r["environment"],source=r["url"],status=r.get("status",r.get("retrieval_status","ok")),error=r.get("error")) for r in snapshot["entries"] if r.get("source_type")=="wsdl" or r["kind"]=="wsdl_status"]
-            ready_pairs={(r["environment"],r["number"]) for r in current["revisions"] if r["status"]=="matched"}
-            registry_pairs={(r["environment"],r["number"]):r for r in current["registry"]}
+            ready_pairs={(r["environment"],r["number"]) for r in current["revisions"] if r["status"]=="matched" and r.get("listed_now", True)}
+            registry_pairs={(r["environment"],r["number"]):r for r in current["registry"] if r.get("listed_now", True)}
             missing=[]
             for (env,number),row in sorted(registry_pairs.items(),key=lambda i:(i[0][0],int(i[0][1]))):
                 if (env,number) in ready_pairs:continue
@@ -206,6 +207,7 @@ def _run(root):
             write(stage/"data/schema-coverage.json",encode(dict(checked_at=current["checked_at"],numbers_with_trees=len({n for e,n in ready_pairs}),source_checks=wsdl_status,missing=missing)))
             promote(root, stage)
             result = dict(status="ok", collector_source=collector_source(), checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics, wsdl_status=wsdl_status, missing_trees=missing,
+                          collector_replay=collector_replay,
                           new_schema_revisions=schema_events, new_source_events=source_events,
                           new_messages=[dict(environment=e, number=n) for e,n in new_messages],
                           total_revisions=len(current["revisions"]))

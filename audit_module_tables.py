@@ -167,10 +167,34 @@ class Comparison:
                             f"Кратность {field['min']}..{field['max']}.",
                             'Таблица и проверка по схеме допускают разное число вхождений.')
 
-    def limits(self, field, where, limit, description):
+    def limits(self, field, where, limit, description, documented_type=''):
         facets = defaultdict(list)
         for key, val in field.get('facets', []):
             facets[key].append(val)
+        actual, base = field.get('type', ''), field.get('base', '')
+        if (actual and local_name(actual).lower() != local_name(base).lower()
+                and local_name(documented_type).lower() == local_name(base).lower()
+                and (facets or field.get('values'))):
+            # Naming the actual type includes its restrictions by reference.
+            # Naming only its primitive base requires those restrictions in text.
+            text = limit+' '+description
+            def described(key, value):
+                if key == 'pattern':
+                    if value in text:return True
+                    digits = re.fullmatch(r'\\d\{(\d+)\}|\[0-9\]\{(\d+)\}', value)
+                    return bool(digits and re.search(r'(?<!\d)'+(digits[1] or digits[2])+r'\s+цифр', text, re.I))
+                labels={'length':r'(?<![\w.])(?:ровно\s+)?длинн?а', 'minLength':r'мин(?:имальная)?\.?\s*длинн?а',
+                        'maxLength':r'макс(?:имальная)?\.?\s*длинн?а'}
+                if key in labels:return bool(re.search(labels[key]+r'\s*:?\s*'+re.escape(value)+r'(?!\d)', text, re.I))
+                return bool(re.search(r'\b'+re.escape(key)+r'\s*[=:]\s*'+re.escape(value)+r'(?![\w.])', text))
+            missing=[f'{key}={value}' for key, values in facets.items() for value in values if not described(key,value)]
+            if field.get('values') and not all(re.search(r'(?<!\w)'+re.escape(value)+r'(?!\w)',text) for value,_ in field['values']):
+                missing.append('перечисление '+', '.join(value for value,_ in field['values']))
+            if missing:
+                self.record('Ограничение значения', where, field,
+                            'Указана примитивная база '+documented_type+' без полного ограничения именованного типа.',
+                            'Тип '+actual+': '+'; '.join(missing)+'.',
+                            'Значение, допустимое по таблице, может быть отклонено XSD.')
         annotation = field.get('doc', '')
         if (local_name(field.get('base', '')) in ('date', 'dateTime')
                 and 'крайняя дата' in description.lower() and 'крайняя дата' in annotation.lower()
@@ -258,7 +282,7 @@ class Comparison:
                 self.record('Имя элемента', location, field, 'В таблице '+name+'.', 'Имя в XSD '+matched+'.',
                             'XML чувствителен к регистру и точному написанию имени.')
             self.compare_field(field, location, row[1], row[3])
-            self.limits(field, location, row[2], row[4] if len(row) > 4 else '')
+            self.limits(field, location, row[2], row[4] if len(row) > 4 else '',row[1])
         if seen:
             for name, field in children.items():
                 if name not in seen and field['min'] != '0' and not field.get('group'):

@@ -9,6 +9,27 @@ def run(number, sha='a'*40, status='completed', conclusion='success', created='2
 
 
 class AutomationStatusTests(unittest.TestCase):
+    def test_last_success_is_queried_independently_of_failed_current_check(self):
+        from automation_status import collect_status
+        from unittest.mock import patch
+        failures = [run(n, conclusion="failure") for n in range(20, 10, -1)]
+        successful = run(9, created="2026-11-12T08:00:00Z")
+        for matches in ([successful], []):
+            def read(path):
+                if "check-sfr" in path:
+                    return {"workflow_runs": [run(21, conclusion="failure")]}
+                if "status=success" in path:
+                    return {"workflow_runs": matches}
+                return {"workflow_runs": failures}
+            with self.subTest(matches=matches), patch("automation_status.api", side_effect=read), \
+                    patch("automation_status.sourcecraft_status", return_value={}), \
+                    patch("automation_status.run_reports", return_value={}):
+                result = collect_status()["github"]
+            self.assertEqual(result["publication"]["state"], "not_published")
+            self.assertEqual(result["last_successful_publication"]["state"], "success" if matches else "unknown")
+            if matches:
+                self.assertEqual(result["last_successful_publication"]["run_id"], 9)
+
     def test_published_target_is_found_after_ten_newer_runs(self):
         from automation_status import collect_status
         from unittest.mock import patch
@@ -130,6 +151,7 @@ class AutomationStatusTests(unittest.TestCase):
                     'actions/workflows/check-sfr.yml/runs?branch=main&per_page=10': {'workflow_runs': [check]},
                     'actions/workflows/pages.yml/runs?branch=main&per_page=10': {'workflow_runs': [pending]},
                     'actions/runs/2': iter([pending, final]),
+                    'actions/workflows/pages.yml/runs?branch=main&status=success&per_page=1': {'workflow_runs': []},
                 }
 
                 def read(path):
@@ -163,6 +185,7 @@ class AutomationStatusTests(unittest.TestCase):
                     'actions/workflows/check-sfr.yml/runs?branch=main&per_page=10': {'workflow_runs': [check]},
                     'actions/workflows/pages.yml/runs?branch=main&per_page=10': {'workflow_runs': listed},
                     'actions/runs/2': direct,
+                    'actions/workflows/pages.yml/runs?branch=main&status=success&per_page=1': {'workflow_runs': []},
                     'actions/workflows/pages.yml/runs?branch=main&head_sha='+'a'*40+'&per_page=100': {'workflow_runs': []},
                 }
                 reports = {'publication-target.json': {'update_run_id': 1, 'head_sha': check['head_sha']},

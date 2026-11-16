@@ -22,14 +22,15 @@ def detect_metadata(filename, environment, override=None):
     if date_match:
         year=("20" if len(date_match[3])==2 else "")+date_match[3]
         date=year+"-"+date_match[2]+"-"+date_match[1]
-        try:datetime.strptime(date,"%Y-%m-%d")
-        except ValueError as exc:raise ValueError("Некорректная дата в имени "+filename) from exc
     data=dict(number=match[1] if match else "",version=version[1].replace("_",".") if version else "",date=date,source="Ручная загрузка из GitHub")
     if override is not None:
         if not isinstance(override,dict) or set(override)-{"number","version","date","title","source"}:
             raise ValueError("Проверьте поля metadata.json для "+filename)
         data.update({key:str(value) for key,value in override.items()})
     data["environment"]=environment
+    if data["date"]:
+        try:datetime.strptime(data["date"],"%Y-%m-%d")
+        except ValueError as exc:raise ValueError("Некорректная дата для "+filename) from exc
     if not re.fullmatch(r"\d{1,8}",data["number"]):
         raise ValueError("Не определён номер сообщения: "+filename+". Используйте 10110_v3.1.docx или metadata.json.")
     return data

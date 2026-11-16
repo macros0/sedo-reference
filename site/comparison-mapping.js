@@ -260,7 +260,7 @@
   let savedSuggest=null;
   if(saved.pairs.length){
    try{const available=suggestDescendants(saved.pairs,options.before,options.after),view=button("swap mapping-suggest",available.suggestions.length||available.conflicts.length?"Предпросмотр вложенных тегов ("+available.suggestions.length+")":"Просмотреть сопоставления");
-   view.onclick=()=>{if(options.isCurrent()){try{showPreview(savedReport(),"Ранее применено")}catch(e){status.textContent="Не удалось открыть черновик. "+e.message}}};savedSuggest=view;controls.append(view)}catch(e){status.textContent+=" Не удалось подготовить предложения. "+e.message}
+   view.onclick=()=>{if(options.isCurrent()){try{if(!active)showPreview(savedReport(),"Ранее применено")}catch(e){status.textContent="Не удалось открыть черновик. "+e.message}}};savedSuggest=view;controls.append(view)}catch(e){status.textContent+=" Не удалось подготовить предложения. "+e.message}
   }
   input.onchange=async()=>{
    const file=input.files?.[0];if(!file)return;const token=++generation;

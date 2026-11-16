@@ -17,6 +17,109 @@ XS='http://www.w3.org/2001/XMLSchema'
 PROJECT=Path(__file__).resolve().parents[1]
 
 class XsdBundleTests(unittest.TestCase):
+    def test_unrelated_fixed_name_does_not_expand_unused_recursive_type(self):
+        row,_=self.revision()
+        sources={'main.xsd':f'''<xs:schema xmlns:xs="{XS}" xmlns:m="urn:main" targetNamespace="urn:main">
+        <xs:import schemaLocation="attrs.xsd"/><xs:attribute name="editable" type="xs:boolean"/>
+        <xs:element name="Request"><xs:complexType><xs:attribute ref="m:editable"/></xs:complexType></xs:element>
+        <xs:complexType name="Unused"><xs:sequence><xs:element name="child" type="m:Unused" minOccurs="0"/></xs:sequence>
+        <xs:attribute ref="m:editable"/></xs:complexType></xs:schema>'''.encode(),
+        'attrs.xsd':f'<xs:schema xmlns:xs="{XS}"><xs:attribute name="editable" type="xs:boolean" fixed="false"/></xs:schema>'.encode()}
+        raw=io.BytesIO()
+        with zipfile.ZipFile(raw,'w') as archive:
+            for name,content in sources.items():archive.writestr(name,content)
+        data=raw.getvalue();row.update(schema_path='main.xsd',archive_sha256=sha(data),dependencies=[[name,sha(content)] for name,content in sources.items()])
+        write(self.state/'objects'/row['archive_sha256'],data)
+        directory=self.extract(row)
+        self.assertFalse(json.loads((directory/'manifest.json').read_bytes()).get('attribute_checks'))
+        result=self.run_validator(directory,b'<Request xmlns="urn:main" xmlns:m="urn:main" m:editable="true"/>')
+        self.assertEqual(result.returncode,0,result.stderr)
+
+    def test_chameleon_global_fixed_attribute_gets_supplementary_probe(self):
+        row,_=self.revision()
+        sources={'main.xsd':f'<xs:schema xmlns:xs="{XS}" xmlns:m="urn:main" targetNamespace="urn:main"><xs:include schemaLocation="attrs.xsd"/><xs:element name="Request"><xs:complexType><xs:attribute ref="m:editable"/></xs:complexType></xs:element></xs:schema>'.encode(),
+                 'attrs.xsd':f'<xs:schema xmlns:xs="{XS}"><xs:attribute name="editable" type="xs:boolean" fixed="false"/></xs:schema>'.encode()}
+        raw=io.BytesIO()
+        with zipfile.ZipFile(raw,'w') as archive:
+            for name,content in sources.items():archive.writestr(name,content)
+        data=raw.getvalue();row.update(schema_path='main.xsd',archive_sha256=sha(data),dependencies=[[name,sha(content)] for name,content in sources.items()])
+        write(self.state/'objects'/row['archive_sha256'],data)
+        directory=self.extract(row)
+        self.assertTrue(json.loads((directory/'manifest.json').read_bytes()).get('attribute_checks'))
+        for value,want in (('false',0),('0',0),('true',1),('1',1)):
+            result=self.run_validator(directory,('<Request xmlns="urn:main" xmlns:m="urn:main" m:editable="'+value+'"/>').encode())
+            self.assertEqual(result.returncode,want,result.stderr)
+
+    def test_same_chameleon_file_compiles_in_two_namespaces(self):
+        from schema import Schema, dependency_set
+        from sync import inspect_file
+        row,_=self.revision()
+        sources={'main.xsd':f'''<xs:schema xmlns:xs="{XS}" xmlns:a="urn:a" xmlns:b="urn:b" targetNamespace="urn:main" elementFormDefault="qualified">
+        <xs:import namespace="urn:a" schemaLocation="a.xsd"/><xs:import namespace="urn:b" schemaLocation="b.xsd"/>
+        <xs:element name="Request"><xs:complexType><xs:sequence><xs:element name="a" type="a:Box"/>
+        <xs:element name="b" type="b:Box"/></xs:sequence></xs:complexType></xs:element></xs:schema>'''.encode(),
+        'common.xsd':f'''<xs:schema xmlns:xs="{XS}" elementFormDefault="qualified"><xs:simpleType name="Code"><xs:restriction base="xs:string"><xs:length value="2"/></xs:restriction></xs:simpleType>
+        <xs:complexType name="Box"><xs:sequence><xs:element name="code" type="Code"/></xs:sequence></xs:complexType></xs:schema>'''.encode()}
+        for namespace in ('a','b'):
+            sources[namespace+'.xsd']=f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:{namespace}"><xs:include schemaLocation="common.xsd"/></xs:schema>'.encode()
+        raw=io.BytesIO()
+        with zipfile.ZipFile(raw,'w') as archive:
+            for name,content in sources.items():archive.writestr(name,content)
+        data=raw.getvalue();row.update(schema_path='main.xsd',archive_sha256=sha(data))
+        write(self.state/'objects'/row['archive_sha256'],data)
+        row['dependencies']=dependency_set(inspect_file(data,'zip')['schemas'],row['schema_path'])
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            tree=Schema(archive,'main.xsd','Request');tree.field(tree.root)
+        self.assertEqual([f['ns'] for f in tree.fields if f['name']=='code'],['urn:a','urn:b'])
+        directory=self.extract(row)
+        good=b'<Request xmlns="urn:main"><a><code xmlns="urn:a">AB</code></a><b><code xmlns="urn:b">CD</code></b></Request>'
+        for payload,want in ((good,0),(good.replace(b'CD',b'LONG'),1)):
+            result=self.run_validator(directory,payload)
+            self.assertEqual(result.returncode,want,result.stderr)
+
+    def test_nested_chameleon_include_uses_effective_namespace_in_bundle(self):
+        from schema import Schema, dependency_set
+        from sync import inspect_file
+        row,sources=self.revision()
+        sources['pack/main/Parts.xsd']=f'<xs:schema xmlns:xs="{XS}"><xs:include schemaLocation="Defs.xsd"/></xs:schema>'.encode()
+        sources['pack/main/Defs.xsd']=f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:main"><xs:simpleType name="Flag"><xs:restriction base="xs:string"/></xs:simpleType></xs:schema>'.encode()
+        raw=io.BytesIO()
+        with zipfile.ZipFile(raw,'w') as archive:
+            for name,content in sources.items():archive.writestr(name,content)
+        data=raw.getvalue();row['archive_sha256']=sha(data)
+        write(self.state/'objects'/row['archive_sha256'],data)
+        row['dependencies']=dependency_set(inspect_file(data,'zip')['schemas'],row['schema_path'])
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            tree=Schema(archive,row['schema_path'],row['root']);tree.field(tree.root)
+        directory=self.extract(row)
+        result=self.run_validator(directory,b'<Request xmlns="urn:main"><code>ABCD</code><flag>yes</flag></Request>')
+        self.assertEqual(result.returncode,0,result.stderr)
+
+    def test_chameleon_include_dependency_tree_and_offline_validation(self):
+        from schema import Schema, dependency_set
+        from sync import inspect_file
+        row,sources=self.revision()
+        sources['pack/main/Parts.xsd']=sources['pack/main/Parts.xsd'].replace(b' targetNamespace="urn:main"',b'')
+        raw=io.BytesIO()
+        with zipfile.ZipFile(raw,'w') as archive:
+            for name,content in sources.items():archive.writestr(name,content)
+        data=raw.getvalue();row['archive_sha256']=sha(data)
+        write(self.state/'objects'/row['archive_sha256'],data)
+        # The dependency collector must agree with both schema engines about
+        # a no-namespace include adopting the including document's namespace.
+        inventory=inspect_file(data,'zip')['schemas']
+        row['dependencies']=dependency_set(inventory,row['schema_path'])
+        self.assertEqual(len(row['dependencies']),3)
+        with zipfile.ZipFile(io.BytesIO(data)) as archive:
+            tree=Schema(archive,row['schema_path'],row['root']);tree.field(tree.root)
+        flag=next(f for f in tree.fields if f['name']=='flag')
+        self.assertEqual(flag['typeNs'],'urn:main')
+        self.assertEqual(flag['values'],[['yes',''],['no','']])
+        directory=self.extract(row)
+        for value,want in (('yes',0),('invalid',1)):
+            result=self.run_validator(directory,('<Request xmlns="urn:main"><code>ABCD</code><flag>'+value+'</flag></Request>').encode())
+            self.assertEqual(result.returncode,want,result.stderr)
+
     def setUp(self):
         self.temp=tempfile.TemporaryDirectory(prefix='sedo-bundle-test-');self.addCleanup(self.temp.cleanup)
         self.base=Path(self.temp.name);self.state=self.base/'state';self.site=self.base/'site'

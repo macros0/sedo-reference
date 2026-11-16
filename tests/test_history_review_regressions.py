@@ -35,6 +35,10 @@ class OfflineIntegrityTests(unittest.TestCase):
         for command in ("python verify.py", "npm run test:browser"):
             self.assertIn(command, workflow)
             self.assertLess(workflow.index(command), workflow.index("git push"))
+        candidate_tests=workflow.index('name: Test generated candidate invariants')
+        self.assertLess(workflow.index('python auto_update.py'),candidate_tests)
+        self.assertLess(candidate_tests,workflow.index('git push'))
+
 
     def fixture(self, root):
         state, data = root / 'state', root / 'data'

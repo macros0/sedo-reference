@@ -22,24 +22,33 @@ def import_basename(location):
     resource=parse_qs(parsed.query).get("xsd",[parsed.path if parsed.scheme else location])[0]
     return posixpath.basename(unquote(resource).replace("\\","/"))
 
-def resolve_import(files,origin,location,namespace=None):
+def resolve_import(files,origin,location,namespace=None,kind="import"):
+    allowed={namespace or ""}
+    if kind in ("include", "redefine"):allowed.add("")
+    def matches(meta):return (kind=="legacy" and namespace is None) or (meta.get("namespace") or "") in allowed
     expected=posixpath.normpath(posixpath.join(posixpath.dirname(origin),location.replace("\\","/")))
     if expected in files:
-        if namespace and files[expected].get("namespace")!=namespace:raise ValueError("Несовпадение namespace импорта "+location)
+        if not matches(files[expected]):raise ValueError("Несовпадение namespace импорта "+location)
         return expected
-    candidates=[path for path,meta in files.items() if posixpath.basename(path)==import_basename(location) and namespace and meta.get("namespace")==namespace]
+    candidates=[path for path,meta in files.items() if posixpath.basename(path)==import_basename(location)
+                and not (kind=="legacy" and namespace is None) and matches(meta)]
     if len({files[p]["sha256"] for p in candidates})==1:return sorted(candidates)[0]
     raise ValueError(("Неоднозначный импорт " if candidates else "Не найден импорт ")+location+" в "+origin)
 
 def dependency_set(schemas,entry):
-    files={s["path"]:s for s in schemas};visited={}
-    def visit(path):
-        if path in visited:return
-        s=files[path];visited[path]=s["sha256"]
+    files={s["path"]:s for s in schemas};visited={};contexts=set()
+    def visit(path,inherited_namespace=None):
+        s=files[path];effective=s.get("namespace") or inherited_namespace or ""
+        if (path,effective) in contexts:return
+        contexts.add((path,effective));visited[path]=s["sha256"]
         for loc in s["dependencies"]:
             if not loc:raise ValueError("Импорт без пути в "+path)
-            namespace=next((i.get("namespace") for i in s.get("imports",[]) if i.get("location")==loc),None)
-            visit(resolve_import(files,path,loc,namespace))
+            reference=next((i for i in s.get("imports",[]) if i.get("location")==loc),{})
+            # Old snapshots recorded only schemaLocation. Preserve their
+            # exact-path closure without guessing an absent import namespace.
+            kind=reference.get("kind","import") if reference else "legacy"
+            namespace=effective if kind=="include" else reference.get("namespace")
+            visit(resolve_import(files,path,loc,namespace,kind),effective if kind=="include" else None)
     visit(entry)
     return sorted((posixpath.relpath(p,posixpath.dirname(entry)),h) for p,h in visited.items())
 
@@ -52,6 +61,11 @@ def notes(node):
 class Schema:
     def __init__(self, archive, entry, root_name):
         self.files = {}
+        # A chameleon document can contribute distinct components to several
+        # namespaces. Keep a separate parsed tree for every effective namespace,
+        # while retaining real archive paths for provenance and old consumers.
+        self.documents = {}
+        self.context = {}
         self.owner = {}
         self.prefixes = {}
         self.symbol = {}
@@ -65,9 +79,7 @@ class Schema:
         if self.root is None:
             raise ValueError("Корневой элемент " + root_name + " не найден.")
 
-    def load(self, archive, path):
-        if path in self.files:
-            return
+    def load(self, archive, path, inherited_namespace=None):
         data = archive.read(path)
         parser = ET.iterparse(io.BytesIO(data), events=("start-ns", "start", "end"))
         scopes = [{}]
@@ -85,8 +97,13 @@ class Schema:
             else:
                 scopes.pop()
         root = parser.root
-        target = root.get("targetNamespace", "")
-        self.files[path] = (root, self.prefixes[root], target)
+        declared = root.get("targetNamespace", "")
+        target = declared or inherited_namespace or ""
+        if (path,target) in self.documents:return
+        document=(root,self.prefixes[root],target)
+        self.documents[path,target]=document
+        self.files.setdefault(path,document)
+        for node in root.iter():self.context[node]=document
         for e in root:
             if e.get("name"):
                 key = (target, local(e), e.get("name"))
@@ -95,19 +112,26 @@ class Schema:
                 self.symbol[key] = e
         for imp in list(root.findall(X+"import")) + list(root.findall(X+"include")):
             location=imp.attrib["schemaLocation"]
-            target=posixpath.normpath(posixpath.join(posixpath.dirname(path),location))
-            if target not in archive.namelist():
-                if self.inventory is None:
-                    self.inventory={name:dict(namespace=ET.fromstring(archive.read(name)).get("targetNamespace"),sha256=hashlib.sha256(archive.read(name)).hexdigest()) for name in archive.namelist() if name.lower().endswith(".xsd")}
-                target=resolve_import(self.inventory,path,location,imp.get("namespace") if imp.tag==X+"import" else self.files[path][2])
-            self.load(archive,target)
+            if self.inventory is None:
+                self.inventory={name:dict(namespace=ET.fromstring(archive.read(name)).get("targetNamespace"),sha256=hashlib.sha256(archive.read(name)).hexdigest()) for name in archive.namelist() if name.lower().endswith(".xsd")}
+            kind=local(imp)
+            imported=resolve_import(self.inventory,path,location,imp.get("namespace") if kind=="import" else target,kind)
+            self.load(archive,imported,target if kind=="include" else None)
 
-    def resolve(self, qname, source, kinds):
-        prefix, _, name = qname.rpartition(":")
+    def qname_namespace(self, qname, source):
+        prefix, _, _name = qname.rpartition(":")
         scope = self.prefixes[source]
         if prefix and prefix not in scope:
             raise ValueError("Необъявленный префикс "+prefix+" в "+self.owner[source])
-        uri = scope.get(prefix, "")
+        uri=scope.get(prefix, "")
+        schema,_,effective=self.context.get(source,self.files[self.owner[source]])
+        if not prefix and not uri and not schema.get("targetNamespace"):
+            uri=effective
+        return uri
+
+    def resolve(self, qname, source, kinds):
+        prefix, _, name = qname.rpartition(":")
+        uri = self.qname_namespace(qname,source)
         if uri == XS:
             return None
         for k in kinds:
@@ -116,7 +140,7 @@ class Schema:
         raise ValueError("Не удалось раскрыть тип или ссылку "+qname+" в "+self.owner[source])
 
     def instance_namespace(self, declaration):
-        schema, _, target = self.files[self.owner[declaration]]
+        schema, _, target = self.context.get(declaration,self.files[self.owner[declaration]])
         kind = local(declaration)
         if self.symbol.get((target, kind, declaration.get("name"))) is declaration:
             return target
@@ -184,19 +208,32 @@ class Schema:
         nodegroups = 0
         content = []
         complex_type = False
-        def expand_type(q,elem,stack,particles):
+        def expand_type(q,elem,stack,particles,attributes_only=False,excluded_attributes=frozenset()):
             if elem is src and q == src.get("type"):
-                prefix, _, _name = q.rpartition(":")
-                d["typeNs"] = self.prefixes[elem].get(prefix, "")
+                d["typeNs"] = self.qname_namespace(q,elem)
             obj = self.resolve(q,elem,["simpleType","complexType"])
             if obj is None:
-                d["base"]=q
+                if not attributes_only:
+                    d["base"]=q
+                    d["baseNs"]=self.qname_namespace(q,elem)
             else:
                 if obj in stack:
                     raise ValueError("Рекурсивный тип в "+path)
                 d.setdefault("typeFile", self.owner[obj].split("/")[-1])
-                walk(obj, "", stack+(obj,),particles)
-        def walk(e,group,stack,particles):
+                walk(obj, "", stack+(obj,),particles,attributes_only=attributes_only,excluded_attributes=excluded_attributes)
+        def attribute_key(e):
+            obj=self.resolve(e.get("ref"),e,["attribute"]) if e.get("ref") else e
+            return self.instance_namespace(obj),obj.get("name")
+        def restriction_attributes(e,visited=()):
+            keys=set()
+            for child in e:
+                if local(child)=="attribute":keys.add(attribute_key(child))
+                elif local(child)=="attributeGroup":
+                    obj=self.resolve(child.get("ref"),child,["attributeGroup"])
+                    if obj in visited:raise ValueError("Рекурсивная группа в "+path)
+                    keys.update(restriction_attributes(obj,visited+(obj,)))
+            return keys
+        def walk(e,group,stack,particles,attributes_only=False,excluded_attributes=frozenset(),complex_content=False):
             nonlocal nodegroups, complex_type
             kind = local(e)
             if kind == "complexType" and not complex_type:
@@ -208,6 +245,7 @@ class Schema:
                     d["flags"]["mixed"] = "true"
                 else:
                     d["flags"].pop("mixed", None)
+            if attributes_only and kind in ("choice","sequence","all","group"):return
             if kind in ("choice", "sequence", "all"):
                 model = [kind]
                 particles.append(model)
@@ -219,7 +257,9 @@ class Schema:
             if local(e) in ("choice","sequence","all") and (e.get("minOccurs","1"),e.get("maxOccurs","1"))!=("1","1"):
                 group=(group+" / " if group else "")+local(e)+" ["+e.get("minOccurs","1")+".."+e.get("maxOccurs","1")+"]"
             if local(e) in ("restriction","extension") and e.get("base"):
-                expand_type(e.get("base"),e,stack,particles)
+                restrict_complex=kind=="restriction" and complex_content
+                inherited_exclusions=excluded_attributes | restriction_attributes(e) if restrict_complex else excluded_attributes
+                expand_type(e.get("base"),e,stack,particles,attributes_only or restrict_complex,inherited_exclusions)
                 if kind == "restriction" and e.find(X+"enumeration") is not None:
                     d["values"].clear()
             for c in e:
@@ -232,18 +272,23 @@ class Schema:
                     label=f"Выбор {choice_id}, вариант {option}"
                     child_group=f"{group} / {label}" if group else label
                 if t in ("element","attribute","any","anyAttribute"):
+                    if attributes_only and t not in ("attribute","anyAttribute"):continue
+                    # A restriction inherits named attribute uses, but its
+                    # wildcard is its own declaration (absence removes it).
+                    if attributes_only and t=="anyAttribute":continue
+                    if t=="attribute" and (c.get("use")=="prohibited" or attribute_key(c) in excluded_attributes):continue
                     child = self.field(c,idx,child_group,stack)
                     if t in ("element", "any"):
                         particles.append(self.fields[child]["name"])
                 elif t in ("complexType","simpleType","complexContent","simpleContent","extension","restriction","sequence","choice","all"):
-                    walk(c,child_group,stack,particles)
+                    walk(c,child_group,stack,particles,attributes_only,excluded_attributes,kind=="complexContent")
                 elif t in ("attributeGroup","group"):
                     obj=self.resolve(c.get("ref"),c,[t]) if c.get("ref") else c
                     if obj in stack:raise ValueError("Рекурсивная группа в "+path)
                     group_label=child_group
                     if t=="group" and (c.get("minOccurs","1"),c.get("maxOccurs","1"))!=("1","1"):
                         group_label+=(" / " if group_label else "")+"group ["+c.get("minOccurs","1")+".."+c.get("maxOccurs","1")+"]"
-                    walk(obj,group_label,stack+(obj,),particles)
+                    walk(obj,group_label,stack+(obj,),particles,attributes_only,excluded_attributes)
                 elif t=="union":
                     alternatives=[]
                     variants=[(q,None) for q in c.get("memberTypes","").split()]+[(None,n) for n in c.findall(X+"simpleType")]
@@ -252,13 +297,14 @@ class Schema:
                         temporary=ET.Element(X+"element",dict(name="unionOption",**({"type":q} if q else {})))
                         self.owner[temporary]=self.owner[c]
                         self.prefixes[temporary]=self.prefixes[c]
+                        self.context[temporary]=self.context[c]
                         if obj is not None:temporary.append(obj)
                         original=self.fields
                         try:
                             self.fields=[];self.field(temporary,chain=stack)
                             if len(self.fields)!=1:raise ValueError("Нескалярный вариант union в "+path)
                             option=self.fields[0]
-                            alternatives.append({k:option[k] for k in ("type","base","facets","values","flags")}|({"alternatives":option["alternatives"]} if option.get("alternatives") else {}))
+                            alternatives.append({k:option[k] for k in ("type","base","facets","values","flags","typeNs","baseNs") if k in option}|({"alternatives":option["alternatives"]} if option.get("alternatives") else {}))
                         finally:self.fields=original
                     d["alternatives"]=alternatives
                 elif t=="enumeration":
@@ -273,6 +319,7 @@ class Schema:
             walk(src,"",chain,content)
             if tag == "element" and not complex_type and src.find(X+"simpleType") is None:
                 d["base"] = "xs:anyType"
+                d["baseNs"] = XS
         if content:
             d["contentModel"] = content[0] if len(content) == 1 else ["sequence", *content]
         elif complex_type and not d["base"]:

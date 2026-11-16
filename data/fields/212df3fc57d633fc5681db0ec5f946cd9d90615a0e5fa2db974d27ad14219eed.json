@@ -76,7 +76,8 @@
       "file": "Sedo.xsd",
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/sedo/v01",
-      "typeFile": "Sedo.xsd"
+      "typeFile": "Sedo.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }

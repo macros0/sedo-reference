@@ -82,10 +82,14 @@ restoreField();
         if not r["ready"]:continue
         fields=field_cache[rid]
         (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8",newline="\n")
+        r["fields_sha256"]=sha((comparison/(rid+".js")).read_bytes())
         r["review_sources"]=review_sources(catalog,r)
         data=dict(fields=fields,review_sources=r["review_sources"],revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=r.get("archive_name") or unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
-        (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8",newline="\n")
-        r["viewer_sha256"]=sha((editions/(rid+".html")).read_bytes())
+        page=editions/(rid+".html")
+        html=template.replace("__CATALOG_JSON__",packed(data)).encode("utf8")
+        if not page.is_file() or page.read_bytes()!=html:
+            write(page,html)
+        r["viewer_sha256"]=sha(page.read_bytes())
     if catalog.get("updates"):
         try:
             result=subprocess.run(["node",str(Path(__file__).with_name("summarize_updates.cjs")),str(HERE/"data/fields")],

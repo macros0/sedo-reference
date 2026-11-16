@@ -34,6 +34,30 @@ def field(name, path, parent, typ, children=()):
 
 
 class ModuleAuditTests(unittest.TestCase):
+    def test_primitive_base_does_not_document_named_type_restrictions(self):
+        self.fields[1].update(type='org:regNum', base='xs:string', facets=[['pattern', r'\d{10}']])
+        def document(typ, limit='', description=''):
+            return make_body('Тип сообщения 55: извещение', 'Таблица 1',
+                             [HEADER, ['code', typ, limit, '1', description]])
+        findings = audit(self.revision, document('xs:string'), self.fields)[1]
+        self.assertTrue(any(f['kind'] == 'Ограничение значения' and 'notice/code' in f['xlocation'] for f in findings))
+        self.assertEqual(audit(self.revision, document('org:regNum'), self.fields)[1], [])
+        self.assertEqual(audit(self.revision, document('xs:string', r'\d{10}'), self.fields)[1], [])
+        self.assertEqual(audit(self.revision, document('xs:string', '', 'Ровно 10 цифр'), self.fields)[1], [])
+
+    def test_message_111_restricted_empl_reg_no_is_reported_in_own_environment(self):
+        from schema import Schema
+        revisions = json.loads((ROOT/'data/catalog.json').read_bytes())['revisions']
+        for environment in ('prod', 'test'):
+            revision = next(r for r in revisions if r['number'] == '111' and r['environment'] == environment
+                            and r.get('source_type') == 'module')
+            with zipfile.ZipFile(ROOT/'state/objects'/revision['archive_sha256']) as archive:
+                tree = Schema(archive, revision['schema_path'], revision['root']); tree.field(tree.root)
+            with zipfile.ZipFile(ROOT/'state/objects'/revision['document_sha256']) as document:
+                body = ET.fromstring(document.read('word/document.xml')).find(W+'body')
+            findings = audit(revision, body, tree.fields)[1]
+            self.assertTrue(any(f['kind'] == 'Ограничение значения' and f['xlocation'].endswith('/emplRegNo2') for f in findings), environment)
+
     def setUp(self):
         self.revision = dict(number='55', root='notice', namespace='urn:test', schema_path='Example.xsd')
         self.fields = [field('notice', 'notice', -1, 'NoticeType', [1]),

@@ -77,7 +77,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "firstName",
@@ -102,7 +103,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "middleName",
@@ -127,7 +129,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDate",
@@ -146,7 +149,8 @@
       "ns": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "birthDateSpecial",
@@ -213,7 +217,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "month",
@@ -246,7 +251,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "year",
@@ -265,7 +271,8 @@
       "ns": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "snils",
@@ -294,7 +301,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "identificationDocument",
@@ -351,7 +359,8 @@
       "ns": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "Series",
@@ -376,7 +385,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "Number",
@@ -405,7 +415,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issueDate",
@@ -424,7 +435,8 @@
       "ns": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "issuedBy",
@@ -449,7 +461,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "unitCode",
@@ -474,7 +487,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "expiredOn",
@@ -493,7 +507,8 @@
       "ns": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "inn",
@@ -518,7 +533,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "bic",
@@ -543,7 +559,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "bankAccount",
@@ -568,7 +585,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "executionPresented",
@@ -587,7 +605,8 @@
       "ns": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "executionDuration",
@@ -616,7 +635,8 @@
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
       "typeNs": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
-      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd"
+      "typeFile": "judicial_restriction_info_sedo_1.0.2.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     },
     {
       "name": "applicationDate",
@@ -635,7 +655,8 @@
       "ns": "urn://iis.ecp.ru/judicial_restriction_info/1.0.2",
       "file": "judicial_restriction_info_sedo_1.0.2.xsd",
       "flags": {},
-      "typeNs": "http://www.w3.org/2001/XMLSchema"
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
     }
   ]
 }
