@@ -61,10 +61,12 @@ class AttributeUseValidator:
         for profile in manifest.get('attribute_type_checks',[]):
             for rule in profile['checks']:self.by_type[tuple(profile['type'])].setdefault(tuple(map(tuple,rule['path'])),[]).append(rule)
 
-    def validate(self, document):
+    def validate(self, document, *, check_attributes_on_invalid=False):
         from lxml import etree
-        if not self.primary.validate(document):
+        primary_valid = self.primary.validate(document)
+        if not primary_valid and not check_attributes_on_invalid:
             self.error_log=self.primary.error_log;return False
+        primary_errors = list(self.primary.error_log)
         root=document.getroot() if hasattr(document,'getroot') else document
         prefix='sedoprobe'
         while any(prefix in node.nsmap for node in root.iter() if isinstance(node.tag,str)):prefix+='x'
@@ -92,7 +94,7 @@ class AttributeUseValidator:
                 subjects[probe]=(node,rule)
             for child in node:visit(child,path,scopes)
         visit(root,(),())
-        valid=self.supplementary.validate(probes);self.error_log=[]
+        valid=self.supplementary.validate(probes);self.error_log=primary_errors
         if not valid:
             probe_tree=probes.getroottree()
             by_probe_path={probe_tree.getpath(probe):subject for probe,subject in subjects.items()}
@@ -104,8 +106,9 @@ class AttributeUseValidator:
                     node,rule=subject;ns,name=rule['attribute'];attribute=('{'+ns+'}' if ns else '')+name
                     message="Element '"+node.tag+"', attribute '"+attribute+"': "+error.message
                 else:message=error.message
-                self.error_log.append(SimpleNamespace(line=error.line,column=error.column,message=message))
-        return valid
+                self.error_log.append(SimpleNamespace(line=error.line,column=error.column,message=message,
+                    path=node.getroottree().getpath(node) if subject else None))
+        return primary_valid and valid
 
 
 def main(argv=None):

@@ -263,11 +263,11 @@
    view.onclick=()=>{if(options.isCurrent()){try{showPreview(savedReport(),"Ранее применено")}catch(e){status.textContent="Не удалось открыть черновик. "+e.message}}};savedSuggest=view;controls.append(view)}catch(e){status.textContent+=" Не удалось подготовить предложения. "+e.message}
   }
   input.onchange=async()=>{
-   const file=input.files?.[0];if(!file)return;const token=++generation;active?.destroy();active=null;activeReport=null;preview.replaceChildren();
-   upload.disabled=add.disabled=true;if(savedSuggest)savedSuggest.disabled=true;status.textContent="Читаем Excel…";
-   try{const report=await readFile(file,options);if(token===generation&&options.isCurrent())showPreview(report,"Из Excel")}
+   const file=input.files?.[0];if(!file)return;const token=++generation;
+   upload.disabled=add.disabled=reset.disabled=true;preview.inert=notice.inert=true;if(savedSuggest)savedSuggest.disabled=true;status.textContent="Читаем Excel…";
+   try{const report=await readFile(file,options);if(report.errors.length)throw Error(report.errors.join(" "));if(token===generation&&options.isCurrent())showPreview(report,"Из Excel")}
    catch(e){if(token===generation&&options.isCurrent())status.textContent="Не удалось загрузить соответствия. "+e.message}
-   finally{if(token===generation){upload.disabled=add.disabled=false;if(savedSuggest)savedSuggest.disabled=false;input.value=""}}
+   finally{if(token===generation){upload.disabled=add.disabled=false;reset.disabled=!saved.pairs.length&&!saved.notice;preview.inert=notice.inert=false;if(savedSuggest)savedSuggest.disabled=false;input.value=""}}
   };
   return {hasUnapplied:()=>active?.hasUnapplied()??false};
  }

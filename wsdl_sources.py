@@ -162,6 +162,41 @@ def bridge(document, support, read_object):
         own_namespaces = {ET.fromstring(v).get("targetNamespace") for v in own.values()}
         files = {n: v for n, v in dependencies.items() if ET.fromstring(v).get("targetNamespace") not in own_namespaces}
         files.update(own)
+        # One namespace can span several files. Restore only missing concrete
+        # dependencies, keeping all declarations supplied by the document first.
+        from schema import resolve_import, import_basename
+        inventory = {name: dict(namespace=ET.fromstring(raw).get("targetNamespace"), sha256=sha(raw))
+                     for name, raw in {**dependencies, **own}.items()}
+        pending = list(files)
+        for name in pending:
+            root = ET.fromstring(files[name])
+            for reference in root:
+                if reference.tag not in (XS + "include", XS + "import"):
+                    continue
+                location = reference.get("schemaLocation")
+                if not location:
+                    continue
+                namespace = reference.get("namespace") if reference.tag == XS + "import" else root.get("targetNamespace")
+                try:
+                    resolve_import({n: inventory[n] for n in files}, name, location, namespace)
+                    continue
+                except ValueError:
+                    pass
+                try:
+                    target = resolve_import(inventory, name, location, namespace)
+                except ValueError:
+                    # Preserve conflicting candidates so the matching pass can
+                    # distinguish ambiguity from a genuinely missing dependency.
+                    for candidate, metadata in inventory.items():
+                        if (candidate in dependencies and candidate not in files
+                                and posixpath.basename(candidate) == import_basename(location)
+                                and metadata["namespace"] == namespace):
+                            files[candidate] = dependencies[candidate]
+                            pending.append(candidate)
+                    continue
+                if target not in files:
+                    files[target] = dependencies[target]
+                    pending.append(target)
         content = _archive(files)
         digest = sha(content)
         if digest in seen:

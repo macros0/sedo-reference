@@ -10,6 +10,39 @@ BASE=SEED.split("?")[0]
 XS="http://www.w3.org/2001/XMLSchema"
 
 class WsdlSourcesTests(unittest.TestCase):
+ def test_bridge_restores_same_namespace_include_and_prefers_document_copy(self):
+  from schema import dependency_set
+  from wsdl_sources import _archive
+  main=f'<xs:schema xmlns:xs="{XS}" xmlns:m="urn:main" targetNamespace="urn:main"><xs:include schemaLocation="types.xsd"/><xs:element name="response" type="m:Code"/></xs:schema>'.encode()
+  types=f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:main"><xs:simpleType name="Code"><xs:restriction base="xs:string"/></xs:simpleType></xs:schema>'.encode()
+  for local in (False,True):
+   own={"root.xsd":main}
+   if local:own["types.xsd"]=types
+   support_raw=_archive({"root.xsd":main,"types.xsd":types.replace(b"xs:string",b"xs:int")})
+   own_raw=_archive(own)
+   objects={sha(own_raw):own_raw,sha(support_raw):support_raw}
+   doc=dict(environment="test",url="https://example.test/doc.docx",embedded_archives=[dict(sha256=sha(own_raw))])
+   support=dict(environment="test",sha256=sha(support_raw),source_url=SEED,source_files=[])
+   result=bridge(doc,support,objects.__getitem__)[0]
+   entry=next(s for s in result["schemas"] if s["path"]=="document/root.xsd")
+   self.assertEqual(len(dependency_set(result["schemas"],entry["path"])),2)
+   with zipfile.ZipFile(io.BytesIO(result["content"])) as archive:
+    tree=Schema(archive,entry["path"],"response");tree.field(tree.root)
+    self.assertEqual(tree.fields[0]["base"],"xs:string" if local else "xs:int")
+
+ def test_bridge_does_not_choose_between_conflicting_include_candidates(self):
+  from schema import dependency_set
+  from wsdl_sources import _archive
+  main=f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:main"><xs:include schemaLocation="types.xsd"/><xs:element name="response" type="xs:string"/></xs:schema>'.encode()
+  a=f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:main"/>'.encode()
+  own_raw=_archive({"root.xsd":main})
+  support_raw=_archive({"a/types.xsd":a,"b/types.xsd":a.replace(b"/>",b"> </xs:schema>")})
+  objects={sha(own_raw):own_raw,sha(support_raw):support_raw}
+  doc=dict(environment="test",url="https://example.test/doc.docx",embedded_archives=[dict(sha256=sha(own_raw))])
+  support=dict(environment="test",sha256=sha(support_raw),source_url=SEED,source_files=[])
+  result=bridge(doc,support,objects.__getitem__)[0]
+  with self.assertRaisesRegex(ValueError,"Неоднозначный импорт"):dependency_set(result["schemas"],"document/root.xsd")
+
  def bundle(self,body=None):
   return {SEED:('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="'+XS+'"><w:types><xs:schema><xs:import namespace="urn:main" schemaLocation="'+BASE+'?xsd=main.xsd"/></xs:schema></w:types></w:definitions>').encode(),BASE+"?xsd=main.xsd":body or ('<xs:schema xmlns:xs="'+XS+'" xmlns:c="urn:common" targetNamespace="urn:main"><xs:import namespace="urn:common" schemaLocation="'+BASE+'?xsd=Common.xsd"/><xs:element name="response" type="c:Code"/></xs:schema>').encode(),BASE+"?xsd=Common.xsd":('<xs:schema xmlns:xs="'+XS+'" targetNamespace="urn:common"><xs:simpleType name="Code"><xs:restriction base="xs:string"><xs:length value="10"/></xs:restriction></xs:simpleType></xs:schema>').encode()}
  def collect(self,resources):

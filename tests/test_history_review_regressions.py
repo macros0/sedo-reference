@@ -12,6 +12,30 @@ from verify import verify
 
 
 class OfflineIntegrityTests(unittest.TestCase):
+    def test_replay_uses_captured_libraries_without_published_wsdl_links(self):
+        import os
+        from tests.test_collector_feed import FeedTests
+        from sync import sync
+        manifest, objects = FeedTests().capture()
+        for mode in ("sourcecraft", "home"):
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as temp:
+                state, data, _ = self.fixture(Path(temp))
+                snapshot = json.loads((state / "snapshots" / (json.loads((state / "current.json").read_bytes())["snapshot"] + ".json")).read_bytes())
+                snapshot["entries"].append(manifest["library"])
+                payload = encode(snapshot)
+                write(state / "snapshots" / (sha(payload) + ".json"), payload)
+                write(state / "current.json", encode(dict(snapshot=sha(payload))))
+                for digest, raw in objects.items():
+                    write(state / "objects" / digest, raw)
+                with patch.dict(os.environ, SEDO_COLLECTOR_SOURCE=mode):
+                    verify(state, data)
+
+    def test_daily_workflow_checks_browser_and_snapshot_before_push(self):
+        workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/check-sfr.yml").read_text("utf8")
+        for command in ("python verify.py", "npm run test:browser"):
+            self.assertIn(command, workflow)
+            self.assertLess(workflow.index(command), workflow.index("git push"))
+
     def fixture(self, root):
         state, data = root / 'state', root / 'data'
         page = b'<a href="/specs_sedo/archive.zip">Schemas</a>'
@@ -46,7 +70,7 @@ class OfflineIntegrityTests(unittest.TestCase):
     def test_replay_must_match_expected_current_snapshot_not_only_itself(self):
         with tempfile.TemporaryDirectory() as temp:
             state, data, _ = self.fixture(Path(temp))
-            def changed(base):
+            def changed(base, **kwargs):
                 from sync import get
                 get(next(iter(SITES.values())))
                 write(base / 'current.json', encode(dict(snapshot='0' * 64)))

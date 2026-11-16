@@ -32,6 +32,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
+      - name: Install browser test dependencies
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
       - name: Test history preservation and update failures
         run: |
           python -m unittest discover -s tests -v
@@ -71,7 +76,20 @@ jobs:
           SEDO_COLLECTOR_SOURCE: ${{ vars.SEDO_COLLECTOR_SOURCE || 'sourcecraft' }}
         run: |
           python auto_update.py
+          python verify.py
           node tests/test_browser_validation.cjs --all-editions
+      - name: Check candidate in Chromium before saving
+        run: npm run test:browser
+      - name: Save browser test report
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: browser-test-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 30
       - name: Commit validated data and deploy
         run: |
           git add state data site

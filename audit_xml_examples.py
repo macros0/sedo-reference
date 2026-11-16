@@ -39,11 +39,13 @@ def _parse(data, resources=None, base_url=None):
     return root
 
 
-def _schema(path, entry):
+def _schema(path, revision):
     # Read only XSD members, never extract paths. Give libxml2 opaque, in-memory
     # URLs, including for the HTTP-style import locations in recovered WSDLs.
     inventory = {}
     roots = {}
+    originals = {}
+    entry = revision["schema_path"]
     with zipfile.ZipFile(path) as archive:
         members = [m for m in archive.infolist() if m.filename.lower().endswith(".xsd")]
         if len(members) > MAX_FILES or sum(m.file_size for m in members) > MAX_TOTAL:
@@ -52,6 +54,7 @@ def _schema(path, entry):
             if member.file_size > MAX_FILE or member.filename in inventory:
                 raise ValueError("Слишком большая или дублированная схема в архиве.")
             data = archive.read(member)
+            originals[member.filename] = data
             root = _parse(data)
             inventory[member.filename] = dict(namespace=root.get("targetNamespace"),
                                                sha256=hashlib.sha256(data).hexdigest())
@@ -78,7 +81,20 @@ def _schema(path, entry):
             imp.set("schemaLocation", urls[target])
             pending.append(target)
         resources[url] = etree.tostring(root)
-    return etree.XMLSchema(_parse(resources[urls[entry]], resources, urls[entry]))
+    primary = etree.XMLSchema(_parse(resources[urls[entry]], resources, urls[entry]))
+    if any(root.xpath(".//xs:attribute[@ref and @fixed] | xs:attribute[@fixed]",
+                      namespaces={"xs": X[1:-1]}) for root in roots.values()):
+        from xsd_bundle import _prepare
+        from xsd_validate import AttributeUseValidator
+        selected = {name: originals[name] for name, url in urls.items() if url in resources}
+        output, _, constraints = _prepare(revision, selected)
+        if constraints:
+            prefix = "sedo-memory:///bundle/"
+            local_resources = {prefix+name: raw for name, raw in output.items() if not name.startswith("originals/")}
+            source = prefix + constraints["supplementary_schema"]
+            supplementary = etree.XMLSchema(_parse(local_resources[source], local_resources, source))
+            return AttributeUseValidator(primary, supplementary, constraints)
+    return primary
 
 
 def _paragraphs(body):
@@ -243,15 +259,19 @@ def _diagnostic(node, error):
     except etree.XPathError:
         hits = []
     element = hits[0] if hits and isinstance(hits[0], etree._Element) else None
+    if element is None and error.path:
+        tree = node.getroottree()
+        element = next((item for item in node.iter() if isinstance(item.tag, str)
+                        and tree.getpath(item) == error.path), None)
     path = error.path or etree.QName(node).localname
     message = error.message
     readable = re.sub(r"\{(?:https?://|urn:)[^}]*\}", "", message)
     value = element.text if element is not None else None
     if element is not None:
         path = "/" + "/".join(etree.QName(p).localname for p in [*reversed(list(element.iterancestors())), element])
-        attribute = re.search(r", attribute '([^']+)'", message)
+        attribute = re.search(r", attribute '([^']+)'|The attribute '([^']+)' is required", message)
         if attribute:
-            key = attribute[1]
+            key = attribute[1] or attribute[2]
             path += "/@" + key.rsplit("}", 1)[-1]
             value = element.get(key)
     if value and re.fullmatch(r"(?:string)+", value.strip(), re.I):
@@ -336,7 +356,7 @@ def audit(revision, body, archive_path):
                 continue
             if schema is None:
                 try:
-                    schema = _schema(archive_path, revision["schema_path"])
+                    schema = _schema(archive_path, revision)
                 except (OSError, ValueError, KeyError, RuntimeError, zipfile.BadZipFile, etree.LxmlError) as exc:
                     notes.append("Не удалось подготовить XSD редакции: " + str(exc)[:220])
                     return checked, findings, list(dict.fromkeys(notes))
@@ -346,7 +366,9 @@ def audit(revision, body, archive_path):
                                          f"Для номера указан корень {expected}, пространство имён {namespace or 'отсутствует'}.",
                                          "Пример не соответствует корню редакции.", "Сверить имя корня и пространство имён."))
                 continue
-            valid = schema.validate(node)
+            from xsd_validate import AttributeUseValidator
+            valid = (schema.validate(node, check_attributes_on_invalid=True)
+                     if isinstance(schema, AttributeUseValidator) else schema.validate(node))
             if template:
                 # A literal boolean contradicting fixed="true" is meaningful
                 # even in a template. Placeholder values and mutually exclusive

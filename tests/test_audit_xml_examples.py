@@ -26,6 +26,29 @@ def body(*paragraphs):
 
 
 class ExampleAuditTests(unittest.TestCase):
+    def test_required_attribute_diagnostic_links_to_attribute(self):
+        self.write_schema(XSD.replace("</xs:sequence>", '</xs:sequence><xs:attribute name="stamp" use="required"/>'))
+        _, findings, _ = self.check("Пример", GOOD)
+        self.assertTrue(findings[0]["location"].endswith("/request/@stamp"), findings)
+
+    def test_locally_declared_child_prefix_keeps_required_attribute_path(self):
+        self.write_schema('<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:example"><xs:element name="request"><xs:complexType><xs:sequence><xs:element name="child" form="qualified"><xs:complexType><xs:attribute name="stamp" use="required"/></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element></xs:schema>')
+        _, findings, _ = self.check("Пример", '<request xmlns="urn:example"><local:child xmlns:local="urn:example"/></request>')
+        self.assertTrue(findings[0]["location"].endswith("/request/child/@stamp"), findings)
+
+    def test_fixed_attribute_ref_matches_validator_even_in_invalid_template(self):
+        main = XSD.replace('targetNamespace=', 'xmlns:a="urn:attrs" targetNamespace=').replace(
+            '<xs:element name="request">', '<xs:import namespace="urn:attrs" schemaLocation="attrs.xsd"/><xs:element name="request">').replace(
+            '</xs:sequence>', '</xs:sequence><xs:attribute ref="a:editable" fixed="false"/>')
+        attrs = '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:attrs"><xs:attribute name="editable" type="xs:boolean"/></xs:schema>'
+        self.write_schema(main, **{"attrs.xsd": attrs})
+        for value, invalid in (("true",True), ("1",True), ("false",False), ("0",False)):
+            for template in (False,True):
+                xml = GOOD.replace('xmlns="urn:example"', 'xmlns="urn:example" xmlns:a="urn:attrs" a:editable="'+value+'"')
+                if template: xml = xml.replace(">1<", ">string<")
+                _, findings, _ = self.check("Пример шаблона" if template else "Пример", xml)
+                self.assertEqual(bool(findings), invalid, (value,template,findings))
+
     def setUp(self):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)

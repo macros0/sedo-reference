@@ -9,6 +9,23 @@ def run(number, sha='a'*40, status='completed', conclusion='success', created='2
 
 
 class AutomationStatusTests(unittest.TestCase):
+    def test_published_target_is_found_after_ten_newer_runs(self):
+        from automation_status import collect_status
+        from unittest.mock import patch
+        check = run(1)
+        target = run(2)
+        newer = [run(n, sha="b"*40) for n in range(12,2,-1)]
+        def api(path):
+            if "check-sfr" in path: return {"workflow_runs": [check]}
+            if "head_sha=" in path: return {"workflow_runs": [target]}
+            return {"workflow_runs": newer}
+        reports = {"update-report.json": {"status": "ok"},
+                   "publication-target.json": {"update_run_id": 1, "head_sha": "a"*40}}
+        with patch("automation_status.api", side_effect=api), patch("automation_status.sourcecraft_status", return_value={}), patch("automation_status.run_reports", return_value=reports):
+            result = collect_status()
+        self.assertEqual(result["github"]["publication"]["state"], "success")
+        self.assertEqual(result["github"]["publication"]["run_id"], 2)
+
     def result(self, checks=None, pages=None, report=None, target=None, legacy=None):
         return build_status(dict(latest=dict(complete=True, finished_at='2026-11-13T07:02:00Z',
                     contours={'prod':dict(observed_at='2026-11-13T07:01:00Z', changed=False),
@@ -146,6 +163,7 @@ class AutomationStatusTests(unittest.TestCase):
                     'actions/workflows/check-sfr.yml/runs?branch=main&per_page=10': {'workflow_runs': [check]},
                     'actions/workflows/pages.yml/runs?branch=main&per_page=10': {'workflow_runs': listed},
                     'actions/runs/2': direct,
+                    'actions/workflows/pages.yml/runs?branch=main&head_sha='+'a'*40+'&per_page=100': {'workflow_runs': []},
                 }
                 reports = {'publication-target.json': {'update_run_id': 1, 'head_sha': check['head_sha']},
                            'update-report.json': {'status': 'ok', 'new_revisions': []}}

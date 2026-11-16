@@ -10,6 +10,13 @@ const choose=(side,value)=>{const select=find('mapping-tag-choice-'+side)[0];sel
 (async()=>{
  mount([]);find('mapping-add')[0].onclick();assert.equal(find('mapping-apply')[0].disabled,true,'unfinished editor blocks applying');
  choose('before','old/a');choose('after','new/a');find('mapping-edit-comment')[0].value='Первый комментарий';find('mapping-editor-save')[0].onclick();
+ const draftBeforeUpload=find('mapping-proposal').length,input=find('mapping-file')[0];
+ let completeRead;input.files=[{size:7,arrayBuffer:()=>new Promise(resolve=>{completeRead=resolve})}];const importing=input.onchange();
+ assert.equal(find('mapping-preview')[0].inert,true,'freeze the prior editor while a replacement is being read');
+ assert.equal(find('mapping-draft-notice')[0].inert,true,'freeze prior apply/discard controls while reading');
+ completeRead(new ArrayBuffer(7));await importing;
+ assert.equal(find('mapping-preview')[0].inert,false,'restore the prior editor after a failed import');
+ assert.equal(find('mapping-proposal').length,draftBeforeUpload,'unreadable XLSX must preserve the unapplied draft');
  assert.equal(find('mapping-row-editor')[0].hidden,false,'saving a draft pair must keep the form open for the next pair');assert.match(find('mapping-editor-feedback')[0].textContent,/old\/a.*new\/a/);assert.equal(find('mapping-tag-choice-before')[0].value,'');assert.equal(find('mapping-tag-choice-after')[0].value,'');assert.ok(!find('mapping-tag-choice-before')[0].children.some(e=>e.value==='old/a'),'saved draft endpoints must disappear from the next selection');assert.equal(find('mapping-apply')[0].disabled,false,'a blank continuation form must not block applying saved pairs');
  choose('before','old/b');assert.equal(find('mapping-apply')[0].disabled,true,'partial next pair must block applying');find('mapping-editor-cancel')[0].onclick();
  assert.equal(find('mapping-proposal').length,1);assert.equal(find('mapping-draft-notice')[0].hidden,false);assert.equal(api.store.load(opts).pairs.length,0,'draft never writes storage');

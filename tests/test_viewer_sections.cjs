@@ -10,6 +10,15 @@ function app(number,environment='prod',transform=fields=>fields){
  const scripts=[...viewer.matchAll(/<script(?: [^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]);vm.runInContext(scripts.at(-1),context);
  return {nodes,context,fields};
 }
+for(const [base,flags,contentModel,expected] of [
+ ['xs:anyType',{},undefined,'xs:anyType'],
+ ['',{},['empty'],'Пустой составной тип'],
+ ['',{mixed:'true'},['empty'],'Смешанный составной тип']
+]){
+ const {nodes}=app('205','prod',fields=>[{...fields[0],type:'',base,flags,contentModel,children:[]}]);
+ const facts=nodes.get('detail').children.find(e=>e.className==='facts');
+ assert.equal(facts.children[0].children[1].textContent,expected);
+}
 for(const number of ['86','10110','611']){
  const {nodes,context,fields}=app(number),scope=nodes.get('scope'),tree=nodes.get('tree');
  const block=fields.find(f=>f.parent===0&&f.children.length),nested=fields.find(f=>f.parent>0&&f.children.length);

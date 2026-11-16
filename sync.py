@@ -4,6 +4,7 @@ import collections
 import concurrent.futures
 import hashlib
 import io
+from itertools import islice
 import json
 import posixpath
 import re
@@ -86,7 +87,17 @@ class SourceRedirect(HTTPRedirectHandler):
 
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         source_url(newurl, self.seed)
+        if fp is not None:
+            if len(fp.read(MAX_BYTES + 1)) > MAX_BYTES:
+                raise ValueError("redirect response exceeds limit")
         return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+class SourceHTTPSHandler(HTTPSHandler):
+    def https_open(self, request):
+        from collector_transport import before_http_request
+        before_http_request()
+        return super().https_open(request)
 
 
 def _get(url, timeout=30, attempts=3):
@@ -100,7 +111,7 @@ def _get(url, timeout=30, attempts=3):
             context.load_verify_locations(cafile=str(bundle))
     for attempt in range(attempts):
         try:
-            opener = build_opener(SourceRedirect(url), HTTPSHandler(context=context))
+            opener = build_opener(SourceRedirect(url), SourceHTTPSHandler(context=context))
             with opener.open(Request(safe,headers={"User-Agent":"SEDO-reference/1.0"}),timeout=timeout) as r:
                 b=r.read(MAX_BYTES+1)
                 if len(b)>MAX_BYTES: raise ValueError("file exceeds limit")
@@ -170,7 +181,8 @@ def inspect_file(b,kind):
             if bindings: info["module_bindings"] = bindings
         return info
 
-def sync(base):
+def sync(base, *, wsdl_entries=None):
+    """Collect sources, optionally replaying the recorded WSDL observations offline."""
     entries=[]; pages={}; errors=[]; tasks=[]
     def blob(b):
         h=sha(b); p=base/"objects"/h
@@ -217,14 +229,24 @@ def sync(base):
             if archives:meta["embedded_archives"]=[{k:v for k,v in a.items() if k!="content"} for a in archives]
         return b,meta,packages
     with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
-        futures={pool.submit(fetch,r):r for r in tasks}
-        for fut in concurrent.futures.as_completed(futures):
-            r=futures[fut]
-            try:
-                b,meta,packages=fut.result();r.update(sha256=blob(b),bytes=len(b),**meta)
-                for package in packages:blob(package["content"])
-            except Exception as e:
-                r["error"]=str(e);errors.append([r["url"],str(e)])
+        pending = iter(tasks)
+        futures = {pool.submit(fetch, r): r for r in islice(pending, 3)}
+        while futures:
+            completed, _ = concurrent.futures.wait(futures, return_when=concurrent.futures.FIRST_COMPLETED)
+            for fut in completed:
+                r = futures.pop(fut)
+                try:
+                    b,meta,packages=fut.result();r.update(sha256=blob(b),bytes=len(b),**meta)
+                    for package in packages:blob(package["content"])
+                    if packages:
+                        del package
+                    del b, packages
+                except Exception as e:
+                    r["error"]=str(e);errors.append([r["url"],str(e)])
+            completed.clear()
+            del fut
+            for r in islice(pending, 3 - len(futures)):
+                futures[pool.submit(fetch, r)] = r
     # Only published, explicitly classified service hosts can provide a contour's
     # transport library. A test URL on the production page remains a test URL.
     from wsdl_sources import discover, collect, bridge
@@ -235,6 +257,11 @@ def sync(base):
         previous=json.loads((base/"snapshots"/(key+".json")).read_bytes())
     supports=[]
     for env in SITES:
+        if wsdl_entries is not None:
+            recorded = [dict(row) for row in wsdl_entries if row["environment"] == env]
+            entries.extend(recorded)
+            supports.extend(row for row in recorded if row.get("source_type") == "wsdl")
+            continue
         from collector_snapshots import load_library
         captured = load_library(base, env)
         if captured:

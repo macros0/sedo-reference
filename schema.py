@@ -183,6 +183,7 @@ class Schema:
             self.fields[parent]["children"].append(idx)
         nodegroups = 0
         content = []
+        complex_type = False
         def expand_type(q,elem,stack,particles):
             if elem is src and q == src.get("type"):
                 prefix, _, _name = q.rpartition(":")
@@ -196,8 +197,17 @@ class Schema:
                 d.setdefault("typeFile", self.owner[obj].split("/")[-1])
                 walk(obj, "", stack+(obj,),particles)
         def walk(e,group,stack,particles):
-            nonlocal nodegroups
+            nonlocal nodegroups, complex_type
             kind = local(e)
+            if kind == "complexType" and not complex_type:
+                complex_type = True
+                complex_content = e.find(X+"complexContent")
+                mixed = (complex_content.get("mixed", e.get("mixed", "false"))
+                         if complex_content is not None else e.get("mixed", "false"))
+                if mixed in ("true", "1"):
+                    d["flags"]["mixed"] = "true"
+                else:
+                    d["flags"].pop("mixed", None)
             if kind in ("choice", "sequence", "all"):
                 model = [kind]
                 particles.append(model)
@@ -261,8 +271,12 @@ class Schema:
             expand_type(src.get("type"),src,chain,content)
         else:
             walk(src,"",chain,content)
+            if tag == "element" and not complex_type and src.find(X+"simpleType") is None:
+                d["base"] = "xs:anyType"
         if content:
             d["contentModel"] = content[0] if len(content) == 1 else ["sequence", *content]
+        elif complex_type and not d["base"]:
+            d["contentModel"] = ["empty"]
         if parent==-1:self.coalesce_choice_leaves()
         return idx
 

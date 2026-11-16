@@ -21,8 +21,9 @@ def _tree(value):
 def _source_record(observed, current_rows):
     source = {key: copy.deepcopy(observed[key]) for key in SOURCE_KEYS if key in observed}
     identity = (source.get("document_sha256"), source.get("document_url"))
-    source["listed_now"] = any((row.get("document_sha256"), row.get("document_url")) == identity
-                               and row.get("listed_now", True) for row in current_rows)
+    source["listed_now"] = any((item.get("document_sha256"), item.get("document_url")) == identity
+                               for row in current_rows
+                               for item in row.get("listed_sources", [row] if row.get("listed_now", True) else []))
     downloadable = next((row for row in current_rows if row.get("document_sha256") == identity[0]
                          and row.get("document_download")), None)
     if downloadable:

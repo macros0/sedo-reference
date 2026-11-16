@@ -5,6 +5,42 @@ from collector_transport import PoliteFetch
 
 
 class TransportTests(unittest.TestCase):
+    def test_permitted_redirect_waits_and_counts_each_request(self):
+        import sync
+        from urllib.request import Request
+        seed = sync.SITES["prod"]
+        target = "https://lk.sfr.gov.ru/specs_sedo/archive.zip"
+        def get(url, **kwargs):
+            handler = sync.SourceHTTPSHandler()
+            handler.https_open(Request(seed))
+            sync.SourceRedirect(seed).redirect_request(Request(seed), None, 302, "", {}, target)
+            handler.https_open(Request(target))
+            return b"ok"
+        with patch("urllib.request.HTTPSHandler.https_open"), patch("collector_transport.time.monotonic", return_value=10), patch("collector_transport.time.sleep") as sleep:
+            fetch = PoliteFetch(get)
+            self.assertEqual(fetch(seed), b"ok")
+            self.assertEqual(fetch.count, 2)
+            sleep.assert_called_once_with(5)
+        fetch = PoliteFetch(get, max_requests=1)
+        with patch("urllib.request.HTTPSHandler.https_open"), self.assertRaisesRegex(RuntimeError, "budget"):
+            fetch(seed)
+
+    def test_redirect_loop_rejection_does_not_consume_another_request(self):
+        import io
+        import sync
+        from urllib.request import Request
+        seed = sync.SITES["prod"]
+        def get(url, **kwargs):
+            handler = sync.SourceRedirect(seed)
+            request = Request(seed)
+            request.redirect_dict = {seed: handler.max_repeats}
+            return handler.http_error_302(request, io.BytesIO(b""), 302, "", {"location": seed})
+        fetch = PoliteFetch(get)
+        with patch("collector_transport.time.sleep") as sleep, self.assertRaises(HTTPError):
+            fetch(seed)
+        self.assertEqual(fetch.count, 1)
+        sleep.assert_not_called()
+
     def test_pause_timeout_single_attempt(self):
         get = Mock(return_value=b"xml")
         with patch('collector_transport.time.monotonic', side_effect=[10, 12, 17]), patch('collector_transport.time.sleep') as sleep:

@@ -12,6 +12,8 @@
 *.js text eol=lf
 *.cjs text eol=lf
 *.html text eol=lf
+*.css text eol=lf
+*.svg text eol=lf
 /site/sources/*.xsd -text
 /site/schemas/*.validation.json.gz -text
 

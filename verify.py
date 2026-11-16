@@ -4,6 +4,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 from sync import SITES,sync
+from sync import write
 from catalog import dependency_set,derive
 
 def failure_probe_url(snapshot, requests):
@@ -44,20 +45,34 @@ def verify(state,data):
     if missing:
         raise ValueError("Missing required replay objects: " + ", ".join(missing))
     def cached(u,**kwargs):return (state/"objects"/urls[u]).read_bytes()
+    wsdl_entries = [row for row in snapshot["entries"]
+                    if row.get("source_type") == "wsdl" or row.get("kind") == "wsdl_status"]
+    from collector_snapshots import make_manifest, validate_manifest
+    for row in wsdl_entries:
+        if row.get("source_type") == "wsdl":
+            library = {key: value for key, value in row.items() if key != "retrieval_status"}
+            validate_manifest(make_manifest(library, "2000-01-01T00:00:00+00:00"),
+                              lambda digest: (state/"objects"/digest).read_bytes())
     with TemporaryDirectory() as tmp:
         base=Path(tmp)
+        # These are inputs of this exact snapshot, independent of today's
+        # collector configuration, links and availability.
+        for row in wsdl_entries:
+            if row.get("sha256"):
+                for digest in [row["sha256"], *(source["sha256"] for source in row.get("source_files", []))]:
+                    write(base/"objects"/digest, (state/"objects"/digest).read_bytes())
         with patch("sync.get",side_effect=cached) as downloads:
-            sync(base);first=(base/"current.json").read_bytes()
+            sync(base, wsdl_entries=wsdl_entries);first=(base/"current.json").read_bytes()
             if snapshot.get("format") == 1:
                 assert json.loads(first)["snapshot"] == current, "Replayed snapshot differs from expected current snapshot " + current
-            sync(base)
+            sync(base, wsdl_entries=wsdl_entries)
         assert first==(base/"current.json").read_bytes() and not any(json.loads((base/"last-run.json").read_bytes())["diff"].values())
         probe_url = failure_probe_url(snapshot, (call.args[0] for call in downloads.call_args_list))
         def failed(u,**kwargs):
             if u == probe_url:raise OSError("simulated failure")
             return cached(u)
         with patch("sync.get",side_effect=failed):
-            try:sync(base)
+            try:sync(base, wsdl_entries=wsdl_entries)
             except (ValueError, OSError):pass
             else:raise AssertionError("failed download accepted")
         assert first==(base/"current.json").read_bytes()

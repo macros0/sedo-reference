@@ -1,11 +1,24 @@
 """Conservative, sequential SFR transport used by the daily XSD collector."""
 import time
 import threading
+from contextvars import ContextVar
 from urllib.error import HTTPError
 
 REQUEST_POLICY = {"min_pause_seconds": 5, "request_timeout_seconds": 30,
                   "attempts_per_url": 1, "max_requests": 32, "parallel_requests": 1,
                   "stop_on_first_error": True}
+
+_active_fetch = ContextVar("active_polite_fetch", default=None)
+
+
+def before_http_request():
+    """Count accepted HTTP hops when the opener reaches its transport."""
+    fetch = _active_fetch.get()
+    if fetch is not None:
+        if fetch.http_requests:
+            fetch.finished_at = time.monotonic()
+            fetch.start_request()
+        fetch.http_requests += 1
 
 
 class PoliteFetch:
@@ -23,17 +36,10 @@ class PoliteFetch:
             return self._request(url)
 
     def _request(self, url):
-        if self.stopped:
-            raise RuntimeError("Collection stopped after first request error: " + self.stopped)
-        if self.count >= self.max_requests:
-            self.stopped = "Request budget exhausted"
-            raise RuntimeError(self.stopped)
-        if self.finished_at is not None:
-            pause = REQUEST_POLICY["min_pause_seconds"] - (time.monotonic() - self.finished_at)
-            if pause > 0:
-                time.sleep(pause)
-        self.count += 1
+        self.start_request()
+        self.http_requests = 0
         print("FETCH " + url, flush=True)
+        token = _active_fetch.set(self)
         try:
             raw = self.fetch(url, timeout=REQUEST_POLICY["request_timeout_seconds"], attempts=1)
             print("OK " + str(len(raw)) + " bytes " + url, flush=True)
@@ -46,3 +52,16 @@ class PoliteFetch:
             raise
         finally:
             self.finished_at = time.monotonic()
+            _active_fetch.reset(token)
+
+    def start_request(self):
+        if self.stopped:
+            raise RuntimeError("Collection stopped after first request error: " + self.stopped)
+        if self.count >= self.max_requests:
+            self.stopped = "Request budget exhausted"
+            raise RuntimeError(self.stopped)
+        if self.finished_at is not None:
+            pause = REQUEST_POLICY["min_pause_seconds"] - (time.monotonic() - self.finished_at)
+            if pause > 0:
+                time.sleep(pause)
+        self.count += 1

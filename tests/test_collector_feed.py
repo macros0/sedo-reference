@@ -10,6 +10,20 @@ from collector_feed import store_feed, import_feed
 
 
 class FeedTests(unittest.TestCase):
+    def test_invalid_cached_manifest_envelope_is_replaced_and_retry_is_idempotent(self):
+        manifest, objects = self.capture()
+        with tempfile.TemporaryDirectory() as remote, tempfile.TemporaryDirectory() as local:
+            remote, local = Path(remote), Path(local)
+            store_feed(remote, [manifest], objects)
+            read = lambda name: (remote / name).read_bytes()
+            import_feed(local, read)
+            name = "collector/test/" + manifest["content_id"] + ".json"
+            broken = dict(manifest, observed_at="2026-11-13T12:00:00")
+            (local / name).write_text(json.dumps(broken))
+            import_feed(local, read)
+            self.assertEqual(json.loads((local / name).read_bytes()), manifest)
+            self.assertEqual(import_feed(local, read)["new_manifests"], 0)
+
     def capture(self, changed=False):
         fixture = fixtures.WsdlSourcesTests()
         resources = fixture.bundle()

@@ -94,7 +94,7 @@ def export(state,target):
     observation_file=state/"observations.json"
     observations=json.loads(observation_file.read_bytes())["snapshots"] if observation_file.exists() else {}
     updates=[];update_sources={};source_observations=[];seen_sources=set();previous_by_message={}
-    versions={};current_ids=set();registry={};current_registry=set()
+    versions={};current_ids=set();registry={};current_registry=set();listed_sources={}
     for batch,key in enumerate(dict.fromkeys([*history,ptr])):
         d=derive(json.loads((state/"snapshots"/(key+".json")).read_bytes()))
         added={}
@@ -121,7 +121,10 @@ def export(state,target):
                 if old and old.get("manual_source") and not row.get("manual_source"):
                     row=dict(row,manual_source=old["manual_source"])
                 versions[row["revision_id"]]=row
-            if key==ptr:current_ids.add(row["revision_id"])
+            if key==ptr:
+                current_ids.add(row["revision_id"])
+                listed_sources.setdefault(row["revision_id"], []).append({
+                    key: row.get(key) for key in ("document_sha256", "document_url")})
         # Editions discovered in the same batch share a previous historical edition.
         previous_by_message.update(added)
         for row in d["registry"]:
@@ -129,7 +132,9 @@ def export(state,target):
             registry[identity]=row
             if key==ptr:current_registry.add(identity)
         if key==ptr:latest=d
-    latest["revisions"]=[dict(r,listed_now=i in current_ids) for i,r in versions.items()]
+    latest["revisions"]=[dict(r,listed_now=i in current_ids) |
+                         (dict(listed_sources=listed_sources[i]) if len(listed_sources.get(i, [])) > 1 else {})
+                         for i,r in versions.items()]
     latest["registry"]=[dict(row,listed_now=identity in current_registry) for identity,row in registry.items()]
     latest["updates"]=updates
     # Keep the legacy events unchanged; provenance is fixed at first observation

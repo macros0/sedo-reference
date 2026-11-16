@@ -10,6 +10,21 @@ from sync import encode, write
 
 
 class JournalTests(unittest.TestCase):
+    def test_two_current_urls_of_one_revision_remain_current_independently(self):
+        from edition_groups import group_editions
+        row = dict(self.revision("same"), document_sha256="doc", document_url="https://example.test/one.docx")
+        other = dict(row, document_url="https://example.test/two.docx")
+        self.add("both", [row, other])
+        self.export()
+        def sources():
+            catalog = json.loads((self.state / "catalog.json").read_bytes())
+            return group_editions(catalog, lambda rid: [])["revisions"][0]["edition_sources"]
+        self.assertTrue(all(s["listed_now"] for s in sources()))
+        self.add("one", [row])
+        self.export()
+        self.assertEqual({s["document_url"]: s["listed_now"] for s in sources()},
+                         {row["document_url"]: True, other["document_url"]: False})
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)

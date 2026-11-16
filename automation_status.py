@@ -162,6 +162,14 @@ def collect_status(publication_run_id=None):
         reports = {}
         errors.append('Reports: '+str(error)[:350])
     legacy = {}
+    target = reports.get('publication-target.json') or {}
+    expected = target.get('head_sha')
+    if (checks and str(target.get('update_run_id')) == str(checks[0]['id'])
+            and isinstance(expected, str) and re.fullmatch('[0-9a-f]{40}', expected)
+            and not any(p.get('head_sha') == expected and p.get('created_at', '') >= checks[0].get('created_at', '') for p in pages)):
+        matches = api('actions/workflows/pages.yml/runs?branch=main&head_sha='+expected+'&per_page=100')['workflow_runs']
+        by_id = {p['id']: p for p in [*matches, *pages]}
+        pages = sorted(by_id.values(), key=lambda p: (p['created_at'], p['id']), reverse=True)
     update = reports.get('update-report.json') or {}
     if update.get('status') == 'ok' and not reports.get('publication-target.json'):
         for page in pages[:3]:

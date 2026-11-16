@@ -13,6 +13,9 @@ class SourceTransportTests(unittest.TestCase):
         handler = sync.SourceRedirect(seed)
         allowed = 'https://ecp.sfr.gov.ru/sedo/soap/types.xsd'
         self.assertEqual(handler.redirect_request(Request(seed), None, 302, '', {}, allowed).full_url, allowed)
+        response = io.BytesIO(b"redirect")
+        handler.redirect_request(Request(seed), response, 302, '', {}, allowed)
+        self.assertEqual(response.read(), b"")
         explicit_port = 'https://ecp.sfr.gov.ru:443/sedo/soap/types.xsd'
         self.assertEqual(handler.redirect_request(Request(seed), None, 302, '', {}, explicit_port).full_url, explicit_port)
         for url in ['http://ecp.sfr.gov.ru/sedo/soap/types.xsd',

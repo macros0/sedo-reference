@@ -123,11 +123,24 @@ def import_feed(base, fetch):
         name = manifest_path(env, digest)
         existing = base / name
         raw = existing.read_bytes() if existing.exists() else None
+        def read(h):
+            if not isinstance(h, str) or not DIGEST.fullmatch(h):
+                raise ValueError("Invalid feed object identity")
+            object_name = "objects/" + h
+            if object_name in files:
+                return files[object_name]
+            path = base / object_name
+            content = path.read_bytes() if path.exists() else None
+            if content is None or sha(content) != h:
+                content = checked_object(fetch(object_name), h)
+                files[object_name] = content
+            return content
         def parse(raw):
             manifest = json.loads(raw)
             if (manifest["environment"] != env or manifest["content_id"] != digest
                     or sha(encode(manifest["library"])) != digest):
                 raise ValueError("Feed manifest identity mismatch")
+            validate_manifest(manifest, read)
             return manifest
         try:
             manifest = parse(raw) if raw is not None else None
@@ -136,19 +149,6 @@ def import_feed(base, fetch):
         if manifest is None:
             raw = fetch(name)
             manifest = parse(raw)
-        def read(h):
-            if not isinstance(h, str) or not DIGEST.fullmatch(h):
-                raise ValueError("Invalid feed object identity")
-            name = "objects/" + h
-            if name in files:
-                return files[name]
-            path = base / name
-            content = path.read_bytes() if path.exists() else None
-            if content is None or sha(content) != h:
-                content = checked_object(fetch(name), h)
-                files[name] = content
-            return content
-        validate_manifest(manifest, read)
         if not existing.exists() or existing.read_bytes() != raw:
             files[name] = raw
             count += not existing.exists()
