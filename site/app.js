@@ -20,6 +20,87 @@ const go=(number,env,rev,field)=>{location.hash=route(number,env,rev,field)};
 function anchor(text,hash,cls){const a=node("a",cls,text);a.href="#"+hash;return a}
 function external(text,url){const a=node("a","source",text);a.href=url;a.target="_blank";a.rel="noopener";return a}
 function documentDownload(r){const a=node("a","source","Скачать DOCX");a.href=r.document_download;a.download=r.document_filename;return a}
+function appendSchemaOrigin(card,r){
+ if(!r.schema_path)return;
+ const file=r.schema_path.split("/").pop(), line=node("p","meta schema-origin","Первоисточник XSD · ");
+ const origin=r.archive_url?.split("#")[0], service=r.schema_source_url;
+ const filename=url=>decodeURIComponent(new URL(url).pathname.split("/").pop());
+ const step=()=>line.append(document.createTextNode(" → "));
+ if(r.schema_publication_page){
+  line.append(external("Страница СФР ("+new URL(r.schema_publication_page).host+new URL(r.schema_publication_page).pathname+")",r.schema_publication_page));
+  step();
+ }
+ if(r.schema_source_type==="wsdl"){
+  if(service){line.append(external("WSDL шлюза СФР",service));step()}
+  const digest=r.dependencies?.find(([name])=>name===file)?.[1];
+  const original=r.schema_sources?.find(s=>digest&&s.kind==="xsd"&&s.sha256===digest);
+  if(original)line.append(external(file,original.url));
+  else line.append(document.createTextNode(file));
+ }else{
+  if(origin?.startsWith("manual:")){
+   line.append(document.createTextNode("Загруженный архив "+filename(origin)));
+  }else if(origin){
+   const embedded=r.schema_source_type==="wsdl_bridge"||r.archive_url.includes("#embedded=");
+   line.append(external((embedded?"Документ ":"Архив ")+filename(origin),origin));
+   if(embedded){
+    step();
+    const inline=r.archive_url.includes("#schema-");
+    const attachment=r.archive_name?.replace(/ \(из DOCX\)$/,"");
+    line.append(document.createTextNode(inline?"Схема в тексте документа":attachment&&attachment!==file?"Вложение "+attachment:"Вложенная XSD"));
+   }
+  }
+  step();
+  if(r.schema_file_download){
+   const link=node("a","source",r.schema_path);link.href=r.schema_file_download;link.download=r.schema_file_name||file;
+   link.title="Скачать исходный файл XSD";line.append(link);
+  }else line.append(document.createTextNode(r.schema_path));
+  if(r.schema_source_type==="wsdl_bridge"&&service){
+   line.append(document.createTextNode(" · Зависимости из "),external("WSDL шлюза СФР ("+new URL(service).hostname+")",service));
+  }
+ }
+ if(!r.schema_publication_page)line.append(document.createTextNode(origin?.startsWith("manual:")?" · "+(r.manual_source?.label||"Ручная загрузка"):" · Страница публикации не сохранена"));
+ card.append(line);
+}
+function appendSchemaReview(container,r){
+ const review=r.schema_review;
+ if(!review)return;
+ const coverage="Проверено таблиц или строк: "+review.tables+" · XML-примеров: "+review.examples+".";
+ const found=review.findings.length;
+ const report=node("section","schema-review");
+ container.append(report);
+ if(!found){
+  const status=review.tables||review.examples?"В проверенной части расхождений не найдено.":"Сопоставимых таблиц и XML-примеров для автоматической проверки не найдено.";
+  report.append(node("p","meta",status+" "+coverage));
+  for(const note of review.notes||[])report.append(node("p","meta",note));
+  return;
+ }
+ const button=node("button","open","Показать замечания ("+found+")");
+ button.type="button";button.setAttribute("aria-expanded","false");
+ const details=node("div","schema-review-details");details.hidden=true;
+ report.append(button,details);
+ button.onclick=()=>{
+  if(!details.children.length){
+   details.append(node("p","meta",coverage));
+   for(const note of review.notes||[])details.append(node("p","meta",note));
+   for(const issue of review.findings){
+    const item=node("article","schema-review-item");
+    item.append(node("h3","",issue.kind));
+    const evidence=node("dl","");
+    for(const [label,value] of [["Место в спецификации",issue.location],["В спецификации",issue.spec],["Место в XSD",issue.xlocation],["В схеме",issue.xsd],["Последствие",issue.impact]]){
+     if(value)evidence.append(node("dt","",label),node("dd","",value));
+    }
+    item.append(evidence);
+    for(const target of window.SedoReviewJournal?.fieldLinks(r,issue)||[]){
+     const a=node("a","source",target.text);a.href=target.href;item.append(node("br"),a);
+    }
+    details.append(item);
+   }
+  }
+  details.hidden=!details.hidden;
+  button.setAttribute("aria-expanded",String(!details.hidden));
+  button.textContent=details.hidden?"Показать замечания ("+found+")":"Скрыть замечания ("+found+")";
+ };
+}
 function schemaExportControl(r){
  if(r.schema_download){const a=node("a","source schema-download","Скачать XSD (ZIP)");a.href=r.schema_download+(r.schema_bundle_sha256?"?v="+r.schema_bundle_sha256.slice(0,16):"");a.download=r.schema_filename;a.title="XSD сообщения и зависимости для локальной валидации XML";return a}
  return r.schema_export_error?node("span","meta schema-export-unavailable",r.schema_export_error):null;
@@ -30,10 +111,13 @@ function appendEditionSources(container,r){
  const list=node("div","edition-sources");
  for(const source of editionSources(r)){
   const item=node("div","edition-source");
-  item.append(node("p","meta","Документ · версия "+(source.document_version||"не указана")+" · "+date(source.label_date)));
+  item.append(node("p","meta","Формат описан в спецификации · версия "+(source.document_version||"не указана")+" · "+date(source.label_date)));
   item.append(source.document_url?external(documentName(source),source.document_url):node("p","meta",documentName(source)));
   if(source.document_download)item.append(node("br"),documentDownload(source));
   if(source.listed_now===false)item.append(node("p","meta","Источник сохранён в истории"));
+  const revision=catalog.revisions.find(row=>row.revision_id===source.revision_id)||r;
+  appendSchemaOrigin(item,revision);
+  appendSchemaReview(item,revision);
   list.append(item);
  }
  container.append(list);return list;
@@ -103,7 +187,6 @@ function renderVersions(m,env){
     const schemaControl=schemaExportControl(r);if(schemaControl)card.append(schemaControl);
     if(r.validation_download)card.append(anchor('Проверить XML локально',route(m.number,e,r.revision_id)+'&validate=1','open validation-link'));
     appendEditionSources(card,r);
-    card.append(node("p","meta","Редакция "+r.revision_id.slice(0,8)));
     if(!r.listed_now&&r.source_type!=="manual")card.append(node("p","meta","Редакция сохранена в истории"));
     panel.append(card)
    }
@@ -134,9 +217,16 @@ function openValidationField(revision,path){
 let loadedRevision=null;
 function renderRoute(){
  window.SedoValidator?.dispose();
+ const journal=document.getElementById("review-journal");if(journal)journal.hidden=true;
  const p=new URLSearchParams(location.hash.slice(1)),number=p.get("message"),env=p.get("env"),rev=p.get("rev"),field=p.get("field");
  for(const id of ["catalog","versions","viewer","comparison","updates","import-help","error"])$(id).hidden=true;
  $("crumbs").replaceChildren(anchor("Все сообщения",""));
+ if(p.has("remarks")){
+  let section=document.getElementById("review-journal");
+  if(!section){section=node("section");section.id="review-journal";$("versions").after(section)}
+  section.hidden=false;$("crumbs").append(node("span","","/"),node("span","","Журнал замечаний"));
+  document.title="Журнал замечаний · СЭДО";window.SedoReviewJournal.mount(section,catalog,p);return;
+ }
  if(p.has("import")){$("import-help").hidden=false;document.title="Ручная загрузка · СЭДО";return}
  if(p.has("updates")){$("updates").hidden=false;$("crumbs").append(node("span","","/"),node("span","","Журнал обновлений"));document.title="Журнал обновлений · СЭДО";renderUpdates(p);return}
  if(!number){$("catalog").hidden=false;renderMessages();return}
@@ -160,7 +250,9 @@ function renderRoute(){
  let validationHost=$('validation-host');if(!validationHost){validationHost=node('div','validation-host');validationHost.id='validation-host';$('frame').before(validationHost)}
  if(r.validation_download){const button=node('button','open validation-open','Проверить XML локально');button.id='validate-from-viewer';button.type='button';button.onclick=()=>window.SedoValidator?.mount(r,validationHost,path=>openValidationField(r,path));$('doc-download').after(button);if(p.has('validate'))button.onclick()}
  let sourceBox=$("viewer-sources");if(!sourceBox){sourceBox=node("div","viewer-sources");sourceBox.id="viewer-sources";$("frame").before(sourceBox)}
- sourceBox.replaceChildren();sourceBox.hidden=!grouped;if(grouped){sourceBox.append(node("h2","","Источники этой схемы"));appendEditionSources(sourceBox,r)}
+ sourceBox.replaceChildren();sourceBox.hidden=false;
+  if(grouped){sourceBox.append(node("h2","","Источники этой схемы"));appendEditionSources(sourceBox,r)}
+  else{appendSchemaOrigin(sourceBox,r);appendSchemaReview(sourceBox,r)}
  document.getElementById("compare-from-viewer")?.remove();
  const pair=comparisonDefaults(m),other=m.revisions.find(x=>x.ready&&x.revision_id!==(r.display_revision_id||rev));
  if(other){const link=anchor("Сравнить с другой редакцией",comparisonRoute(number,rev,pair.right===(r.display_revision_id||rev)?other.revision_id:pair.right),"source");link.id="compare-from-viewer";$("doc-source").after(link)}

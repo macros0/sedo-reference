@@ -1,0 +1,21 @@
+const assert=require('node:assert/strict');
+const journal=require('../web/review-journal.js');
+const ExcelJS=require('../web/vendor/exceljs.min.js');
+const issue={kind:'Кратность',location:'Таблица 2',spec:'=0..1',xlocation:'main.xsd / item',xsd:'1..1',impact:'Обязательное поле'};
+const revision={number:'6',environment:'prod',document_version:'3.1',document_sha256:'doc',archive_sha256:'archive',dependency_digest:'deps',document_url:'https://lk.sfr.gov.ru/spec.docx',archive_url:'https://lk.sfr.gov.ru/xsd.zip',schema_path:'main.xsd',revision_id:'one',schema_review:{findings:[issue]}};
+(async()=>{
+ const catalog={revisions:[revision,{...revision,revision_id:'alias'},{...revision,revision_id:'test',environment:'test'},{...revision,revision_id:'changed',dependency_digest:'new'},{...revision,revision_id:'empty',number:'60',schema_review:{findings:[]}}]};
+ const rows=journal.collect(catalog);
+ assert.equal(rows.length,3,'identical sources do not create duplicate notices');
+ const selected=journal.filter(rows,' 6 ','prod');
+ assert.equal(selected.length,2);assert.equal(journal.filter(rows,'60','').length,0);
+ const workbook=journal.createWorkbook(ExcelJS,selected,{number:'6',env:'prod',baseURL:'https://macros0.github.io/sedo-reference/'});
+ const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(await workbook.xlsx.writeBuffer());
+ const sheet=loaded.getWorksheet('Замечания');
+ assert.equal(sheet.rowCount,3);assert.equal(sheet.getCell('B2').value,'Продуктивный');
+ assert.equal(sheet.getCell('G2').value,'=0..1','source text must stay literal, including formula-like values');
+ assert.equal(sheet.getCell('D2').value.hyperlink,revision.document_url);
+ assert.ok(sheet.autoFilter);assert.equal(sheet.views[0].ySplit,1);
+ assert.equal(journal.collect({revisions:[{...revision,schema_review:{findings:[]}}]}).length,0,'updated source removes resolved notices');
+ console.log('Journal filters, changed source results, deduplication and Excel roundtrip verified.');
+})().catch(error=>{console.error(error);process.exitCode=1});

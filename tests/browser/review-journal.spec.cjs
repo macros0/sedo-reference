@@ -1,0 +1,26 @@
+const {test,expect}=require('@playwright/test');
+const ExcelJS=require('../../web/vendor/exceljs.min.js');
+test('journal filters match the exported Excel and survive navigation',async({page})=>{
+ await page.goto('/site/#remarks=1');
+ await expect(page.getByRole('heading',{name:'Журнал замечаний',exact:true})).toBeVisible();
+ await page.locator('#review-number').fill('6');
+ await page.locator('#review-env').selectOption('prod');
+ const rows=page.locator('.review-results tbody tr');
+ await expect(rows).toHaveCount(1);
+ await expect(rows.first()).toContainText('confirmMessageReadRequest');
+ await expect(rows.first()).toContainText('Продуктивный');
+ const download=page.waitForEvent('download');
+ await page.locator('#review-export').click();
+ const result=await download;
+ expect(result.suggestedFilename()).toBe('sedo-remarks-6-prod.xlsx');
+ const workbook=new ExcelJS.Workbook();await workbook.xlsx.load(require('node:fs').readFileSync(await result.path()));
+ const sheet=workbook.getWorksheet('Замечания');
+ expect(sheet.rowCount).toBe(2);expect(sheet.getCell('A2').value).toBe('6');expect(sheet.getCell('B2').value).toBe('Продуктивный');
+ await page.reload();
+ await expect(page.locator('#review-env')).toHaveValue('prod');await expect(page.locator('#review-number')).toHaveValue('6');
+ await page.locator('#review-env').selectOption('test');
+ await expect(rows).toHaveCount(1);await expect(rows.first()).toContainText('Тестовый');
+ await page.locator('#review-number').fill('999999');
+ await expect(rows).toHaveCount(0);await expect(page.locator('#review-export')).toBeDisabled();
+ await page.locator('.brand').click();await expect(page.locator('#review-journal')).toBeHidden();
+});

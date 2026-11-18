@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+            xmlns="urn:ru:fss:integration:types:rpu:InsuredPerson:v01"
+            xmlns:p="http://www.fss.ru/integration/types/person/v02"
+            xmlns:c="http://www.fss.ru/integration/types/common/v01"
+            xmlns:r="http://www.fss.ru/integration/types/dic/CauseRadiationExposure/v01"
+            xmlns:dsz="urn:ru:fss:integration:types:dic:SpecialZone:v01"
+            targetNamespace="urn:ru:fss:integration:types:rpu:InsuredPerson:v01"
+            elementFormDefault="qualified">
+
+    <xs:import namespace="http://www.fss.ru/integration/types/person/v02" schemaLocation="../../v02/type/Person.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="../type/Common.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/dic/CauseRadiationExposure/v01" schemaLocation="../dic/CauseRadiationExposure.xsd"/>
+    <xs:import namespace="http://www.fss.ru/integration/types/dic/identtityDoc/v01" schemaLocation="../dic/IdentityDocuments.xsd"/>
+    <xs:import namespace="urn:ru:fss:integration:types:dic:SpecialZone:v01" schemaLocation="../dic/SpecialZone.xsd"/>
+
+    <xs:element name="insuredPerson" type="InsuredPersonType" >
+        <xs:annotation>
+            <xs:documentation>Корневой элемент карточки застрахованного</xs:documentation>
+            <xs:documentation>Код сообщения СЭДО = 86</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+    <xs:element name="insuredPersonResponse" >
+        <xs:annotation>
+            <xs:documentation>Корневой элемент результата обработки карточки застрахованного</xs:documentation>
+            <xs:documentation>Код сообщения СЭДО = 87</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="InsuredPersonResponseType">
+                    <xs:attribute name="responseOn" type="c:UuidV1Type"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="mismatchInfo" type="InsuredPersonMismatchType" >
+        <xs:annotation>
+            <xs:documentation>Корневой элемент для направления в адрес страхователя информации о несоответствии данных о застрахованном</xs:documentation>
+            <xs:documentation>Код сообщения СЭДО = 88</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+
+
+    <xs:complexType name="InsuredPersonType">
+        <xs:annotation>
+            <xs:documentation>Сведения о застрахованном лице</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="fullName" type="p:FullName"/>
+            <xs:element name="birthDate" type="p:birthDate"/>
+            <xs:element name="gender" type="p:GenderType"/>
+            <xs:element name="snils" type="p:snils"/>
+            <xs:choice>
+                <xs:element name="fired" >
+                    <xs:annotation>
+                        <xs:documentation>Информация об увольнении</xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element name="date" type="xs:date" >
+                                <xs:annotation>
+                                    <xs:documentation>Дата увольнения</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="contractCancelDate" type="xs:date">
+                                <xs:annotation>
+                                    <xs:documentation>Дата аннулирования трудового договора</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+                <xs:sequence>
+                    <xs:element name="inn" type="INN" minOccurs="0"/>
+                    <xs:element name="identityDocument" type="IdentityDocumentType">
+                        <xs:annotation>
+                            <xs:documentation>Документ, удостоверяющий личность</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="residenceDocumentType" type="ResidenceDocumentType" minOccurs="0"/>
+                    <xs:element name="otherInfo" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Иные сведения</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:choice>
+                                    <xs:element name="workplace" type="dsz:SpecialZoneType" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>Работа в особой зоне</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="livingPlace" type="dsz:SpecialZoneType" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>Проживание в особой зоне</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:choice>
+                                <xs:element name="causeRadiation" type="r:CauseRadiationExposureType" minOccurs="0">
+                                    <xs:annotation>
+                                        <xs:documentation>Причина воздействия радиации</xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                    <xs:element name="regAddress" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Сведения о месте регистрации</xs:documentation>
+                        </xs:annotation>
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="fiasAddress" type="c:AddressFiasType" >
+                                    <xs:annotation>
+                                        <xs:documentation>Адрес справочника ГАР</xs:documentation>
+                                    </xs:annotation>
+                                </xs:element>
+                                <xs:element name="postalCode">
+                                    <xs:annotation>
+                                        <xs:documentation>Почтовый индекс</xs:documentation>
+                                    </xs:annotation>
+                                    <xs:simpleType>
+                                        <xs:restriction base="xs:string">
+                                            <xs:maxLength value="6"/>
+                                        </xs:restriction>
+                                    </xs:simpleType>
+                                </xs:element>
+                            </xs:sequence>
+                        </xs:complexType>
+
+                    </xs:element>
+                    <xs:element name="methodReceivePayment" type="c:MethodReceivePaymentType" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation>Способ получения платежа</xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+                <xs:element name="isNotWorker" type="xs:boolean" fixed="true">
+                    <xs:annotation>
+                        <xs:documentation>Не является сотрудником</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="INN">
+        <xs:annotation>
+            <xs:documentation>ИНН физического лица</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:length value="12"/>
+            <xs:pattern value="\d{12}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="SeriesType">
+        <xs:annotation>
+            <xs:documentation>Серия</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="c:StringMaxLen10"/>
+    </xs:simpleType>
+
+    <xs:simpleType name="NumberType">
+        <xs:annotation>
+            <xs:documentation>Номер</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="c:StringMaxLen10"/>
+    </xs:simpleType>
+
+    <xs:complexType name="PassportRFType">
+        <xs:annotation>
+            <xs:documentation>Паспорт РФ</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="series">
+                <xs:annotation>
+                    <xs:documentation>Серия паспорта РФ</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="4"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="number">
+                <xs:annotation>
+                    <xs:documentation>Номер паспорта РФ</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:length value="6"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+
+            <xs:element name="issueDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата выдачи</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="whoIssued" type="c:StringMaxLen200">
+                <xs:annotation>
+                    <xs:documentation>Кем выдан</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TempIdentDocType">
+        <xs:annotation>
+            <xs:documentation>Временное удостоверение личности</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="number" type="c:StringMaxLen12">
+                <xs:annotation>
+                    <xs:documentation>Номер документа</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="issueDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Дата выдачи</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="whoIssued" type="c:StringMaxLen200" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Кем выдан</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="expirationDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Действует до</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="OtherIdentDocType">
+        <xs:annotation>
+            <xs:documentation>Иной документ</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="type" type="identityDocument"/>
+            <xs:element name="series" type="SeriesType" minOccurs="0"/>
+            <xs:element name="number" type="c:StringMaxLen20">
+                <xs:annotation>
+                    <xs:documentation>Номер</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="expirationDate" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Действует до</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ResidentCardType">
+        <xs:annotation>
+            <xs:documentation>Вид на жительство</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="series" type="SeriesType"/>
+            <xs:element name="number" type="c:StringMaxLen20"/>
+            <xs:element name="passportIssueDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата выдачи или продления</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="TempResidencePermitType">
+        <xs:annotation>
+            <xs:documentation>Разрешение на временное проживание или пребывание</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="series" type="SeriesType" minOccurs="0"/>
+            <xs:element name="number" type="c:StringMaxLen20">
+                <xs:annotation>
+                    <xs:documentation>Номер</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="issueDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>Дата выдачи</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="IdentityDocumentType">
+        <xs:annotation>
+            <xs:documentation>Сведения о документе, удостоверяющем личность</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="passport" type="PassportRFType"/>
+            <xs:element name="tempIdentDocType" type="TempIdentDocType">
+                <xs:annotation>
+                    <xs:documentation>Временное удостоверение личности</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="otherIdentDocType" type="OtherIdentDocType">
+                <xs:annotation>
+                    <xs:documentation>Иной документ</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="ResidenceDocumentType">
+        <xs:annotation>
+            <xs:documentation>Сведения о документах, подтверждающих постоянное или временное проживание(пребывание) на территории Российской Федерации (для иностранных граждан и лиц без гражданства)</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="residentCard" type="ResidentCardType"/>
+            <xs:element name="tempResidencePermit" type="TempResidencePermitType"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="InsuredPersonResponseType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий результат обработки карточки застрахованного</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="snils" type="p:snils">
+                <xs:annotation>
+                    <xs:documentation>СНИЛС застрахованного информация о котором подавалась ранее</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="status" type="InsuredPersonStatusType">
+                <xs:annotation>
+                    <xs:documentation>Статус обработки сообщения карточки застрахованного</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="protocol" type="c:ProtocolType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Протокол несоответствия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="InsuredPersonStatusType">
+        <xs:annotation>
+            <xs:documentation>Статус обработки карточки застрахованного</xs:documentation>
+        </xs:annotation>
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="RECEIVED">
+                    <xs:annotation>
+                        <xs:documentation>Сообщение получено</xs:documentation>
+                        <xs:documentation>Статус говорит о том, что началась обработка сообщения</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="ERROR">
+                    <xs:annotation>
+                        <xs:documentation>Ошибка</xs:documentation>
+                        <xs:documentation>Статус говорит о том, что в процессе обработки обнаружены ошибки</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+                <xs:enumeration value="PROCESSED">
+                    <xs:annotation>
+                        <xs:documentation>Сообщение успешно обработано</xs:documentation>
+                    </xs:annotation>
+                </xs:enumeration>
+            </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="InsuredPersonMismatchType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий информацию о несоответствии данных о застрахованном</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="snils" type="p:snils">
+                <xs:annotation>
+                    <xs:documentation>СНИЛС застрахованного информация о котором подавалась ранее</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="protocol" type="MismatchProtocolType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation>Протокол несоответствия</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="MismatchProtocolType">
+        <xs:annotation>
+            <xs:documentation>Тип описывающий протокол несоответствия</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="item" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation>Запись протокола о несоответствии данных</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="mnemonic">
+                            <xs:annotation>
+                                <xs:documentation>Мнемоника</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="message">
+                            <xs:annotation>
+                                <xs:documentation>Текст</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="description">
+                            <xs:annotation>
+                                <xs:documentation>Описание</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="identityDocument">
+        <xs:annotation>
+            <xs:documentation>
+                Справочник: "Вид удостоверения личности"
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:maxLength value="2"/>
+            <xs:enumeration value="01">
+                <xs:annotation>
+                    <xs:documentation>Паспорт гражданина СССР</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="03">
+                <xs:annotation>
+                    <xs:documentation>Свидетельство о рождении</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="05">
+                <xs:annotation>
+                    <xs:documentation>Справка об освобождении из места лишения свободы</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="08">
+                <xs:annotation>
+                    <xs:documentation>Временное удостоверение, выданное взамен военного билета</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="09">
+                <xs:annotation>
+                    <xs:documentation>Дипломатический паспорт</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="10">
+                <xs:annotation>
+                    <xs:documentation>Паспорт иностранного гражданина</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="11">
+                <xs:annotation>
+                    <xs:documentation>Свидетельство о рассмотрении ходатайства о признании лица беженцем на территории Российской Федерации по существу</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="12">
+                <xs:annotation>
+                    <xs:documentation>Вид на жительство в Российской Федерации
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="13">
+                <xs:annotation>
+                    <xs:documentation>Удостоверение беженца</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="15">
+                <xs:annotation>
+                    <xs:documentation>Разрешение на временное проживание в Российской Федерации</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="19">
+                <xs:annotation>
+                    <xs:documentation>Свидетельство о предоставлении временного убежища на территории РФ</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="22">
+                <xs:annotation>
+                    <xs:documentation>Загранпаспорт гражданина Российской Федерации</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="23">
+                <xs:annotation>
+                    <xs:documentation>Свид. о рождении, выданное уполномоченным органом иностранного государства</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="24">
+                <xs:annotation>
+                    <xs:documentation>Удостоверение личности военнослужащего Российской Федерации</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="26">
+                <xs:annotation>
+                    <xs:documentation>Паспорт моряка</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="27">
+                <xs:annotation>
+                    <xs:documentation>Паспорт моряка Военный билет офицера запаса</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="60">
+                <xs:annotation>
+                    <xs:documentation>Документы, подтверждающие факт регистрации по месту жительства (пребывания)</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="61">
+                <xs:annotation>
+                    <xs:documentation>Свидетельство о регистрации по месту жительства</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="62">
+                <xs:annotation>
+                    <xs:documentation>Вид на жительство иностранного гражданина</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="63">
+                <xs:annotation>
+                    <xs:documentation>Свидетельство о регистрации по месту пребывания</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="81">
+                <xs:annotation>
+                    <xs:documentation>Свидетельство о смерти</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="91">
+                <xs:annotation>
+                    <xs:documentation>Иные документы</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="93">
+                <xs:annotation>
+                    <xs:documentation>Служебный паспорт гражданина Российской Федерации</xs:documentation>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.fss.ru/integration/types/ls/v01" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:cm="http://www.fss.ru/integration/types/common/v01" xmlns:org="http://www.fss.ru/integration/types/organization/v01" targetNamespace="http://www.fss.ru/integration/types/ls/v01" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="../type/Common.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/organization/v01" schemaLocation="../type/Organization.xsd"/>
+	<xs:element name="Application">
+		<xs:annotation>
+			<xs:documentation>Заявление на получение справки</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CommonDataType">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="kpsNum" type="org:kpsNum" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Код подчиненности</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="dateStart" type="xs:date">
+								<xs:annotation>
+									<xs:documentation>Дата, на которую производится расчет задолженности
+                                    </xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="idMessage" type="cm:UuidV1Type">
+								<xs:annotation>
+									<xs:documentation>Идентификатор сообщения</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="id" type="cm:UuidV1Type"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SvedSostRaschPhysRequest" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:choice>
+								<xs:element name="regNum" type="org:regNum">
+									<xs:annotation>
+										<xs:documentation>Регистрационный номер по ОСС</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="regNumSFR" type="org:regNumSFR">
+									<xs:annotation>
+										<xs:documentation>Регистрационный номер страхователя СФР</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+							<xs:element name="firstNameCiv">
+								<xs:annotation>
+									<xs:documentation>Имя</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="500"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="lastNameCiv">
+								<xs:annotation>
+									<xs:documentation>Фамилия</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="500"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="middleNameCiv" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Отчество</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="500"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="docDatCiv" type="xs:date"/>
+							<xs:element name="inn" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>ИНН для ИП</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="org:inn">
+										<xs:maxLength value="12"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="docTypeCiv">
+								<xs:annotation>
+									<xs:documentation>Тип документа, удостоверяющего личность</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="2"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="docSeries">
+								<xs:annotation>
+									<xs:documentation>Серия документа, удостоверяющего личность</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="docNumber">
+								<xs:annotation>
+									<xs:documentation>Номер документа, удостоверяющего личность</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:maxLength value="50"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="SvedSostRaschJurRequest" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:choice>
+								<xs:element name="regNum" type="org:regNum">
+									<xs:annotation>
+										<xs:documentation>Регистрационный номер по ОСС</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="regNumSFR" type="org:regNumSFR">
+									<xs:annotation>
+										<xs:documentation>Регистрационный номер страхователя СФР</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:choice>
+							<xs:element name="fullName" type="org:fullName">
+								<xs:annotation>
+									<xs:documentation>Полное наименование юридического лица</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="inn">
+								<xs:annotation>
+									<xs:documentation>ИНН для иридических лиц</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="org:inn">
+										<xs:maxLength value="10"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="kpp">
+								<xs:annotation>
+									<xs:documentation>Код причины постановки на учет (КПП)</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="org:kpp">
+										<xs:maxLength value="9"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://www.fss.ru/integration/types/DocumentType/v01" xmlns:ns1="http://www.fss.ru/integration/rvz/RvzDocumentsAsv/v01" targetNamespace="http://www.fss.ru/integration/rvz/RvzDocumentsAsv/v01" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.fss.ru/integration/types/DocumentType/v01" schemaLocation="../type/DocumentType.xsd"/>
+	<xs:element name="DecisionDiscountRust" type="dc:DocumentType">
+		<xs:annotation>
+			<xs:documentation>Решение об установлении скидки к страховому тарифу</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="DecisionRefusalDiscountRust" type="dc:DocumentType">
+		<xs:annotation>
+			<xs:documentation>Решение об отказе в установлении скидки к страховому тарифу  </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="DecisionSurchargeRust" type="dc:DocumentType">
+		<xs:annotation>
+			<xs:documentation>Решение об установлении надбавки к страховому тарифу
+            </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

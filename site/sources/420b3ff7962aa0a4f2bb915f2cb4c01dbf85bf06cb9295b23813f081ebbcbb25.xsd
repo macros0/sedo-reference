@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2021 rel. 2 sp1 (x64) (http://www.altova.com) by  () -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+           xmlns:dc="http://www.fss.ru/integration/types/DocumentType/v01" elementFormDefault="qualified"
+           targetNamespace="http://www.fss.ru/integration/kp/KpDocumentsAsv/v01"
+           attributeFormDefault="unqualified" vc:minVersion="1.1">
+    <xs:import namespace="http://www.fss.ru/integration/types/DocumentType/v01" schemaLocation="../type/DocumentType.xsd"/>
+    <xs:element name="ActKp" type="dc:DocumentType">
+        <xs:annotation>
+            <xs:documentation>Акт камеральной проверки</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="ClaimDocumentsKp" type="dc:DocumentType">
+        <xs:annotation>
+            <xs:documentation>Требование о представлении документов по камеральной проверке</xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="DecisionOffsetKp" type="dc:DocumentType">
+        <xs:annotation>
+            <xs:documentation>Решение о возмещении излишне понесенных расходов по результатам камеральной проверки
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="DecisionProsecuteKp" type="dc:DocumentType">
+        <xs:annotation>
+            <xs:documentation>Решение о привлечении к ответственности по результатам камеральной проверки
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+    <xs:element name="DecisionRejectKp" type="dc:DocumentType">
+        <xs:annotation>
+            <xs:documentation>Решение об отказе в привлечении к ответственности по результатам камеральной проверки
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+	<xs:element name="DecisionOkvedKp" type="dc:DocumentType">
+        <xs:annotation>
+            <xs:documentation>Решение о несоответствии сведений об ОВЭД страхователя по результатам камеральной проверки
+            </xs:documentation>
+        </xs:annotation>
+    </xs:element>
+</xs:schema>

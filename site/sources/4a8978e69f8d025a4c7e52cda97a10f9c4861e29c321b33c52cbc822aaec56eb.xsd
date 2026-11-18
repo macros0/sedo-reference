@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:proactive:notice:proactiveExpireNotice:v3.0" targetNamespace="urn:ru:ecp:integration:proactive:notice:proactiveExpireNotice:v3.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:com="urn:ru:ecp:integration:types:common:v3.0"
+           xmlns:p="urn:ru:ecp:integration:types:person:v3.0"
+           elementFormDefault="qualified"
+           version="1.0">
+    <xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="../../type/Common.xsd"/>
+    <xs:import namespace="urn:ru:ecp:integration:types:person:v3.0" schemaLocation="../../type/Person.xsd"/>
+    <xs:element name="proactiveExpireNotice">
+        <xs:annotation>
+            <xs:documentation>
+                Уведомление, о том, что ответ на запрос недостающих сведений от страхователя (10110
+                сообщение) не поступил в сроки, установленные ПП РФ № 2010 от 23 ноября 2021 г.
+                Тип сообщения СЭДО №12410
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="socialAssistNum" type="xs:long">
+                    <xs:annotation>
+                        <xs:documentation>Номер проактивного процесса</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="snils" type="p:snils">
+                    <xs:annotation>
+                        <xs:documentation>СНИЛС застрахованного лица</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="UUID" type="com:uuidV1Type">
+                    <xs:annotation>
+                        <xs:documentation>Идентификатор сообщения № 10010</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="date" type="xs:dateTime">
+                    <xs:annotation>
+                        <xs:documentation>Дата и время отправки сообщения № 10010</xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="specVersion" type="com:specVersionType" use="required">
+                <xs:annotation>
+                    <xs:documentation>Номер версии  спецификации для xml документа</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

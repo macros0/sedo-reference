@@ -6,6 +6,8 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from sync import inspect_file, sha, write
 from schema_review import compare_revision
+from review_field_links import review_sources
+from source_provenance import publish_sources
 from edition_groups import group_editions, display_updates, source_updates
 from xsd_bundle import publish_bundles
 HERE=Path(__file__).resolve().parent
@@ -48,6 +50,7 @@ def main():
     site=HERE/"site";editions=site/"editions";editions.mkdir(parents=True,exist_ok=True)
     comparison=site/"fields";comparison.mkdir(exist_ok=True)
     archive_documents(catalog, HERE/"state", site)
+    publish_sources(catalog, HERE/"state", site)
     field_cache={rid:json.loads((HERE/"data/fields"/(rid+".json")).read_bytes())["fields"] for rid,status in statuses.items() if status["status"]=="ready"}
     publish_bundles(catalog, HERE/"state", site, navigation={rid:[f["path"] for f in fields] for rid,fields in field_cache.items()})
     template=(HERE/"viewer-template.html").read_text("utf-8-sig")
@@ -70,15 +73,19 @@ restoreField();
 """
     template=template.replace("</script></html>",restore+"</script></html>")
     for r in catalog["revisions"]:
-        rid=r["revision_id"];ready=statuses.get(rid,{}).get("status")=="ready";r["ready"]=ready
-        if not ready:continue
+        rid=r["revision_id"];r["ready"]=statuses.get(rid,{}).get("status")=="ready"
+        if r["ready"]:
+            r["schema_review"]=compare_revision(r,field_cache[rid],HERE/"state"/"objects")
+    catalog=group_editions(catalog,field_cache.__getitem__)
+    for r in catalog["revisions"]:
+        rid=r["revision_id"]
+        if not r["ready"]:continue
         fields=field_cache[rid]
-        r["schema_review"]=compare_revision(r,fields,HERE/"state"/"objects")
         (comparison/(rid+".js")).write_text("window.SEDO_FIELDS=window.SEDO_FIELDS||{};window.SEDO_FIELDS["+packed(rid)+"]="+packed(fields)+";",encoding="utf8")
-        data=dict(fields=fields,revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=r.get("archive_name") or unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
+        r["review_sources"]=review_sources(catalog,r)
+        data=dict(fields=fields,review_sources=r["review_sources"],revision=rid,version=r["document_version"]or"Версия не указана",date=r["label_date"],archive=r.get("archive_name") or unquote(urlsplit(r["archive_url"]).path.split("/")[-1]),files=len(r["dependencies"]),sha256=r["archive_sha256"])
         (editions/(rid+".html")).write_text(template.replace("__CATALOG_JSON__",packed(data)),encoding="utf8")
         r["viewer_sha256"]=sha((editions/(rid+".html")).read_bytes())
-    catalog=group_editions(catalog,field_cache.__getitem__)
     if catalog.get("updates"):
         try:
             result=subprocess.run(["node",str(Path(__file__).with_name("summarize_updates.cjs")),str(HERE/"data/fields")],
@@ -92,7 +99,7 @@ restoreField();
         catalog["schema_updates"]=display_updates(catalog)
         catalog["source_updates"]=source_updates(catalog)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8")
-    assets=("app.js","app.css","automation-status.js","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg","validation.js","validation-core.js","validation-frame.js","validation-worker.js","validation-paths.js","validation-source.js","validation-messages.js","vendor/xmllint/xmllint-browser.mjs","vendor/xmllint/xmllint.wasm","vendor/xmllint/COPYING","vendor/xmllint/README.md")
+    assets=("review-journal.js","app.js","app.css","automation-status.js","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg","validation.js","validation-core.js","validation-frame.js","validation-worker.js","validation-paths.js","validation-source.js","validation-messages.js","vendor/xmllint/xmllint-browser.mjs","vendor/xmllint/xmllint.wasm","vendor/xmllint/COPYING","vendor/xmllint/README.md")
     for file in assets:
         (site/file).parent.mkdir(parents=True,exist_ok=True)
         (site/file).write_bytes((HERE/"web"/file).read_bytes())

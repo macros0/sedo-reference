@@ -1,0 +1,953 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2021 (x64) (http://www.altova.com) by BFT-Razrabotka (BFT-Razrabotka) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.fss.ru/integration/types/pvso/refund/unempl/v01" xmlns:per="http://www.fss.ru/integration/types/person/v01" xmlns:org="http://www.fss.ru/integration/types/organization/v01" xmlns:com="http://www.fss.ru/integration/types/common/v01" xmlns:rr="http://www.fss.ru/integration/types/dic/RegionRate/v01" targetNamespace="http://www.fss.ru/integration/types/pvso/refund/unempl/v01" elementFormDefault="qualified" version="1.0">
+	<xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="xsd/type/Common.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/commonUq/v01" schemaLocation="xsd/type/CommonUQ.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/fssDepartment/v01" schemaLocation="xsd/type/FssDepartment.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/organization/v01" schemaLocation="xsd/type/Organization.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/person/v01" schemaLocation="xsd/type/Person.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/dic/RegionRate/v01" schemaLocation="xsd/dic/RegionRate.xsd"/>
+	<xs:annotation>
+		<xs:documentation>
+            Схема описывающая документы в рамках процесса возмещения затрат Фондом социального страхования Российской Федерации в 2021 году из бюджета Фонда социального страхования Российской Федерации юридическим лицам и индивидуальным предпринимателям на стимулирование найма безработных граждан
+        </xs:documentation>
+	</xs:annotation>
+	<xs:element name="sttmntRefundUnempl" type="SttmntRefundUnemplType">
+		<xs:annotation>
+			<xs:documentation>
+                Корневой элемент заявления на предоставление субсидии юридическим лицам и индивидуальным предпринимателям на стимулирование найма безработных граждан
+            </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="sttmntStatusRequest" type="SttmntStatusRequestType">
+		<xs:annotation>
+			<xs:documentation>
+                Корневой элемент запроса статуса сообщения
+            </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="sttmntRefuseRefundUnempl" type="SttmntRefuseRefundUnemplType">
+		<xs:annotation>
+			<xs:documentation>
+                Корневой элемент отказа от участия в программе
+            </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="sttmntRefundUnemplResult" type="SttmntRefundUnemplResultType">
+		<xs:annotation>
+			<xs:documentation>
+                Корневой элемент результата обработки заявления
+            </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="sttmntRefuseRefundUnemplResult" type="SttmntRefuseRefundUnemplResultType">
+		<xs:annotation>
+			<xs:documentation>
+                Корневой элемент результата обработки отказа от участия в программе
+            </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="sttmntStatusResponse" type="SttmntStatusResponseType">
+		<xs:annotation>
+			<xs:documentation>
+                Корневой элемент запроса статуса сообщения
+            </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:attributeGroup name="AuthorInfoAttrs">
+		<xs:annotation>
+			<xs:documentation>
+                Информация о лице составившем документ
+            </xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="author">
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>
+                            ФИО лица составляющего реестр: работодатель или уполномоченный
+                        </xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="120"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="phone">
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>
+                            Телефон лица, составляющего реестр: работодатель или уполномоченный
+                        </xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="100"/>
+				</xs:restriction>
+				<!-- Change FullName from Person.xsd? -->
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="email">
+			<xs:simpleType>
+				<xs:annotation>
+					<xs:documentation>
+                            E-mail адрес лица, составляющего реестр: работодатель или уполномоченный
+                        </xs:documentation>
+				</xs:annotation>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="100"/>
+					<xs:pattern value="[^@]+@[^\.]+\..+"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:attributeGroup>
+	<xs:complexType name="OrgInfoType">
+		<xs:annotation>
+			<xs:documentation>
+                Информация о страхователе(юр. лицо или ИП)
+            </xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="legalEntity" type="LegalEntityType"/>
+			<xs:element name="ip" type="IndividualProprietorType"/>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="LegalEntityType">
+		<xs:annotation>
+			<xs:documentation>
+                Информация о страховаетеле - юр. лице
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="nameOrg" type="org:fullName"/>
+			<xs:element name="inn" type="org:inn"/>
+			<xs:element name="kpp" type="org:kpp"/>
+			<xs:element name="ogrn" type="org:ogrn"/>
+			<!--            на org без флага-->
+			<xs:choice>
+				<xs:element name="regNum" type="org:regNum">
+					<xs:annotation>
+						<xs:documentation>Идентификатор страхователя по социальному страхованию.
+
+
+Так же см. документацию к полю regNumSFR</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="regNumSFR" type="org:regNumSFR">
+					<xs:annotation>
+						<xs:documentation>Регистрационный номер страхователя СФР.
+~
+До начала переходного периода на регистрационные номера СФР будет приниматься (принимается) 1 поле: regNum.
+~
+В переходном периоде будет приниматься 1 из полей: regNum/regNumSFR
+(если страхователь не перешел на новую схему взаимодействия, то будет направлять regNum, а после перехода на новую схему должен направлять regNumSFR)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:choice minOccurs="0">
+				<xs:element name="publicOrganizationDisability" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Учредитель Общество инвалидов</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="name">
+								<xs:annotation>
+									<xs:documentation>Наименование общероссийской общественной организации инвалидов</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+										<xs:maxLength value="200"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="inn" type="org:inn">
+								<xs:annotation>
+									<xs:documentation>ИНН</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="kpp" type="org:kpp">
+								<xs:annotation>
+									<xs:documentation>КПП</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="ogrn" type="org:ogrn">
+								<xs:annotation>
+									<xs:documentation>ОГРН</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<!--                на empl-->
+				<xs:element name="founderFizlicoDocument" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>учредитель физ. лицо</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="snils" type="per:snils">
+								<xs:annotation>
+									<xs:documentation>СНИЛС предпринимателя/директора</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="lastName" type="per:lastName">
+								<xs:annotation>
+									<xs:documentation>Фамилия учредителя</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="firstName" type="per:firstName">
+								<xs:annotation>
+									<xs:documentation>Имя учредителя</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="middleName" type="per:middleName" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Отчетство учредителя</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="seria" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Серия справки</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string"/>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="number" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Номер справки</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+										<xs:maxLength value="20"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="certificateDate" type="xs:date" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Дата справки</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="soglasie" type="xs:boolean">
+								<xs:annotation>
+									<xs:documentation>Согласие на обработку персональных данных</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IndividualProprietorType">
+		<xs:annotation>
+			<xs:documentation>
+                Информация о страховаетеле - индивидуальном предпринимателе
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="lastName" type="per:lastName"/>
+			<xs:element name="firstName" type="per:firstName"/>
+			<xs:element name="middleName" type="per:middleName" minOccurs="0"/>
+			<xs:element name="inn" type="org:inn"/>
+			<xs:element name="ogrn" type="org:ogrnip"/>
+			<xs:choice>
+				<xs:element name="regNum" type="org:regNum">
+					<xs:annotation>
+						<xs:documentation>Идентификатор страхователя по социальному страхованию.
+
+
+Так же см. документацию к полю regNumSFR</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="regNumSFR" type="org:regNumSFR">
+					<xs:annotation>
+						<xs:documentation>Регистрационный номер страхователя СФР.
+~
+До начала переходного периода на регистрационные номера СФР будет приниматься (принимается) 1 поле: regNum.
+~
+В переходном периоде будет приниматься 1 из полей: regNum/regNumSFR
+(если страхователь не перешел на новую схему взаимодействия, то будет направлять regNum, а после перехода на новую схему должен направлять regNumSFR)</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
+			<xs:sequence minOccurs="0">
+				<!--                 на empl_disabil и флаг disabil_ip-->
+				<xs:element name="founderDisabilityDocument" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Сведения об инвалидности ИП</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="snils" type="per:snils">
+								<xs:annotation>
+									<xs:documentation>СНИЛС предпринимателя/директора</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="seria" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Серия справки</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+										<xs:maxLength value="20"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="number" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Номер справки</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+										<xs:maxLength value="20"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="certificateDate" type="xs:date" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Дата справки</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PaymentInfoType">
+		<xs:annotation>
+			<xs:documentation>
+                Способ перечисления возмещения (р/с или карта мир)
+            </xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="bankInfo" type="BankInfoType"/>
+			<xs:element name="cardMir">
+				<xs:annotation>
+					<xs:documentation>
+                        Номер банковской карты МИР
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="\d{16,19}"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="BankInfoType">
+		<xs:annotation>
+			<xs:documentation>
+               Реквизиты для перечисления в банк
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="bankName">
+				<xs:annotation>
+					<xs:documentation>
+                        Наименование банка
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="120"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="bik">
+				<xs:annotation>
+					<xs:documentation>
+                        БИК банка
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="9"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="corAccNum">
+				<xs:annotation>
+					<xs:documentation>
+                        Корреспондентский счет
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+						<xs:minLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="accountNum">
+				<xs:annotation>
+					<xs:documentation>
+                        Номер расчетного счета
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+						<xs:minLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SttmntRefundUnemplType">
+		<xs:annotation>
+			<xs:documentation>
+                Заявление на возмещения затрат Фондом социального страхования Российской Федерации в 2021 году из бюджета Фонда социального страхования Российской Федерации юридическим лицам и индивидуальным предпринимателям на стимулирование найма безработных граждан
+            </xs:documentation>
+		</xs:annotation>
+		<xs:choice>
+			<xs:element name="primarySttmnt">
+				<xs:annotation>
+					<xs:documentation>
+                        Первичное заявление
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="conformRules" type="xs:boolean">
+							<xs:annotation>
+								<xs:documentation>Подтверждение соответствия правилам условиям предоставления субсидии</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="orgInfo" type="OrgInfoType">
+							<xs:annotation>
+								<xs:documentation>
+                                    Данные работодателя
+                                </xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element ref="paymentInfo"/>
+						<xs:choice>
+							<xs:element ref="workerList"/>
+							<xs:element ref="workerListOPK"/>
+							<xs:element ref="workerListDisability"/>
+						</xs:choice>
+						<xs:element ref="note" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="recalcSttmnt">
+				<xs:annotation>
+					<xs:documentation>
+                        Заявление - перерасчет
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="sttmntNumber">
+							<xs:annotation>
+								<xs:documentation>
+                                    Номер предыдущего заявления
+                                </xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:choice>
+							<xs:element ref="workerList"/>
+							<xs:element ref="workerListOPK"/>
+							<xs:element ref="workerListDisability"/>
+						</xs:choice>
+						<xs:element ref="note" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="correctSttmnt">
+				<xs:annotation>
+					<xs:documentation>
+                        Заявление - коррекция реквизитов
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="sttmntNumber">
+							<xs:annotation>
+								<xs:documentation>
+                                    Номер предыдущего заявления
+                                </xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element ref="paymentInfo"/>
+						<xs:element ref="note" minOccurs="0"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+		<xs:attributeGroup ref="AuthorInfoAttrs"/>
+	</xs:complexType>
+	<xs:complexType name="SttmntRefuseRefundUnemplType">
+		<xs:annotation>
+			<xs:documentation>
+                Заявление - отказ в участии в программе возмещения затрат Фондом социального страхования Российской Федерации в 2021 году из бюджета Фонда социального страхования Российской Федерации юридическим лицам и индивидуальным предпринимателям на стимулирование найма безработных граждан
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="orgInfo" type="OrgInfoType">
+				<xs:annotation>
+					<xs:documentation>
+                        Данные работодателя
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attributeGroup ref="AuthorInfoAttrs"/>
+	</xs:complexType>
+	<!-- Общие элементы >> -->
+	<xs:element name="sttmntNumber" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>
+                Номер заявления
+            </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="paymentInfo" type="PaymentInfoType">
+		<xs:annotation>
+			<xs:documentation>
+                Данные о способе получения выплат
+            </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="workerList">
+		<xs:annotation>
+			<xs:documentation>
+                Список данных о работниках
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="worker" type="WorkerType" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="workerListOPK">
+		<xs:annotation>
+			<xs:documentation>
+                Список данных о работниках
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="worker" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="WorkerType">
+								<xs:sequence>
+									<xs:element name="SZNname">
+										<xs:annotation>
+											<xs:documentation>Наименование государственного учреждения службы занятости населения</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:minLength value="5"/>
+												<xs:maxLength value="250"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="SZNbegin" type="xs:date">
+										<xs:annotation>
+											<xs:documentation>Дата постановки на учёт в органах занятости</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="SZNend" type="xs:date">
+										<xs:annotation>
+											<xs:documentation>Дата снятия с учёта в органах занятости</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="profession" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Профессия работника - ID профессии</xs:documentation>
+										</xs:annotation>
+										<xs:simpleType>
+											<xs:restriction base="xs:integer">
+												<xs:minInclusive value="1"/>
+												<xs:maxExclusive value="9999"/>
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:element>
+									<xs:element name="confirmation" type="xs:boolean" fixed="true">
+										<xs:annotation>
+											<xs:documentation>Подтверждение выполнения условий подпунктом "ж" пункта 5(2)</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+									<xs:element name="movingMoreThan50km" type="xs:boolean" minOccurs="0">
+										<xs:annotation>
+											<xs:documentation>Переехал не менее чем за 50 километров"</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="workerListDisability">
+		<xs:annotation>
+			<xs:documentation>
+                Список данных о работниках
+            </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="worker" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="WorkerType">
+								<xs:sequence>
+									<xs:element name="certificateOfDisability">
+										<xs:annotation>
+											<xs:documentation>Сведения об инвалидности</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:sequence>
+												<xs:element name="seria">
+													<xs:annotation>
+														<xs:documentation>Серия справки</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="1"/>
+															<xs:maxLength value="20"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="number">
+													<xs:annotation>
+														<xs:documentation>Номер справки</xs:documentation>
+													</xs:annotation>
+													<xs:simpleType>
+														<xs:restriction base="xs:string">
+															<xs:minLength value="1"/>
+															<xs:maxLength value="20"/>
+														</xs:restriction>
+													</xs:simpleType>
+												</xs:element>
+												<xs:element name="certificateDate" type="xs:date">
+													<xs:annotation>
+														<xs:documentation>Дата справки</xs:documentation>
+													</xs:annotation>
+												</xs:element>
+											</xs:sequence>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="note">
+		<xs:annotation>
+			<xs:documentation>
+                Пояснительная записка
+            </xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:maxLength value="4000"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<xs:element name="rowNum">
+		<xs:annotation>
+			<xs:documentation>Номер строки</xs:documentation>
+		</xs:annotation>
+		<xs:simpleType>
+			<xs:restriction base="xs:integer">
+				<xs:minInclusive value="1"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	<!-- << Общие элементы -->
+	<!-- Комплексные типы >> -->
+	<xs:complexType name="WorkerType">
+		<xs:annotation>
+			<xs:documentation>
+                Сведения о работнике
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="rowNum"/>
+			<xs:element name="lastName" type="per:lastName">
+				<xs:annotation>
+					<xs:documentation>
+                        Фамилия
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="firstName" type="per:firstName">
+				<xs:annotation>
+					<xs:documentation>
+                        Имя
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="middleName" type="per:middleName" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+                        Отчество
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="birthDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>
+                        Дата рождения работника
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="gender" type="per:GenderType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>
+                        Пол
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="snils" type="per:snils">
+				<xs:annotation>
+					<xs:documentation>
+                        СНИЛС
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="insurenceSum" type="com:amount">
+				<xs:annotation>
+					<xs:documentation>
+                    Сумма страховых взносов
+                </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="regionRate" type="rr:RegionRateType">
+				<xs:annotation>
+					<xs:documentation>
+                        Районный коэффициент
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="orderDate" minOccurs="0">
+				<xs:simpleType>
+					<xs:annotation>
+						<xs:documentation>
+                            Дата приказа о приеме на работу
+                        </xs:documentation>
+					</xs:annotation>
+					<xs:restriction base="xs:date"/>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="orderNum" minOccurs="0">
+				<xs:simpleType>
+					<xs:annotation>
+						<xs:documentation>
+                            Номер приказа о приеме на работу
+                        </xs:documentation>
+					</xs:annotation>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="1"/>
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="contractDate" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>
+                        Дата заключения трудового договора
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="beganWorking" type="xs:date">
+				<xs:annotation>
+					<xs:documentation>
+                        Дата начала выполнения трудовых обязанностей
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SttmntRefundUnemplResultType">
+		<xs:annotation>
+			<xs:documentation>
+                Возвращаемый тип содержащий номер сохраненного заявления, статус и список ошибок ФЛК
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="result">
+				<xs:annotation>
+					<xs:documentation>Данные о принятом заявлении</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="sttmntNumber" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Номер заявления</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="status" type="xs:string">
+							<xs:annotation>
+								<xs:documentation>Статус заявления</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="errorList" type="com:ErrorType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Список сообщений об ошибках</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SttmntRefuseRefundUnemplResultType">
+		<xs:annotation>
+			<xs:documentation>
+                Возвращаемый тип на запрос отказа в участии в программе
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="result">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="sttmntNumber" type="xs:string"/>
+						<xs:element name="status" type="xs:string"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="errorList" type="com:ErrorType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Список сообщений об ошибках</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SttmntStatusRequestType">
+		<xs:annotation>
+			<xs:documentation>
+                Тип определяющий запрос статуса заявления
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="sttmntNumber" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SttmntStatusResponseType">
+		<xs:annotation>
+			<xs:documentation>
+                Тип определяющий ответ на запрос статуса заявления
+            </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="sttmntNumber" type="xs:string"/>
+			<xs:element name="status" type="xs:string"/>
+			<xs:element name="errorList" type="com:ErrorType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Список сообщений об ошибках в заявлении</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="workerStatusList" type="WorkerStatusListType">
+				<xs:annotation>
+					<xs:documentation>Информация о статусе информации о работниках</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="WorkerStatusListType">
+		<xs:sequence>
+			<xs:element name="workerStatus" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="rowNum"/>
+						<xs:element name="status" type="xs:string"/>
+						<xs:element name="errorList" type="com:ErrorType" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Список сообщений об ошибках в сведении о работнике</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- << Комплексные типы -->
+	<xs:simpleType name="SttmntRefundUnemplStatusType">
+		<xs:annotation>
+			<xs:documentation>
+                Справочник статусов заявления
+            </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="RECEIVED">
+				<xs:annotation>
+					<xs:documentation>Заявление зарегистрировано</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="REJECTED">
+				<xs:annotation>
+					<xs:documentation>Заявление отклонено</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="VERIFIED">
+				<xs:annotation>
+					<xs:documentation>Заявление зарегистрировано и прошло все бизнес-проверки</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SttmntRefundUnemplItemStatusType">
+		<xs:annotation>
+			<xs:documentation>
+                Справочник статусов сведения о работнике в заявлении
+            </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ITEM_VERIFIED">
+				<xs:annotation>
+					<xs:documentation>Сведение о работнике зарегистрировано и прошло бизнес-проверки</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="ITEM_REJECTED">
+				<xs:annotation>
+					<xs:documentation>Сведение о работнике отклонено</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SttmntRefundUnemplTrancheStatusType">
+		<xs:annotation>
+			<xs:documentation>
+                Справочник статусов транша
+            </xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="TRANCHE_CREATED">
+				<xs:annotation>
+					<xs:documentation>Транш создан</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TRANCHE_VERIFIED">
+				<xs:annotation>
+					<xs:documentation>Транш проверен и готов к загрузке в процессинг для выплаты</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TRANCHE_REJECTED">
+				<xs:annotation>
+					<xs:documentation>Транш отклонен</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TRANCHE_UPLOADED">
+				<xs:annotation>
+					<xs:documentation>Транш загружен в процессинг для выплаты</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

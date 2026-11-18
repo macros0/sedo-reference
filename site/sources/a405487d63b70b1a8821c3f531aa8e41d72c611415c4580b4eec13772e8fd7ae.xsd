@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:fss:integration:types:proactive:notifications:v01" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:pr="http://www.fss.ru/integration/types/proactive/type/v01" xmlns:org="http://www.fss.ru/integration/types/organization/v01" xmlns:c="http://www.fss.ru/integration/types/common/v01" xmlns:p="http://www.fss.ru/integration/types/person/v02" targetNamespace="urn:ru:fss:integration:types:proactive:notifications:v01" elementFormDefault="qualified" version="1.0">
+	<xs:import namespace="http://www.fss.ru/integration/types/proactive/type/v01" schemaLocation="../type/Proactive.xsd"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/organization/v01" schemaLocation="../type/Organization.xsd" id="org"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/common/v01" schemaLocation="../../v01/type/Common.xsd" id="c"/>
+	<xs:import namespace="http://www.fss.ru/integration/types/person/v02" schemaLocation="../../v02/type/Person.xsd" id="p"/>
+	<xs:element name="proactiveNotification">
+		<xs:annotation>
+			<xs:documentation>Информирование о событиях по проактивному процессу по временной нетрудоспособности и материнству. Тип сообщения СЭДО №107</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="socialAssistNum" type="xs:long">
+					<xs:annotation>
+						<xs:documentation>Номер текущего проактивного процесса</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:choice>
+					<xs:element name="procClosedOpenNew">
+						<xs:annotation>
+							<xs:documentation>Информирование о закрытии проактивного процесса в связи с изменением параметров по процессу. Будет выполнено открытие нового проактивного процесса</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="reason">
+									<xs:annotation>
+										<xs:documentation>Причина закрытия текущего проактивного процесса</xs:documentation>
+									</xs:annotation>
+									<xs:simpleType>
+										<xs:restriction base="xs:string">
+											<xs:maxLength value="1000"/>
+										</xs:restriction>
+									</xs:simpleType>
+								</xs:element>
+								<xs:element name="newSocialAssistNum" type="xs:long">
+									<xs:annotation>
+										<xs:documentation>Номер нового проактивного процесса</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="receivedConfirmationOtherInsurer">
+						<xs:annotation>
+							<xs:documentation>Информирование о приеме 101 сообщения по страховому случаю от другого страхователя</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="paymentMethod" type="pr:paymentMethodType">
+									<xs:annotation>
+										<xs:documentation>Метод назначения пособия, полученный от другого страхователя</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+								<xs:element name="years">
+									<xs:annotation>
+										<xs:documentation>Расчетные года, полученные от другого страхователя</xs:documentation>
+									</xs:annotation>
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element name="year" type="xs:integer" minOccurs="2" maxOccurs="2"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="proactiveExpireNotice">
+		<xs:annotation>
+			<xs:documentation>Уведомление, о том, что ответ на запрос недостающих сведений от страхователя (101 сообщение) не поступил в сроки, установленные ПП РФ № 2010 от 23 ноября 2021 г.
+				Тип сообщения СЭДО №124</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="socialAssistNum" type="xs:long">
+					<xs:annotation>
+						<xs:documentation>Номер проактивного процесса</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="missingResponseToRequest">
+					<xs:annotation>
+						<xs:documentation>Информирование страхователя о том, что не получен ответ на запрос недостающих сведений в установленный срок</xs:documentation>
+					</xs:annotation>
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+							<xs:maxLength value="1000"/>
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="proactiveSalaryNotification">
+		<xs:annotation>
+			<xs:documentation>Сведения, необходимые для исчисления страхователем первых трех дней пособия по временной нетрудоспособности. Тип сообщения СЭДО № 322</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="elnInfo">
+					<xs:annotation>
+						<xs:documentation>Информация об ЭЛН</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="lnNumber" type="c:lnCode">
+								<xs:annotation>
+									<xs:documentation>Номер ЭЛН</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="insurerInfo">
+					<xs:annotation>
+						<xs:documentation>Данные о страхователе</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="regNum" type="org:regNum">
+								<xs:annotation>
+									<xs:documentation>Рег. номер страхователя по ОСС</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="regNumSFR" type="org:regNumSFR">
+								<xs:annotation>
+									<xs:documentation>Единый рег. номер страхователя СФР</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="insuredInfo">
+					<xs:annotation>
+						<xs:documentation>Сведения о застрахованном лице </xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="snils" type="p:snils">
+								<xs:annotation>
+									<xs:documentation>СНИЛС</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="fullName" type="p:FullName">
+								<xs:annotation>
+									<xs:documentation>ФИО</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="birthDate" type="xs:date">
+								<xs:annotation>
+									<xs:documentation>Дата рождения</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="insuredWorksSeveralInsurers" type="xs:boolean">
+					<xs:annotation>
+						<xs:documentation>Застрахованное лицо на момент наступления страхового случая занято у нескольких страхователей</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="paymentMethod" type="pr:paymentMethodType">
+					<xs:annotation>
+						<xs:documentation>Метод назначения и выплаты пособия</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="salaryInfo">
+					<xs:annotation>
+						<xs:documentation>Сведения о заработке застрахованного лица</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="yearSum" type="yearSum322Type" minOccurs="2" maxOccurs="2">
+								<xs:annotation>
+									<xs:documentation>Сведения по году</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="mobilDaysAmount" type="xs:integer" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Количество дней приостановления действия трудового договора в соответствии со статьей 351.7 Трудового кодекса Российской Федерации или приостановления прохождения государственной гражданской службы в соответствии со статьей 53.1 Федерального закона от 27 июля 2004 года N 79-ФЗ "О государственной гражданской службе Российской Федерации", которые приходятся на два предшествующих года от даты начала страхового случая</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="messageDateTime" type="xs:dateTime" use="required">
+				<xs:annotation>
+					<xs:documentation>Дата и время формирования сообщения на стороне СФР</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="yearType">
+		<xs:restriction base="xs:integer">
+			<xs:minInclusive value="2015"/>
+			<xs:pattern value="\d{4}"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="yearSum322Type">
+		<xs:sequence>
+			<xs:element name="year" type="yearType">
+				<xs:annotation>
+					<xs:documentation>Год</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="salaryByCurrentInsurer">
+				<xs:annotation>
+					<xs:documentation>Сумма заработка по одному (текущему) страхователю</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="sumOPS" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Сумма заработной платы застрахованного лица, включая все виды выплат и иных вознаграждений</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="c:amount"/>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="sumGPH" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Сумма заработной платы по гражданско-правовым договорам</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="c:amount"/>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="sumOPS-GPH" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Сумма заработной платы застрахованного лица, за вычетом сумм по ГПД</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="c:amount"/>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="salaryByAllInsurers">
+				<xs:annotation>
+					<xs:documentation>Общая сумма заработка по всем страхователям</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="sumOPS" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Сумма заработной платы застрахованного лица, включая все виды выплат и иных вознаграждений</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="c:amount"/>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="sumGPH" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Сумма заработной платы по гражданско-правовым договорам</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="c:amount"/>
+							</xs:simpleType>
+						</xs:element>
+						<xs:element name="sumOPS-GPH" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Сумма заработной платы застрахованного лица, за вычетом сумм по ГПД</xs:documentation>
+							</xs:annotation>
+							<xs:simpleType>
+								<xs:restriction base="c:amount"/>
+							</xs:simpleType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

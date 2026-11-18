@@ -36,22 +36,46 @@ function index(source){
 }
 function expanded(qname){if(qname.startsWith('{')){const at=qname.lastIndexOf('}');return {name:qname.slice(at+1),ns:qname.slice(1,at)}}return {name:qname,ns:''}}
 function route(node){const parts=[];let length=0;for(let n=node;n;n=n.parent){length+=n.name.length+1;if(length>8192)return null;parts.push(n.name)}return parts.reverse().join('/')}
+function* attributeNames(node,source,limit=Infinity){
+ let count=0;
+ for(const a of source.slice(node.nameEnd,node.openEnd-1).matchAll(/([^\s=]+)\s*=\s*(['"])([\s\S]*?)\2/g)){
+  if(++count>limit)break;
+  const parts=a[1].split(':'),name=parts.at(-1),ns=parts.length>1?node.namespaces[parts[0]]||'\u0000':'';
+  const start=node.nameEnd+a.index;
+  yield {name,ns,declaration:a[1]==='xmlns'||parts[0]==='xmlns',range:{start,end:start+a[1].length,kind:'attribute'}};
+ }
+}
 function sourceRanges(node,attribute,source){
  const result=[{start:node.nameStart,end:node.nameEnd,kind:'tag'}];
  if(node.closeStart!==null)result.push({start:node.closeStart,end:node.closeStart+node.qname.length,kind:'tag'});
  if(attribute&&node.openEnd-node.nameEnd<=65536){
   const wanted=expanded(attribute),prefix=attribute.includes(':')&&!attribute.startsWith('{')?attribute.split(':')[0]:null;
   if(prefix){wanted.name=attribute.split(':').at(-1);wanted.ns=node.namespaces[prefix]||'\u0000'}
-  let count=0;for(const a of source.slice(node.nameEnd,node.openEnd-1).matchAll(/([^\s=]+)\s*=\s*(['"])([\s\S]*?)\2/g)){
-   if(++count>512)break;
-   const parts=a[1].split(':'),name=parts.at(-1),ns=parts.length>1?node.namespaces[parts[0]]||'\u0000':'';
-   if(name===wanted.name&&ns===wanted.ns){const start=node.nameEnd+a.index;result.unshift({start,end:start+a[1].length,kind:'attribute'});break}
+  for(const attr of attributeNames(node,source,512)){
+   if(attr.name===wanted.name&&attr.ns===wanted.ns){result.unshift(attr.range);break}
   }
  }
  return result;
 }
+// The XML index is in document order. Cache the matched public path of each
+// parent so that a wrong ancestor namespace excludes its complete subtree.
+function pathMatcher(known,namespaces){
+ const cache=new WeakMap();
+ function matches(node){
+  if(cache.has(node))return cache.get(node);
+  let path=null;
+  if(!node.parent||matches(node.parent)!==null){
+   const candidate=node.parent?cache.get(node.parent)+'/'+node.name:route(node);
+   if(candidate!==null&&candidate.length<=8192&&namespaces[known.get(candidate)]?.includes(node.ns))path=candidate;
+  }
+  cache.set(node,path);
+  return path;
+ }
+ return matches;
+}
 function locate(errors,nodes,fields=[],namespaces=[]){
  const known=new Map(fields.map((path,i)=>[path,i]));
+ const matches=pathMatcher(known,namespaces);
  return errors.map(error=>{
   const result={...error,locations:[],ambiguous:false,truncated:false,sourceAmbiguous:false};if(!nodes?.length)return result;
   const subject=error.message.match(/^(?:(?:[^\n]*?:\s*)?Schemas validity error\s*:\s*)?Element '([^']+)'(?:, attribute '([^']+)')?:\s*([\s\S]*)$/);
@@ -71,13 +95,10 @@ function locate(errors,nodes,fields=[],namespaces=[]){
    if(byPath.has(path)){const old=byPath.get(path);old.occurrences++;if(old.ranges.length<24){const extra=sourceRanges(node,attribute,nodes.source);if(extra.length>24-old.ranges.length)old.rangesTruncated=true;old.ranges.push(...extra.slice(0,24-old.ranges.length))}else old.rangesTruncated=true;continue}
    seen.add(path);
    if(result.locations.length>=8){result.truncated=true;break}
-   const matches=candidate=>{
-    for(let n=candidate;n;n=n.parent){const key=route(n),i=known.get(key);if(i===undefined||!namespaces[i]?.includes(n.ns))return false}return true;
-   };
    let target='';
    if(!error.root){
-    if(attr&&known.has(path)&&matches(node)&&namespaces[known.get(path)]?.includes(attr.ns))target=path;
-    for(let n=node;!target&&n;n=n.parent){const key=route(n);if(matches(n))target=key}
+    if(attr&&known.has(path)&&matches(node)!==null&&namespaces[known.get(path)]?.includes(attr.ns))target=path;
+    for(let n=node;!target&&n;n=n.parent){target=matches(n)||''}
    }
 
    const location={path:'/'+path,field:target?known.get(target):null,parent:!!target&&target!==path,ranges:sourceRanges(node,attribute,nodes.source),occurrences:1,rangesTruncated:false};
@@ -86,5 +107,41 @@ function locate(errors,nodes,fields=[],namespaces=[]){
   result.ambiguous=seen.size>1;result.sourceAmbiguous=result.ambiguous||result.locations.some(l=>l.occurrences>1);return result;
  });
 }
-const api={index,locate};scope.SedoValidationPaths=api;if(typeof module==='object'&&module.exports)module.exports=api;
+function reviewLocations(nodes,fields=[],namespaces=[],reviewFields=[]){
+ if(!nodes?.length||!reviewFields.length)return [];
+ const selected=new Set(reviewFields.filter(i=>Number.isInteger(i)&&i>=0&&i<fields.length));
+ if(!selected.size)return [];
+ const known=new Map(fields.map((path,i)=>[path,i]));
+ const matches=pathMatcher(known,namespaces);
+ const attributeParents=new Set();
+ for(const i of selected){
+  const at=fields[i].lastIndexOf('/@');
+  if(at>=0)attributeParents.add(fields[i].slice(0,at));
+ }
+ const groups=new Map();
+ function record(field,line,ranges){
+  if(!groups.has(field))groups.set(field,{path:'/'+fields[field],field,line,ranges:[],occurrences:0,rangesTruncated:false});
+  const group=groups.get(field),available=24-group.ranges.length;
+  group.occurrences++;
+  if(ranges.length>available)group.rangesTruncated=true;
+  group.ranges.push(...ranges.slice(0,available));
+ }
+ for(const node of nodes){
+  const path=matches(node);
+  if(path===null)continue;
+  const field=known.get(path);
+  if(selected.has(field))record(field,node.line,sourceRanges(node,null,nodes.source));
+  if(!attributeParents.has(path))continue;
+  let line=node.line,offset=node.nameEnd;
+  for(const attr of attributeNames(node,nodes.source)){
+   if(attr.declaration)continue;
+   const i=known.get(path+'/@'+attr.name);
+   if(!selected.has(i)||!namespaces[i]?.includes(attr.ns))continue;
+   for(;offset<attr.range.start;offset++)if(nodes.source.charCodeAt(offset)===10)line++;
+   record(i,line,[attr.range]);
+  }
+ }
+ return [...groups.values()];
+}
+const api={index,locate,reviewLocations};scope.SedoValidationPaths=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof self==='object'?self:globalThis);

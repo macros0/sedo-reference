@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:tns="http://www.fss.ru/integration/types/eln/ins/notice/v01"
+		   xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   xmlns:eln="http://www.fss.ru/integration/types/eln/ins/v01"
+		   elementFormDefault="qualified" version="1.0"
+		   targetNamespace="http://www.fss.ru/integration/types/eln/ins/notice/v01">
+
+	<xs:import namespace="http://www.fss.ru/integration/types/eln/ins/v01" schemaLocation="./FileOperationsLnIns.xsd"/>
+
+	<xs:element name="changeElnNotice" type="eln:ResponseRow">
+		<xs:annotation>
+			<xs:documentation>Уведомление об изменении ЭЛН</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+</xs:schema>

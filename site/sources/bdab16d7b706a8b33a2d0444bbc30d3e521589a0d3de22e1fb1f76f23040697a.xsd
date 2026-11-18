@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="urn:ru:ecp:integration:types:common:v3.0" targetNamespace="urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0" elementFormDefault="qualified" version="1.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="../../type/Common.xsd"/>
+	<xs:element name="refundUnemplSttmntResult" type="SttmntRefundUnemplResultType">
+		<xs:annotation>
+			<xs:documentation>Результат обработки заявления на предоставление субсидии юридическим лицам и индивидуальным предпринимателям на стимулирование найма безработных граждан.
+Тип сообщения СЭДО №7910</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="SttmntRefundUnemplResultType">
+		<xs:sequence>
+			<xs:element name="result">
+				<xs:annotation>
+					<xs:documentation>Данные о принятом заявлении</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="sttmntNumber" type="sttmntNumberType">
+							<xs:annotation>
+								<xs:documentation>Номер заявления</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="status" type="StateType">
+							<xs:annotation>
+								<xs:documentation>Статус обработки заявления</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:any processContents="skip" minOccurs="0" maxOccurs="unbounded">
+							<xs:annotation>
+								<xs:documentation>Технический элемент, позволяющий расширять XML документ в перспективе</xs:documentation>
+							</xs:annotation>
+						</xs:any>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="errorList" type="com:errorType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Список сообщений об ошибках</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="specVersion" type="com:specVersionType" use="required">
+			<xs:annotation>
+				<xs:documentation>Номер версии  спецификации для xml документа</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="responseOn" type="com:uuidV1Type" use="required">
+			<xs:annotation>
+				<xs:documentation>Ссылка на транспортный идентификатор запроса (тип сообщения СЭДО №7810)</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="messageDateTime" type="xs:dateTime" use="required">
+			<xs:annotation>
+				<xs:documentation>Дата и время формирования сообщения на стороне СФР</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:anyAttribute processContents="skip">
+			<xs:annotation>
+				<xs:documentation>Технический атрибут, позволяющий расширять XML документ</xs:documentation>
+			</xs:annotation>
+		</xs:anyAttribute>
+	</xs:complexType>
+	<xs:simpleType name="StateType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ERROR">
+				<xs:annotation>
+					<xs:documentation>Не принят</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="RECEIVED">
+				<xs:annotation>
+					<xs:documentation>Принят</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="sttmntNumberType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="40"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

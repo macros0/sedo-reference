@@ -1,0 +1,730 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns="http://www.fss.ru/integration/types/pvso/noticetermination/v01"
+            targetNamespace="http://www.fss.ru/integration/types/pvso/noticetermination/v01"
+            elementFormDefault="qualified">
+    <xsd:element name="noticeTerminationRequest" type="NoticeTerminationRequestType"/>
+    <xsd:element name="noticeTerminationResponse" type="NoticeTerminationResponseType"/>
+
+    <xsd:complexType name="NoticeTerminationRequestType">
+        <xsd:annotation>
+            <xsd:documentation>Структура для передачи перечня уведомлений о прекращении пособия по уходу
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="row" maxOccurs="unbounded">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="notificationID" type="NotificationNoType">
+                            <xsd:annotation>
+                                <xsd:documentation>notificationID формируется на стороне Страхователя. notificationID должен быть уникальным по каждому запросу. Так же, формат значения должен соответствовать маске «N_регномер страхователя поОСС_год_месяц_число_номер:субномер», например: N_1234567890_2022_03_01_0001:1.  Дополнительные правила формирования номера не предусмотрены</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="batchNo" type="BatchNoType">
+                            <xsd:annotation>
+                                <xsd:documentation>Идентификатор (BATCH_NO) записи реестра выплаты</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="docDt1" type="xsd:date">
+                            <xsd:annotation>
+                                <xsd:documentation>Дата предоставления документов Застрахованным лицом Страхователю</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="SNILS" type="SnilsType"/>
+                        <xsd:element name="surname">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="60"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="name">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="60"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="patronimic" nillable="true" minOccurs="0">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="60"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="employer">
+                            <xsd:annotation>
+                                <xsd:documentation>Страхователь: наименование</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="255"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="emplRegNo" type="regNum" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>Регистрационный номер по ОСС.
+
+                                    Так же см. документацию к полю regNumSFR</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="regNumSFR" type="regNumSFR" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>Регистрационный номер страхователя СФР.
+                                    ~
+                                    До начала переходного периода на регистрационные номера СФР будет приниматься (принимается) 1 поле: emplRegNo.
+                                    ~
+                                    В переходном периоде  будет приниматься 1 из полей: emplRegNo/regNumSFR
+                                    (если страхователь не перешел на новую схему взаимодействия, то будет направлять emplRegNo, а после перехода на новую схему должен направлять regNumSFR)
+                                    ~
+									Если сообщение направляется добровольно застрахованным лицом, то поле emplRegNo всегда обязательно для заполнения - рег. номером, принадлежащим добровольно застрахованному лицу, а поле regNumSFR не обязательно для заполнения</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="emplParentNo">
+                            <xsd:annotation>
+                                <xsd:documentation>Страхователи: код подчиненности (социального страхования)</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="10"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="emplKPP" type="kpp" nillable="true">
+                            <xsd:annotation>
+                                <xsd:documentation>Страхователь: КПП</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="emplINN" type="inn">
+                            <xsd:annotation>
+                                <xsd:documentation>Страхователь: ИНН</xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="birthday" type="xsd:date"/>
+                        <xsd:element name="SNILSChild" nillable="true" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>СНИЛС ребенка</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                                <xsd:restriction base="SnilsType">
+                                    <xsd:maxLength value="11"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="patronimicChild" nillable="true" minOccurs="0">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="60"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="nameChild">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="60"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="surnameChild">
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="60"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="birthdayChild" type="xsd:date"/>
+                        <xsd:element name="holidType" nillable="true">
+                            <xsd:annotation>
+                                <xsd:documentation>Признак типа приказа страхователя 1-о преждевременном выходе на
+                                    работу;
+                                    2-о прекращении трудовых отношений;
+                                    3 – о смерти ребенка;
+                                    4 - о прекращении оснований для выплаты пособия
+                                    5 - иное
+                                </xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                                <xsd:restriction base="fssnilinteger1">
+                                    <xsd:enumeration value="1">
+                                        <xsd:annotation>
+                                            <xsd:documentation>о преждевременном выходе на работу
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:enumeration>
+                                    <xsd:enumeration value="2">
+                                        <xsd:annotation>
+                                            <xsd:documentation>о прекращении трудовых отношений</xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:enumeration>
+                                    <xsd:enumeration value="3">
+                                        <xsd:annotation>
+                                            <xsd:documentation>о смерти ребенка</xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:enumeration>
+                                    <xsd:enumeration value="4">
+                                        <xsd:annotation>
+                                            <xsd:documentation>о прекращение оснований для выплаты пособия
+                                            </xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:enumeration>
+                                    <xsd:enumeration value="5">
+                                        <xsd:annotation>
+                                            <xsd:documentation>иное</xsd:documentation>
+                                        </xsd:annotation>
+                                    </xsd:enumeration>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="holidTypeInfo" minOccurs="0">
+                            <xsd:annotation>
+                                <xsd:documentation>Пояснение для типа приказа "Иное" или "О прекращении оснований для выплаты пособия"</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="255"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="holidNo" nillable="true">
+                            <xsd:annotation>
+                                <xsd:documentation>Номер приказа страхователя/документа основания для прекращения
+                                    выплаты пособия
+                                </xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="20"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                        <xsd:element name="holidDt" type="xsd:date" nillable="true">
+                            <xsd:annotation>
+                                <xsd:documentation>Дата приказа страхователя/документа основания для прекращения
+                                    выплаты пособия
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="holidDtEx" type="xsd:date" nillable="true">
+                            <xsd:annotation>
+                                <xsd:documentation>Дата прекращения действия основания для выплаты пособия
+                                </xsd:documentation>
+                            </xsd:annotation>
+                        </xsd:element>
+                        <xsd:element name="holidDocNum">
+                            <xsd:annotation>
+                                <xsd:documentation>Наименование документа, подтверждающего прекращение обязательств</xsd:documentation>
+                            </xsd:annotation>
+                            <xsd:simpleType>
+                                <xsd:restriction base="xsd:string">
+                                    <xsd:maxLength value="150"/>
+                                </xsd:restriction>
+                            </xsd:simpleType>
+                        </xsd:element>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:sequence>
+        <xsd:attribute name="software" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Наименование программного обеспечения</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="255"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="version_software" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Версия программного обеспечения</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="15"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="author" use="required">
+            <xsd:annotation>
+                <xsd:documentation>ФИО лица предоставляющего сведения</xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="120"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="phone" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Контактный номер телефона
+                    (с указанием кода) страхователя
+                    (уполномоченного представителя)
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="30"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="email" use="required">
+            <xsd:annotation>
+                <xsd:documentation>Адрес электронной почты страхователя (уполномоченного представителя)
+                </xsd:documentation>
+            </xsd:annotation>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="40"/>
+                    <xsd:pattern value="[0-9a-zA-Z_.\-]{2,50}[@]{1}[0-9a-zA-Z_./-]{2,50}[.]{1}[a-zA-Z]{2,5}"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+        <xsd:attribute name="emplRegNo" type="regNum" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Регистрационный номер по ОСС.
+
+                    Так же см. документацию к полю regNumSFR</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="regNumSFR" type="regNumSFR" use="optional">
+            <xsd:annotation>
+                <xsd:documentation>Регистрационный номер страхователя СФР.
+                    ~
+                    До начала переходного периода на регистрационные номера СФР будет приниматься (принимается) 1 поле: emplRegNo.
+                    ~
+                    В переходном периоде будет приниматься 1 из полей: emplRegNo/regNumSFR
+                    (если страхователь не перешел на новую схему взаимодействия, то будет направлять emplRegNo, а после перехода на новую схему должен направлять regNumSFR)
+                    ~
+					Если сообщение направляется добровольно застрахованным лицом, то поле emplRegNo всегда обязательно для заполнения - рег. номером, принадлежащим добровольно застрахованному лицу, а поле regNumSFR не обязательно для заполнения</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:complexType name="NoticeTerminationResponseType">
+        <xsd:annotation>
+            <xsd:documentation>Структура для ответа на отправку реестра уведомлений о прекращении пособия по уходу
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="dateTimeReceive" type="xsd:dateTime">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Дата и время обработки реестра
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="recriveID">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        ID отправления
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="50"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+            <xsd:element name="statusGeneral" type="StateType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Статус реестра
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="errorList" type="ErrorListType" minOccurs="0"/>
+            <xsd:element name="protocol" type="ProtocolType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Протокол выполнения ФЛК
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ErrorListType">
+        <xsd:sequence>
+            <xsd:element name="error" type="ErrorType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Детализация ошибок для каждого реестра
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ErrorType">
+        <xsd:sequence>
+            <xsd:element name="errorCode" type="xsd:string">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Код ошибки
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="errorDescription">
+                <xsd:annotation>
+                    <xsd:documentation>Текст ошибки
+                    </xsd:documentation>
+                </xsd:annotation>
+                <xsd:simpleType>
+                    <xsd:restriction base="xsd:string">
+                        <xsd:maxLength value="500"/>
+                    </xsd:restriction>
+                </xsd:simpleType>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ProtocolType">
+        <xsd:sequence>
+            <xsd:element name="failedList" type="FailedListType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Перечень документов, которые не прошли логический контроль.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="FailedListType">
+        <xsd:sequence>
+            <xsd:element name="failedBatchNoDetail" type="FailedBatchNoDetailType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Детализация ошибок для каждого документа
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="FailedBatchNoDetailType">
+        <xsd:sequence>
+            <xsd:element name="notificationID" type="NotificationNoType">
+                <xsd:annotation>
+                    <xsd:documentation>Номер реестра с номером строки в которой возникли ошибки</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="errorList" type="ErrorListType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Перечень ошибок
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="StateType">
+        <xsd:restriction base="xsd:integer">
+            <xsd:enumeration value="0">
+                <xsd:annotation>
+                    <xsd:documentation>Не принят</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="1">
+                <xsd:annotation>
+                    <xsd:documentation>Принят</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="2">
+                <xsd:annotation>
+                    <xsd:documentation>Произошла техническая ошибка. Необходимо повторно отправить запрос чуть позже</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="fssempty">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value=""/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="fssnilinteger">
+        <xsd:union memberTypes="xsd:integer fssempty"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="fssnilinteger1">
+        <xsd:union>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:integer">
+                    <xsd:totalDigits value="1"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType>
+                <xsd:restriction base="fssempty"/>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
+    <xsd:simpleType name="fssnilinteger2">
+        <xsd:union>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:integer">
+                    <xsd:totalDigits value="2"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType>
+                <xsd:restriction base="fssempty"/>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
+    <xsd:simpleType name="fssnilinteger3">
+        <xsd:union>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:integer">
+                    <xsd:totalDigits value="3"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType>
+                <xsd:restriction base="fssempty"/>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
+    <xsd:simpleType name="fssnilinteger4">
+        <xsd:union>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:integer">
+                    <xsd:totalDigits value="4"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType>
+                <xsd:restriction base="fssempty"/>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
+    <xsd:simpleType name="fssnildecimal">
+        <xsd:union>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:decimal">
+                    <xsd:fractionDigits value="2"/>
+                    <xsd:totalDigits value="24"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType>
+                <xsd:restriction base="fssempty"/>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
+    <xsd:simpleType name="fssnildecimalK">
+        <xsd:union>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:decimal">
+                    <xsd:fractionDigits value="3"/>
+                    <xsd:totalDigits value="4"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType>
+                <xsd:restriction base="fssempty"/>
+            </xsd:simpleType>
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:pattern value="-?(1\.000|0\.\d{3})"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
+    <xsd:simpleType name="fssnilguid">
+        <xsd:union memberTypes="fssempty">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:pattern value="([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:union>
+    </xsd:simpleType>
+    <xsd:simpleType name="regNum">
+        <xsd:annotation>
+            <xsd:documentation>Регистрационный номер по ОСС</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\d{10}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="regNumSFR">
+        <xsd:annotation>
+            <xsd:documentation>Регистрационный номер страхователя СФР</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\d{10}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="kpp">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\d{9}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="inn">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\d{10}|\d{12}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="ogrn">
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\d{13}"/>
+            <xsd:pattern value="\d{15}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="BatchNoType">
+        <xsd:annotation>
+            <xsd:documentation>Номер файла
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[E|P]_\d{10}_(19|20)[0-9]{2}_[0|1][0-9]_[0-3][0-9]_\d{1,9}[\S]{0,5}:\d{1,3}|\S{18}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="NotificationNoType">
+        <xsd:annotation>
+            <xsd:documentation>Номер уведомления
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[N]_\d{10}_(19|20)[0-9]{2}_[0|1][0-9]_[0-3][0-9]_\d{4}:\d{1,2}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="SnilsType">
+        <xsd:annotation>
+            <xsd:documentation>СНИЛС
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="\d{11}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="IdType">
+        <xsd:annotation>
+            <xsd:documentation>Справочник типов удостоверений личности
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="2"/>
+            <xsd:enumeration value="01">
+                <xsd:annotation>
+                    <xsd:documentation>Паспорт гражданина СССР</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="03">
+                <xsd:annotation>
+                    <xsd:documentation>Свидетельство о рождении</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="05">
+                <xsd:annotation>
+                    <xsd:documentation>Справка об освобождении из места лишения свободы</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="08">
+                <xsd:annotation>
+                    <xsd:documentation>Временное удостоверение, выданное взамен военного билета</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="09">
+                <xsd:annotation>
+                    <xsd:documentation>Дипломатический паспорт</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="10">
+                <xsd:annotation>
+                    <xsd:documentation>Паспорт иностранного гражданина</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="11">
+                <xsd:annotation>
+                    <xsd:documentation>Свидетельство о рассмотрении ходатайства о признании лица беженцем на территории
+                        Российской Федерации по существу
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="12">
+                <xsd:annotation>
+                    <xsd:documentation>Вид на жительство в Российской Федерации</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="13">
+                <xsd:annotation>
+                    <xsd:documentation>Удостоверение беженца</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="14">
+                <xsd:annotation>
+                    <xsd:documentation>Временное удостоверение личности гражданина Российской Федерации
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="15">
+                <xsd:annotation>
+                    <xsd:documentation>Разрешение на временное проживание в Российской Федерации</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="19">
+                <xsd:annotation>
+                    <xsd:documentation>Свидетельство о предоставлении временного убежища на территории РФ
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="21">
+                <xsd:annotation>
+                    <xsd:documentation>Паспорт гражданина Российской Федерации</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="22">
+                <xsd:annotation>
+                    <xsd:documentation>Загранпаспорт гражданина Российской Федерации</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="23">
+                <xsd:annotation>
+                    <xsd:documentation>Свид. о рождении, выданное уполномоченным органом иностранного государства
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="24">
+                <xsd:annotation>
+                    <xsd:documentation>Удостоверение личности военнослужащего Российской Федерации</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="26">
+                <xsd:annotation>
+                    <xsd:documentation>Паспорт моряка</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="27">
+                <xsd:annotation>
+                    <xsd:documentation>Паспорт моряка Военный билет офицера запаса</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="60">
+                <xsd:annotation>
+                    <xsd:documentation>Документы, подтверждающие факт регистрации по месту жительства (пребывания)
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="61">
+                <xsd:annotation>
+                    <xsd:documentation>Свидетельство о регистрации по месту жительства</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="62">
+                <xsd:annotation>
+                    <xsd:documentation>Вид на жительство иностранного гражданина</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="63">
+                <xsd:annotation>
+                    <xsd:documentation>Свидетельство о регистрации по месту пребывания</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="81">
+                <xsd:annotation>
+                    <xsd:documentation>Свидетельство о смерти</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="91">
+                <xsd:annotation>
+                    <xsd:documentation>Иные документы</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="93">
+                <xsd:annotation>
+                    <xsd:documentation>Служебный паспорт гражданина Российской Федерации</xsd:documentation>
+                </xsd:annotation>
+            </xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>

@@ -1,0 +1,109 @@
+<xsd:schema elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="notice">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="noticeData">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="noticeDate" type="xsd:dateTime"/>
+                            <xsd:element name="noticeNumber" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="moData">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="moName" type="moName"/>
+                            <xsd:element name="ogrn" type="ogrn"/>
+                            <xsd:element name="moId" type="moId" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="lnData">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="lnNumber" type="lnNumber"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="senderData">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="employeeName" type="xsd:string"/>
+                            <xsd:element name="employeeRole" type="xsd:string"/>
+                            <xsd:element name="phone" type="xsd:string" minOccurs="0"/>
+                            <xsd:element name="tofName" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="signatoryData">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="signatoryName" type="xsd:string"/>
+                            <xsd:element name="signatoryRole" type="xsd:string"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="fixData">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="fixes" type="fixes"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:simpleType name="lnNumber">
+        <xsd:annotation>
+            <xsd:documentation>
+                Номер ЭЛН
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="[0-9]{12}"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="ogrn">
+        <xsd:annotation>
+            <xsd:documentation>
+                ОГРН
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:pattern value="([0-9]{15}|[0-9]{13})"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="moName">
+        <xsd:annotation>
+            <xsd:documentation>
+                Наименование МО
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="90"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="moId">
+        <xsd:annotation>
+            <xsd:documentation>
+                Идентификатор мед. организации
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="100"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="fixes">
+        <xsd:annotation>
+            <xsd:documentation>
+                Перечень необходимых исправлений
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:minLength value="1"/>
+            <xsd:maxLength value="2000"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>

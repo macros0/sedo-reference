@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2021 rel. 2 sp1 (x64) (http://www.altova.com) by  () -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:dc="http://www.fss.ru/integration/types/DocumentType/v01" xmlns:ns1="http://www.fss.ru/integration/rvz/RvzDocumentsAsv/v01" targetNamespace="http://www.fss.ru/integration/bp/BpDocumentsAsv/v01" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:import namespace="http://www.fss.ru/integration/types/DocumentType/v01" schemaLocation="../type/DocumentType.xsd"/>
+	<xs:element name="ActBp" type="dc:DocumentType">
+		<xs:annotation>
+			<xs:documentation>Акт проверки выполнения банком (иной кредитной организацией) обязанностей, предусмотренных Федеральным законом от 24 июля 1998 г. № 125-ФЗ «Об обязательном социальном страховании от несчастных случаев на производстве и профессиональных заболеваний»</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ClaimDocumentsBp" type="dc:DocumentType">
+		<xs:annotation>
+			<xs:documentation>Требование о предоставлении документов по проверке банка</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="DecisionProsecuteBp" type="dc:DocumentType">
+		<xs:annotation>
+			<xs:documentation>Решение о привлечении банка (иной кредитной организации) к ответственности за совершение правонарушения</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="DecisionRejectBp" type="dc:DocumentType">
+		<xs:annotation>
+			<xs:documentation>Решение об отказе в привлечении банка (иной кредитной организации) к ответственности за совершение правонарушения</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ClaimPayBp" type="dc:DocumentType">
+		<xs:annotation>
+			<xs:documentation>Требование об уплате штрафов банками (иными кредитными организациями)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="DecisionPenaltyBp" type="dc:DocumentType">
+		<xs:annotation>
+			<xs:documentation>Решение о взыскании штрафов за счет денежных средств, находящихся на счетах банка (иных кредитных организациях)</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+</xs:schema>

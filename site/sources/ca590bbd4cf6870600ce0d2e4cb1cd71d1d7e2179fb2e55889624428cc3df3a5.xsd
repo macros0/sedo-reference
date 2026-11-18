@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:com="urn:ru:ecp:integration:types:common:v3.0" xmlns:p="urn:ru:ecp:integration:types:person:v3.0" xmlns:org="urn:ru:ecp:integration:types:organization:v3.0" targetNamespace="urn:ru:ecp:integration:vnim:noticeTermination05:request:v3.0">
+	<xs:import namespace="urn:ru:ecp:integration:types:common:v3.0" schemaLocation="../../type/Common.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:person:v3.0" schemaLocation="../../type/Person.xsd"/>
+	<xs:import namespace="urn:ru:ecp:integration:types:organization:v3.0" schemaLocation="../../type/Organization.xsd"/>
+	<xs:element name="noticeTermination05Request">
+		<xs:annotation>
+			<xs:documentation>Уведомление о прекращении права застрахованного лица на получение ежемесячного пособия по уходу за ребенком.
+Тип сообщения СЭДО №10410</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="insurerInfo">
+					<xs:annotation>
+						<xs:documentation>Данные о страхователе</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="regNumSFR" type="org:regNumSFR">
+								<xs:annotation>
+									<xs:documentation>Единый рег. номер страхователя СФР</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="insuredInfo">
+					<xs:annotation>
+						<xs:documentation>Данные о застрахованном лице</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="snils" type="p:snils">
+								<xs:annotation>
+									<xs:documentation>СНИЛС</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="childInfo">
+					<xs:annotation>
+						<xs:documentation>Данные о ребёнке</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="snils" type="p:snils" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>СНИЛС ребёнка. Поле обязательно для заполнения:
+- для детей, рожденных в РФ;
+- для детей, рожденных за пределами РФ, в случае наличия СНИЛС</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="fullName" type="p:fullName2">
+								<xs:annotation>
+									<xs:documentation>ФИО ребёнка</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="birthDate" type="xs:date">
+								<xs:annotation>
+									<xs:documentation>Дата рождения ребёнка</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="terminationInfo">
+					<xs:annotation>
+						<xs:documentation>Сведения о прекращении права</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="batchNo" type="BatchNoType" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Номер последнего первичного/перерасчетного документа в СФР (батч номер), по которому необходимо прекратить назначение и выплату. Поле заполняется, если известен номер документа</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="holidType">
+								<xs:annotation>
+									<xs:documentation>Причина прекращения: 
+2 - "о прекращении трудовых отношений";
+3 - "о смерти ребенка";
+5 - "иное";
+7 - "невозможность осуществления ухода за ребенком в связи с болезнью получателя";
+8 - "замена на отпуск по БиР"</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:enumeration value="2">
+											<xs:annotation>
+												<xs:documentation>о прекращении трудовых отношений</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="3">
+											<xs:annotation>
+												<xs:documentation>о смерти ребенка</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="5">
+											<xs:annotation>
+												<xs:documentation>иное</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="7">
+											<xs:annotation>
+												<xs:documentation>невозможность осуществления ухода за ребенком в связи с болезнью получателя</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+										<xs:enumeration value="8">
+											<xs:annotation>
+												<xs:documentation>замена на отпуск по БиР</xs:documentation>
+											</xs:annotation>
+										</xs:enumeration>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="holidTypeInfo" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Пояснение для причины "Иное"</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+										<xs:maxLength value="255"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="holidDtEx" type="xs:date">
+								<xs:annotation>
+									<xs:documentation>Дата прекращения права</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="holidDoc">
+								<xs:annotation>
+									<xs:documentation>Наименование документа основания для прекращения назначения и выплаты</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+										<xs:maxLength value="150"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="holidNo">
+								<xs:annotation>
+									<xs:documentation>Номер документа основания для прекращения назначения и выплаты</xs:documentation>
+								</xs:annotation>
+								<xs:simpleType>
+									<xs:restriction base="xs:string">
+										<xs:minLength value="1"/>
+										<xs:maxLength value="20"/>
+									</xs:restriction>
+								</xs:simpleType>
+							</xs:element>
+							<xs:element name="holidDt" type="xs:date">
+								<xs:annotation>
+									<xs:documentation>Дата документа основания для прекращения назначения и выплаты</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="senderInfo" type="senderInfoType">
+					<xs:annotation>
+						<xs:documentation>Сведения об отправителе уведомления</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="specVersion" type="com:specVersionType" use="required">
+				<xs:annotation>
+					<xs:documentation>Номер версии спецификации для xml документа</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="senderInfoType">
+		<xs:sequence>
+			<xs:element name="author" type="p:fullName2">
+				<xs:annotation>
+					<xs:documentation>ФИО</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="email" type="com:emailAddress">
+				<xs:annotation>
+					<xs:documentation>Адрес электронной почты</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="phoneNumber" type="com:phoneNumberType">
+				<xs:annotation>
+					<xs:documentation>Номер телефона</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:simpleType name="BatchNoType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[E|P]_\d{10}_(19|20)[0-9]{2}_[0|1][0-9]_[0-3][0-9]_\d{1,9}[\S]{0,5}:\d{1,3}|\S{18}"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>
