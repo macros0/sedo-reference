@@ -18,3 +18,4 @@
 /web/vendor/xmllint/COPYING -whitespace
 /site/vendor/xmllint/xmllint-browser.mjs -whitespace
 /site/vendor/xmllint/COPYING -whitespace
+/site/sources/*.xsd -text
