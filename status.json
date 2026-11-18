@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generated_at": "2026-11-18T14:11:26.027877+00:00",
+  "generated_at": "2026-11-18T14:12:17.633617+00:00",
   "collector_source": "sourcecraft",
   "sourcecraft": {
     "state": "success",
@@ -38,7 +38,12 @@
       "checked_at": null
     },
     "publication": {
-      "state": "not_published"
+      "state": "processing",
+      "run_id": 44321617378,
+      "url": "https://github.com/macros0/sedo-reference/actions/runs/44321617378",
+      "run_attempt": 1,
+      "started_at": "2026-11-18T14:11:54Z",
+      "finished_at": null
     },
     "last_successful_publication": {
       "state": "success",
