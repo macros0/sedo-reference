@@ -119,6 +119,16 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None, conf
                         publication['state'] = 'superseded'
                 elif publication['state'] == 'success':
                     publication['state'] = 'unknown'
+    # A cancelled/failed check without a deployment target has no candidate to
+    # track. A later independent Pages run still has its own actual outcome.
+    has_target = targets_check(target, check) and target.get('head_sha')
+    if check and check_info['state'] in ('failure', 'cancelled') and publication['state'] == 'not_published' and not has_target:
+        started = check.get('run_started_at') or check.get('created_at', '')
+        independent = max((page for page in pages if page.get('created_at', '') > started
+                           and not (page.get('display_title') or '').startswith('Publish reference for check ')),
+                          key=lambda page: (page['created_at'], page['id']), default=None)
+        if independent:
+            publication = run_info(independent)
     previous = latest_success(pages)
     return dict(format=1, generated_at=now or utcnow(), collector_source=collector_source, sourcecraft=sc,
                 github=dict(check=check_info, versions=versions, publication=publication,
