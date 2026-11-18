@@ -13,6 +13,434 @@ ARCHIVED_91_IDS={"7e6f8189b4b21434371ed568a364cdc59848bcbef0fb0cdf1dd68619a5bf53
                  "12e1b7c0fb79734d27c96ac03a875bf71ec04dbd376fdfdad0fb2a61e96ab765"}
 
 class WsdlSourcesTests(unittest.TestCase):
+ def test_intermediate_manifest_ignores_annotation_imports_but_keeps_direct_roots(self):
+  from collector_snapshots import make_manifest,validate_manifest
+  base=BASE.rsplit('/',1)[0]+'/'
+  resources={SEED:f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}"><w:types><xs:schema><xs:import namespace="urn:A" schemaLocation="main.xsd"/></xs:schema></w:types></w:definitions>'.encode(),
+             base+'main.xsd':f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:A"><xs:annotation><xs:appinfo><xs:import namespace="urn:example" schemaLocation="example-only.xsd"/></xs:appinfo></xs:annotation><xs:include schemaLocation="common.xsd"/></xs:schema>'.encode(),
+             base+'common.xsd':f'<xs:schema xmlns:xs="{XS}"><xs:element name="r" type="xs:string"/></xs:schema>'.encode()}
+  row,objects=self.collect(resources)
+  row.update(inspect_file(objects[row['sha256']],'zip',legacy_schema_roots=True))
+  self.assertEqual(next(item for item in row['schemas'] if item['namespace']=='urn:A')['roots'],[])
+  self.assertEqual(validate_manifest(make_manifest(row,'2026-11-17T00:00:00+00:00'),objects.__getitem__),row)
+
+ def test_old_bridge_root_indexes_and_fresh_snapshot_hash_replay(self):
+  import json,copy
+  from xml.sax.saxutils import escape
+  from sync import encode,write
+  from wsdl_sources import _archive
+  from tests.test_source_collection_regressions import SourceCollectionTests,archive
+  library=_archive({'library.xsd':f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:library"><xs:include schemaLocation="common.xsd"/></xs:schema>'.encode(),
+                    'common.xsd':f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:library"><xs:simpleType name="Code"><xs:restriction base="xs:string"/></xs:simpleType><xs:element name="r" type="xs:string"/></xs:schema>'.encode()})
+  own=f'<xs:schema xmlns:xs="{XS}" xmlns:v="urn:library" targetNamespace="urn:arm"><xs:import namespace="urn:library" schemaLocation="library.xsd"/><xs:element name="arm" type="v:Code"/></xs:schema>'
+  paragraphs=['Тип сообщения 999: Example','<a:arm xmlns:a="urn:arm"/>',own]
+  doc=archive('word/document.xml',('<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>'+''.join('<w:p><w:r><w:t>'+escape(value)+'</w:t></w:r></w:p>' for value in paragraphs)+'</w:body></w:document>').encode())
+  support=dict(environment='test',kind='zip',url=SEED+'#xsd-bundle',source_type='wsdl',source_url=SEED,source_files=[],sha256=sha(library),**inspect_file(library,'zip',legacy_schema_roots=True))
+  for version in (4,5,6):
+   with self.subTest(version=version):
+    f=SourceCollectionTests();f.setUp();self.addCleanup(f.doCleanups)
+    for url in f.resources:
+     if url.endswith('.docx'):f.resources[url]=doc
+    write(f.state/'objects'/sha(library),library)
+    f.collect(1,snapshot_format=version,wsdl_entries=[support])
+    snapshot=f.current();document=next(row for row in snapshot['entries'] if row['kind']=='docx' and row['environment']=='test')
+    bridge_row=document['wsdl_archives'][0]
+    self.assertEqual(next(item for item in bridge_row['schemas'] if item['path'].endswith('/library.xsd'))['roots'],[])
+    old=(f.state/'current.json').read_bytes()
+    f.collect(2,snapshot_format=version,wsdl_entries=[support])
+    self.assertEqual((f.state/'current.json').read_bytes(),old)
+    f.collect(3,snapshot_format=7,wsdl_entries=[support])
+    fresh=(f.state/'current.json').read_bytes()
+    self.assertNotEqual(fresh,old)
+    current_document=next(row for row in f.current()['entries'] if row['kind']=='docx' and row['environment']=='test')
+    self.assertEqual(next(item for item in current_document['wsdl_archives'][0]['schemas'] if item['path'].endswith('/library.xsd'))['roots'],[{'name':'r','description':''}])
+    f.collect(4,snapshot_format=7,wsdl_entries=[support])
+    self.assertEqual((f.state/'current.json').read_bytes(),fresh)
+
+ def test_documentation_examples_are_neither_schemas_nor_downloads(self):
+  base=BASE.rsplit('/',1)[0]+'/'
+  example='<xs:schema><xs:element name="demo" type="xs:string"/></xs:schema>'
+  definitions=(f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}">'
+      f'<w:documentation>{example}</w:documentation><w:types><xs:schema>'
+      '<xs:import namespace="urn:real" schemaLocation="real.xsd"/></xs:schema></w:types></w:definitions>').encode()
+  schema=(f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:real"><xs:annotation><xs:appinfo xml:base="examples/">'
+      '<xs:import namespace="urn:example" schemaLocation="example.xsd"/></xs:appinfo></xs:annotation>'
+      '<xs:element name="working" type="xs:string"/></xs:schema>').encode()
+  requested=[]
+  def fetch(url):
+   requested.append(url)
+   return {SEED:definitions,base+'real.xsd':schema,base+'example.xsd':
+           f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:example"/>'.encode()}[url]
+  objects={}
+  def blob(raw):
+   objects[sha(raw)]=raw
+   return sha(raw)
+  row=collect(SEED,'test',fetch,blob)
+  self.assertEqual(requested,[SEED,base+'real.xsd'])
+  with zipfile.ZipFile(io.BytesIO(objects[row['sha256']])) as archive:
+   self.assertEqual([archive.read(n) for n in archive.namelist()],[schema])
+   tree=Schema(archive,archive.namelist()[0],'working')
+   tree.field(tree.root)
+   self.assertEqual(tree.fields[0]['name'],'working')
+
+ def test_archived_manifest_with_documentation_example_replays_original_bytes(self):
+  from collector_snapshots import make_manifest,validate_manifest
+  from wsdl_sources import _archive
+  attrs=f'xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}"'
+  element=lambda name:f'<xs:element name="{name}" type="xs:string"/>'
+  original=(f'<w:definitions {attrs}><w:documentation><xs:schema>{element("demo")}</xs:schema></w:documentation>'
+            f'<w:types><xs:schema>{element("real")}</xs:schema></w:types></w:definitions>').encode()
+  legacy=_archive({f'schemas/001/inline-{index}.xsd':f'<xs:schema {attrs}>{element(name)}</xs:schema>'.encode()
+                   for index,name in enumerate(('demo','real'))})
+  row=dict(environment='test', url=SEED+'#xsd-bundle', kind='zip',label='XSD по WSDL шлюза СФР',
+           archive_name='wsdl-schemas.zip',source_type='wsdl',source_url=SEED,
+           source_files=[dict(url=SEED,sha256=sha(original),bytes=len(original),kind='wsdl',namespace=None)],
+           sha256=sha(legacy),bytes=len(legacy),**inspect_file(legacy,'zip'))
+  objects={sha(original):original,sha(legacy):legacy}
+  self.assertEqual(validate_manifest(make_manifest(row,'2026-11-16T00:00:00+00:00'),objects.__getitem__),row)
+  fresh,_=self.collect({SEED:original})
+  self.assertEqual([root['name'] for s in fresh['schemas'] for root in s['roots']],['real'])
+
+ def test_redirected_schema_resolves_children_from_final_url_and_replays_offline(self):
+  from unittest.mock import patch
+  from types import SimpleNamespace
+  from collector import capture
+  from collector_snapshots import make_manifest, validate_manifest
+  from collector_transport import PoliteFetch
+  from sync import SITES, _get
+  base = SEED.rsplit('/', 1)[0] + '/'
+  moved = base + 'v2/main.xsd'
+  schema = f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:x">'
+  page = SITES['test']
+  initial = base + 'v1/main.xsd'
+  resources = {page: (page, f'<a href="{SEED}">WSDL</a>'),
+               SEED: (SEED, f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}"><w:types><xs:schema><xs:import namespace="urn:x" schemaLocation="v1/main.xsd"/></xs:schema></w:types></w:definitions>'),
+               initial: (moved, schema+'<xs:include schemaLocation="Common.xsd"/></xs:schema>')}
+  for folder, name in (('v1/', 'previous'), ('v2/', 'current')):
+   url = base + folder + 'Common.xsd'
+   resources[url] = (url, schema+f'<xs:element name="{name}"/></xs:schema>')
+  expected = None
+  for polite in ('0', '1'):
+   with self.subTest(polite=polite):
+    requested = []
+    def opener(redirect, transport):
+     def open_response(request, timeout):
+      requested.append(request.full_url)
+      final, xml = resources[request.full_url]
+      if final != request.full_url:
+       redirect.redirect_request(request, None, 302, 'Found', {}, final)
+       requested.append(final)
+      response = io.BytesIO(xml.encode())
+      response.geturl = lambda: final
+      return response
+     return SimpleNamespace(open=open_response)
+    with patch('sync.build_opener', side_effect=opener), patch.dict('os.environ', SEDO_SFR_POLITE=polite), \
+         patch('sync._polite_fetch', PoliteFetch(_get)), patch('collector_transport.time.sleep'):
+     manifest, objects = capture('test')
+    self.assertEqual(requested, [page, SEED, initial, moved, base+'v2/Common.xsd'])
+    row = validate_manifest(manifest, objects.__getitem__)
+    self.assertEqual([r['name'] for s in row['schemas'] for r in s['roots']], ['current','current'])
+    self.assertEqual(next(x for x in row['source_files'] if x['url']==initial)['final_url'], moved)
+    if expected is None:
+     expected = (row, objects)
+    self.assertEqual((row, objects), expected)
+    row['source_files'][1]['final_url'] = 'https://example.org/v2/main.xsd'
+    with self.assertRaisesRegex(ValueError, 'outside'):
+     validate_manifest(make_manifest(row, manifest['observed_at']), objects.__getitem__)
+    row['source_files'][1]['final_url'] = moved
+
+ def test_xml_base_cannot_confirm_an_unverified_offline_dependency(self):
+  base, resources = self.branch_resources()
+  root = base + 'v1/root.xsd'
+  resources[base+'v1/v2/Common.xsd'] = resources[base+'v2/Common.xsd']
+  for tag in (b'xs:schema', b'xs:include'):
+   changed = dict(resources)
+   changed[root] = changed[root].replace(b'<'+tag+b' ', b'<'+tag+b' xml:base="v2/" ', 1)
+   with self.subTest(tag=tag), self.assertRaisesRegex(ValueError, 'xml:base'):
+    self.collect(changed)
+  # An unrelated annotation has no influence on dependency resolution.
+  resources[root] = resources[root].replace(b'<xs:include', b'<xs:annotation xml:base="v2/"/><xs:include')
+  self.collect(resources)
+
+ def test_archive_and_legacy_offline_consumers_reject_xml_base_on_dependency(self):
+  from audit_xml_examples import _schema
+  from wsdl_sources import _archive
+  from xsd_bundle import _prepare
+  main = f'<xs:schema xmlns:xs="{XS}"><xs:include xml:base="v2/" schemaLocation="types.xsd"/><xs:element name="root" type="Code"/></xs:schema>'
+  def types(base):
+   return f'<xs:schema xmlns:xs="{XS}"><xs:simpleType name="Code"><xs:restriction base="xs:{base}"/></xs:simpleType></xs:schema>'.encode()
+  files = {'main.xsd':main.encode(),'types.xsd':types('string'),'v2/types.xsd':types('int')}
+  archive = _archive(files)
+  revision = dict(schema_path='main.xsd',root='root',namespace=None)
+  for action in (lambda:inspect_file(archive,'zip'), lambda:_schema(io.BytesIO(archive),revision), lambda:_prepare(revision,files)):
+   with self.subTest(action=action), self.assertRaisesRegex(ValueError, 'xml:base'):
+    action()
+
+ def test_inline_schema_without_namespace_preserves_declarations_and_both_roots(self):
+  resources={SEED:(f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}" targetNamespace="urn:service"><w:types>'
+                   '<xs:schema><xs:element name="plain" type="xs:string"/></xs:schema>'
+                   '<xs:schema targetNamespace="urn:qualified"><xs:element name="qualified" type="xs:string"/></xs:schema>'
+                   '</w:types></w:definitions>').encode()}
+  row,objects=self.collect(resources)
+  self.assertEqual({root['name'] for schema in row['schemas'] for root in schema['roots']},{'plain','qualified'})
+  with zipfile.ZipFile(io.BytesIO(objects[row['sha256']])) as archive:
+   for schema in row['schemas']:
+    root=schema['roots'][0]['name']
+    tree=Schema(archive,schema['path'],root);tree.field(tree.root)
+    self.assertEqual(tree.fields[0]['name'],root)
+
+ def test_inline_schema_combining_two_includes_binds_message_and_validates_zip(self):
+  import subprocess
+  import sys
+  import tempfile
+  from pathlib import Path
+  from lxml import etree
+  from module_xsd import match_document
+  from xsd_bundle import _prepare, _selected, _zip
+
+  base = BASE.rsplit('/', 1)[0] + '/'
+  composition = ('<xs:include schemaLocation="root.xsd"/>'
+                 '<xs:include schemaLocation="types.xsd"/>')
+  root = f'<xs:schema xmlns:xs="{XS}"><xs:element name="request" type="Code"/></xs:schema>'.encode()
+  types = f'<xs:schema xmlns:xs="{XS}"><xs:simpleType name="Code"><xs:restriction base="xs:int"/></xs:simpleType></xs:schema>'.encode()
+  inline = f'<xs:schema xmlns:xs="{XS}">{composition}</xs:schema>'.encode()
+  wsdl = (f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}"><w:types>'
+          f'<xs:schema>{composition}</xs:schema></w:types></w:definitions>').encode()
+  valid = b'<request>42</request>'
+  invalid = b'<request>text</request>'
+  with tempfile.TemporaryDirectory() as tmp:
+   folder = Path(tmp)
+   for name, raw in [('inline.xsd', inline), ('root.xsd', root), ('types.xsd', types)]:
+    (folder/name).write_bytes(raw)
+   native = etree.XMLSchema(etree.parse(str(folder/'inline.xsd')))
+   self.assertTrue(native.validate(etree.fromstring(valid)))
+   self.assertFalse(native.validate(etree.fromstring(invalid)))
+
+   support, objects = self.collect({SEED: wsdl, base+'root.xsd': root, base+'types.xsd': types})
+   document = dict(environment='test', module_bindings=[dict(number='999', root='request', namespace='')])
+   matches, diagnostics = match_document(document, [support], objects.__getitem__)
+   self.assertEqual(len(matches), 1, diagnostics)
+   revision = dict(matches[0], environment='test', revision_id='fixture')
+   self.assertIn('inline-', revision['schema_path'])
+   with zipfile.ZipFile(io.BytesIO(objects[support['sha256']])) as archive:
+    output, records, constraints = _prepare(revision, _selected(revision, archive))
+   with zipfile.ZipFile(io.BytesIO(_zip(revision, output, records, constraints))) as package:
+    package.extractall(folder)
+   for expected, xml in [(0, valid), (1, invalid)]:
+    (folder/'input.xml').write_bytes(xml)
+    result = subprocess.run([sys.executable, 'validate.py', 'input.xml'], cwd=folder,
+                            capture_output=True, text=True, encoding='utf8')
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+
+ def test_legacy_manifest_with_include_only_inline_schema_keeps_original_zip(self):
+  from collector_snapshots import make_manifest, validate_manifest
+  from wsdl_sources import _archive
+
+  base = BASE.rsplit('/', 1)[0] + '/'
+  wsdl = (f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}"><w:types>'
+          '<xs:schema><xs:include schemaLocation="part.xsd"/></xs:schema></w:types></w:definitions>').encode()
+  part = f'<xs:schema xmlns:xs="{XS}"><xs:element name="part" type="xs:string"/></xs:schema>'.encode()
+  legacy = _archive({'schemas/002/part.xsd': part})
+  row = dict(environment='test', url=SEED+'#xsd-bundle', kind='zip', label='XSD по WSDL шлюза СФР',
+             archive_name='wsdl-schemas.zip', source_type='wsdl', source_url=SEED, source_files=[
+                 dict(url=SEED, sha256=sha(wsdl), bytes=len(wsdl), kind='wsdl', namespace=None),
+                 dict(url=base+'part.xsd', sha256=sha(part), bytes=len(part), kind='xsd', namespace=None)],
+             sha256=sha(legacy), bytes=len(legacy), **inspect_file(legacy, 'zip'))
+  objects = {sha(wsdl): wsdl, sha(part): part, sha(legacy): legacy}
+  self.assertEqual(validate_manifest(make_manifest(row, '2026-11-16T00:00:00+00:00'),
+                                     objects.__getitem__), row)
+  fresh, _ = self.collect({SEED: wsdl, base+'part.xsd': part})
+  self.assertIn('schemas/001/inline-0.xsd', {item['path'] for item in fresh['schemas']})
+
+ def test_inline_include_entry_keeps_a_single_root_candidate_but_not_unrelated_contracts(self):
+  from module_xsd import match_document
+  from wsdl_sources import _archive
+  base = BASE.rsplit('/', 1)[0] + '/'
+  wsdl = (f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}"><w:types>'
+          '<xs:schema><xs:include schemaLocation="part.xsd"/></xs:schema></w:types></w:definitions>').encode()
+  part = f'<xs:schema xmlns:xs="{XS}"><xs:element name="request" type="xs:int"/></xs:schema>'.encode()
+  support, objects = self.collect({SEED: wsdl, base+'part.xsd': part})
+  document = dict(environment='test', module_bindings=[dict(number='999', root='request', namespace='')])
+  matches, issues = match_document(document, [support], objects.__getitem__)
+  self.assertEqual(len(matches), 1, issues)
+  self.assertIn('inline-', matches[0]['schema_path'])
+
+  other = _archive({'part.xsd': part.replace(b'xs:int', b'xs:string')})
+  objects[sha(other)] = other
+  alternative = dict(kind='zip', environment='test', url='https://example.test/other.zip',
+                     sha256=sha(other), **inspect_file(other, 'zip'))
+  matches, issues = match_document(document, [support, alternative], objects.__getitem__)
+  self.assertEqual(matches, [])
+  self.assertIn('Неоднозначные схемы', [issue['reason'] for issue in issues])
+
+ def test_individual_docx_uses_complete_wsdl_entry_and_preserves_explicit_or_legacy_path(self):
+  import copy
+  from catalog import derive
+  from collector_snapshots import make_manifest, validate_manifest
+  from wsdl_sources import _archive
+  base = BASE.rsplit('/', 1)[0] + '/'
+  wsdl = (f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}"><w:types>'
+          '<xs:schema><xs:include schemaLocation="part.xsd"/></xs:schema></w:types></w:definitions>').encode()
+  part = f'<xs:schema xmlns:xs="{XS}"><xs:element name="request" type="xs:int"/></xs:schema>'.encode()
+  resources = {SEED: wsdl, base+'part.xsd': part}
+  support, objects = self.collect(resources)
+  document = dict(kind='docx', environment='test', url='https://example.test/Тип_сообщения_999.docx',
+                  sha256='a'*64, label='Example',
+                  structure=[['Корневой элемент', 'request'], ['Пространство имен файла xml-схемы', '']])
+  result = derive(dict(format=7, entries=[document, support]))
+  row, = result['revisions']
+  self.assertEqual(row['status'], 'matched')
+  self.assertEqual(row['schema_path'], 'schemas/001/inline-0.xsd')
+  self.assertEqual(result['review'], [])
+
+  named = copy.deepcopy(document)
+  named['structure'].append(['Расположение файла xml-схемы', 'part.xsd'])
+  row, = derive(dict(format=7, entries=[named, support]))['revisions']
+  self.assertEqual(row['schema_path'], 'schemas/002/part.xsd')
+
+  independent = _archive({'another.xsd': part.replace(b'xs:int', b'xs:string')})
+  alternative = dict(kind='zip', environment='test', url='https://example.test/other.zip',
+                     sha256=sha(independent), **inspect_file(independent, 'zip'))
+  row, = derive(dict(format=7, entries=[document, support, alternative]))['revisions']
+  self.assertEqual(row['status'], 'review')
+
+  def blob(raw):
+   objects[sha(raw)] = raw
+   return sha(raw)
+  old = collect(SEED, 'test', resources.__getitem__, blob, legacy_inline_includes=True)
+  manifest = make_manifest(old, '2026-11-16T00:00:00+00:00')
+  self.assertEqual(validate_manifest(manifest, objects.__getitem__), old)
+  for version in (6, 7):
+   row, = derive(dict(format=version, entries=[document, old]))['revisions']
+   self.assertEqual(row['status'], 'matched')
+   self.assertEqual(row['schema_path'], 'schemas/002/part.xsd')
+
+ def test_import_without_namespace_accepts_only_unnamespaced_schema(self):
+  resources=self.bundle()
+  main,common=BASE+"?xsd=main.xsd",BASE+"?xsd=Common.xsd"
+  resources[main]=resources[main].replace(b'namespace="urn:common" ',b'')
+  with self.assertRaisesRegex(ValueError,"namespace"):self.collect(resources)
+  resources[common]=resources[common].replace(b' targetNamespace="urn:common"',b'')
+  self.collect(resources)
+
+ def test_override_is_rejected_for_wsdl_and_zip(self):
+  from wsdl_sources import _archive
+  for operator in ('override',):
+   resources=self.bundle()
+   root=('<xs:schema xmlns:xs="'+XS+'" targetNamespace="urn:main"><xs:'+operator+' schemaLocation="Common.xsd"/><xs:element name="response" type="xs:string"/></xs:schema>').encode()
+   resources[BASE+'?xsd=main.xsd']=root
+   with self.subTest('wsdl'), self.assertRaisesRegex(ValueError,operator):self.collect(resources)
+   with self.subTest('zip'), self.assertRaisesRegex(ValueError,operator):inspect_file(_archive({'root.xsd':root}), 'zip')
+
+ def test_redefine_is_rejected_before_confirmation_for_wsdl_and_zip(self):
+  from wsdl_sources import _archive
+  resources=self.bundle()
+  main=BASE+"?xsd=main.xsd"
+  root=('<xs:schema xmlns:xs="'+XS+'" targetNamespace="urn:main"><xs:redefine schemaLocation="Common.xsd"/></xs:schema>').encode()
+  resources[main]=root
+  with self.subTest("wsdl"), self.assertRaisesRegex(ValueError,"redefine"):self.collect(resources)
+  with self.subTest("zip"), self.assertRaisesRegex(ValueError,"redefine"):inspect_file(_archive({"root.xsd":root,"Common.xsd":resources[BASE+"?xsd=Common.xsd"]}),"zip")
+
+ def branch_resources(self):
+  base=BASE.rsplit("/",1)[0]+"/"
+  resources={SEED:(f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}"><w:types><xs:schema>'+
+                   ''.join(f'<xs:import namespace="urn:{v}" schemaLocation="{v}/root.xsd"/>' for v in ("v1","v2"))+
+                   '</xs:schema></w:types></w:definitions>').encode()}
+  for v in ("v1","v2"):
+   resources[base+v+"/root.xsd"]=f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:{v}" xmlns:t="urn:{v}"><xs:include schemaLocation="Common.xsd"/><xs:element name="response" type="t:Code"/></xs:schema>'.encode()
+   resources[base+v+"/Common.xsd"]=f'<xs:schema xmlns:xs="{XS}"><xs:simpleType name="Code"><xs:restriction base="xs:string"><xs:enumeration value="{v}"/></xs:restriction></xs:simpleType></xs:schema>'.encode()
+  return base,resources
+
+ def test_exact_absolute_and_root_relative_includes_preserve_fetched_edges(self):
+  from urllib.parse import urlsplit
+  for mode in ("absolute","root-relative","mixed"):
+   with self.subTest(mode=mode):
+    base,resources=self.branch_resources()
+    for v in ("v1","v2"):
+     url=base+v+"/root.xsd"
+     location=base+v+"/Common.xsd"
+     if mode=="root-relative":location=urlsplit(location).path
+     if mode=="mixed" and v=="v1":location="Common.xsd"
+     resources[url]=resources[url].replace(b'"Common.xsd"',('"'+location+'"').encode())
+    from collector_snapshots import make_manifest, validate_manifest
+    from schema import dependency_set
+    from xsd_bundle import _selected, _prepare
+    row,objects=self.collect(resources)
+    self.assertEqual(validate_manifest(make_manifest(row,'2026-11-17T00:00:00+00:00'),objects.__getitem__),row)
+    with zipfile.ZipFile(io.BytesIO(objects[row['sha256']])) as archive:
+     for v in ('v1','v2'):
+      entry=next(s['path'] for s in row['schemas'] if s['namespace']=='urn:'+v)
+      tree=Schema(archive,entry,'response');tree.field(tree.root)
+      self.assertEqual(tree.fields[0]['values'],[[v,'']])
+      selected=_selected(dict(schema_path=entry,dependencies=dependency_set(row['schemas'],entry)),archive)
+      self.assertEqual(set(selected.values()),{resources[base+v+'/root.xsd'],resources[base+v+'/Common.xsd']})
+      _prepare(dict(schema_path=entry,root='response',namespace='urn:'+v),selected)
+
+ def test_exact_import_targets_survive_document_bridge(self):
+  from schema import dependency_set
+  from wsdl_sources import bridge, _archive
+  from xsd_bundle import _selected, _prepare
+  base,resources=self.branch_resources()
+  for v in ('v1','v2'):
+   resources[base+v+'/root.xsd']=resources[base+v+'/root.xsd'].replace(b'"Common.xsd"',('"'+base+v+'/Common.xsd"').encode())
+  support,objects=self.collect(resources)
+  original=_archive({'main.xsd':f'<xs:schema xmlns:xs="{XS}" xmlns:v="urn:v1" targetNamespace="urn:doc"><xs:import namespace="urn:v1" schemaLocation="{base}v1/root.xsd"/><xs:element name="request"><xs:complexType><xs:sequence><xs:element ref="v:response"/></xs:sequence></xs:complexType></xs:element></xs:schema>'.encode()})
+  objects[sha(original)]=original
+  document=dict(environment='test',url='https://example.test/doc.docx',embedded_archives=[dict(sha256=sha(original))])
+  result=bridge(document,support,objects.__getitem__)[0]
+  row=dict(schema_path='document/main.xsd',root='request',namespace='urn:doc',dependencies=dependency_set(result['schemas'],'document/main.xsd'))
+  with zipfile.ZipFile(io.BytesIO(result['content'])) as archive:
+   tree=Schema(archive,row['schema_path'],row['root']);tree.field(tree.root)
+   self.assertEqual(tree.fields[1]['values'],[['v1','']])
+   output,_,_=_prepare(row,_selected(row,archive))
+  self.assertTrue(output['message.xsd'])
+
+ def test_missing_exact_target_cannot_fall_back_to_another_common_schema(self):
+  from schema import dependency_set
+  base,resources=self.branch_resources()
+  for v in ('v1','v2'):
+   resources[base+v+'/root.xsd']=resources[base+v+'/root.xsd'].replace(b'"Common.xsd"',('"'+base+v+'/Common.xsd"').encode())
+  row,_=self.collect(resources)
+  entry=next(item for item in row['schemas'] if item['namespace']=='urn:v1')
+  target=next(iter(entry['import_targets'].values()))
+  with self.assertRaisesRegex(ValueError,'точный импорт'):
+   dependency_set([item for item in row['schemas'] if item['path']!=target],entry['path'])
+
+ def test_legacy_manifest_keeps_direct_roots_and_archive_bytes(self):
+  from collector_snapshots import make_manifest, validate_manifest
+  base,resources=self.branch_resources()
+  for v in ('v1','v2'):
+   resources[base+v+'/root.xsd']=resources[base+v+'/root.xsd'].replace(b'<xs:element name="response" type="t:Code"/>',b'')
+   resources[base+v+'/Common.xsd']=resources[base+v+'/Common.xsd'].replace(b'</xs:schema>',b'<xs:element name="response" type="Code"/></xs:schema>')
+  objects={}
+  def blob(raw):objects[sha(raw)]=raw;return sha(raw)
+  old=collect(SEED,'test',resources.__getitem__,blob,legacy_annotations=True,legacy_schema_roots=True)
+  original=objects[old['sha256']]
+  self.assertEqual([s['roots'] for s in old['schemas'] if s['namespace']], [[],[]])
+  self.assertEqual(validate_manifest(make_manifest(old,'2026-11-17T00:00:00+00:00'),objects.__getitem__),old)
+  self.assertEqual(objects[old['sha256']],original)
+
+ def test_relative_includes_preserve_original_context_in_independent_subdirectories(self):
+  from schema import dependency_set
+  from xsd_bundle import _selected
+  base,resources=self.branch_resources()
+  row,objects=self.collect(resources)
+  with zipfile.ZipFile(io.BytesIO(objects[row["sha256"]])) as archive:
+   for v in ("v1","v2"):
+    entry=next(s["path"] for s in row["schemas"] if s["namespace"]=="urn:"+v)
+    tree=Schema(archive,entry,"response");tree.field(tree.root)
+    self.assertEqual(tree.fields[0]["values"][0][0],v)
+    files=_selected({"schema_path":entry,"dependencies":dependency_set(row["schemas"],entry)},archive)
+    self.assertEqual(set(files.values()),{resources[base+v+"/root.xsd"],resources[base+v+"/Common.xsd"]})
+  # Different explicit namespaces let the legacy bundles resolve these same
+  # basenames unambiguously, so retaining their archive identity is possible.
+  for v in ("v1","v2"):
+   url=base+v+"/Common.xsd"
+   resources[url]=resources[url].replace(b"<xs:schema ",f'<xs:schema targetNamespace="urn:{v}" '.encode())
+  row,_=self.collect(resources)
+  self.assertEqual([s["path"] for s in row["schemas"]],
+                   ["schemas/002/root.xsd","schemas/003/root.xsd","schemas/004/Common.xsd","schemas/005/Common.xsd"])
+
  def test_bridge_restores_same_namespace_include_and_prefers_document_copy(self):
   from schema import dependency_set
   from wsdl_sources import _archive

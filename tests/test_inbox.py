@@ -13,6 +13,16 @@ PROJECT = Path(__file__).resolve().parents[1]
 
 
 class InboxMetadataTests(unittest.TestCase):
+    def test_date_and_version_in_either_order_with_override(self):
+        for year in ('26', '2026'):
+            for tokens in (f'16.11.{year}_v3.2', f'v3.2_16.11.{year}'):
+                name = f'999_{tokens}.docx'
+                with self.subTest(name=name):
+                    data = detect_metadata(name, 'test')
+                    self.assertEqual((data['version'], data['date']), ('3.2', '2026-11-16'))
+                    override = detect_metadata(name, 'test', {'version': '4.1', 'date': '2026-11-15'})
+                    self.assertEqual((override['version'], override['date']), ('4.1', '2026-11-15'))
+
     def test_date_override_repairs_invalid_filename_and_final_date_is_validated(self):
         name = "10110_v1.2_31.02.2026.docx"
         self.assertEqual(detect_metadata(name, "prod", {"date": "2026-02-28"})["date"], "2026-02-28")
@@ -35,6 +45,48 @@ class InboxMetadataTests(unittest.TestCase):
         data=detect_metadata("spec.docx","prod",dict(number="10110",version="3.1",date="2026-11-12"))
         self.assertEqual(data["number"],"10110")
         self.assertEqual(data["environment"],"prod")
+
+
+class InboxEditionIdentityTests(unittest.TestCase):
+    def test_removing_archive_keeps_confirmed_edition_even_with_document_only_history(self):
+        from tests.test_fix15_sources import FilenameImportReviewTests
+        from tests.test_source_collection_regressions import individual_document
+        from sync import encode, write
+        from wsdl_sources import _archive
+        fixture = FilenameImportReviewTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        root = fixture.root
+        incoming = root / 'incoming/test'
+        doc = individual_document('response')
+        write(incoming / 'original/999.docx', doc)
+        first = process_inbox(root)['files'][0]
+        self.assertEqual(first['status'], 'document_only')
+        for name, datatype in [('a', 'int'), ('b', 'string')]:
+            folder = incoming / name
+            write(folder / '999.docx', doc)
+            write(folder / 'metadata.json', encode({'999.docx': {'title': name}}))
+            schema = (f'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:main">'
+                      f'<xs:element name="response" type="xs:{datatype}"/></xs:schema>')
+            write(folder / 'schema.zip', _archive({'main.xsd': schema.encode()}))
+        initial = process_inbox(root)['files']
+        confirmed = {r['path']: r['revision_id'] for r in [first, *initial]}
+        b = 'incoming/test/b/999.docx'
+        (incoming / 'b/schema.zip').unlink()
+        write(incoming / 'b/metadata.json', encode({'999.docx': {'title': 'B corrected'}}))
+        corrected = process_inbox(root)['files'][0]
+        self.assertEqual((corrected['path'], corrected['revision_id']), (b, confirmed[b]))
+        rows = json.loads((root / 'data/catalog.json').read_bytes())['revisions']
+        titles = {r['revision_id']: r['title'] for r in rows}
+        self.assertEqual(titles[confirmed[b]], 'B corrected')
+        self.assertEqual(titles[confirmed['incoming/test/a/999.docx']], 'a')
+        self.assertEqual(titles[first['revision_id']], 'Сообщение 999')
+        ledger = json.loads((root / 'state/inbox.json').read_bytes())['files']
+        self.assertEqual({p: r['revision_id'] for p, r in ledger.items()}, confirmed)
+        self.assertEqual(process_inbox(root)['processed'], 0)
+        write(incoming / 'new/999.docx', doc)
+        with self.assertRaisesRegex(ValueError, 'несколько редакций'):
+            process_inbox(root)
 
 
 class InboxImportTests(unittest.TestCase):
@@ -104,14 +156,14 @@ class InboxImportTests(unittest.TestCase):
         self.assertEqual((self.root/"data/catalog.json").read_bytes(),self.before)
 
     def test_later_failure_rolls_back_the_entire_batch(self):
-        from manual_import import prepare_import
+        from manual_import import stage_import
         (self.folder/"10110_v10.0_12.11.2026.docx").write_bytes(self.document)
         calls=[]
         def prepare(*args,**kwargs):
             calls.append(1)
             if len(calls)==2:raise ValueError("second import failed")
-            return prepare_import(*args,**kwargs)
-        with patch("import_inbox.prepare_import",side_effect=prepare),self.assertRaises(ValueError):
+            return stage_import(*args,**kwargs)
+        with patch("import_inbox.stage_import",side_effect=prepare),self.assertRaises(ValueError):
             process_inbox(self.root)
         self.assertEqual(len(calls),2)
         self.assertEqual((self.root/"data/catalog.json").read_bytes(),self.before)

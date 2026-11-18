@@ -31,3 +31,16 @@ r=locate(source,"Element 'x': invalid value",3);assert.ok(r.locations[0].ranges?
 r=locate(source,"Element 'x', attribute 'id': invalid value",3);assert.ok(r.locations[0].ranges.some(x=>x.kind==='attribute'&&normalized.slice(x.start,x.end)==='id'));
 r=locate('<r><left><x/><x/></left></r>',"Element 'x': invalid value");assert.equal(r.locations[0].occurrences,2,'repeated same-path candidates must not be silently narrowed to the first');assert.equal(r.locations[0].ranges.length,2);assert.equal(r.sourceAmbiguous,true);
 console.log('Validation paths: namespaces, attrs, repeats, ambiguity, ancestors, lexical containers and bounds passed.');
+{
+ const paths=['r','r/p','r/p/x'],namespaces=paths.map(()=>['urn:r']);
+ const correct='<p><x>wrong</x></p>',foreign='<w:p><x>7</x></w:p>';
+ for(const inner of [foreign+correct,correct+foreign]){
+  const indexed=p.index('<r xmlns="urn:r" xmlns:w="urn:other">'+inner+'</r>');
+  const diagnostic=p.locate([{line:1,message:"Element '{urn:r}x': invalid integer"}],indexed,paths,namespaces)[0];
+  assert.equal(diagnostic.ambiguous,true);
+  assert.deepEqual(diagnostic.locations.map(l=>l.field).sort(),[0,2]);
+  assert.ok(diagnostic.locations.every(l=>l.path==='/r/p/x'&&l.occurrences===1));
+  assert.match(diagnostic.locations.find(l=>l.field===0).expandedPath,/\{urn:other\}p/);
+  assert.match(diagnostic.locations.find(l=>l.field===2).expandedPath,/\{urn:r\}p/);
+ }
+}

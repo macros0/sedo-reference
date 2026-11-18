@@ -45,7 +45,23 @@
         "senderInfo",
         "signatoryInfo",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "tof",
+          "batch_no",
+          "insurerInfo",
+          "receiversRow",
+          "rejectionInfo",
+          "attachment",
+          "senderInfo",
+          "signatoryInfo",
+          "*"
+        ]
+      }
     },
     {
       "name": "tof",
@@ -73,7 +89,16 @@
         "sequence",
         "code",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "name"
+        ]
+      }
     },
     {
       "name": "code",
@@ -179,7 +204,16 @@
         "sequence",
         "regNum",
         "regNumSFR"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNum",
+          "regNumSFR"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -269,7 +303,18 @@
         "childInfo",
         "periods",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "parentInfo",
+          "childInfo",
+          "periods",
+          "*"
+        ]
+      }
     },
     {
       "name": "parentInfo",
@@ -299,7 +344,17 @@
         "fullName",
         "snils",
         "childRelType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "snils",
+          "childRelType"
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -329,7 +384,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -513,7 +578,16 @@
         "sequence",
         "snils",
         "birthDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "birthDate"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -546,7 +620,15 @@
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {},
       "typeFile": "Person.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{11}"
+        ],
+        [
+          "[0-9]*"
+        ]
+      ]
     },
     {
       "name": "birthDate",
@@ -595,7 +677,17 @@
         "daysAmount",
         "TotalHour",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "daysAmount",
+          "TotalHour",
+          "*"
+        ]
+      }
     },
     {
       "name": "daysAmount",
@@ -673,11 +765,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "ns": "",
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "*",
@@ -693,11 +786,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "ns": "",
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "rejectionInfo",
@@ -727,7 +821,18 @@
         "date",
         "reason",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "date",
+          "reason",
+          "*"
+        ]
+      }
     },
     {
       "name": "number",
@@ -819,11 +924,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "ns": "",
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "attachment",
@@ -857,7 +963,19 @@
         "mimeType",
         "size",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name"
+        ]
+      }
     },
     {
       "name": "content",
@@ -985,7 +1103,17 @@
         "fullName",
         "role",
         "phone"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "role",
+          "phone"
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -1101,7 +1229,16 @@
         "sequence",
         "fullName",
         "role"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "role"
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -1177,11 +1314,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:wozm:refund:disabilitychildren:sttmnt:reject:v3.0",
+      "ns": "",
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "@specVersion",
@@ -1271,7 +1409,8 @@
       "file": "DisabilityChildrenStatementReject.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     }
   ]
 }

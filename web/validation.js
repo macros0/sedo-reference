@@ -31,10 +31,29 @@ function dispose(){serial++;if(active){active.abort.abort();active.panel.remove(
 async function mount(row,container,onField){
  dispose();const token=serial,abort=new AbortController(),panel=document.createElement('section');panel.className='local-validator';panel.setAttribute('aria-label','Локальная проверка XML');
  const heading=document.createElement('h2');heading.textContent='Локальная проверка XML · '+row.number;
- const info=document.createElement('p');info.textContent=(row.environment==='prod'?'Продуктивный':'Тестовый')+' · документ '+(row.document_version||'без версии')+' · '+(row.label_date||'без даты')+' · редакция '+row.revision_id.slice(0,8);
+ const info=document.createElement('p'),grouped=row.edition_sources?.length>1;
+ const edition=(row.document_version||'без версии')+' · '+(row.label_date||'без даты');
+ info.textContent=(row.environment==='prod'?'Продуктивный':'Тестовый')+(grouped?' · общая схема':' · документ '+edition)+' · редакция '+row.revision_id.slice(0,8);
+ panel.append(heading,info);
+ if(grouped){
+  if(row.display_revision_id&&row.display_revision_id!==row.revision_id){
+   const selected=document.createElement('p');selected.textContent='Выбранный документ '+edition;panel.append(selected);
+  }
+  const details=document.createElement('details'),summary=document.createElement('summary'),list=document.createElement('ul');
+  summary.textContent='Источники схемы · '+row.edition_sources.length;
+  for(const source of row.edition_sources){
+   const item=document.createElement('li'),url=source.document_download||source.document_url;
+   const label=document.createElement(url?'a':'span');label.textContent='Версия '+(source.document_version||'не указана')+' · '+(source.label_date||'без даты');
+   if(url){label.href=url;if(source.document_download)label.download=source.document_filename||'';else{label.target='_blank';label.rel='noopener'}}
+   item.append(label);if(source.module)item.append(document.createTextNode(' · '+source.module));list.append(item);
+  }
+  const revision=document.createElement('p'),id=document.createElement('code');id.textContent=row.revision_id;
+  revision.append(document.createTextNode('ID редакции '),id);
+  details.append(summary,revision,list);panel.append(details);
+ }
  const close=document.createElement('button');close.type='button';close.textContent='Закрыть валидатор';close.onclick=dispose;
  const status=document.createElement('p');status.setAttribute('role','status');status.textContent='Подготавливаем программу и XSD. Файл пока не выбирается и никуда не передаётся.';
- panel.append(heading,info,close,status);container.append(panel);active={abort,panel,row,onField};
+ panel.append(close,status);container.append(panel);active={abort,panel,row,onField};
  try{
   if(!window.isSecureContext||!crypto?.subtle||typeof DecompressionStream!=='function'||typeof WebAssembly!=='object')throw Error('Нужен современный браузер с WebAssembly и DecompressionStream, открытый по HTTPS или localhost. Можно использовать Python-валидатор из ZIP.');
   if(!/^[a-f0-9]{64}$/.test(row.revision_id)||row.validation_download!=='schemas/'+row.revision_id+'.validation.json.gz'||!/^[a-f0-9]{64}$/.test(row.validation_sha256||''))throw Error('Для этой редакции нет комплекта браузерной проверки.');

@@ -33,7 +33,20 @@
         "senderData",
         "signatoryData",
         "fixData"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "noticeData",
+          "moData",
+          "lnData",
+          "senderData",
+          "signatoryData",
+          "fixData"
+        ]
+      }
     },
     {
       "name": "noticeData",
@@ -59,7 +72,16 @@
         "sequence",
         "noticeDate",
         "noticeNumber"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "noticeDate",
+          "noticeNumber"
+        ]
+      }
     },
     {
       "name": "noticeDate",
@@ -127,7 +149,17 @@
         "moName",
         "ogrn",
         "moId"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "moName",
+          "ogrn",
+          "moId"
+        ]
+      }
     },
     {
       "name": "moName",
@@ -233,7 +265,15 @@
       "contentModel": [
         "sequence",
         "lnNumber"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber"
+        ]
+      }
     },
     {
       "name": "lnNumber",
@@ -289,7 +329,18 @@
         "employeeRole",
         "phone",
         "tofName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "employeeName",
+          "employeeRole",
+          "phone",
+          "tofName"
+        ]
+      }
     },
     {
       "name": "employeeName",
@@ -395,7 +446,16 @@
         "sequence",
         "signatoryName",
         "signatoryRole"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "signatoryName",
+          "signatoryRole"
+        ]
+      }
     },
     {
       "name": "signatoryName",
@@ -459,7 +519,15 @@
       "contentModel": [
         "sequence",
         "fixes"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fixes"
+        ]
+      }
     },
     {
       "name": "fixes",

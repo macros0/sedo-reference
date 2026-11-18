@@ -39,7 +39,7 @@ const validXml = `<${result.root} xmlns="${result.namespace}" specVersion="${res
 </${result.root}>`;
 
 test('an unqualified field displays its XML instance namespace', async ({ page }) => {
-  const revision = edition('1001', 'test');
+  const revision = catalog.revisions.find(r => r.revision_id === '0045b492594b00b9505a42b3e531cce4b1dda4e30e636f60865c7c3859654c8e');
   const route = new URLSearchParams({ message: '1001', env: 'test', rev: revision.revision_id,
     field: 'sedoAppealRequest/appealTitle' });
   await page.goto(`#${route}`);

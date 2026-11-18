@@ -27,7 +27,16 @@
         "sequence",
         "powerOfAttorneyInfo",
         "protocol"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "powerOfAttorneyInfo",
+          "protocol"
+        ]
+      }
     },
     {
       "name": "powerOfAttorneyInfo",
@@ -59,7 +68,19 @@
         "issued",
         "revocationReason",
         "revocationDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "status",
+          "issued",
+          "revocationReason",
+          "revocationDate"
+        ]
+      }
     },
     {
       "name": "content",
@@ -199,7 +220,15 @@
       "contentModel": [
         "sequence",
         "message"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "message"
+        ]
+      }
     },
     {
       "name": "message",
@@ -231,7 +260,18 @@
         "level",
         "comment",
         "recommendation"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "mnemonic",
+          "level",
+          "comment",
+          "recommendation"
+        ]
+      }
     },
     {
       "name": "mnemonic",

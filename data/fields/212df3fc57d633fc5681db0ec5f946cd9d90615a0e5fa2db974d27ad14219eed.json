@@ -25,7 +25,15 @@
       "contentModel": [
         "sequence",
         "uuids"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "uuids"
+        ]
+      }
     },
     {
       "name": "uuids",
@@ -51,7 +59,15 @@
       "contentModel": [
         "sequence",
         "uuid"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "uuid"
+        ]
+      }
     },
     {
       "name": "uuid",

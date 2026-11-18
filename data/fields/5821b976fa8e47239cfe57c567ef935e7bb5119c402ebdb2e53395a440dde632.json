@@ -29,7 +29,17 @@
         "owner",
         "list",
         "protocol"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "owner",
+          "list",
+          "protocol"
+        ]
+      }
     },
     {
       "name": "owner",
@@ -59,7 +69,17 @@
         "legalOrganization",
         "legalPerson",
         "person"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "legalOrganization",
+          "legalPerson",
+          "person"
+        ]
+      }
     },
     {
       "name": "legalOrganization",
@@ -98,7 +118,27 @@
           "ogrn",
           "foreign"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "jurAddress",
+          "inn",
+          "kpp",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "ogrn",
+              "foreign"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -174,7 +214,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "kpp",
@@ -290,7 +336,21 @@
         "snils",
         "inn",
         "ogrnip"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName",
+          "birthDate",
+          "snils",
+          "inn",
+          "ogrnip"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -536,7 +596,36 @@
           "insurer",
           "volunteer"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "firstName",
+              "lastName",
+              "middleName",
+              "birthDate",
+              "snils",
+              "inn"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "insurer",
+              "volunteer"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -731,7 +820,15 @@
       "contentModel": [
         "sequence",
         "regNum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNum"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -781,7 +878,16 @@
         "sequence",
         "regNum",
         "kpsNum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNum",
+          "kpsNum"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -859,7 +965,15 @@
       "contentModel": [
         "sequence",
         "powerOfAttorney"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "powerOfAttorney"
+        ]
+      }
     },
     {
       "name": "powerOfAttorney",
@@ -897,7 +1011,22 @@
         "endDate",
         "principal",
         "representative"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "createDate",
+          "uuid",
+          "parentUuid",
+          "paStatus",
+          "startDate",
+          "endDate",
+          "principal",
+          "representative"
+        ]
+      }
     },
     {
       "name": "createDate",
@@ -1109,7 +1238,15 @@
       "contentModel": [
         "sequence",
         "message"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "message"
+        ]
+      }
     },
     {
       "name": "message",
@@ -1141,7 +1278,18 @@
         "level",
         "comment",
         "recommendation"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "mnemonic",
+          "level",
+          "comment",
+          "recommendation"
+        ]
+      }
     },
     {
       "name": "mnemonic",

@@ -18,6 +18,52 @@ on:
 permissions:
   contents: read
 jobs:
+  browser:
+    name: Build and test the candidate in Chromium
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Install build and browser test dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Build from captured sources
+        env:
+          SEDO_COLLECTOR_SOURCE: ${{ vars.SEDO_COLLECTOR_SOURCE || 'sourcecraft' }}
+        run: |
+          python collector_snapshots.py --offline
+          python import_inbox.py
+          python update_catalog.py --offline
+          python verify.py
+          python build_site.py
+          node tests/test_browser_validation.cjs --all-editions
+          node tests/test_attribute_ref_constraints.cjs --all-editions
+      - name: Test generated candidate invariants
+        run: |
+          python -m unittest discover -s tests -q
+          npm run test:node
+      - name: Test the built candidate
+        run: npm run test:browser
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: incoming-browser-test-report
+          path: |
+            playwright-report/
+            test-results/
+          if-no-files-found: ignore
+          retention-days: 7
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -36,9 +82,7 @@ jobs:
       - name: Preview incoming without saving or publishing
         run: |
           python -m unittest discover -s tests -q
-          for test in tests/test_*.cjs; do
-            node "$test"
-          done
+          npm run test:node
           python import_inbox.py --check
       - name: Write validation report
         if: always()

@@ -1,4 +1,7 @@
 import copy
+import base64
+import gzip
+from unittest.mock import patch
 import io
 import json
 import os
@@ -11,12 +14,178 @@ import zipfile
 from pathlib import Path
 from lxml import etree
 from sync import encode, sha, write
-from xsd_bundle import publish_bundles
+from xsd_bundle import publish_bundles, _browser_compatible
 
 XS='http://www.w3.org/2001/XMLSchema'
 PROJECT=Path(__file__).resolve().parents[1]
 
 class XsdBundleTests(unittest.TestCase):
+    def test_documented_entry_selects_namespace_include_without_arbitrary_wrapper_choice(self):
+        from catalog import derive
+        from sync import inspect_file
+        for declared in ('', ' targetNamespace="urn:A"'):
+            files={'main.xsd':f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:A"><xs:include schemaLocation="common.xsd"/></xs:schema>'.encode(),
+                   'common.xsd':f'<xs:schema xmlns:xs="{XS}"{declared}><xs:element name="r" type="xs:string"/></xs:schema>'.encode()}
+            raw=io.BytesIO()
+            with zipfile.ZipFile(raw,'w') as archive:
+                for name,content in files.items():archive.writestr(name,content)
+            doc=dict(kind='docx',environment='test',url='https://example.test/Тип_сообщения_999.docx',sha256='d'*64,label='Example',structure=[['Корневой элемент','r'],['Пространство имен файла XML-схемы','urn:A'],['Расположение файла XML-схемы','main.xsd']])
+            package=dict(kind='zip',environment='test',url='https://example.test/schema.zip',sha256=sha(raw.getvalue()),**inspect_file(raw.getvalue(),'zip'))
+            revision=derive(dict(entries=[doc,package]))['revisions'][0]
+            self.assertEqual((revision['status'],revision.get('schema_path')),('matched','main.xsd'))
+            if declared:
+                doc['structure']=doc['structure'][:-1]
+                self.assertEqual(derive(dict(entries=[doc,package]))['revisions'][0]['status'],'review')
+
+    def test_global_root_from_chameleon_include_matches_tree_and_bundle(self):
+        from schema import Schema
+        from sync import inspect_file
+        from xsd_bundle import _prepare
+        files={'common.xsd':f'<xs:schema xmlns:xs="{XS}"><xs:element name="r" type="xs:int"/></xs:schema>'.encode()}
+        packs=[]
+        for ns in ('A','B'):
+            files[ns+'.xsd']=f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:{ns}"><xs:include schemaLocation="common.xsd"/></xs:schema>'.encode()
+        raw=io.BytesIO()
+        with zipfile.ZipFile(raw,'w') as archive:
+            for name,content in files.items(): archive.writestr(name,content)
+        metadata=inspect_file(raw.getvalue(),'zip')['schemas']
+        for ns in ('A','B'):
+            entry=ns+'.xsd'
+            self.assertEqual(next(item for item in metadata if item['path']==entry)['roots'],[{'name':'r','description':''}])
+            with zipfile.ZipFile(raw) as archive:
+                tree=Schema(archive,entry,'r');tree.field(tree.root)
+            self.assertEqual(tree.fields[0]['ns'],'urn:'+ns)
+            output,_,_=_prepare(dict(schema_path=entry,root='r',namespace='urn:'+ns),{entry:files[entry],'common.xsd':files['common.xsd']})
+            packs.append(dict(format=1,number='999',environment='test',revision_id='a'*64,root='r',namespace='urn:'+ns,entrypoint='message.xsd',fields=['r'],field_namespaces=[['urn:'+ns]],files={name:base64.b64encode(content).decode('ascii') for name,content in output.items() if not name.startswith('originals/')}))
+            with tempfile.TemporaryDirectory() as folder:
+                base=Path(folder)
+                for path,content in output.items():
+                    target=base/path;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(content)
+                validator=etree.XMLSchema(etree.parse(str(base/'message.xsd')))
+                self.assertTrue(validator.validate(etree.fromstring(f'<r xmlns="urn:{ns}">1</r>')))
+                self.assertFalse(validator.validate(etree.fromstring('<r xmlns="urn:wrong">1</r>')))
+        result=subprocess.run(['node',str(PROJECT/'tests/included_root_wasm.cjs')],input=json.dumps(packs),text=True,capture_output=True,cwd=PROJECT,timeout=40)
+        self.assertEqual(result.returncode,0,result.stderr)
+
+    def test_typed_element_fixed_values_keep_instance_type_and_patterns(self):
+        from tests.typed_fixed_fixture import fixture, CALENDAR_CASES, CASES, xml
+        from xsd_bundle import _prepare, _zip
+        row, files = fixture()
+        original = etree.XMLSchema(etree.fromstring(files['main.xsd']))
+        for body, _, valid in CALENDAR_CASES:
+            with self.subTest(original=body):
+                self.assertEqual(original.validate(etree.fromstring(xml(body).encode())), valid,
+                                 str(original.error_log))
+        directory = self.base/'typed-fixed'
+        directory.mkdir()
+        with zipfile.ZipFile(io.BytesIO(_zip(row, *_prepare(row, files)))) as archive:
+            archive.extractall(directory)
+        for body, valid in CASES:
+            with self.subTest(body=body):
+                result = self.run_validator(directory, xml(body).encode())
+                self.assertEqual(result.returncode, 0 if valid else 1, result.stderr)
+                if body.startswith('<utc>') and not valid or '<pattern>1.0</pattern>' in body:
+                    self.assertIn("[facet 'pattern']", result.stderr)
+                if body.startswith('<instant>') and not valid:
+                    self.assertRegex(result.stderr, r"Element 'instant': .*does not match the fixed value constraint")
+                    if '<decimal>2</decimal>' in body:
+                        self.assertRegex(result.stderr, r"Element 'decimal': .*does not match the fixed value constraint")
+
+    def test_audit_uses_same_typed_fixed_values_without_changing_originals(self):
+        from tests.typed_fixed_fixture import fixture, CASES, xml
+        from audit_xml_examples import _schema
+        row, files = fixture()
+        source = self.base/'typed-originals.zip'
+        with zipfile.ZipFile(source, 'w') as archive:
+            for name, raw in files.items():archive.writestr(name, raw)
+        original_bytes = source.read_bytes()
+        validator = _schema(source, row)
+        for body, valid in CASES:
+            with self.subTest(body=body):
+                self.assertEqual(validator.validate(etree.fromstring(xml(body).encode())), valid,
+                                 str(validator.error_log))
+        self.assertEqual(source.read_bytes(), original_bytes)
+
+    def test_quoted_boolean_declarations_in_appinfo_do_not_change_validator(self):
+        from xsd_bundle import _prepare
+        source = (f'<xs:schema xmlns:xs="{XS}"><xs:annotation><xs:appinfo>'
+                  '<xs:element name="example" type="undeclared:foreign" fixed="true"/>'
+                  '</xs:appinfo></xs:annotation><xs:element name="root" type="xs:string"/></xs:schema>').encode()
+        row = dict(root='root', schema_path='root.xsd', namespace=None)
+        _, _, constraints = _prepare(row, {'root.xsd':source})
+        self.assertNotIn('boolean_fixed_replacements', constraints)
+
+    def test_701_fixed_boolean_accepts_both_lexical_forms(self):
+        catalog = json.loads((PROJECT/'data/catalog.json').read_bytes())
+        row = next(r for r in catalog['revisions'] if r['revision_id'].startswith('bf8b73ce'))
+        self.state = PROJECT/'state'
+        directory = self.extract(row)
+        for text, code in [('true',0), ('1',0), (' 1 ',0), ('',0), ('false',1), ('0',1), ('yes',1)]:
+            xml = (f'<restrictionResponse xmlns="{row["namespace"]}">'
+                   '<responseOn>00000000-0000-0000-0000-000000000000</responseOn>\n'
+                   f'<notIdentified>{text}</notIdentified></restrictionResponse>')
+            result = self.run_validator(directory, xml.encode())
+            with self.subTest(text=text):
+                self.assertEqual(result.returncode, code, result.stderr)
+                if code: self.assertIn('Строка 2', result.stderr)
+
+    def test_uppercase_xsd_suffix_is_browser_compatible(self):
+        row,sources=self.revision()
+        sources={name.replace('Parts.xsd','Part0.XSD'):content.replace(b'Parts.xsd',b'Part0.XSD') for name,content in sources.items()}
+        raw=io.BytesIO()
+        with zipfile.ZipFile(raw,'w') as archive:
+            for name,content in sources.items():archive.writestr(name,content)
+        data=raw.getvalue();row.update(archive_sha256=sha(data),dependencies=sorted([[posixpath.relpath(name,'pack/main'),sha(content)] for name,content in sources.items()]))
+        write(self.state/'objects'/row['archive_sha256'],data)
+        self.bundle(row)
+        pack=json.loads(gzip.decompress((self.site/row['validation_download']).read_bytes()))
+        self.assertTrue(all(name.endswith('.xsd') for name in pack['files']))
+        main=base64.b64decode(pack['files']['message.xsd'])
+        self.assertIn(b'Part0.xsd',main)
+        checked=subprocess.run(['node','-e',"const p=JSON.parse(require('node:fs').readFileSync(0,'utf8'));require('./web/validation-core.js').checkPack(p,p);"],input=json.dumps(pack),text=True,capture_output=True,cwd=PROJECT)
+        self.assertEqual(checked.returncode,0,checked.stderr)
+
+
+    def test_browser_file_count_boundary_preserves_local_zip(self):
+        for count in (256,257):
+            with self.subTest(count=count):
+                row,_=self.revision(version=str(count))
+                output={'message.xsd':b'<schema/>'}
+                output.update({f'schemas/p{i}.xsd':b'<schema/>' for i in range(count-1)})
+                with patch('xsd_bundle._prepare',return_value=(output,[],{})):
+                    self.bundle(row)
+                self.assertEqual('validation_download' in row,count==256)
+                if count==257:self.assertIn('ZIP',row['validation_error'])
+
+    def test_browser_size_limits_preserve_local_zip(self):
+        # Include full JSON overhead and navigation, not only schema bytes.
+        for mode in ('unpacked','download'):
+            with self.subTest(mode=mode):
+                row,_=self.revision(version=mode)
+                output={'message.xsd':b'<schema/>'}
+                navigation={row['revision_id']:['x'*(32*1024*1024)]} if mode=='unpacked' else {}
+                with patch('xsd_bundle._prepare',return_value=(output,[],{})), patch('xsd_bundle._field_namespaces',return_value=[[]]):
+                    if mode=='download':
+                        with patch('xsd_bundle.gzip.compress',return_value=b'x'*(8*1024*1024+1)):
+                            self.bundle(row)
+                    else:publish_bundles({'revisions':[row]},self.state,self.site,navigation)
+                self.assertEqual(row['schema_export_status'],'ready')
+                self.assertNotIn('validation_download',row)
+                self.assertIn('ZIP',row['validation_error'])
+
+    def test_browser_limits_match_consumer_boundaries(self):
+        pack={'files':{'message.xsd':''}}
+        self.assertTrue(_browser_compatible(pack,b'x'*(32*1024*1024),b'x'*(8*1024*1024)))
+        self.assertFalse(_browser_compatible(pack,b'x'*(32*1024*1024+1),b''))
+        self.assertFalse(_browser_compatible(pack,b'',b'x'*(8*1024*1024+1)))
+        pack.update(attribute_checks=[],supplementary_namespace='urn:test',supplementary_schema='message.xsd')
+        self.assertTrue(_browser_compatible(pack,b'',b''))
+        pack['attribute_any_type_paths']=[[]]
+        self.assertFalse(_browser_compatible(pack,b'',b''),'root anyType paths must identify an XML node')
+        pack.pop('attribute_any_type_paths')
+        pack['attribute_checks']=[dict(path=[['','root']]*257,attribute=['','attr'],element='value0',field='root/@attr')]
+        self.assertFalse(_browser_compatible(pack,b'',b''))
+
     def test_unrelated_fixed_name_does_not_expand_unused_recursive_type(self):
         row,_=self.revision()
         sources={'main.xsd':f'''<xs:schema xmlns:xs="{XS}" xmlns:m="urn:main" targetNamespace="urn:main">
@@ -33,6 +202,28 @@ class XsdBundleTests(unittest.TestCase):
         directory=self.extract(row)
         self.assertFalse(json.loads((directory/'manifest.json').read_bytes()).get('attribute_checks'))
         result=self.run_validator(directory,b'<Request xmlns="urn:main" xmlns:m="urn:main" m:editable="true"/>')
+        self.assertEqual(result.returncode,0,result.stderr)
+
+    def test_unused_recursive_fixed_type_keeps_download_and_browser_pack_available(self):
+        from tests.test_attribute_ref_constraints import dynamic_fixture
+        row,sources=dynamic_fixture('unused-recursive')
+        raw=io.BytesIO()
+        with zipfile.ZipFile(raw,'w') as archive:
+            for name,content in sources.items():archive.writestr(name,content)
+        data=raw.getvalue()
+        row.update(status='matched',archive_sha256=sha(data),dependencies=[[name,sha(content)] for name,content in sources.items()])
+        write(self.state/'objects'/row['archive_sha256'],data)
+        self.bundle(row)
+        self.assertEqual(row['schema_export_status'],'ready',row.get('schema_export_error'))
+        with zipfile.ZipFile(self.site/row['schema_download']) as archive:
+            manifest=json.loads(archive.read('manifest.json'))
+            self.assertNotIn('supplementary_schema',manifest)
+            self.assertEqual(archive.read('originals/002_main.xsd'),sources['main.xsd'])
+            directory=self.base/'unused-recursive'
+            archive.extractall(directory)
+        pack=json.loads(gzip.decompress((self.site/row['validation_download']).read_bytes()))
+        self.assertNotIn('supplementary_schema',pack)
+        result=self.run_validator(directory,b'<request xmlns="urn:main">text</request>')
         self.assertEqual(result.returncode,0,result.stderr)
 
     def test_chameleon_global_fixed_attribute_gets_supplementary_probe(self):
@@ -248,7 +439,7 @@ class XsdBundleTests(unittest.TestCase):
         digest=sha(doc.getvalue());write(self.state/'objects'/digest,doc.getvalue());row.update(document_sha256=digest,document_url='https://example.test/spec.docx')
         source=encode(dict(revisions=[row]));write(self.base/'data/catalog.json',source)
         write(self.base/'data/fields/index.json',encode([dict(revision_id=row['revision_id'],status='ready')]))
-        write(self.base/'data/fields'/(row['revision_id']+'.json'),encode(dict(fields=[dict(name='Request',path='Request',parent=-1,children=[])])))
+        write(self.base/'data/fields'/(row['revision_id']+'.json'),encode(dict(revision_id=row['revision_id'],fields=[dict(name='Request',path='Request',parent=-1,children=[])])))
         write(self.base/'viewer-template.html',b'<html></html>')
         for name in ('review-journal.js','index.html','app.js','app.css','automation-status.js','compare-core.js','compare.js','comparison-export.js','mapping-draft.js','mapping-editor.js','comparison-mapping.js','vendor/exceljs.min.js','vendor/exceljs-LICENSE','vendor/README.md','journal.js','message-transitions.js','favicon.svg','validation.js','validation-core.js','validation-frame.js','validation-worker.js','validation-paths.js','validation-source.js','validation-messages.js','vendor/xmllint/xmllint-browser.mjs','vendor/xmllint/xmllint.wasm','vendor/xmllint/COPYING','vendor/xmllint/README.md'):write(self.base/'web'/name,b'test')
         with patch.object(build_site,'HERE',self.base):build_site.main()

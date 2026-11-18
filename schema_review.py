@@ -7,7 +7,7 @@ import audit_individual_tables
 import audit_module_tables
 import audit_xml_examples
 from module_xsd import W, text
-from review_field_links import attach_targets
+from review_field_links import attach_targets, attach_schema_sources
 
 
 def compare_schema_location(body, schema_path):
@@ -54,15 +54,17 @@ def compare_revision(revision, fields, objects):
                     notes=["Для этой редакции не сопоставлен исходный комплект XSD."])
     body = _document_body(objects, revision["document_sha256"])
     archive = objects / revision["archive_sha256"]
-    if revision.get("source_type") == "module":
+    table_notes = []
+    if revision.get("source_type") == "module" or revision.get('document_type') == 'module':
         prepared = _module_tables(objects, revision["document_sha256"])
-        tables, table_findings = audit_module_tables.audit(revision, prepared, fields)
+        tables, table_findings = audit_module_tables.audit(revision, prepared, fields, notes=table_notes, archive_path=archive)
     else:
-        tables, table_findings = audit_individual_tables.audit(revision, body, fields, archive_path=archive)
+        tables, table_findings = audit_individual_tables.audit(revision, body, fields, archive_path=archive, notes=table_notes)
         paths, path_findings = compare_schema_location(body, revision["schema_path"])
         tables += paths
         table_findings = [*table_findings, *path_findings]
     examples, example_findings, notes = audit_xml_examples.audit(revision, body, archive)
-    keys = ("kind", "location", "spec", "xlocation", "xsd", "impact")
-    findings = [{key: finding[key] for key in keys} for finding in [*table_findings, *example_findings]]
-    return dict(tables=tables, examples=examples, findings=[attach_targets(f, fields) for f in findings], notes=notes)
+    keys = ("kind", "location", "spec", "xlocation", "xsd", "impact", "field_paths", "field_link_scope", "xsd_source", "xsd_sources")
+    linked = [attach_targets(f, fields) for f in [*table_findings, *example_findings]]
+    linked = attach_schema_sources(revision, linked, archive)
+    return dict(tables=tables, examples=examples, findings=[{key: f[key] for key in keys if key in f} for f in linked], notes=list(dict.fromkeys([*table_notes, *notes])))

@@ -38,7 +38,26 @@
           "errorInfo"
         ],
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "status",
+          "warnInfo",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "processedInfo",
+              "errorInfo"
+            ]
+          },
+          "*"
+        ]
+      }
     },
     {
       "name": "status",
@@ -96,7 +115,16 @@
         "sequence",
         "warnList",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "warnList",
+          "*"
+        ]
+      }
     },
     {
       "name": "warnList",
@@ -120,7 +148,15 @@
       "contentModel": [
         "sequence",
         "warn"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "warn"
+        ]
+      }
     },
     {
       "name": "warn",
@@ -150,7 +186,17 @@
         "code",
         "message",
         "details"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "details"
+        ]
+      }
     },
     {
       "name": "code",
@@ -250,11 +296,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "ns": "",
       "file": "Common.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "processedInfo",
@@ -278,7 +325,15 @@
       "contentModel": [
         "sequence",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "*"
+        ]
+      }
     },
     {
       "name": "*",
@@ -298,7 +353,8 @@
       "file": "NoticeResponseResult.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "errorInfo",
@@ -326,7 +382,16 @@
         "sequence",
         "errorList",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "errorList",
+          "*"
+        ]
+      }
     },
     {
       "name": "errorList",
@@ -350,7 +415,15 @@
       "contentModel": [
         "sequence",
         "error"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "error"
+        ]
+      }
     },
     {
       "name": "error",
@@ -380,7 +453,17 @@
         "code",
         "message",
         "details"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "details"
+        ]
+      }
     },
     {
       "name": "code",
@@ -480,11 +563,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "ns": "",
       "file": "Common.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "*",
@@ -504,7 +588,8 @@
       "file": "NoticeResponseResult.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "@specVersion",
@@ -600,7 +685,8 @@
       "file": "NoticeResponseResult.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     }
   ]
 }

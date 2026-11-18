@@ -47,7 +47,26 @@
         "organizationSize",
         "idReport",
         "idProtocol"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "department",
+          "idMessage",
+          "regNum",
+          "regNumSFR",
+          "date",
+          "number",
+          "requestDocs",
+          "attachment",
+          "dateDeadline",
+          "organizationSize",
+          "idReport",
+          "idProtocol"
+        ]
+      }
     },
     {
       "name": "department",
@@ -75,7 +94,16 @@
         "sequence",
         "code",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "name"
+        ]
+      }
     },
     {
       "name": "code",
@@ -268,7 +296,15 @@
       "contentModel": [
         "sequence",
         "requestDoc"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "requestDoc"
+        ]
+      }
     },
     {
       "name": "requestDoc",
@@ -407,7 +443,22 @@
         "signatureEmpl",
         "signatureFund",
         "application"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name",
+          "signatureEmpl",
+          "signatureFund",
+          "application"
+        ]
+      }
     },
     {
       "name": "content",
@@ -601,7 +652,22 @@
         "name",
         "signatureEmpl",
         "signatureFund"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "description",
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name",
+          "signatureEmpl",
+          "signatureFund"
+        ]
+      }
     },
     {
       "name": "description",

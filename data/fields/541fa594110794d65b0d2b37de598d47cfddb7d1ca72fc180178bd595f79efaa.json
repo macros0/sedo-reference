@@ -38,7 +38,21 @@
         "receiversRow",
         "rejectionInfo",
         "attachment"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "msgDateTime",
+          "tof",
+          "batch_no",
+          "insurerInfo",
+          "receiversRow",
+          "rejectionInfo",
+          "attachment"
+        ]
+      }
     },
     {
       "name": "msgDateTime",
@@ -86,7 +100,16 @@
         "sequence",
         "code",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "name"
+        ]
+      }
     },
     {
       "name": "code",
@@ -187,7 +210,16 @@
         "sequence",
         "regNum",
         "regNumSFR"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNum",
+          "regNumSFR"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -267,7 +299,17 @@
         "parentInfo",
         "childInfo",
         "periods"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "parentInfo",
+          "childInfo",
+          "periods"
+        ]
+      }
     },
     {
       "name": "parentInfo",
@@ -297,7 +339,17 @@
         "fullName",
         "snils",
         "childRelType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "snils",
+          "childRelType"
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -327,7 +379,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -511,7 +573,16 @@
         "sequence",
         "snils",
         "birthDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "birthDate"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -544,7 +615,15 @@
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
       "typeFile": "Person.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "[0-9]*"
+        ],
+        [
+          "[0-9]*"
+        ]
+      ]
     },
     {
       "name": "birthDate",
@@ -591,7 +670,16 @@
         "sequence",
         "daysAmount",
         "TotalHour"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "daysAmount",
+          "TotalHour"
+        ]
+      }
     },
     {
       "name": "daysAmount",
@@ -666,7 +754,17 @@
         "number",
         "date",
         "reason"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "date",
+          "reason"
+        ]
+      }
     },
     {
       "name": "number",
@@ -768,7 +866,19 @@
         "mimeType",
         "size",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name"
+        ]
+      }
     },
     {
       "name": "content",

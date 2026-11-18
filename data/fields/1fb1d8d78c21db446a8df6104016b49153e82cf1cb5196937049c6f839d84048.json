@@ -52,7 +52,34 @@
         "executionPresented",
         "executionDuration",
         "applicationDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lastName",
+          "firstName",
+          "middleName",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "birthDate",
+              "birthDateSpecial"
+            ]
+          },
+          "snils",
+          "identificationDocument",
+          "inn",
+          "bic",
+          "bankAccount",
+          "executionPresented",
+          "executionDuration",
+          "applicationDate"
+        ]
+      }
     },
     {
       "name": "lastName",
@@ -180,7 +207,17 @@
         "day",
         "month",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "day",
+          "month",
+          "year"
+        ]
+      }
     },
     {
       "name": "day",
@@ -340,7 +377,21 @@
         "issuedBy",
         "unitCode",
         "expiredOn"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "Code",
+          "Series",
+          "Number",
+          "issueDate",
+          "issuedBy",
+          "unitCode",
+          "expiredOn"
+        ]
+      }
     },
     {
       "name": "Code",

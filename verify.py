@@ -3,16 +3,45 @@ import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
-from sync import SITES,sync
+from sync import RedirectedBytes,SITES,resource_url,sync
 from sync import write
 from catalog import dependency_set,derive
 
 def failure_probe_url(snapshot, requests):
-    requested = set(requests)
+    requested = {resource_url(url) for url in requests}
     for entry in snapshot["entries"]:
-        if entry.get("kind") == "zip" and "sha256" in entry and entry["url"] in requested:
-            return entry["url"]
+        url = resource_url(entry.get("download_url") or entry["url"])
+        if entry.get("kind") == "zip" and entry.get("source_type") != "wsdl" and "sha256" in entry and url in requested:
+            return url
     return next(SITES[env] for env in snapshot["pages"] if SITES[env] in requested)
+
+
+def fetch_archived(state, snapshot):
+    from sync import sha
+    urls = {SITES[k]: v for k, v in snapshot["pages"].items()}
+    redirects = dict(snapshot.get("page_redirects", {}))
+    def remember(url, digest):
+        key = resource_url(url)
+        if urls.setdefault(key, digest) != digest:
+            raise ValueError("Conflicting archived bytes for " + key)
+    for row in snapshot["entries"]:
+        if "sha256" in row and row.get("source_type") != "wsdl":
+            remember(row.get("download_url") or row["url"], row["sha256"])
+        for source in row.get("source_files", []):
+            remember(source["url"], source["sha256"])
+            if source.get("final_url"):
+                redirects[source["url"]] = source["final_url"]
+    missing = sorted({digest for digest in urls.values() if not (state/"objects"/digest).is_file()})
+    if missing:
+        raise ValueError("Missing required replay objects: " + ", ".join(missing))
+    def cached(url, **kwargs):
+        key = resource_url(url)
+        digest = urls[key]
+        raw = (state/"objects"/digest).read_bytes()
+        if sha(raw) != digest:
+            raise ValueError("Archived source digest mismatch: " + key)
+        return RedirectedBytes(raw, redirects[key]) if key in redirects else raw
+    return cached
 
 
 def verify(state,data):
@@ -29,6 +58,7 @@ def verify(state,data):
     for r in revisions:
         if r["status"]=="document_only" and r.get("source_type")=="manual":continue
         obj=json.loads((data/"fields"/(r["revision_id"]+".json")).read_bytes())
+        assert obj.get("revision_id") == r["revision_id"], "Field revision identity mismatch"
         f=obj["fields"];assert f[0]["name"]==r["root"]
         assert all(f[c]["parent"]==i for i,n in enumerate(f) for c in n["children"])
         # These semantic examples describe the original snapshot, not future SFR rules.
@@ -37,14 +67,7 @@ def verify(state,data):
             assert p["benefitResponse/benefit1/assignmentParams/contractsInfo/workerAndGPHcontract/GPHcontract"]["base"]=="xs:boolean"
             assert dict(p["benefitResponse/benefit1/calculationData/calcConditionList/calcCondition"]["values"])["46"]
     # Replay the exact source bytes to test idempotence and failed retrieval.
-    urls={SITES[k]:v for k,v in snapshot["pages"].items()}
-    urls.update({r["url"]:r["sha256"] for r in snapshot["entries"] if "sha256" in r})
-    for row in snapshot["entries"]:
-        for source in row.get("source_files",[]):urls[source["url"]]=source["sha256"]
-    missing = sorted({digest for digest in urls.values() if not (state/"objects"/digest).is_file()})
-    if missing:
-        raise ValueError("Missing required replay objects: " + ", ".join(missing))
-    def cached(u,**kwargs):return (state/"objects"/urls[u]).read_bytes()
+    cached = fetch_archived(state, snapshot)
     wsdl_entries = [row for row in snapshot["entries"]
                     if row.get("source_type") == "wsdl" or row.get("kind") == "wsdl_status"]
     from collector_snapshots import make_manifest, validate_manifest
@@ -55,6 +78,7 @@ def verify(state,data):
                               lambda digest: (state/"objects"/digest).read_bytes())
     with TemporaryDirectory() as tmp:
         base=Path(tmp)
+        replay = dict(wsdl_entries=wsdl_entries, snapshot_format=snapshot.get("format", 1))
         # These are inputs of this exact snapshot, independent of today's
         # collector configuration, links and availability.
         for row in wsdl_entries:
@@ -62,17 +86,17 @@ def verify(state,data):
                 for digest in [row["sha256"], *(source["sha256"] for source in row.get("source_files", []))]:
                     write(base/"objects"/digest, (state/"objects"/digest).read_bytes())
         with patch("sync.get",side_effect=cached) as downloads:
-            sync(base, wsdl_entries=wsdl_entries);first=(base/"current.json").read_bytes()
-            if snapshot.get("format") == 1:
+            sync(base, **replay);first=(base/"current.json").read_bytes()
+            if snapshot.get("format") in (1, 2, 3, 4, 5, 6, 7):
                 assert json.loads(first)["snapshot"] == current, "Replayed snapshot differs from expected current snapshot " + current
-            sync(base, wsdl_entries=wsdl_entries)
+            sync(base, **replay)
         assert first==(base/"current.json").read_bytes() and not any(json.loads((base/"last-run.json").read_bytes())["diff"].values())
         probe_url = failure_probe_url(snapshot, (call.args[0] for call in downloads.call_args_list))
         def failed(u,**kwargs):
             if u == probe_url:raise OSError("simulated failure")
             return cached(u)
         with patch("sync.get",side_effect=failed):
-            try:sync(base, wsdl_entries=wsdl_entries)
+            try:sync(base, **replay)
             except (ValueError, OSError):pass
             else:raise AssertionError("failed download accepted")
         assert first==(base/"current.json").read_bytes()

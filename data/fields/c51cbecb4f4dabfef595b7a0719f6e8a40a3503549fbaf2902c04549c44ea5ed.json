@@ -35,7 +35,20 @@
         "informationResponse",
         "note",
         "senderInfo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "noticeNumber",
+          "insuredInfo",
+          "insurerInfo",
+          "informationResponse",
+          "note",
+          "senderInfo"
+        ]
+      }
     },
     {
       "name": "noticeNumber",
@@ -89,7 +102,15 @@
       "contentModel": [
         "sequence",
         "snils"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -143,7 +164,15 @@
       "contentModel": [
         "sequence",
         "regNumSFR"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNumSFR"
+        ]
+      }
     },
     {
       "name": "regNumSFR",
@@ -203,7 +232,18 @@
         "noInformation",
         "refusal",
         "responseWillBeSentNewDoc"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "information",
+          "noInformation",
+          "refusal",
+          "responseWillBeSentNewDoc"
+        ]
+      }
     },
     {
       "name": "information",
@@ -229,7 +269,16 @@
         "sequence",
         "receivePayment",
         "insuredInfo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "receivePayment",
+          "insuredInfo"
+        ]
+      }
     },
     {
       "name": "receivePayment",
@@ -261,7 +310,18 @@
         "cardMir",
         "otherOrg",
         "postalAddress"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "bankInfo",
+          "cardMir",
+          "otherOrg",
+          "postalAddress"
+        ]
+      }
     },
     {
       "name": "bankInfo",
@@ -289,7 +349,16 @@
         "sequence",
         "bik",
         "accountNum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "bik",
+          "accountNum"
+        ]
+      }
     },
     {
       "name": "bik",
@@ -421,7 +490,21 @@
         "personalInsuredAccount",
         "kbk",
         "regNumSFRCorrectionalFacility"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "orgName",
+          "bik",
+          "accountNum",
+          "personalOrgAccount",
+          "personalInsuredAccount",
+          "kbk",
+          "regNumSFRCorrectionalFacility"
+        ]
+      }
     },
     {
       "name": "orgName",
@@ -664,7 +747,24 @@
           "postalCode"
         ],
         "foreignAddress"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "addressGar",
+              "postalCode"
+            ]
+          },
+          "foreignAddress"
+        ]
+      }
     },
     {
       "name": "addressGar",
@@ -706,7 +806,34 @@
           ]
         ],
         "flat"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "houseGuid",
+              {
+                "kind": "sequence",
+                "min": "1",
+                "max": "1",
+                "children": [
+                  "guid",
+                  "house",
+                  "stroenie",
+                  "building"
+                ]
+              }
+            ]
+          },
+          "flat"
+        ]
+      }
     },
     {
       "name": "houseGuid",
@@ -964,7 +1091,16 @@
         "sequence",
         "fullName",
         "birthDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "birthDate"
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -994,7 +1130,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -1242,7 +1388,17 @@
         "author",
         "email",
         "phoneNumber"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "author",
+          "email",
+          "phoneNumber"
+        ]
+      }
     },
     {
       "name": "author",
@@ -1272,7 +1428,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",

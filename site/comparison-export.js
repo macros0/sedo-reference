@@ -1,23 +1,30 @@
 /* XLSX workbench for human review. Source data is always written as text. */
 (function(root,factory){
  "use strict";
- const api=factory();
+ const api=factory(typeof module==="object"&&module.exports?require("./compare-core.js"):root.SedoCompare);
  if(typeof module==="object"&&module.exports)module.exports=api;
  else root.SedoComparisonExport=api;
-})(typeof globalThis!=="undefined"?globalThis:this,function(){
+})(typeof globalThis!=="undefined"?globalThis:this,function(SedoCompare){
  "use strict";
  const statuses={added:"Добавлено",removed:"Удалено",changed:"Изменено",mapped:"Сопоставлено без изменений",same:"Без изменений"};
  const json=value=>JSON.stringify(value??null);
  const text=value=>value===null||value===undefined?"":typeof value==="object"?json(value):String(value);
+ const xmlValue=(value,name)=>name?value+" ({"+name[0]+"}"+name[1]+")":value;
  function constraints(f){
   if(!f)return "";
   const parts=[];
+  if(f.kind==="any"||f.kind==="anyAttribute")parts.push("Допустимые пространства имён: "+SedoCompare.fieldNamespace(f));
   for(const key of ["type","base"])if(f[key])parts.push(key+": "+f[key]);
   if(f.min!==undefined||f.max!==undefined)parts.push("Вхождения: "+text(f.min)+"…"+text(f.max));
   if(f.group)parts.push("Группа: "+text(f.group));
-  if(f.facets?.length)parts.push("Ограничения: "+f.facets.map(v=>v[0]+" = "+json(v[1])).join("; "));
-  if(f.values?.length)parts.push("Значения: "+f.values.map(v=>json(v[0])+(v[1]?" — "+v[1]:"")).join("; "));
-  if(f.flags&&Object.keys(f.flags).length)parts.push("Свойства: "+json(f.flags));
+  const facets=(f.facets||[]).filter(([key])=>key!=="pattern"||!f.patternGroups);
+  if(facets.length)parts.push("Ограничения: "+facets.map(v=>v[0]+" = "+json(v[1])).join("; "));
+  if(f.patternGroups)parts.push("Шаблоны XSD: "+f.patternGroups.map(group=>"("+group.map(json).join(" ИЛИ ")+")").join(" И "));
+  if(f.values?.length)parts.push("Значения: "+f.values.map((v,i)=>xmlValue(json(v[0]),f.valueQNames?.[i])+(v[1]?" — "+v[1]:"")).join("; "));
+  if(f.flags&&Object.keys(f.flags).length){
+   const labels={abstract:"Абстрактный элемент",typeAbstract:"Абстрактный тип (требуется конкретный xsi:type)"};
+   parts.push("Свойства: "+Object.entries(f.flags).map(([key,value])=>(labels[key]||key)+" = "+xmlValue(value,f.flagQNames?.[key])).join("; "));
+  }
   if(f.alternatives?.length)parts.push("Варианты union (ИЛИ):\n"+f.alternatives.map((v,i)=>(i+1)+". "+constraints(v)).join("\nИЛИ\n"));
   return parts.join("\n");
  }
@@ -26,7 +33,7 @@
   const side=r=>[r.number,r.environment,r.edition_sources?.length>1?"schema":"v"+(r.document_version||"unknown"),r.revision_id.slice(0,8)].join("-");
   return ("sedo-"+side(left)+"__"+side(right)+".xlsx").replace(/[^\p{L}\p{N}._-]/gu,"_");
  }
- function createWorkbook(ExcelJS,{left,right,before,after,results,mappings=[],baseURL,createdAt=new Date()}){
+ function createWorkbook(ExcelJS,{left,right,before,after,results,mappings=[],deleted={},baseURL,createdAt=new Date()}){
   const wb=new ExcelJS.Workbook();
   wb.creator="Справочник СЭДО";wb.created=createdAt;wb.modified=createdAt;
   wb.calcProperties.fullCalcOnLoad=true;
@@ -55,18 +62,29 @@
   }
   const diffByPath=new Map(results.filter(d=>!d.manual).map(d=>[d.path,d])),diffByPair=new Map(results.filter(d=>d.manual).map(d=>[JSON.stringify([d.beforePath,d.afterPath]),d])),target=new Map(after.map(f=>[f.path,f])),mappedByBefore=new Map(),usedTargets=new Set();
   for(const pair of mappings){if(!mappedByBefore.has(pair.beforePath))mappedByBefore.set(pair.beforePath,[]);mappedByBefore.get(pair.beforePath).push(pair);usedTargets.add(pair.afterPath)}
-  const entries=before.flatMap(field=>mappedByBefore.has(field.path)?mappedByBefore.get(field.path).map(pair=>({field,pair})):[{field,pair:null}]);
+  const deletedBefore=new Set(deleted.before),deletedAfter=new Set(deleted.after);
+  const excluded=(path,paths)=>{
+   for(let candidate=path;candidate;candidate=candidate.includes('/')?candidate.slice(0,candidate.lastIndexOf('/')):'')if(paths.has(candidate))return true;
+   return false;
+  };
+  const entries=before.flatMap(field=>{
+   const rows=(mappedByBefore.get(field.path)||[]).map(pair=>({field,pair}));
+   if(!rows.length||deletedBefore.has(field.path))rows.push({field,pair:null});
+   return rows;
+  });
   const mapRows=entries.map(({field:f,pair})=>{
-   const exact=target.has(f.path)&&!usedTargets.has(f.path),path=pair?pair.afterPath:exact?f.path:"";
+   const removed=!pair&&deletedBefore.has(f.path);
+   const exact=target.has(f.path)&&!usedTargets.has(f.path)&&!excluded(f.path,deletedBefore)&&!excluded(f.path,deletedAfter);
+   const path=pair?pair.afterPath:exact?f.path:"";
    const diff=pair?diffByPair.get(JSON.stringify([f.path,path])):diffByPath.get(f.path);
-   return [statuses[diff?.status||"same"],f.path,f.doc||"",constraints(f),path,"","",pair?"Подтверждено":"Не проверено",pair?.comment||""];
+   return [statuses[diff?.status||"same"],f.path,f.doc||"",constraints(f),path,"","",pair?"Подтверждено":removed?"Удалено":"Не проверено",pair?.comment||""];
   });
   const mapping=sheet("Сопоставление",["Изменение по полному пути","Путь «Было»","Описание «Было»","Ограничения «Было»","Путь «Стало» — введите или выберите","Описание «Стало» — автоматически","Ограничения «Стало» — автоматически","Решение — вручную","Комментарий — вручную"],[21,42,43,44,42,43,44,24,42],mapRows,5);
   for(const [r,value] of [[1,"Ручное сопоставление XML-полей"],[2,"Было: "+edition(left)],[3,"Стало: "+edition(right)],[4,"Жёлтые ячейки редактируются. Совпавший путь ещё не подтверждён. Инструкция и источники — на листе «О выгрузке»."]]){
    mapping.mergeCells(r,1,r,9);const cell=mapping.getCell(r,1);cell.value=value;cell.font={name:"Arial",size:r===1?14:10,bold:r===1,color:{argb:navy}};cell.alignment={wrapText:true,vertical:"middle"};mapping.getRow(r).height=r===4?32:25;
   }
   const sourceHeaders=["Полный XML-путь","Описание","Ограничения для сопоставления","Имя","Вид узла","Тип","Базовый тип","minOccurs / use","maxOccurs","Группа","Namespace","Facets (JSON)","Значения и описания (JSON)","Свойства (JSON)","Варианты union (JSON)","Файл схемы","Файл типа","Индекс родителя","Индексы детей (JSON)","Исходная запись (JSON)"];
-  const sourceRows=fields=>fields.map(f=>[f.path,f.doc||"",constraints(f),f.name,f.kind,f.type||"",f.base||"",f.min??"",f.max??"",text(f.group),f.ns||"",json(f.facets||[]),json(f.values||[]),json(f.flags||{}),json(f.alternatives||[]),f.file||"",f.typeFile||"",f.parent??"",json(f.children||[]),json(f)]);
+  const sourceRows=fields=>fields.map(f=>[f.path,f.doc||"",constraints(f),f.name,f.kind,f.type||"",f.base||"",f.min??"",f.max??"",text(f.group),SedoCompare.fieldNamespace(f),json(f.facets||[]),json(f.values||[]),json(f.flags||{}),json(f.alternatives||[]),f.file||"",f.typeFile||"",f.parent??"",json(f.children||[]),json(f)]);
   const widths=[45,55,60,25,15,32,25,18,18,30,45,45,55,30,60,45,45,18,30,80];
   sheet("Было",sourceHeaders,widths,sourceRows(before));
   sheet("Стало",sourceHeaders,widths,sourceRows(after));
@@ -75,10 +93,11 @@
   for(let i=0;i<entries.length;i++){
    const row=i+6,path=mapping.getCell(row,5),exact=target.get(mapRows[i][4]);
    if(after.length)path.dataValidation={type:"list",allowBlank:true,formulae:["TargetPaths"],showInputMessage:true,promptTitle:"Новый XML-путь",prompt:"Скопируйте путь с листа «Стало» или выберите из списка.",showErrorMessage:true,errorStyle:"warning",errorTitle:"Путь не найден",error:"Проверьте полный путь на листе «Стало»."};
-   // MATCH(…,0) still interprets wildcards: escape them for literal XML paths.
-   const key=`SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(E${row},"~","~~"),"*","~*"),"?","~?")`;
+   // EXACT compares literal, case-sensitive XML paths. INDEX exposes the
+   // boolean array to MATCH without CSE or newer dynamic-array functions.
+   const match=`MATCH(TRUE,INDEX(EXACT(E${row},'Стало'!$A$2:$A$${last}),0),0)`;
    for(const [column,sourceColumn,value] of [[6,"B",exact?.doc||""],[7,"C",exact?constraints(exact):""]]){
-    mapping.getCell(row,column).value={formula:`IF(E${row}="","",_xlfn.IFNA(INDEX('Стало'!$${sourceColumn}$2:$${sourceColumn}$${last},MATCH(${key},'Стало'!$A$2:$A$${last},0))&"","Путь не найден"))`,result:value};
+    mapping.getCell(row,column).value={formula:`IF(E${row}="","",IFERROR(INDEX('Стало'!$${sourceColumn}$2:$${sourceColumn}$${last},${match})&"","Путь не найден"))`,result:value};
    }
    mapping.getCell(row,8).dataValidation={type:"list",allowBlank:true,formulae:['"Не проверено,Подтверждено,Удалено,Переработано,Требует уточнения"']};
    for(const column of [5,8,9]){const cell=mapping.getCell(row,column);cell.fill={type:"pattern",pattern:"solid",fgColor:{argb:input}};cell.font={name:"Arial",size:10,color:{argb:"156582"}};cell.numFmt="@"}
@@ -102,6 +121,8 @@
    ["Создано (UTC)",createdAt.toISOString(),""],
    ["Объём выгрузки","Все поля и изменения выбранной пары. Поиск и фильтр страницы не ограничивают выгрузку.",""],
    ["Сравнение","Подтверждённые ручные пары сравниваются между собой. Остальные поля сравниваются по полному XML-пути; при смене корня или имени считаются удалёнными/добавленными.",""],
+   ...((before.some(SedoCompare.hasUnresolvedUnionValues)||after.some(SedoCompare.hasUnresolvedUnionValues))
+    ?[["Покрытие сравнения union",SedoCompare.unionCoverageNote,""]]:[]),
    ["Как сопоставлять","На первом листе выберите или вставьте полный путь из «Стало» в жёлтую ячейку. Пары можно также добавлять и редактировать в браузере: сохраните строку в черновик, затем нажмите «Применить и обновить сравнение». Описание и ограничения подтянутся формулами Excel. Для родительского блока можно подтвердить его строку: при загрузке браузер предложит вложенные теги с одинаковыми относительными путями. Предложения можно проверить и исключить в предпросмотре.",""],
    ["Проверка смысла","Совпадение пути не подтверждает одинаковое назначение. Сверяйте описания, вложенные поля, группы, условия и ограничения. Переименования автоматически не определяются.",""],
    ["Разделение и объединение","При разделении старого поля на несколько новых дублируйте его строку и укажите разные пути. При объединении допускается один новый путь в нескольких строках. Поясните решение в комментарии.",""],
@@ -122,6 +143,8 @@
     }
    }
   }
+  // A reversed comparison has no input row for an excluded target-only field.
+  for(const path of deletedAfter)metaRows.push(["Исключённый путь «Стало»","Не сопоставлять автоматически",path]);
   const meta=sheet("О выгрузке",["Параметр / инструкция","Было / пояснение","Стало"],[32,95,95],metaRows);
   for(const n of [7,8,9])for(const c of [2,3]){const cell=meta.getCell(n,c);if(cell.value)cell.value={text:cell.value,hyperlink:cell.value}}
   for(const n of sourceLinks)for(const c of [2,3]){const cell=meta.getCell(n,c);if(cell.value)cell.value={text:cell.value,hyperlink:cell.value}}

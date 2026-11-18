@@ -27,13 +27,13 @@
    previous.onclick=()=>{page--;draw()};nextPage.onclick=()=>{page++;draw()};draw();return draw;
   }
   const matches=row=>{
-   if(only.checked&&row.origin==="confirmed")return false;
+   if(only.checked&&!draft.isProposal(row))return false;
    const haystack=normalized([row.beforePath,row.afterPath,old.get(row.beforePath)?.name,next.get(row.afterPath)?.name,old.get(row.beforePath)?.doc,next.get(row.afterPath)?.doc,row.relativePath,row.parentBeforePath,row.parentAfterPath,row.comment,row.decision].join(" "));
    return normalized(search.value).split(/\s+/).filter(Boolean).every(t=>haystack.includes(t));
   };
   const primary=el("div","mapping-table");container.append(primary);
   redraw=paginated(primary,()=>draft.rows,["Применить","Источник","Путь и описание «Было»","Путь и описание «Стало»","Комментарий / основание","Действия"],row=>{
-   const tr=el("tr"),choice=el("td"),check=el("input",row.origin==="confirmed"?"mapping-explicit":"mapping-proposal");check.type="checkbox";check.checked=row.selected;check.disabled=editorOpen||busy;check.dataset.beforePath=row.beforePath;check.dataset.afterPath=row.afterPath;check.setAttribute("aria-label","Сопоставить "+row.beforePath+" → "+row.afterPath);
+   const tr=el("tr"),choice=el("td"),check=el("input",draft.isProposal(row)?"mapping-proposal":"mapping-explicit");check.type="checkbox";check.checked=row.selected;check.disabled=editorOpen||busy;check.dataset.beforePath=row.beforePath;check.dataset.afterPath=row.afterPath;check.setAttribute("aria-label","Сопоставить "+row.beforePath+" → "+row.afterPath);
    check.onchange=()=>{draft.toggle(row.id,check.checked);refresh()};choice.append(check);
    const label=row.origin==="confirmed"?manualLabel:row.origin==="workbook"?"Из Excel — не подтверждено":row.origin==="relative"?"По относительному пути":"Изменено в браузере";
    const reason=row.origin==="relative"?"Относительный путь: "+row.relativePath+"\nРодитель: "+row.parentBeforePath+" → "+row.parentAfterPath:row.origin==="workbook"?"Строка Excel "+row.row+" · решение «"+row.decision+"». "+row.comment:row.comment;
@@ -45,11 +45,13 @@
   const conflictsHost=el("div","mapping-conflicts-host");container.append(conflictsHost);
   const apply=button("open mapping-apply","Применить и обновить сравнение"),cancel=button("swap mapping-discard","Отменить предпросмотр"),footer=el("div","mapping-controls");footer.append(apply,cancel);container.append(footer,el("p","meta","Правки пока находятся в черновике. Основная кнопка сохранит выбранные пары в браузере и обновит сравнение. Схемы и исходный Excel не изменяются."));
   function update(){
-   const state=draft.summary(),rows=draft.rows,proposed=rows.filter(r=>r.origin!=="confirmed"),fixed=rows.filter(r=>r.origin==="confirmed"&&r.selected).length;
+   const state=draft.summary(),rows=draft.rows,proposed=rows.filter(draft.isProposal),fixed=rows.filter(r=>!draft.isProposal(r)&&r.selected).length;
    selection.textContent="К применению: подтверждённых пар "+fixed+", предложений "+proposed.filter(r=>r.selected).length+" из "+proposed.length;
    validation.textContent=state.errors.join("\n");
    status.textContent="Сохранено пар: "+state.savedCount+". В предпросмотре выбрано: "+state.selectedCount+". Предложено из Excel "+rows.filter(r=>r.origin==="workbook").length+", предложено вложенных "+rows.filter(r=>r.origin==="relative").length+", ошибок "+sourceErrors.length+"."+(report.reversed?" Направление пар развёрнуто.":"");
-   const unfinished=editorOpen&&formPending(),disabled=busy||unfinished||!!sourceErrors.length||!!state.errors.length||(!rows.length&&!state.savedCount);
+   const excluded=(report.deleted?.before.length||0)+(report.deleted?.after.length||0);
+   if(excluded)status.textContent+=" Исключено из автосопоставления: "+excluded+".";
+   const unfinished=editorOpen&&formPending(),disabled=busy||unfinished||!!sourceErrors.length||!!state.errors.length||(!rows.length&&!state.savedCount&&!state.dirty);
    apply.disabled=topApply.disabled=disabled;apply.textContent="Применить и обновить сравнение ("+state.selectedCount+")";topApply.textContent=busy?"Обновляем сравнение…":"Применить ("+state.selectedCount+")";
    all.disabled=none.disabled=add.disabled=busy||editorOpen;cancel.disabled=busy;
    notice.hidden=!state.dirty&&!unfinished;

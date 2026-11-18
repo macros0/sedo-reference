@@ -50,7 +50,24 @@
         "certifiedCopiesOrders",
         "receiversRow",
         "addInfo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "batch_no",
+          "changeRecalcFlag",
+          "prim_batch_no",
+          "recalc_reason",
+          "insurerInfo",
+          "refundSum",
+          "numberRecipients",
+          "certifiedCopiesOrders",
+          "receiversRow",
+          "addInfo"
+        ]
+      }
     },
     {
       "name": "batch_no",
@@ -185,7 +202,28 @@
         "refNumber",
         "Empl_Flag",
         "bankInfo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "regNum",
+              "regNumSFR"
+            ]
+          },
+          "emplKPP",
+          "emplINN",
+          "refNumber",
+          "Empl_Flag",
+          "bankInfo"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -367,7 +405,18 @@
         "accountNum",
         "accountNumInFederalExchequer",
         "kbk"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "bik",
+          "accountNum",
+          "accountNumInFederalExchequer",
+          "kbk"
+        ]
+      }
     },
     {
       "name": "bik",
@@ -514,7 +563,17 @@
         "totalSum",
         "sumForNonBudgetFunds",
         "sumForAdditionalDays"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "totalSum",
+          "sumForNonBudgetFunds",
+          "sumForAdditionalDays"
+        ]
+      }
     },
     {
       "name": "totalSum",
@@ -690,7 +749,18 @@
         "childInfo",
         "ORD",
         "periods"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "parentInfo",
+          "childInfo",
+          "ORD",
+          "periods"
+        ]
+      }
     },
     {
       "name": "parentInfo",
@@ -720,7 +790,17 @@
         "fullName",
         "snils",
         "childRelType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "snils",
+          "childRelType"
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -750,7 +830,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -943,7 +1033,32 @@
           "sequence",
           "certificateOfDisability"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "fullName",
+              "snils",
+              "birthDate"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "certificateOfDisability"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -973,7 +1088,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -1096,7 +1221,15 @@
       "file": "disabilityChildrenStatement.xsd",
       "flags": {},
       "typeFile": "Person.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "[0-9]*"
+        ],
+        [
+          "[0-9]*"
+        ]
+      ]
     },
     {
       "name": "birthDate",
@@ -1149,7 +1282,19 @@
         "certificateDate",
         "disabilityBeginDate",
         "disabilityEndDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "series",
+          "number",
+          "certificateDate",
+          "disabilityBeginDate",
+          "disabilityEndDate"
+        ]
+      }
     },
     {
       "name": "series",
@@ -1263,7 +1408,16 @@
         "choice",
         "notLimited",
         "endDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "notLimited",
+          "endDate"
+        ]
+      }
     },
     {
       "name": "notLimited",
@@ -1333,7 +1487,16 @@
         "sequence",
         "number",
         "date"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "date"
+        ]
+      }
     },
     {
       "name": "number",
@@ -1403,7 +1566,16 @@
         "sequence",
         "additionalPeriods",
         "accumulatedPeriods"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "additionalPeriods",
+          "accumulatedPeriods"
+        ]
+      }
     },
     {
       "name": "additionalPeriods",
@@ -1433,7 +1605,17 @@
         "periodAndCalculationData",
         "providedDays",
         "providedTotalHour"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "periodAndCalculationData",
+          "providedDays",
+          "providedTotalHour"
+        ]
+      }
     },
     {
       "name": "periodAndCalculationData",
@@ -1465,7 +1647,18 @@
         "month",
         "daysAmount",
         "dailyAverageSal"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year",
+          "month",
+          "daysAmount",
+          "dailyAverageSal"
+        ]
+      }
     },
     {
       "name": "year",
@@ -1666,7 +1859,20 @@
         "accumulatedProvidedPeriodData",
         "accumulatedProvidedDays",
         "accumulatedProvidedTotalHour"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "accumulatedPeriodData",
+          "accumulatedDays",
+          "accumulatedTotalHour",
+          "accumulatedProvidedPeriodData",
+          "accumulatedProvidedDays",
+          "accumulatedProvidedTotalHour"
+        ]
+      }
     },
     {
       "name": "accumulatedPeriodData",
@@ -1696,7 +1902,17 @@
         "year",
         "month",
         "daysAmount"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year",
+          "month",
+          "daysAmount"
+        ]
+      }
     },
     {
       "name": "year",
@@ -1864,7 +2080,18 @@
         "month",
         "daysAmount",
         "dailyAverageSal"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year",
+          "month",
+          "daysAmount",
+          "dailyAverageSal"
+        ]
+      }
     },
     {
       "name": "year",

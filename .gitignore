@@ -9,11 +9,16 @@ update-report.json
 sourcecraft-report.json
 automation-status-report.json
 publication-target.json
+publication-receipt.json
 inbox-report.json
 
 .venv/
 .update-recovery/
+.site-recovery/
+.site-build-*/
 .update.lock
+.sync.lock
+.sourcecraft-import/
 node_modules/
 playwright-report/
 test-results/

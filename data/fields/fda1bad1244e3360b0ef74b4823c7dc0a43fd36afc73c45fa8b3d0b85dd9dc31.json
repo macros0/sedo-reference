@@ -29,7 +29,16 @@
         "choice",
         "result",
         "errorList"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "result",
+          "errorList"
+        ]
+      }
     },
     {
       "name": "result",
@@ -61,7 +70,18 @@
         "messageList",
         "errorList",
         "broadcastMessageList"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "messageCount",
+          "messageList",
+          "errorList",
+          "broadcastMessageList"
+        ]
+      }
     },
     {
       "name": "messageCount",
@@ -129,7 +149,37 @@
         "expiryDate",
         "needConfirm",
         "messageDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "uuid",
+          "messageType",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              {
+                "kind": "sequence",
+                "min": "1",
+                "max": "1",
+                "children": [
+                  "recipientId",
+                  "regNumSfr"
+                ]
+              },
+              "org"
+            ]
+          },
+          "subAbonentId",
+          "expiryDate",
+          "needConfirm",
+          "messageDate"
+        ]
+      }
     },
     {
       "name": "uuid",
@@ -284,7 +334,53 @@
           "inn",
           "kpp"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "ogrn",
+              "inn",
+              "kpp"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "ogrnip",
+              "inn",
+              "snils"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "snils",
+              "inn",
+              "regnum"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "inn",
+              "kpp"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "ogrn",
@@ -582,7 +678,18 @@
         "regNumSfr",
         "code",
         "message"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "recipientId",
+          "regNumSfr",
+          "code",
+          "message"
+        ]
+      }
     },
     {
       "name": "recipientId",
@@ -702,7 +809,15 @@
       "contentModel": [
         "sequence",
         "broadcastMessage"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "broadcastMessage"
+        ]
+      }
     },
     {
       "name": "broadcastMessage",
@@ -732,7 +847,17 @@
         "messageUuid",
         "message",
         "dateOfRelevance"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "messageUuid",
+          "message",
+          "dateOfRelevance"
+        ]
+      }
     },
     {
       "name": "messageUuid",
@@ -828,7 +953,17 @@
         "code",
         "message",
         "details"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "details"
+        ]
+      }
     },
     {
       "name": "code",

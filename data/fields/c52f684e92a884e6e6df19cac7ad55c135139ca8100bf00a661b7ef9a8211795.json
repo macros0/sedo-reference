@@ -40,7 +40,39 @@
             "error"
           ]
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "uuid"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              {
+                "kind": "choice",
+                "min": "1",
+                "max": "1",
+                "children": [
+                  "resultList",
+                  "resultOrgList",
+                  "error"
+                ]
+              }
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "uuid",
@@ -85,7 +117,15 @@
       "contentModel": [
         "sequence",
         "result"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "result"
+        ]
+      }
     },
     {
       "name": "result",
@@ -115,7 +155,17 @@
         "regNum",
         "status",
         "error"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNum",
+          "status",
+          "error"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -201,7 +251,17 @@
         "code",
         "message",
         "details"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "details"
+        ]
+      }
     },
     {
       "name": "code",
@@ -287,7 +347,15 @@
       "contentModel": [
         "sequence",
         "resultOrg"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "resultOrg"
+        ]
+      }
     },
     {
       "name": "resultOrg",
@@ -320,7 +388,24 @@
         ],
         "status",
         "error"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "org"
+            ]
+          },
+          "status",
+          "error"
+        ]
+      }
     },
     {
       "name": "org",
@@ -373,7 +458,53 @@
           "inn",
           "kpp"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "ogrn",
+              "inn",
+              "kpp"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "ogrnip",
+              "inn",
+              "snils"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "snils",
+              "inn",
+              "regnum"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "inn",
+              "kpp"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "ogrn",
@@ -611,7 +742,17 @@
         "code",
         "message",
         "details"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "details"
+        ]
+      }
     },
     {
       "name": "code",
@@ -701,7 +842,17 @@
         "code",
         "message",
         "details"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "details"
+        ]
+      }
     },
     {
       "name": "code",

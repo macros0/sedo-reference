@@ -24,6 +24,42 @@ def entry(env='prod',number='611'):
     return dict(environment=env,kind='docx',url='https://example.test/Спецификация v2_7_Пр_12_Доходная часть (09.06.2026).docx',label='Спецификация v2.7 (09.06.2026)',sha256=sha(content),**inspect_file(content,'docx')),content
 
 class ModuleMessageTests(unittest.TestCase):
+    def test_conflicting_roots_are_reviewed_in_both_section_orders(self):
+        from module_xsd import match_document
+        from tests.test_schema_recovery import archive, docx as make_docx
+        raw = archive({'main.xsd': '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:test"><xs:element name="result" type="xs:string"/><xs:element name="report" type="xs:string"/></xs:schema>'})
+        zipped = dict(environment='test', kind='zip', url='schemas.zip', sha256=sha(raw), **inspect_file(raw, 'zip'))
+        results = []
+        for roots in (('result', 'report'), ('report', 'result'), ('result', 'result')):
+            content, _ = make_docx([part for root in roots for part in ('Тип сообщения 999: Ответ', f'<{root} xmlns="urn:test"/>')])
+            document = dict(environment='test', kind='docx', url='module.docx', label='v1', sha256=sha(content), **inspect_file(content, 'docx'))
+            matches, issues = match_document(document, [zipped], {sha(raw): raw}.__getitem__)
+            document['module_matches'] = matches
+            document['schema_diagnostics'] = issues
+            if roots[0] == roots[1]:
+                self.assertEqual(len(matches), 1)
+                self.assertEqual(len(derive(dict(entries=[document]))['revisions']), 1)
+            else:
+                self.assertEqual(matches, [])
+                self.assertEqual(len(derive(dict(entries=[document]))['document_sources']), 1)
+                self.assertIn('{urn:test}result', str(issues))
+                self.assertIn('{urn:test}report', str(issues))
+                results.append(issues)
+        self.assertEqual(results[0], results[1])
+
+    def test_export_refuses_colliding_revision_with_different_schema_root(self):
+        match = dict(number='999', root='result', namespace='urn:test', dependency_digest='same', schema_path='main.xsd', archive_sha256='archive', archive_url='schemas.zip')
+        document = dict(environment='test', kind='docx', url='module.docx', sha256='document', label='v1', module_matches=[match, dict(match, root='report')])
+        with tempfile.TemporaryDirectory() as folder:
+            state = Path(folder)
+            raw = encode(dict(entries=[document])); key = sha(raw)
+            write(state/'snapshots'/(key+'.json'), raw)
+            write(state/'current.json', encode(dict(snapshot=key)))
+            write(state/'catalog.json', b'previous catalog')
+            with self.assertRaisesRegex(ValueError, 'идентичност|корн|QName'):
+                export(state, state/'catalog.json')
+            self.assertEqual((state/'catalog.json').read_bytes(), b'previous catalog')
+
     def test_extract_declarations_not_contents_examples_or_mentions(self):
         body=paragraph('Тип сообщения 611: Решение по проверке','Heading1')
         body+=paragraph('Тип сообщения 611.')+paragraph('Пример типа сообщения 612: не заголовок')

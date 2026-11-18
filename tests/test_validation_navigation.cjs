@@ -20,3 +20,7 @@ nodes.get('query').value='DOES_NOT_MATCH';handlers.message(event);assert.equal(n
 nodes.get('query').value='DOES_NOT_MATCH';vm.runInContext('select(0)',context);handlers.hashchange();assert.equal(nodes.get('query').value,'DOES_NOT_MATCH','normal tree selection hash changes must retain search');handlers.message(event);assert.equal(nodes.get('query').value,'','explicit validation jump still clears a hiding search');
 location.hash=new URLSearchParams({field:fields[0].path}).toString();handlers.hashchange();assert.equal(vm.runInContext('fields[current].path',context),fields[0].path,'external new-field hash must still restore selection');
 console.log('Validation navigation: actual generated tree, source/revision guards, field selection, repeated jumps and filter reset passed.');
+vm.runInContext('select(1)',context);
+location.hash='';handlers.hashchange();
+assert.equal(vm.runInContext('current',context),0,'Back to a fragmentless viewer restores its root');
+assert.equal(location.hash,'#','restoring history must not create a root fragment');

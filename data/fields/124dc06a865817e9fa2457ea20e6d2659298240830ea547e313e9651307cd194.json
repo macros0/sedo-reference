@@ -36,7 +36,21 @@
         "paymentMethod",
         "salaryInfo",
         "mobilDaysAmount"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "elnInfo",
+          "insurerInfo",
+          "insuredInfo",
+          "insuredWorksSeveralInsurers",
+          "paymentMethod",
+          "salaryInfo",
+          "mobilDaysAmount"
+        ]
+      }
     },
     {
       "name": "elnInfo",
@@ -60,7 +74,15 @@
       "contentModel": [
         "sequence",
         "lnNumber"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber"
+        ]
+      }
     },
     {
       "name": "lnNumber",
@@ -112,7 +134,16 @@
         "sequence",
         "regNum",
         "regNumSFR"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNum",
+          "regNumSFR"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -192,7 +223,17 @@
         "snils",
         "fullName",
         "birthDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "birthDate"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -252,7 +293,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -460,7 +511,15 @@
       "contentModel": [
         "sequence",
         "yearSum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "yearSum"
+        ]
+      }
     },
     {
       "name": "yearSum",
@@ -490,7 +549,17 @@
         "year",
         "salaryByCurrentInsurer",
         "salaryByAllInsurers"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year",
+          "salaryByCurrentInsurer",
+          "salaryByAllInsurers"
+        ]
+      }
     },
     {
       "name": "year",
@@ -548,7 +617,17 @@
         "sumOPS",
         "sumGPH",
         "sumOPS-GPH"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "sumOPS",
+          "sumGPH",
+          "sumOPS-GPH"
+        ]
+      }
     },
     {
       "name": "sumOPS",
@@ -663,7 +742,17 @@
         "sumOPS",
         "sumGPH",
         "sumOPS-GPH"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "sumOPS",
+          "sumGPH",
+          "sumOPS-GPH"
+        ]
+      }
     },
     {
       "name": "sumOPS",

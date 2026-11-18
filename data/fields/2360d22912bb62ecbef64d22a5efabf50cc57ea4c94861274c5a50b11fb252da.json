@@ -31,7 +31,16 @@
         "sequence",
         "status",
         "errorList"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "status",
+          "errorList"
+        ]
+      }
     },
     {
       "name": "status",
@@ -89,7 +98,15 @@
       "contentModel": [
         "sequence",
         "error"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "error"
+        ]
+      }
     },
     {
       "name": "error",
@@ -119,7 +136,17 @@
         "code",
         "message",
         "details"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "details"
+        ]
+      }
     },
     {
       "name": "code",
@@ -299,7 +326,8 @@
       "file": "DisabilityChildrenStatementResult.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     }
   ]
 }

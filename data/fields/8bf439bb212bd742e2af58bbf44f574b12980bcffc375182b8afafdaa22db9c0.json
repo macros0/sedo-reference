@@ -41,7 +41,40 @@
           ]
         ],
         "notice"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insurerInfo",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              {
+                "kind": "sequence",
+                "min": "1",
+                "max": "1",
+                "children": [
+                  "benefitInfo",
+                  "recalculationFlag"
+                ]
+              },
+              {
+                "kind": "sequence",
+                "min": "1",
+                "max": "1",
+                "children": [
+                  "recalculation"
+                ]
+              }
+            ]
+          },
+          "notice"
+        ]
+      }
     },
     {
       "name": "insurerInfo",
@@ -65,7 +98,15 @@
       "contentModel": [
         "sequence",
         "regNumSFR"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNumSFR"
+        ]
+      }
     },
     {
       "name": "regNumSFR",
@@ -129,7 +170,19 @@
         "benefit4",
         "benefit5",
         "benefit6"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "benefit1",
+          "benefit2",
+          "benefit4",
+          "benefit5",
+          "benefit6"
+        ]
+      }
     },
     {
       "name": "benefit1",
@@ -159,7 +212,18 @@
         "lnNumber",
         "changeYears",
         "contractsInfo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insuredInfo",
+          "lnNumber",
+          "changeYears",
+          "contractsInfo"
+        ]
+      }
     },
     {
       "name": "insuredInfo",
@@ -187,7 +251,16 @@
         "sequence",
         "snils",
         "category"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "category"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -331,7 +404,15 @@
       "contentModel": [
         "sequence",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year"
+        ]
+      }
     },
     {
       "name": "year",
@@ -391,7 +472,17 @@
         "workerContract",
         "GPHcontract",
         "workerAndGPHcontract"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "workerContract",
+          "GPHcontract",
+          "workerAndGPHcontract"
+        ]
+      }
     },
     {
       "name": "workerContract",
@@ -415,7 +506,15 @@
       "contentModel": [
         "sequence",
         "period"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "period"
+        ]
+      }
     },
     {
       "name": "period",
@@ -443,7 +542,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -507,7 +615,15 @@
       "contentModel": [
         "sequence",
         "period"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "period"
+        ]
+      }
     },
     {
       "name": "period",
@@ -533,7 +649,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -599,7 +724,16 @@
         "sequence",
         "workerContract",
         "GPHcontract"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "workerContract",
+          "GPHcontract"
+        ]
+      }
     },
     {
       "name": "workerContract",
@@ -623,7 +757,15 @@
       "contentModel": [
         "sequence",
         "period"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "period"
+        ]
+      }
     },
     {
       "name": "period",
@@ -651,7 +793,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -743,7 +894,19 @@
         "changeYears",
         "contractsInfo",
         "period"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insuredInfo",
+          "lnNumber",
+          "changeYears",
+          "contractsInfo",
+          "period"
+        ]
+      }
     },
     {
       "name": "insuredInfo",
@@ -771,7 +934,16 @@
         "sequence",
         "snils",
         "category"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "category"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -915,7 +1087,15 @@
       "contentModel": [
         "sequence",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year"
+        ]
+      }
     },
     {
       "name": "year",
@@ -975,7 +1155,17 @@
         "workerContract",
         "GPHcontract",
         "workerAndGPHcontract"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "workerContract",
+          "GPHcontract",
+          "workerAndGPHcontract"
+        ]
+      }
     },
     {
       "name": "workerContract",
@@ -1019,7 +1209,15 @@
       "contentModel": [
         "sequence",
         "period"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "period"
+        ]
+      }
     },
     {
       "name": "period",
@@ -1047,7 +1245,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -1135,7 +1342,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -1207,7 +1423,19 @@
         "childInfo",
         "childRelType",
         "baseDocuments"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insuredInfo",
+          "contractsInfo",
+          "childInfo",
+          "childRelType",
+          "baseDocuments"
+        ]
+      }
     },
     {
       "name": "insuredInfo",
@@ -1237,7 +1465,17 @@
         "snils",
         "category",
         "birthDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "category",
+          "birthDate"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -1375,7 +1613,17 @@
         "workerContract",
         "GPHcontract",
         "workerAndGPHcontract"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "workerContract",
+          "GPHcontract",
+          "workerAndGPHcontract"
+        ]
+      }
     },
     {
       "name": "workerContract",
@@ -1467,7 +1715,18 @@
         "fullName",
         "birthDate",
         "gender"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "birthDate",
+          "gender"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -1542,7 +1801,41 @@
           "middleName",
           "noMiddleName"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "lastName",
+              "noLastName"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "firstName",
+              "noFirstName"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "middleName",
+              "noMiddleName"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "lastName",
@@ -1826,7 +2119,17 @@
         "birthReferenceDocs",
         "birthRecord",
         "birthDocOtherCountry"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "birthReferenceDocs",
+          "birthRecord",
+          "birthDocOtherCountry"
+        ]
+      }
     },
     {
       "name": "birthReferenceDocs",
@@ -1852,7 +2155,16 @@
         "sequence",
         "birthReference",
         "birthRecord"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "birthReference",
+          "birthRecord"
+        ]
+      }
     },
     {
       "name": "birthReference",
@@ -1882,7 +2194,17 @@
         "number",
         "issueDate",
         "refType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "issueDate",
+          "refType"
+        ]
+      }
     },
     {
       "name": "number",
@@ -1992,7 +2314,16 @@
         "sequence",
         "number",
         "issueDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "issueDate"
+        ]
+      }
     },
     {
       "name": "number",
@@ -2063,7 +2394,16 @@
         "sequence",
         "number",
         "issueDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "issueDate"
+        ]
+      }
     },
     {
       "name": "number",
@@ -2138,7 +2478,18 @@
         "number",
         "issueDate",
         "country"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "series",
+          "number",
+          "issueDate",
+          "country"
+        ]
+      }
     },
     {
       "name": "series",
@@ -3287,7 +3638,21 @@
         "childInfo",
         "childRelType",
         "baseDocuments"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insuredInfo",
+          "changeYears",
+          "contractsInfo",
+          "period",
+          "childInfo",
+          "childRelType",
+          "baseDocuments"
+        ]
+      }
     },
     {
       "name": "insuredInfo",
@@ -3317,7 +3682,17 @@
         "snils",
         "category",
         "birthDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "category",
+          "birthDate"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -3451,7 +3826,15 @@
       "contentModel": [
         "sequence",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year"
+        ]
+      }
     },
     {
       "name": "year",
@@ -3511,7 +3894,17 @@
         "workerContract",
         "GPHcontract",
         "workerAndGPHcontract"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "workerContract",
+          "GPHcontract",
+          "workerAndGPHcontract"
+        ]
+      }
     },
     {
       "name": "workerContract",
@@ -3555,7 +3948,15 @@
       "contentModel": [
         "sequence",
         "period"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "period"
+        ]
+      }
     },
     {
       "name": "period",
@@ -3583,7 +3984,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -3671,7 +4081,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -3743,7 +4162,18 @@
         "fullName",
         "birthDate",
         "gender"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "birthDate",
+          "gender"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -3818,7 +4248,41 @@
           "middleName",
           "noMiddleName"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "lastName",
+              "noLastName"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "firstName",
+              "noFirstName"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "middleName",
+              "noMiddleName"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "lastName",
@@ -4105,7 +4569,24 @@
           "birthRecord"
         ],
         "birthDocOtherCountry"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "birthCertificate",
+              "birthRecord"
+            ]
+          },
+          "birthDocOtherCountry"
+        ]
+      }
     },
     {
       "name": "birthCertificate",
@@ -4135,7 +4616,17 @@
         "series",
         "number",
         "issueDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "series",
+          "number",
+          "issueDate"
+        ]
+      }
     },
     {
       "name": "series",
@@ -4243,7 +4734,16 @@
         "sequence",
         "number",
         "issueDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "issueDate"
+        ]
+      }
     },
     {
       "name": "number",
@@ -4318,7 +4818,18 @@
         "number",
         "issueDate",
         "country"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "series",
+          "number",
+          "issueDate",
+          "country"
+        ]
+      }
     },
     {
       "name": "series",
@@ -5461,7 +5972,18 @@
         "lnNumber",
         "changeYears",
         "contractsInfo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insuredInfo",
+          "lnNumber",
+          "changeYears",
+          "contractsInfo"
+        ]
+      }
     },
     {
       "name": "insuredInfo",
@@ -5489,7 +6011,16 @@
         "sequence",
         "snils",
         "category"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "category"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -5633,7 +6164,15 @@
       "contentModel": [
         "sequence",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year"
+        ]
+      }
     },
     {
       "name": "year",
@@ -5693,7 +6232,17 @@
         "workerContract",
         "GPHcontract",
         "workerAndGPHcontract"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "workerContract",
+          "GPHcontract",
+          "workerAndGPHcontract"
+        ]
+      }
     },
     {
       "name": "workerContract",
@@ -5717,7 +6266,15 @@
       "contentModel": [
         "sequence",
         "period"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "period"
+        ]
+      }
     },
     {
       "name": "period",
@@ -5745,7 +6302,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -5811,7 +6377,16 @@
         "sequence",
         "period",
         "GPHinsurancePaymentObligation"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "period",
+          "GPHinsurancePaymentObligation"
+        ]
+      }
     },
     {
       "name": "period",
@@ -5837,7 +6412,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -5929,7 +6513,16 @@
         "sequence",
         "workerContract",
         "GPHcontract"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "workerContract",
+          "GPHcontract"
+        ]
+      }
     },
     {
       "name": "workerContract",
@@ -5953,7 +6546,15 @@
       "contentModel": [
         "sequence",
         "period"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "period"
+        ]
+      }
     },
     {
       "name": "period",
@@ -5981,7 +6582,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -6091,7 +6701,15 @@
       "contentModel": [
         "sequence",
         "batchNo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "batchNo"
+        ]
+      }
     },
     {
       "name": "batchNo",
@@ -6145,7 +6763,16 @@
         "sequence",
         "number",
         "date"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "date"
+        ]
+      }
     },
     {
       "name": "number",

@@ -2,8 +2,8 @@
 import json
 import posixpath
 import zipfile
-from urllib.parse import urlsplit
-from sync import SITES, sha, write
+from edition_groups import prepare_observed_sources, SCHEMA_SOURCE_KEYS
+from sync import SITES, catalog_resource, sha, write
 
 
 def publish_sources(catalog, state, site):
@@ -22,55 +22,93 @@ def publish_sources(catalog, state, site):
             # Only recorded official publications establish a page relationship.
             if env not in SITES or not entry.get("sha256"):
                 continue
-            if urlsplit(url).hostname != urlsplit(SITES[env]).hostname:
+            if not catalog_resource(url, env):
                 continue
             page = entry.get("source_page") or SITES[env]
-            if urlsplit(page).hostname != urlsplit(SITES[env]).hostname:
+            if not catalog_resource(page, env):
                 continue
             snapshot_publications[(env, url, entry["sha256"])] = page
         snapshots[key] = snapshot_publications
         publications.update(snapshot_publications)
     first_snapshots = {event["revision_id"]: event.get("snapshot") for event in catalog.get("updates", [])}
-    for row in catalog["revisions"]:
+    prepare_observed_sources(catalog)
+    packages = {}
+    prior_editions = {}
+    revisions = {row.get("revision_id"): row for row in catalog["revisions"]}
+
+    def publish(row, snapshot, *, revision=False):
         row.pop("schema_publication_page", None)
         row.pop("schema_file_download", None)
         row.pop("schema_file_name", None)
         row.pop("schema_files", None)
-        if row.get("status") != "matched":
-            continue
+        if not row.get("schema_path") and not revision and snapshot in snapshots and revisions.get(row.get("revision_id"), {}).get("status") == "matched":
+            # Old exports lack per-observation packaging. Recover it from the
+            # original inventory, including when an external ZIP moved alone.
+            if snapshot not in prior_editions:
+                from catalog import derive
+                saved = json.loads((state / "snapshots" / (snapshot + ".json")).read_bytes())
+                prior_editions[snapshot] = {(r["revision_id"], r.get("document_sha256"), r.get("document_url")): r
+                                            for r in derive(saved, revisions)["revisions"] if r.get("status") == "matched"}
+            match = prior_editions[snapshot].get((row.get("revision_id"),row.get("document_sha256"),row.get("document_url")), {})
+            row.update({k: match[k] for k in SCHEMA_SOURCE_KEYS if k in match})
+        if not row.get("schema_path") or not row.get("archive_sha256"):
+            return
         origin = row.get("archive_url", "").split("#")[0]
         embedded = "#embedded=" in row.get("archive_url", "") or row.get("schema_source_type") in ("wsdl", "wsdl_bridge")
-        resource = row.get("document_url") if embedded else origin
+        resource = (row.get("document_url") or "").split("#")[0] if embedded else origin
         digest = row.get("document_sha256") if embedded else row.get("archive_sha256")
         identity = (row["environment"], resource, digest)
         # Archived cards cite the publication recorded with their first event.
         # Current cards prefer the current publication; fallback is the last
         # confirmed occurrence of these exact bytes and URL.
-        event_sources = snapshots.get(first_snapshots.get(row.get("revision_id")), {})
-        page = (event_sources.get(identity) if not row.get("listed_now", True) else None) or publications.get(identity)
+        page = snapshots.get(snapshot, {}).get(identity)
+        if not page and revision:
+            page = publications.get(identity)
         if page:
             row["schema_publication_page"] = page
-        source = state / "objects" / row["archive_sha256"]
-        if sha(source.read_bytes()) != row["archive_sha256"]:
-            raise ValueError("Не совпадает контрольная сумма исходного комплекта XSD")
-        with zipfile.ZipFile(source) as bundle:
-            content = bundle.read(row["schema_path"])
-            paths = {row["schema_path"]}
-            paths.update(posixpath.normpath(posixpath.join(posixpath.dirname(row["schema_path"]),name))
-                         for name,digest in row.get("dependencies",[]))
-            files=[]
-            for path in sorted(paths):
-                raw=bundle.read(path)
-                relative="sources/"+sha(raw)+".xsd"
-                output=site/relative
-                if not output.is_file() or output.read_bytes()!=raw:
-                    write(output,raw)
-                files.append(dict(path=path,download=relative,sha256=sha(raw)))
-            row["schema_files"]=files
-        filename = row["schema_path"].rsplit("/", 1)[-1]
-        relative = "sources/" + sha(content) + ".xsd"
-        output = site / relative
-        if not output.is_file() or output.read_bytes() != content:
-            write(output, content)
-        row["schema_file_download"] = relative
-        row["schema_file_name"] = filename
+        entry = row["schema_path"]
+        paths = {entry}
+        paths.update(posixpath.normpath(posixpath.join(posixpath.dirname(entry), name))
+                     for name, _ in row.get("dependencies", []))
+        package = row["archive_sha256"], tuple(sorted(paths))
+        if package not in packages:
+            archive = state / "objects" / row["archive_sha256"]
+            if sha(archive.read_bytes()) != row["archive_sha256"]:
+                raise ValueError("Не совпадает контрольная сумма исходного комплекта XSD")
+            files = {}
+            with zipfile.ZipFile(archive) as bundle:
+                for path in sorted(paths):
+                    raw = bundle.read(path)
+                    digest = sha(raw)
+                    relative = "sources/" + digest + ".xsd"
+                    output = site / relative
+                    if not output.is_file() or output.read_bytes() != raw:
+                        write(output, raw)
+                    files[path] = dict(path=path, download=relative, sha256=digest)
+            packages[package] = files
+        files = packages[package]
+        if revision:
+            row["schema_files"] = list(files.values())
+        row["schema_file_download"] = files[entry]["download"]
+        row["schema_file_name"] = posixpath.basename(entry)
+        if row.get("schema_source_type") == "wsdl":
+            original = next((s['url'] for s in row.get('schema_sources', [])
+                             if s.get('kind') == 'xsd' and s.get('sha256') == files[entry]['sha256']), None)
+            if original:
+                row['schema_original_url'] = original
+        if not revision:
+            row.pop("dependencies", None)
+            row.pop("schema_sources", None)
+
+    for row in catalog["revisions"]:
+        if row.get("status") != "matched":
+            continue
+        snapshot = current if row.get("listed_now", True) else first_snapshots.get(row.get("revision_id"))
+        publish(row, snapshot, revision=True)
+        for source in row.get("listed_sources", []):
+            publish(source, current)
+    for event in catalog.get("source_observations", []):
+        if "source" in event:
+            publish(event["source"], event.get("snapshot"))
+    for rid, source in catalog.get("update_sources", {}).items():
+        publish(source, first_snapshots.get(rid))

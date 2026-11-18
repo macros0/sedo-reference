@@ -7,14 +7,18 @@ import zipfile
 
 from lxml import etree
 
-from module_xsd import MAX_FILE, MAX_FILES, MAX_TOTAL, W, word_text
-from schema import X, resolve_import
+from module_xsd import MAX_FILE, MAX_FILES, MAX_TOTAL, QNAME, W, word_text
+from schema import X, SchemaFiles, archive_targets, check_dependency_bases, import_metadata, resolve_import
 
 
 SECTION = re.compile(r"Тип сообщения\s+(?:СЭДО\s*)?(?:№\s*)?(\d+)\s*[:–—-]\s*\S", re.I)
 EXAMPLE = re.compile(r"Пример(?:\s+(?:XML[- ]документа|(?:стр?уктуры\s+)?(?:запроса|ответа(?: на запрос)?)|сообщения|шаблона))?[.:]?", re.I)
 NEXT_SECTION = re.compile(r"(?:XSD[- ]схема|Приложение(?:\s|$)|Атрибутивный\s*/\s*элементный|Атрибуты (?:типов|элемента)|Описание$|Структура$)", re.I)
-OPEN_TAG = re.compile(r"<([A-Za-z_][\w.-]*(?::[A-Za-z_][\w.-]*)?)(?=[\s/>]|$)")
+OPEN_TAG = re.compile(rf"<({QNAME})(?=[\s/>]|$)")
+XML_DECLARATION_START = re.compile(r"<\?xml(?=[ \t\r\n]|$)")
+SPACE = re.compile(r"\s*")
+LITERAL_START = re.compile(r"<!--|<!\[CDATA\[|<\?")
+LITERAL_END = {"<!--": "-->", "<![CDATA[": "]]>", "<?": "?>"}
 MAX_EXAMPLE = 2 * 1024 * 1024
 SOAP = {"http://schemas.xmlsoap.org/soap/envelope/", "http://www.w3.org/2003/05/soap-envelope"}
 
@@ -47,6 +51,7 @@ def _schema(path, revision):
     originals = {}
     entry = revision["schema_path"]
     with zipfile.ZipFile(path) as archive:
+        exact_targets = archive_targets(archive)
         members = [m for m in archive.infolist() if m.filename.lower().endswith(".xsd")]
         if len(members) > MAX_FILES or sum(m.file_size for m in members) > MAX_TOTAL:
             raise ValueError("Архив превышает лимит числа или объёма схем.")
@@ -56,8 +61,8 @@ def _schema(path, revision):
             data = archive.read(member)
             originals[member.filename] = data
             root = _parse(data)
-            inventory[member.filename] = dict(namespace=root.get("targetNamespace"),
-                                               sha256=hashlib.sha256(data).hexdigest())
+            inventory[member.filename] = import_metadata(root, hashlib.sha256(data).hexdigest())
+            inventory[member.filename]['import_targets'] = exact_targets.get(member.filename, {})
             roots[member.filename] = root
     if entry not in roots:
         raise ValueError("В архиве отсутствует входная XSD редакции.")
@@ -76,6 +81,7 @@ def _schema(path, revision):
         if (name,effective_namespace) in contexts:
             continue
         contexts.add((name,effective_namespace))
+        check_dependency_bases(root, name)
         for imp in root:
             if imp.tag not in {X + "import", X + "include", X + "redefine"}:
                 continue
@@ -91,18 +97,27 @@ def _schema(path, revision):
             pending.append((target,None if imp.tag==X+'import' else effective_namespace))
         resources[url] = etree.tostring(root)
     primary = etree.XMLSchema(_parse(resources[urls[entry]], resources, urls[entry]))
-    if any(root.xpath(".//xs:attribute[@ref and @fixed] | xs:attribute[@fixed]",
+    if any(root.xpath(".//xs:attribute[@ref and @fixed] | xs:attribute[@fixed] | .//xs:element[@fixed]",
                       namespaces={"xs": X[1:-1]}) for root in roots.values()):
         from xsd_bundle import _prepare
-        from xsd_validate import AttributeUseValidator
-        selected = {name: originals[name] for name, url in urls.items() if url in resources}
+        from xsd_validate import AttributeUseValidator, BooleanFixedValidator
+        selected = SchemaFiles((name, originals[name]) for name, url in urls.items() if url in resources)
+        selected.import_targets = {name: {location: target for location, target in edges.items() if target in selected}
+                                   for name, edges in exact_targets.items() if name in selected}
         output, _, constraints = _prepare(revision, selected)
         if constraints:
             prefix = "sedo-memory:///bundle/"
             local_resources = {prefix+name: raw for name, raw in output.items() if not name.startswith("originals/")}
-            source = prefix + constraints["supplementary_schema"]
-            supplementary = etree.XMLSchema(_parse(local_resources[source], local_resources, source))
-            return AttributeUseValidator(primary, supplementary, constraints)
+            if constraints.get('boolean_fixed_replacements'):
+                alternate = dict(local_resources)
+                for name, replacement in constraints['boolean_fixed_replacements'].items():
+                    alternate[prefix+name] = local_resources[prefix+replacement]
+                entry_url = prefix+'message.xsd'
+                primary = BooleanFixedValidator(primary, etree.XMLSchema(_parse(alternate[entry_url], alternate, entry_url)))
+            if constraints.get("supplementary_schema"):
+                source = prefix + constraints["supplementary_schema"]
+                supplementary = etree.XMLSchema(_parse(local_resources[source], local_resources, source))
+                return AttributeUseValidator(primary, supplementary, constraints)
     return primary
 
 
@@ -119,29 +134,84 @@ def _paragraphs(body):
         style = block.find(W + "pPr/" + W + "pStyle")
         if style is not None and re.search(r"toc|contents|оглав", style.get(W + "val", ""), re.I):
             continue
-        rows.append(word_text(block).strip())
+        rows.append(word_text(block))
     return rows
 
 
 def _examples(revision, rows):
-    multi = any(SECTION.match(p) for p in rows if p)
+    multi = any(SECTION.match(p.strip()) for p in rows if p)
     selected = not multi and revision.get("source_type") != "module"
     heading = None
     parts = []
     for p in [*rows, None]:
-        section = SECTION.match(p) if p else None
-        example = EXAMPLE.fullmatch(p) if p else None
-        boundary = p is None or section or example or NEXT_SECTION.match(p)
+        heading_text = p.strip() if p is not None else ''
+        section = SECTION.match(heading_text)
+        example = EXAMPLE.fullmatch(heading_text)
+        boundary = p is None or section or example or NEXT_SECTION.match(heading_text)
         if boundary:
             if heading:
                 yield heading, parts
             heading, parts = None, []
             if section:
                 selected = section[1] == str(revision["number"])
+            elif p and (multi or revision.get("source_type") == "module") and re.match(r"Приложение(?:\s|$)", heading_text, re.I):
+                selected = False
             if selected and example:
-                heading = p
+                heading = heading_text
         elif heading:
             parts.append(p)
+
+
+def _open_literal(chunk, terminator):
+    """Track literals across Word paragraphs when recovering at a new declaration."""
+    position = 0
+    while True:
+        if terminator:
+            closing = chunk.find(terminator, position)
+            if closing < 0:
+                return terminator
+            position = closing + len(terminator)
+            terminator = None
+        opening = LITERAL_START.search(chunk, position)
+        if opening is None:
+            return None
+        terminator = LITERAL_END[opening[0]]
+        position = opening.end()
+
+
+def _feed_instance(scanner, chunk, depth):
+    """Feed through each possible tag end to find the parser's root boundary."""
+    start = 0
+    while (closing := chunk.find('>', start)) != -1:
+        end = closing + 1
+        scanner.feed(chunk[start:end].encode('utf-8'))
+        for event, _ in scanner.read_events():
+            depth += 1 if event == 'start' else -1
+            if not depth:
+                return depth, end
+        start = end
+    if start < len(chunk):
+        scanner.feed(chunk[start:].encode('utf-8'))
+    return depth, None
+
+
+def _following_instance(chunk, boundary):
+    """Find the next sample or the terminator of an open epilog comment or PI."""
+    while True:
+        start = SPACE.match(chunk, boundary).end()
+        if (OPEN_TAG.match(chunk, start) or XML_DECLARATION_START.match(chunk, start)
+                or chunk.startswith('<!DOCTYPE', start)):
+            return boundary, None
+        if chunk.startswith('<!--', start):
+            marker, size = '-->', 4
+        elif chunk.startswith('<?', start):
+            marker, size = '?>', 2
+        else:
+            return None, None
+        end = chunk.find(marker, start + size)
+        if end < 0:
+            return None, marker
+        boundary = end + len(marker)
 
 
 def _instances(parts):
@@ -149,9 +219,14 @@ def _instances(parts):
     i = 0
     declaration = []
     declaration_length = 0
-    while i < len(parts):
-        line = parts[i]
-        i += 1
+    remainder = ''
+    while remainder or i < len(parts):
+        if remainder:
+            line = remainder.lstrip()
+            remainder = ''
+        else:
+            line = parts[i].lstrip()
+            i += 1
         declaration_inline = False
         if not line:
             continue
@@ -172,7 +247,7 @@ def _instances(parts):
             declaration_inline=bool(line)
         # Retain the declaration for syntax checking, including when Word puts
         # it in a separate paragraph from the root element.
-        if line.startswith('<?xml'):
+        if XML_DECLARATION_START.match(line):
             match = re.match(r'<\?xml\b.*?\?>',line,re.S)
             if match:
                 declaration=[match[0]]
@@ -183,6 +258,28 @@ def _instances(parts):
                 declaration=[line]
                 declaration_length=len(line)
                 continue
+        if not line:
+            continue
+        # XML Misc may precede the document element. Retain it for syntax
+        # validation, but never mistake a tag quoted in a comment for the root.
+        while line.startswith(('<!--', '<?')):
+            terminator = '-->' if line.startswith('<!--') else '?>'
+            while terminator not in line and i < len(parts):
+                line += '\n' + parts[i]
+                i += 1
+                if len(line) + declaration_length > MAX_EXAMPLE:
+                    yield None, 'XML-пример превышает лимит объёма.'
+                    return
+            if terminator not in line:
+                break
+            marker, _, line = line.partition(terminator)
+            declaration.append(marker + terminator)
+            declaration_length += len(marker) + len(terminator) + 1
+            if declaration_length > MAX_EXAMPLE:
+                yield None, 'XML-пример превышает лимит объёма.'
+                return
+            line = line.lstrip()
+            declaration_inline = bool(line)
         if not line:
             continue
         if line.startswith("<!DOCTYPE"):
@@ -199,37 +296,55 @@ def _instances(parts):
         lines = [*declaration[:-1],declaration[-1]+line] if declaration_inline else [*declaration,line]
         declaration=[]
         length = sum(map(len,lines))+len(lines)-1
-        opening = line[match.start():]
-        closing_candidates = 0
+        # Feed only the instance here. The full original declaration and any
+        # stray leading characters stay in lines for the actual syntax report.
+        scanner = etree.XMLPullParser(events=('start', 'end'), no_network=True,
+                                      resolve_entities=False, load_dtd=False)
+        # Complete encoding detection before the root, even for <r/>. This
+        # padding exists only in the boundary scanner, never in the audited XML.
+        scanner.feed(b'    ')
+        depth = 0
+        literal = None
+        chunk = line[match.start():]
         while True:
-            if end.search(lines[-1]):
-                # A descendant can have the same QName as the root.
-                closing_candidates += 1
-                if closing_candidates > 32:
-                    yield None, "Неоднозначные границы вложенного XML-примера."
-                    return
+            if scanner is not None:
                 try:
-                    _parse(_xml_bytes("\n".join(lines)))
-                except etree.XMLSyntaxError as exc:
-                    if "Premature end of data" not in exc.msg:
-                        break
-                except ValueError:
-                    break
+                    depth, boundary = _feed_instance(scanner, chunk, depth)
+                except etree.XMLSyntaxError:
+                    # Keep the malformed sample together until its apparent
+                    # close or a new declaration so it produces one diagnostic.
+                    scanner = None
                 else:
+                    if boundary is not None:
+                        following, terminator = _following_instance(chunk, boundary)
+                        while terminator and i < len(parts):
+                            chunk = parts[i]
+                            length += 1 + len(chunk)
+                            if length > MAX_EXAMPLE:
+                                break
+                            lines.append(chunk)
+                            i += 1
+                            closing = chunk.find(terminator)
+                            if closing != -1:
+                                following, terminator = _following_instance(chunk, closing + len(terminator))
+                        if following is not None:
+                            remainder = chunk[following:]
+                            lines[-1] = lines[-1][:-len(remainder)]
+                        break
+            if scanner is None:
+                if end.search(lines[-1]) or lines[-1].rstrip().endswith('/>') and len(lines) == 1:
                     break
-            if opening is not None and ">" in opening:
-                if opening.partition(">")[0].rstrip().endswith("/"):
-                    break
-                opening = None
-            if i == len(parts) or parts[i].startswith("<?xml"):
+            if i == len(parts):
+                break
+            literal = _open_literal(chunk, literal)
+            if not literal and XML_DECLARATION_START.match(parts[i]):
                 break
             current = parts[i]
             length += 1 + len(current)
             if length > MAX_EXAMPLE:
                 break
             lines.append(current)
-            if opening is not None:
-                opening += "\n" + current
+            chunk = "\n" + current
             i += 1
         if length > MAX_EXAMPLE:
             yield None, "XML-пример превышает лимит объёма."
@@ -244,7 +359,7 @@ def _instances(parts):
 
 def _xml_bytes(text):
     """Check XML declaration grammar before changing Unicode's byte encoding."""
-    if text.startswith('<?xml'):
+    if XML_DECLARATION_START.match(text):
         declaration=re.match(r'<\?xml\b.*?\?>',text,re.S)
         if declaration:
             original=declaration[0]
@@ -266,18 +381,24 @@ def _payload(node, number):
     body = node.find(f"{{{namespace}}}Body")
     if body is None:
         raise ValueError("SOAP Body отсутствует.")
-    values = body.xpath('.//*[local-name()="message"]')
+    # Transport fields belong to the SOAP operation. Application XML can
+    # itself contain message and messageType elements at a deeper level.
+    values = body.xpath('./*[*[local-name()="messageType"]]/*[local-name()="message"]')
     if len(values) != 1:
         raise ValueError("Не удалось однозначно выделить поле message из SOAP Body.")
-    types = values[0].getparent().xpath('./*[local-name()="messageType"]/text()')
-    if types != [str(number)]:
+    types = values[0].getparent().xpath('./*[local-name()="messageType"]')
+    if len(types) != 1 or types[0].xpath('./*') or types[0].xpath('string(.)') != str(number):
         raise ValueError("Номер сообщения внутри SOAP не подтверждён.")
-    if len(values[0]) == 1:
-        return values[0][0]
-    if len(values[0]):
+    message = values[0]
+    elements = message.xpath("./*")
+    if len(elements) == 1:
+        # libxml2 diagnostics use absolute document paths. A payload still owned
+        # by the SOAP document gives wrapper-relative paths and loses values.
+        return _parse(etree.tostring(elements[0], with_tail=False))
+    if elements:
         raise ValueError("В SOAP message несколько дочерних элементов.")
     try:
-        data = base64.b64decode("".join((values[0].text or "").split()), validate=True)
+        data = base64.b64decode("".join(message.xpath("string(.)").split()), validate=True)
         return _parse(data)
     except (ValueError, binascii.Error, etree.XMLSyntaxError) as exc:
         raise ValueError("Внутренний SOAP message не распознан как XML в Base64.") from exc
@@ -305,16 +426,25 @@ def _syntax_detail(exc):
 
 
 def _diagnostic(node, error):
-    namespaces = {key: uri for key, uri in node.nsmap.items() if key}
-    try:
-        hits = node.xpath(error.path, namespaces=namespaces) if error.path else []
-    except etree.XPathError:
-        hits = []
-    element = hits[0] if hits and isinstance(hits[0], etree._Element) else None
-    if element is None and error.path:
+    element = None
+    if error.path:
         tree = node.getroottree()
-        element = next((item for item in node.iter() if isinstance(item.tag, str)
-                        and tree.getpath(item) == error.path), None)
+        namespaces = {key: uri for key, uri in node.nsmap.items() if key}
+        try:
+            hits = node.xpath(error.path, namespaces=namespaces)
+        except etree.XPathError:
+            hits = []
+        # Prefixes and positions in a diagnostic path describe the original
+        # node, which can locally bind the prefix to a different namespace.
+        if (len(hits) == 1 and isinstance(hits[0], etree._Element)
+                and tree.getpath(hits[0]) == error.path):
+            element = hits[0]
+        else:
+            matches = (item for item in node.iter() if isinstance(item.tag, str)
+                       and tree.getpath(item) == error.path)
+            match = next(matches, None)
+            if match is not None and next(matches, None) is None:
+                element = match
     path = error.path or etree.QName(node).localname
     message = error.message
     readable = re.sub(r"\{(?:https?://|urn:)[^}]*\}", "", message)
@@ -326,9 +456,11 @@ def _diagnostic(node, error):
             key = attribute[1] or attribute[2]
             path += "/@" + key.rsplit("}", 1)[-1]
             value = element.get(key)
-    if value and re.fullmatch(r"(?:string)+", value.strip(), re.I):
+    value_error = bool(re.fullmatch(r'SCHEMAV_CVC_(?:DATATYPE_VALID_1_2_[123]|(?:ENUMERATION|PATTERN|MINLENGTH|MAXLENGTH|LENGTH|MININCLUSIVE|MAXINCLUSIVE|MINEXCLUSIVE|MAXEXCLUSIVE|TOTALDIGITS|FRACTIONDIGITS)_VALID)',
+                                    getattr(error, 'type_name', '')))
+    if value_error and value and re.fullmatch(r"(?:string)+", value.strip(), re.I):
         return None
-    if "base64Binary" in message and ("..." in message or "…" in message):
+    if value_error and value and "base64Binary" in message and ("..." in value or "…" in value):
         return None
     value_summary = None
     if value is not None and value.strip():
@@ -352,8 +484,17 @@ def _diagnostic(node, error):
         spec = "В примере пропущен атрибут " + required[1] + "."
         rule = "Атрибут " + required[1] + " обязателен."
     elif "not expected" in readable:
-        spec = "В примере в этой позиции передан элемент " + path.rsplit("/", 1)[-1] + "."
-        rule = "В этой позиции XSD допускает " + expected[1] + "." if expected else "Модель XSD не допускает этот элемент в данной позиции."
+        actual = element.tag if element is not None else None
+        raw_expected = re.search(r"Expected is (?:one of )?\( (.*?) \)", message)
+        expected_names = [name.strip() for name in raw_expected[1].split(', ')] if raw_expected else []
+        collision = actual is not None and any(name.rsplit('}', 1)[-1] == etree.QName(actual).localname
+                                               and name != actual for name in expected_names)
+        def qname_label(name):
+            return name if name.startswith('{') else name + ' (без пространства имён)'
+        actual_label = qname_label(actual) if collision else path.rsplit("/", 1)[-1]
+        expected_label = ', '.join(qname_label(name) for name in expected_names) if collision else expected[1] if expected else None
+        spec = "В примере в этой позиции передан элемент " + actual_label + "."
+        rule = "В этой позиции XSD допускает " + expected_label + "." if expected_label else "Модель XSD не допускает этот элемент в данной позиции."
     else:
         spec = value_summary or "Значение или атрибут узла примера нарушает ограничение."
         if enumeration:
@@ -448,8 +589,13 @@ def audit(revision, body, archive_path):
                     impact = "Проверка подписанного XML целиком по прикладной XSD отклоняет подпись."
                 else:
                     impact = "Пример отклоняется при проверке по XSD этой редакции."
-                findings.append(_finding(revision, location + " — " + path, spec, rule,
-                                         impact, "Сверить указанный узел примера с объявлением XSD."))
+                finding = _finding(revision, location + " — " + path, spec, rule,
+                                   impact, "Сверить указанный узел примера с объявлением XSD.")
+                facet = re.search(r'CVC_(ENUMERATION|PATTERN|MINLENGTH|MAXLENGTH|LENGTH|MININCLUSIVE|MAXINCLUSIVE|MINEXCLUSIVE|MAXEXCLUSIVE|TOTALDIGITS|FRACTIONDIGITS)_VALID', getattr(error, 'type_name', ''))
+                if facet:
+                    from schema import FACETS
+                    finding['rule_facets'] = [key for key in FACETS if key.upper() == facet[1]]
+                findings.append(finding)
     if not checked and not notes:
         notes.append("В разделе сообщения не найден самостоятельный XML-пример.")
     return checked, findings, list(dict.fromkeys(notes))

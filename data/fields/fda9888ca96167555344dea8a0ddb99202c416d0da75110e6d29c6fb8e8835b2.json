@@ -39,7 +39,22 @@
         "calculationData",
         "receivePayment",
         "documents"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "vacationStatementCalc",
+          "primaryStatementUuid",
+          "insurerInfo",
+          "insuredInfo",
+          "orderInfo",
+          "calculationData",
+          "receivePayment",
+          "documents"
+        ]
+      }
     },
     {
       "name": "vacationStatementCalc",
@@ -129,7 +144,19 @@
         "regNumMain",
         "inn",
         "documentsSendPerson"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insurerName",
+          "regNum",
+          "regNumMain",
+          "inn",
+          "documentsSendPerson"
+        ]
+      }
     },
     {
       "name": "insurerName",
@@ -239,7 +266,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/additionalVacationStatement",
       "typeFile": "inline-1.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "documentsSendPerson",
@@ -267,7 +300,16 @@
         "sequence",
         "rank",
         "fullName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "rank",
+          "fullName"
+        ]
+      }
     },
     {
       "name": "rank",
@@ -317,7 +359,17 @@
         "lastName",
         "firstName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lastName",
+          "firstName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "lastName",
@@ -435,7 +487,16 @@
         "sequence",
         "fullNamePU",
         "snils"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullNamePU",
+          "snils"
+        ]
+      }
     },
     {
       "name": "fullNamePU",
@@ -465,7 +526,17 @@
         "lastName",
         "firstName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lastName",
+          "firstName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "lastName",
@@ -619,7 +690,19 @@
         "orderBeginDate",
         "orderEndDate",
         "daysAmount"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "orderNum",
+          "orderDate",
+          "orderBeginDate",
+          "orderEndDate",
+          "daysAmount"
+        ]
+      }
     },
     {
       "name": "orderNum",
@@ -759,7 +842,22 @@
         "dailyAverageSum",
         "totalDaysAmount",
         "vacationSum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "periodsData",
+          "totalSum",
+          "totalDays",
+          "premiumSum",
+          "totalIncomeSum",
+          "dailyAverageSum",
+          "totalDaysAmount",
+          "vacationSum"
+        ]
+      }
     },
     {
       "name": "periodsData",
@@ -789,7 +887,17 @@
         "period",
         "periodSumm",
         "countDays"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "period",
+          "periodSumm",
+          "countDays"
+        ]
+      }
     },
     {
       "name": "period",
@@ -1022,7 +1130,24 @@
           "cardMir",
           "postalTransfer"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "bankInfo",
+              "cardMir",
+              "postalTransfer"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "bankInfo",
@@ -1052,7 +1177,17 @@
         "accountNum",
         "bik",
         "bankName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "accountNum",
+          "bik",
+          "bankName"
+        ]
+      }
     },
     {
       "name": "accountNum",
@@ -1196,7 +1331,23 @@
         "block",
         "building",
         "flat"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "postIndex",
+          "region",
+          "district",
+          "city",
+          "street",
+          "house",
+          "block",
+          "building",
+          "flat"
+        ]
+      }
     },
     {
       "name": "postIndex",
@@ -1418,7 +1569,18 @@
         "docDate",
         "docComment",
         "attachment"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "docNmber",
+          "docDate",
+          "docComment",
+          "attachment"
+        ]
+      }
     },
     {
       "name": "docNmber",
@@ -1512,7 +1674,19 @@
         "mimeType",
         "size",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name"
+        ]
+      }
     },
     {
       "name": "content",

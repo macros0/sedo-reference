@@ -9,6 +9,70 @@ async function add(page,before,after,comment){
 async function editFirst(page,comment){
  await page.locator('.mapping-suggest').click();await page.locator('.mapping-edit-row').first().click();await page.locator('.mapping-edit-comment').fill(comment);await page.locator('.mapping-editor-save').click();await page.locator('.mapping-editor-cancel').click();
 }
+test('storage recovery merges isolated tab edits into the stored comparison',async({page,context})=>{
+ await page.goto(url);
+ await page.evaluate(key=>{
+  const original=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(name,value){
+   if(name===key){Storage.prototype.setItem=original;throw new DOMException('Quota exceeded','QuotaExceededError')}
+   return original.call(this,name,value);
+  };
+ },key);
+ await add(page,'approveSocialAssistResult/status','benefitResponseResult/status','Локальная пара');
+ await page.locator('.mapping-apply').click();
+ await expect(page.locator('.mapping-panel')).toContainText('только в текущем сеансе');
+ const other=await context.newPage();await other.goto(url);
+ await add(other,'approveSocialAssistResult/socialAssistNum','benefitResponseResult/processNum','Пара другой вкладки');
+ await other.locator('.mapping-apply').click();await expect(other.locator('.mapping-applied-feedback')).toContainText('1');
+ await add(page,'approveSocialAssistResult/errorList/error/code','benefitResponseResult/errorList/error/code','Новая пара');
+ await page.locator('.mapping-apply').click();await expect(page.locator('.mapping-applied-feedback')).toContainText('3');
+ const record=await other.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+ expect(record.pairs.map(pair=>pair.comment).sort()).toEqual(['Локальная пара','Новая пара','Пара другой вкладки']);
+});
+for(const reverse of [false,true]){
+ test('identical remaps preserve an independent pair in '+(reverse?'reversed':'forward')+' tabs',async({page,context})=>{
+  const a='approveSocialAssistResult/status',b='approveSocialAssistResult/errorList/error/code';
+  const x='benefitResponseResult/status',y='benefitResponseResult/processNum',z='benefitResponseResult/errorList/error/code';
+  await page.goto(url);await add(page,a,x,'');
+  await page.locator('.mapping-apply').click();await expect(page.locator('.mapping-applied-feedback')).toContainText('1');
+  const second=await context.newPage();
+  const otherUrl=reverse?'/site/#'+new URLSearchParams({message:'10510',compare:'1',left:right.revision_id,right:left.revision_id}):url;
+  await second.goto(otherUrl);
+  async function replace(tab,side,path){
+   await tab.locator('.mapping-suggest').click();await tab.locator('.mapping-edit-row').first().click();
+   await tab.locator('.mapping-tag-choice-'+side).selectOption(path);
+   await tab.locator('.mapping-editor-save').click();await tab.locator('.mapping-editor-cancel').click();
+  }
+  await replace(page,'after',y);await replace(second,reverse?'before':'after',y);
+  await add(second,reverse?z:b,reverse?b:z,'Независимая пара');
+  await page.locator('.mapping-apply').click();await expect(page.locator('.mapping-applied-feedback')).toContainText('1');
+  await second.locator('.mapping-apply').click();await expect(second.locator('.mapping-applied-feedback')).toContainText('2');
+  await page.reload();
+  const expected=[{beforePath:a,afterPath:y,comment:''},{beforePath:b,afterPath:z,comment:'Независимая пара'}];
+  const pairs=await page.evaluate(key=>{
+   const stored=JSON.parse(localStorage.getItem(key));
+   const current=new URLSearchParams(location.hash.slice(1)).get('left');
+   return stored.pairs.map(p=>stored.left===current?p:{beforePath:p.afterPath,afterPath:p.beforePath,comment:p.comment});
+  },key);
+  expect(pairs).toEqual(expected);
+ });
+}
+test('different remap targets in two tabs keep the conflicting draft',async({page,context})=>{
+ await page.goto(url);
+ const a='approveSocialAssistResult/status',before='benefitResponseResult/status';
+ await add(page,a,before,'');await page.locator('.mapping-apply').click();await expect(page.locator('.mapping-applied-feedback')).toContainText('1');
+ const second=await context.newPage();await second.goto(url);
+ for(const [tab,path] of [[page,'benefitResponseResult/processNum'],[second,'benefitResponseResult/errorList/error/code']]){
+  await tab.locator('.mapping-suggest').click();await tab.locator('.mapping-edit-row').first().click();
+  await tab.locator('.mapping-tag-choice-after').selectOption(path);
+  await tab.locator('.mapping-editor-save').click();await tab.locator('.mapping-editor-cancel').click();
+ }
+ await page.locator('.mapping-apply').click();await expect(page.locator('.mapping-applied-feedback')).toBeVisible();
+ await second.locator('.mapping-apply').click();
+ await expect(second.locator('.mapping-draft-errors')).toContainText('Конфликт');
+ await expect(second.locator('.mapping-draft-errors')).toContainText('benefitResponseResult/processNum');
+ await expect(second.locator('.mapping-draft-errors')).toContainText('benefitResponseResult/errorList/error/code');
+});
 test('two real tabs merge disjoint draft applies and retain conflicting drafts',async({page,context})=>{
  // Exercise the current source through the ordinary comparison page even before
  // a site rebuild; no fixture bypasses the mounted editor or apply callback.

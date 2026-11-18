@@ -2,6 +2,7 @@
   "name": "sedo-reference",
   "private": true,
   "scripts": {
+    "test:node": "node tests/run_node_tests.cjs",
     "test:browser": "playwright test"
   },
   "devDependencies": {

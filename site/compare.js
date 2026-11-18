@@ -26,8 +26,25 @@ function comparisonPool(m){
  return [...numbers].flatMap(number=>messages.get(number)?.revisions||[]).filter(r=>r.ready&&(!r.display_revision_id||r.display_revision_id===r.revision_id));
 }
 function comparisonRevision(pool,id){return pool.find(r=>r.revision_id===id)||catalog.revisions.find(r=>r.revision_id===id&&r.ready&&pool.some(x=>x.number===r.number))}
+function newestEditionFirst(a,b){
+ const version=(left,right)=>{
+  const parts=value=>/^\d+(?:\.\d+)*$/.test(value||'')?value.split('.').map(BigInt):null,l=parts(left),r=parts(right);
+  if(!l||!r)return Number(!!r)-Number(!!l);
+  for(let i=0;i<Math.max(l.length,r.length);i++){const x=l[i]||0n,y=r[i]||0n;if(x!==y)return x>y?-1:1}
+  return 0;
+ };
+ const key=r=>r.label_date?date(r.label_date).split(".").reverse().join(""):"";
+ const order=(left,right)=>key(right).localeCompare(key(left))||Number(right.listed_now!==false)-Number(left.listed_now!==false)||version(left.document_version,right.document_version);
+ const source=row=>{
+  const sources=row.edition_sources||[],current=sources.filter(s=>s.listed_now!==false);
+  if(sources.length<2)return row;
+  return [...(current.length?current:sources)].sort(order)[0]||row;
+ };
+ const left=source(a),right=source(b);
+ return key(right).localeCompare(key(left))||Number(b.listed_now!==false)-Number(a.listed_now!==false)||version(left.document_version,right.document_version)||(a.revision_id||'').localeCompare(b.revision_id||'');
+}
 function crossTypePair(m,target,environment){
- const pool=comparisonPool(m),latest=rows=>[...rows].sort((a,b)=>date(b.label_date).split(".").reverse().join("").localeCompare(date(a.label_date).split(".").reverse().join("")))[0];
+ const pool=comparisonPool(m),latest=rows=>rows.sort(newestEditionFirst)[0];
  for(const env of environment?[environment]:["prod","test"]){
   const left=latest(pool.filter(r=>r.number===m.number&&r.environment===env)),right=latest(pool.filter(r=>r.number===target&&r.environment===env));
   if(left&&right)return {left:left.revision_id,right:right.revision_id};
@@ -40,8 +57,7 @@ function appendRelatedComparisons(container,m,env){
  if(links.childNodes.length)container.append(links);
 }
 function comparisonDefaults(m){
- const key=r=>r.label_date?date(r.label_date).split('.').reverse().join(''):'';
- const ready=m.revisions.filter(r=>r.ready).sort((a,b)=>key(b).localeCompare(key(a))||a.revision_id.localeCompare(b.revision_id));
+ const ready=m.revisions.filter(r=>r.ready).sort(newestEditionFirst);
  const prod=ready.find(r=>r.environment==='prod'),test=ready.find(r=>r.environment==='test');
  const right=test||prod,left=prod&&test?prod:ready.find(r=>r.revision_id!==right?.revision_id)||right;
  return {left:left?.revision_id,right:right?.revision_id};
@@ -66,7 +82,8 @@ async function renderComparison(m,params,applied=false,view=null){
  }
  const switchSides=node("button","swap","Поменять местами");switchSides.type="button";
  switchSides.onclick=()=>{location.hash=comparisonRoute(m.number,rightId,leftId)};controls.append(switchSides);section.append(controls);
- selectors.forEach(select=>select.onchange=()=>{location.hash=comparisonRoute(m.number,selectors[0].value,selectors[1].value)});
+ selectors[0].onchange=()=>{location.hash=comparisonRoute(m.number,selectors[0].value,rightId)};
+ selectors[1].onchange=()=>{location.hash=comparisonRoute(m.number,leftId,selectors[1].value)};
  if(!canCompareTypes(left.number,right.number)){section.append(node("p","empty","Для этих типов нет подтверждённого соответствия. Выберите прежний тип и его новый формат либо две редакции одного типа."));return false}
  const sources=node("div","compare-sources");
  for(const [caption,r] of [["Было",left],["Стало",right]]){
@@ -82,17 +99,19 @@ async function renderComparison(m,params,applied=false,view=null){
   const results=SedoCompare.compare(a,b,mappings);state.remove();
   const counts={added:0,removed:0,changed:0,mapped:0};results.forEach(r=>counts[r.status]++);
   const summaries=node("div","compare-counts");for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])summaries.append(node("span",key,text+" · "+counts[key]));if(mappings.length)summaries.append(node("span","mapped","Ручных соответствий · "+mappings.length));section.append(summaries);
+  const limited=a.some(SedoCompare.hasUnresolvedUnionValues)||b.some(SedoCompare.hasUnresolvedUnionValues);
+  if(limited)section.append(node("p","meta",SedoCompare.unionCoverageNote));
   if(applied){const feedback=node("p","mapping-applied-feedback",(applied==="cancelled"?"Сопоставление отменено. Сохранено пар: ":"Сравнение обновлено. Применено пар: ")+mappings.length);feedback.setAttribute("role","status");section.append(feedback)}
   const mappingPanel=SedoMapping.mount(section,mappingOptions,saved,()=>renderComparison(m,params,true));let cancelling=false;
   const exports=node("div","comparison-export"),exportButton=node("button","open","Выгрузить Excel для сопоставления"),exportState=node("span","meta");exportButton.type="button";exportState.setAttribute("role","status");
   exportButton.onclick=async()=>{
    exportButton.disabled=true;exportState.textContent="Готовим книгу…";
-   try{await SedoComparisonExport.download({left,right,before:a,after:b,results,mappings,baseURL:new URL(".",location.href).href});exportState.textContent="Книга передана браузеру для скачивания."}
+   try{await SedoComparisonExport.download({left,right,before:a,after:b,results,mappings,deleted:saved.deleted,baseURL:new URL(".",location.href).href});exportState.textContent="Книга передана браузеру для скачивания."}
    catch(error){exportState.textContent="Не удалось выгрузить Excel. "+error.message}
    finally{exportButton.disabled=false}
   };
   exports.append(exportButton,exportState,node("p","meta","Вся выбранная пара редакций: исходные поля, изменения и таблица ручного сопоставления. Поиск и фильтры не ограничивают выгрузку."));section.append(exports);
-  if(!results.length){section.append(node("p","empty","Деревья совпадают. Изменений в тегах, ограничениях и описаниях не найдено."));if(applied)summaries.scrollIntoView?.({block:"start",behavior:"smooth"});return true}
+  if(!results.length){section.append(node("p","empty",(limited?"":"Деревья совпадают. ")+"Изменений в тегах, ограничениях и описаниях не найдено."));if(applied)summaries.scrollIntoView?.({block:"start",behavior:"smooth"});return true}
   const filters=node("div","searchbar"),searchLabel=node("label","","Поиск по изменениям"),search=node("input");search.type="search";search.placeholder="Тег, путь, описание или ограничение";searchLabel.append(search);
   const kindLabel=node("label","","Вид изменения"),kind=node("select");for(const [value,text] of [["","Все изменения"],["added","Добавлено"],["removed","Удалено"],["changed","Изменено"],["mapped","Сопоставлено без изменений"]])kind.add(new Option(text,value));kindLabel.append(kind);filters.append(searchLabel,kindLabel);section.append(filters);
   if(view){search.value=view.search;kind.value=view.kind}

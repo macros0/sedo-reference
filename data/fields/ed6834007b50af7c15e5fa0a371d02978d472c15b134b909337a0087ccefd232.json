@@ -33,7 +33,19 @@
         "statusGeneral",
         "errorList",
         "protocol"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "dateTimeReceive",
+          "recriveID",
+          "statusGeneral",
+          "errorList",
+          "protocol"
+        ]
+      }
     },
     {
       "name": "dateTimeReceive",
@@ -137,7 +149,15 @@
       "contentModel": [
         "sequence",
         "error"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "error"
+        ]
+      }
     },
     {
       "name": "error",
@@ -165,7 +185,16 @@
         "sequence",
         "errorCode",
         "errorDescription"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "errorCode",
+          "errorDescription"
+        ]
+      }
     },
     {
       "name": "errorCode",
@@ -235,7 +264,15 @@
       "contentModel": [
         "sequence",
         "failedList"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "failedList"
+        ]
+      }
     },
     {
       "name": "failedList",
@@ -261,7 +298,15 @@
       "contentModel": [
         "sequence",
         "failedBatchNoDetail"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "failedBatchNoDetail"
+        ]
+      }
     },
     {
       "name": "failedBatchNoDetail",
@@ -289,7 +334,16 @@
         "sequence",
         "notificationID",
         "errorList"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "notificationID",
+          "errorList"
+        ]
+      }
     },
     {
       "name": "notificationID",
@@ -341,7 +395,15 @@
       "contentModel": [
         "sequence",
         "error"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "error"
+        ]
+      }
     },
     {
       "name": "error",
@@ -369,7 +431,16 @@
         "sequence",
         "errorCode",
         "errorDescription"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "errorCode",
+          "errorDescription"
+        ]
+      }
     },
     {
       "name": "errorCode",

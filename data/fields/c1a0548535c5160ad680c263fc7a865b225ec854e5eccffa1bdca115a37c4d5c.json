@@ -49,7 +49,26 @@
         "senderInfo",
         "signatoryInfo",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "refusalNumber",
+          "refusalDate",
+          "tof",
+          "registryNum",
+          "insuredInfo",
+          "insurerInfo",
+          "benefitInfo",
+          "refusalText",
+          "attachments",
+          "senderInfo",
+          "signatoryInfo",
+          "*"
+        ]
+      }
     },
     {
       "name": "refusalNumber",
@@ -127,7 +146,16 @@
         "sequence",
         "code",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "name"
+        ]
+      }
     },
     {
       "name": "code",
@@ -241,7 +269,17 @@
         "snils",
         "fullName",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "*"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -301,7 +339,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -411,7 +459,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "insurerInfo",
@@ -439,7 +488,16 @@
         "sequence",
         "regNumSFR",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNumSFR",
+          "*"
+        ]
+      }
     },
     {
       "name": "regNumSFR",
@@ -489,7 +547,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefitInfo",
@@ -532,7 +591,29 @@
           "benefit6"
         ],
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "proactiveProcessNum",
+          "rowNumber",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "benefit1",
+              "benefit2",
+              "benefit4",
+              "benefit5",
+              "benefit6"
+            ]
+          },
+          "*"
+        ]
+      }
     },
     {
       "name": "proactiveProcessNum",
@@ -616,7 +697,16 @@
         "sequence",
         "lnNumber",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber",
+          "*"
+        ]
+      }
     },
     {
       "name": "lnNumber",
@@ -666,7 +756,8 @@
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit2",
@@ -692,7 +783,16 @@
         "sequence",
         "lnNumber",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber",
+          "*"
+        ]
+      }
     },
     {
       "name": "lnNumber",
@@ -742,7 +842,8 @@
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit4",
@@ -770,7 +871,17 @@
         "childSnils",
         "childBirthDate",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "childSnils",
+          "childBirthDate",
+          "*"
+        ]
+      }
     },
     {
       "name": "childSnils",
@@ -840,7 +951,8 @@
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit5",
@@ -868,7 +980,17 @@
         "childSnils",
         "vacationPeriod",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "childSnils",
+          "vacationPeriod",
+          "*"
+        ]
+      }
     },
     {
       "name": "childSnils",
@@ -926,7 +1048,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -986,7 +1117,8 @@
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit6",
@@ -1012,7 +1144,16 @@
         "sequence",
         "lnNumber",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber",
+          "*"
+        ]
+      }
     },
     {
       "name": "lnNumber",
@@ -1062,7 +1203,8 @@
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "*",
@@ -1082,7 +1224,8 @@
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "refusalText",
@@ -1135,7 +1278,15 @@
       "contentModel": [
         "sequence",
         "attachment"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "attachment"
+        ]
+      }
     },
     {
       "name": "attachment",
@@ -1169,7 +1320,19 @@
         "mimeType",
         "size",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name"
+        ]
+      }
     },
     {
       "name": "content",
@@ -1297,7 +1460,17 @@
         "fullName",
         "role",
         "phone"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "role",
+          "phone"
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -1413,7 +1586,16 @@
         "sequence",
         "fullName",
         "role"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "role"
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -1493,7 +1675,8 @@
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "@specVersion",
@@ -1589,7 +1772,8 @@
       "file": "Refusal.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     }
   ]
 }

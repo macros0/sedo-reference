@@ -53,7 +53,40 @@
           ],
           "isNotWorker"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "birthDate",
+          "gender",
+          "snils",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "fired",
+              {
+                "kind": "sequence",
+                "min": "1",
+                "max": "1",
+                "children": [
+                  "inn",
+                  "identityDocument",
+                  "residenceDocumentType",
+                  "otherInfo",
+                  "regAddress",
+                  "methodReceivePayment"
+                ]
+              },
+              "isNotWorker"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -83,7 +116,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -280,7 +323,16 @@
         "choice",
         "date",
         "contractCancelDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "date",
+          "contractCancelDate"
+        ]
+      }
     },
     {
       "name": "date",
@@ -380,7 +432,17 @@
         "passport",
         "tempIdentDocType",
         "otherIdentDocType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "passport",
+          "tempIdentDocType",
+          "otherIdentDocType"
+        ]
+      }
     },
     {
       "name": "passport",
@@ -412,7 +474,18 @@
         "number",
         "issueDate",
         "whoIssued"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "series",
+          "number",
+          "issueDate",
+          "whoIssued"
+        ]
+      }
     },
     {
       "name": "series",
@@ -538,7 +611,18 @@
         "issueDate",
         "whoIssued",
         "expirationDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "issueDate",
+          "whoIssued",
+          "expirationDate"
+        ]
+      }
     },
     {
       "name": "number",
@@ -662,7 +746,18 @@
         "series",
         "number",
         "expirationDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "type",
+          "series",
+          "number",
+          "expirationDate"
+        ]
+      }
     },
     {
       "name": "type",
@@ -881,7 +976,16 @@
         "choice",
         "residentCard",
         "tempResidencePermit"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "residentCard",
+          "tempResidencePermit"
+        ]
+      }
     },
     {
       "name": "residentCard",
@@ -911,7 +1015,17 @@
         "series",
         "number",
         "passportIssueDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "series",
+          "number",
+          "passportIssueDate"
+        ]
+      }
     },
     {
       "name": "series",
@@ -1013,7 +1127,17 @@
         "series",
         "number",
         "issueDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "series",
+          "number",
+          "issueDate"
+        ]
+      }
     },
     {
       "name": "series",
@@ -1116,7 +1240,24 @@
           "livingPlace"
         ],
         "causeRadiation"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "workplace",
+              "livingPlace"
+            ]
+          },
+          "causeRadiation"
+        ]
+      }
     },
     {
       "name": "workplace",
@@ -1248,7 +1389,16 @@
         "sequence",
         "fiasAddress",
         "postalCode"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fiasAddress",
+          "postalCode"
+        ]
+      }
     },
     {
       "name": "fiasAddress",
@@ -1288,7 +1438,33 @@
           ]
         ],
         "flat"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "houseGuid",
+              {
+                "kind": "sequence",
+                "min": "1",
+                "max": "1",
+                "children": [
+                  "guid",
+                  "house",
+                  "building"
+                ]
+              }
+            ]
+          },
+          "flat"
+        ]
+      }
     },
     {
       "name": "houseGuid",
@@ -1479,7 +1655,26 @@
           "currentFiasAddress",
           "postalCode"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "bankInfo",
+          "cardMir",
+          "otherOrg",
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "currentFiasAddress",
+              "postalCode"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "bankInfo",
@@ -1509,7 +1704,17 @@
         "bankName",
         "bik",
         "accountNum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "bankName",
+          "bik",
+          "accountNum"
+        ]
+      }
     },
     {
       "name": "bankName",
@@ -1667,7 +1872,24 @@
         "regNumSFRCorrectionalFacility",
         "innCorrectionalFacility",
         "kppCorrectionalFacility"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "nameOrg",
+          "bik",
+          "accountNum",
+          "personalOrgAccount",
+          "personalInsuredAccount",
+          "kbk",
+          "regNumCorrectionalFacility",
+          "regNumSFRCorrectionalFacility",
+          "innCorrectionalFacility",
+          "kppCorrectionalFacility"
+        ]
+      }
     },
     {
       "name": "nameOrg",
@@ -1961,7 +2183,33 @@
           ]
         ],
         "flat"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "houseGuid",
+              {
+                "kind": "sequence",
+                "min": "1",
+                "max": "1",
+                "children": [
+                  "guid",
+                  "house",
+                  "building"
+                ]
+              }
+            ]
+          },
+          "flat"
+        ]
+      }
     },
     {
       "name": "houseGuid",

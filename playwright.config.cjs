@@ -16,7 +16,7 @@ module.exports = defineConfig({
     screenshot: 'only-on-failure',
   },
   webServer: {
-    command: 'python -m http.server 4173 --bind 127.0.0.1 --directory .',
+    command: 'python tests/browser_server.py',
     url: 'http://127.0.0.1:4173/site/',
     reuseExistingServer: false,
     stderr: 'ignore',

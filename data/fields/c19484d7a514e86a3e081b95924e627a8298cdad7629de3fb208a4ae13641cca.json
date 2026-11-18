@@ -31,7 +31,18 @@
         "okved",
         "incomeDistribution",
         "note"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insurerInfo",
+          "okved",
+          "incomeDistribution",
+          "note"
+        ]
+      }
     },
     {
       "name": "insurerInfo",
@@ -89,7 +100,31 @@
         "cfoName",
         "emplCount",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNum",
+          "kpsNum",
+          "regNumFund",
+          "codeTerrOrg",
+          "inn",
+          "ogrn",
+          "kpp",
+          "startDate",
+          "registrationDate",
+          "registrationPlace",
+          "state",
+          "uncommercial",
+          "jurAddress",
+          "ceoName",
+          "cfoName",
+          "emplCount",
+          "year"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -239,7 +274,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "ogrn",
@@ -553,7 +594,15 @@
       "contentModel": [
         "sequence",
         "codeOKVED2"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "codeOKVED2"
+        ]
+      }
     },
     {
       "name": "codeOKVED2",
@@ -619,7 +668,18 @@
         "incomeVED",
         "targetedIncome",
         "emplCount"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "codeOKVED2",
+          "incomeVED",
+          "targetedIncome",
+          "emplCount"
+        ]
+      }
     },
     {
       "name": "codeOKVED2",
@@ -741,7 +801,16 @@
         "sequence",
         "noteText",
         "noteFile"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "noteText",
+          "noteFile"
+        ]
+      }
     },
     {
       "name": "noteText",
@@ -801,7 +870,19 @@
         "mimeType",
         "size",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name"
+        ]
+      }
     },
     {
       "name": "content",

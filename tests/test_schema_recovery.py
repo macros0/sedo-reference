@@ -22,6 +22,25 @@ def archive(files):
     return out.getvalue()
 
 class SchemaRecoveryTests(unittest.TestCase):
+    def test_prose_placeholders_do_not_swallow_later_xml_examples(self):
+        _, doc = docx(['Тип сообщения 97: Результат',
+                      'Уведомление: <Наименование ОСФР>, <ФИО застрахованного>, <Причина возврата>.',
+                      '<result xmlns="urn:result"><statementID>123</statementID></result>'])
+        self.assertEqual([(b['root'], b['namespace']) for b in document_bindings(doc)],
+                         [('result', 'urn:result')])
+
+    def test_unclosed_single_word_placeholder_recovers_complete_examples(self):
+        from module_xsd import xml_fragments
+        example = '<result xmlns="urn:result"><statementID>123</statementID></result>'
+        for prefix in ('<ФИО>', '<broken><unfinished>'):
+            _, doc = docx(['Тип сообщения 97: Результат', prefix, example, example])
+            with self.subTest(prefix=prefix):
+                self.assertEqual([b['root'] for b in document_bindings(doc)], ['result'])
+                self.assertEqual(list(xml_fragments(prefix + example + example)), [example, example])
+        # Complete nested XML remains one fragment.
+        nested = '<outer>' + example + '</outer>'
+        self.assertEqual(list(xml_fragments(nested)), [nested])
+
     def test_binding_from_complete_xml_example(self):
         _,doc=docx(['Тип сообщения 111: Уведомление ЭЛН','Пример','<?xml version="1.0"?>','<e:changeElnNotice xmlns:e="urn:eln">','<e:code>123</e:code>','</e:changeElnNotice>'])
         binding=document_bindings(doc)[0]

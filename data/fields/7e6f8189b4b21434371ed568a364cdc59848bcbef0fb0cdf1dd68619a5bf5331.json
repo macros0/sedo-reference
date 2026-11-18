@@ -29,7 +29,17 @@
         "ipList",
         "organizationList",
         "error"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "ipList",
+          "organizationList",
+          "error"
+        ]
+      }
     },
     {
       "name": "ipList",
@@ -55,7 +65,15 @@
       "contentModel": [
         "sequence",
         "ipResponse"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "ipResponse"
+        ]
+      }
     },
     {
       "name": "ipResponse",
@@ -83,7 +101,16 @@
         "sequence",
         "ip",
         "response"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "ip",
+          "response"
+        ]
+      }
     },
     {
       "name": "ip",
@@ -111,7 +138,16 @@
         "sequence",
         "inn",
         "ogrnip"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "inn",
+          "ogrnip"
+        ]
+      }
     },
     {
       "name": "inn",
@@ -141,7 +177,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "ogrnip",
@@ -204,7 +246,24 @@
           "regNumSfr"
         ],
         "error"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "regNum",
+              "regNumSfr"
+            ]
+          },
+          "error"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -286,7 +345,17 @@
         "code",
         "message",
         "detail"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "detail"
+        ]
+      }
     },
     {
       "name": "code",
@@ -372,7 +441,15 @@
       "contentModel": [
         "sequence",
         "organizationResponse"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "organizationResponse"
+        ]
+      }
     },
     {
       "name": "organizationResponse",
@@ -400,7 +477,16 @@
         "sequence",
         "organization",
         "response"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "organization",
+          "response"
+        ]
+      }
     },
     {
       "name": "organization",
@@ -430,7 +516,17 @@
         "inn",
         "ogrn",
         "kpp"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "inn",
+          "ogrn",
+          "kpp"
+        ]
+      }
     },
     {
       "name": "inn",
@@ -460,7 +556,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "ogrn",
@@ -549,7 +651,24 @@
           "regNumSfr"
         ],
         "error"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "regNum",
+              "regNumSfr"
+            ]
+          },
+          "error"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -631,7 +750,17 @@
         "code",
         "message",
         "detail"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "detail"
+        ]
+      }
     },
     {
       "name": "code",
@@ -721,7 +850,17 @@
         "code",
         "message",
         "details"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "details"
+        ]
+      }
     },
     {
       "name": "code",

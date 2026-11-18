@@ -23,7 +23,15 @@
       "contentModel": [
         "sequence",
         "event"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "event"
+        ]
+      }
     },
     {
       "name": "event",
@@ -58,7 +66,26 @@
           "elnClosed",
           "recalculation"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "category",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "childCareVocation",
+              "birthChild",
+              "elnClosed",
+              "recalculation"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "category",
@@ -126,7 +153,18 @@
         "childInfo",
         "baseDocuments",
         "contractsType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insuredInfo",
+          "childInfo",
+          "baseDocuments",
+          "contractsType"
+        ]
+      }
     },
     {
       "name": "insuredInfo",
@@ -158,7 +196,18 @@
         "fullName",
         "birthDate",
         "childRelType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "birthDate",
+          "childRelType"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -218,7 +267,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -405,7 +464,25 @@
           "snils",
           "gender"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "birthDate",
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "snils",
+              "gender"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -435,7 +512,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -631,7 +718,16 @@
         "sequence",
         "vocationPeriod",
         "identityDocument"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "vocationPeriod",
+          "identityDocument"
+        ]
+      }
     },
     {
       "name": "vocationPeriod",
@@ -657,7 +753,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -728,7 +833,24 @@
           "birthDocOtherCountry"
         ],
         "birthRecord"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "birthCertificate",
+              "birthDocOtherCountry"
+            ]
+          },
+          "birthRecord"
+        ]
+      }
     },
     {
       "name": "birthCertificate",
@@ -760,7 +882,18 @@
         "number",
         "issueDate",
         "issuer"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "series",
+          "number",
+          "issueDate",
+          "issuer"
+        ]
+      }
     },
     {
       "name": "series",
@@ -883,7 +1016,18 @@
         "number",
         "issueDate",
         "issuer"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "series",
+          "number",
+          "issueDate",
+          "issuer"
+        ]
+      }
     },
     {
       "name": "series",
@@ -1006,7 +1150,16 @@
         "sequence",
         "number",
         "issueDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "issueDate"
+        ]
+      }
     },
     {
       "name": "number",
@@ -1073,7 +1226,15 @@
       "contentModel": [
         "sequence",
         "contractType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "contractType"
+        ]
+      }
     },
     {
       "name": "contractType",
@@ -1133,7 +1294,18 @@
         "childInfo",
         "baseDocuments",
         "contractsType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insuredInfo",
+          "childInfo",
+          "baseDocuments",
+          "contractsType"
+        ]
+      }
     },
     {
       "name": "insuredInfo",
@@ -1165,7 +1337,18 @@
         "fullName",
         "birthDate",
         "childRelType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "birthDate",
+          "childRelType"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -1225,7 +1408,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -1412,7 +1605,25 @@
           "snils",
           "gender"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "birthDate",
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "snils",
+              "gender"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -1442,7 +1653,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -1636,7 +1857,15 @@
       "contentModel": [
         "sequence",
         "identityDocument"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "identityDocument"
+        ]
+      }
     },
     {
       "name": "identityDocument",
@@ -1667,7 +1896,24 @@
           "birthDocOtherCountry"
         ],
         "birthRecord"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "birthReference",
+              "birthDocOtherCountry"
+            ]
+          },
+          "birthRecord"
+        ]
+      }
     },
     {
       "name": "birthReference",
@@ -1697,7 +1943,18 @@
         "issueDate",
         "issuer",
         "refType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "issueDate",
+          "issuer",
+          "refType"
+        ]
+      }
     },
     {
       "name": "number",
@@ -1839,7 +2096,18 @@
         "number",
         "issueDate",
         "issuer"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "series",
+          "number",
+          "issueDate",
+          "issuer"
+        ]
+      }
     },
     {
       "name": "series",
@@ -1962,7 +2230,16 @@
         "sequence",
         "number",
         "issueDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "number",
+          "issueDate"
+        ]
+      }
     },
     {
       "name": "number",
@@ -2029,7 +2306,15 @@
       "contentModel": [
         "sequence",
         "contractType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "contractType"
+        ]
+      }
     },
     {
       "name": "contractType",
@@ -2089,7 +2374,18 @@
         "lnCode",
         "insuranceCaseState",
         "contractsType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insuredInfo",
+          "lnCode",
+          "insuranceCaseState",
+          "contractsType"
+        ]
+      }
     },
     {
       "name": "insuredInfo",
@@ -2113,7 +2409,15 @@
       "contentModel": [
         "sequence",
         "snils"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -2213,7 +2517,15 @@
       "contentModel": [
         "sequence",
         "contractType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "contractType"
+        ]
+      }
     },
     {
       "name": "contractType",
@@ -2267,7 +2579,15 @@
       "contentModel": [
         "sequence",
         "batchNo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "batchNo"
+        ]
+      }
     },
     {
       "name": "batchNo",

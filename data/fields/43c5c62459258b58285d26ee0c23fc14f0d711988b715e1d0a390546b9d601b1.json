@@ -27,7 +27,16 @@
         "sequence",
         "person",
         "paymentNotice"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "person",
+          "paymentNotice"
+        ]
+      }
     },
     {
       "name": "person",
@@ -61,7 +70,19 @@
         "patronymic",
         "birthDate",
         "snils"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "secondName",
+          "patronymic",
+          "birthDate",
+          "snils"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -222,7 +243,29 @@
           "paymentCanceling",
           "noticeSend"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "noticeType",
+          "batchNo",
+          "socialAssistNum",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "registerRecieve",
+              "paymentSend",
+              "paymentDone",
+              "paymentCanceling",
+              "noticeSend"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "noticeType",
@@ -348,7 +391,33 @@
           "sequence",
           "insurerName"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "infoType",
+              "docType",
+              "period",
+              "addInformation"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "insurerName"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "infoType",
@@ -470,7 +539,16 @@
         "sequence",
         "periodStart",
         "periodEnd"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "periodStart",
+          "periodEnd"
+        ]
+      }
     },
     {
       "name": "periodStart",
@@ -588,7 +666,18 @@
         "docType",
         "period",
         "addInformation"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "infoType",
+          "docType",
+          "period",
+          "addInformation"
+        ]
+      }
     },
     {
       "name": "infoType",
@@ -710,7 +799,16 @@
         "sequence",
         "periodStart",
         "periodEnd"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "periodStart",
+          "periodEnd"
+        ]
+      }
     },
     {
       "name": "periodStart",
@@ -820,7 +918,35 @@
           "sum",
           "dutySum"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "infoType",
+              "docType",
+              "period",
+              "addInformation"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "summa",
+              "sum",
+              "dutySum"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "infoType",
@@ -942,7 +1068,16 @@
         "sequence",
         "periodStart",
         "periodEnd"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "periodStart",
+          "periodEnd"
+        ]
+      }
     },
     {
       "name": "periodStart",
@@ -1134,7 +1269,34 @@
           "sum",
           "paymentState"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "infoType",
+              "docType",
+              "period",
+              "addInformation"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "sum",
+              "paymentState"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "infoType",
@@ -1256,7 +1418,16 @@
         "sequence",
         "periodStart",
         "periodEnd"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "periodStart",
+          "periodEnd"
+        ]
+      }
     },
     {
       "name": "periodStart",
@@ -1414,7 +1585,33 @@
           "sequence",
           "insurerName"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "infoType",
+              "docType",
+              "period",
+              "addInformation"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "insurerName"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "infoType",
@@ -1536,7 +1733,16 @@
         "sequence",
         "periodStart",
         "periodEnd"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "periodStart",
+          "periodEnd"
+        ]
+      }
     },
     {
       "name": "periodStart",

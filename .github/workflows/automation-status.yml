@@ -6,6 +6,10 @@ on:
         description: Pages run finishing the deployment
         type: string
         required: false
+      publication_run_attempt:
+        description: Attempt of the Pages run finishing deployment
+        type: string
+        required: false
   schedule:
     - cron: '5 4 * * *'
   workflow_run:
@@ -36,6 +40,9 @@ jobs:
       - name: Publish independent public status
         env:
           SEDO_COLLECTOR_SOURCE: ${{ vars.SEDO_COLLECTOR_SOURCE || 'sourcecraft' }}
+          CHECK_RUN_ID: ${{ github.event.workflow_run.name == 'Check SFR catalogs' && github.event.workflow_run.id || '' }}
+          CHECK_RUN_ATTEMPT: ${{ github.event.workflow_run.name == 'Check SFR catalogs' && github.event.workflow_run.run_attempt || '' }}
+          PUBLICATION_RUN_ATTEMPT: ${{ inputs.publication_run_attempt || (github.event.workflow_run.name == 'Publish reference' && github.event.workflow_run.run_attempt) || '' }}
           PUBLICATION_RUN_ID: ${{ inputs.publication_run_id || (github.event.action == 'completed' && github.event.workflow_run.name == 'Publish reference' && github.event.workflow_run.id) || '' }}
         run: python automation_status.py
       - uses: actions/upload-artifact@v4
