@@ -56,6 +56,41 @@ const result=summarizeUpdates(catalog,id=>fields[id]);
  assert.equal(summarizeUpdates(history,id=>fields[id]||fields.t1)[1].comparison.left,'t1','discovery time takes precedence over current membership and array order');
 }
 {
+ const observed=(revision_id,hour,previous_revision_id=null,snapshot=revision_id)=>({
+  revision_id,previous_revision_id,snapshot,observed_at:`2026-11-18T0${hour}:00:00Z`
+ });
+ const updates=[observed('first',1),observed('later',4,'first'),observed('replayed',3,'later'),
+  observed('doc',5,'replayed'),observed('ready',6,'doc'),observed('same-batch',6,'doc','ready'),
+  observed('tie',6,'ready'),observed('other',2)];
+ const revisions=updates.map(row=>revision(row.revision_id,row.revision_id==='other'?'test':'prod',
+  {ready:row.revision_id!=='doc'}));
+ const results=summarizeUpdates({revisions,updates},id=>[field('root',{base:id==='ready'?'xs:int':'xs:string'})]);
+ const left=Object.fromEntries(results.map(row=>[row.revision_id,row.comparison.left]));
+ assert.deepEqual(left,{first:null,later:'replayed',replayed:'first',doc:'later',ready:'later',
+  'same-batch':'later',tie:'ready',other:'first'});
+ assert.equal(results[4].comparison.counts.changed,1,'a separately supplied ZIP is compared against the prior ready edition');
+ assert.equal(results[2].previous_revision_id,'later','the raw history is preserved');
+ const fallback=summarizeUpdates({
+  revisions:[revision('doc','prod',{ready:false}),revision('ready'),revision('other','test')],
+  updates:[observed('doc',1),observed('other',2),observed('ready',3,'doc')]
+ },()=>fields.p1)[2];
+ assert.equal(fallback.comparison.left,'other');
+ assert.equal(fallback.comparison.basis,'other_contour');
+ const grouped=summarizeUpdates({
+  revisions:[revision('first'),revision('later'),revision('alias','prod',{display_revision_id:'later'})],
+  updates:[observed('first',1),observed('later',4,'first'),observed('alias',3,'later')]
+ },()=>fields.p1);
+ assert.equal(grouped[1].comparison.left,'first','an earlier alias of the current schema cannot be its own baseline');
+ assert.equal(grouped[2].comparison.left,'first');
+ const importReport=summarizeUpdates({
+  revisions:[revision('later'),revision('alias','prod',{display_revision_id:'later'})],
+  updates:[observed('later',3),observed('alias',4,'later')]
+ },()=>fields.p1);
+ assert.equal(importReport[0].comparison.status,'no_baseline');
+ assert.equal(importReport[1].comparison.left,'later','a hidden source event keeps its historical import comparison');
+ assert.deepEqual(importReport[1].comparison.counts,{added:0,removed:0,changed:0});
+}
+{
  for(const [base,old,next,facets] of [['decimal','01.00','1',[]],['token',' foo   bar ','foo bar',[]],['decimal','1','1',[['minInclusive','01.00']]]]){
   const rows=summarizeUpdates({revisions:[revision('old'),revision('next')],updates:[event('next','old')]},id=>[field('v',{base:'xs:'+base,flags:{fixed:id==='old'?old:next},values:[[id==='old'?old:next,'']],facets:id==='old'?facets:facets.map(([k])=>[k,'1'])})]);
   assert.deepEqual(rows[0].comparison.counts,{added:0,removed:0,changed:0},'typed equivalents do not enter journal counts');
@@ -73,6 +108,13 @@ const result=summarizeUpdates(catalog,id=>fields[id]);
  const events=summarizeUpdates({revisions:[revision('old'),revision('next')],updates:[event('next','old')]},
   id=>[field('flag',{base:'xs:boolean',flags:{default:versions[id]}})]);
  assert.equal(events[0].comparison.counts.changed,0,'equivalent boolean defaults have identical journal counts');
+}
+{
+ const partial=field('notation',{base:'xs:NOTATION',values:[['p:code','']]});
+ const expanded={...partial,valueQNames:[['urn:example','code']]};
+ const catalog={revisions:[revision('old'),revision('next')],updates:[event('next','old')]};
+ assert.equal(summarizeUpdates(catalog,id=>[id==='old'?partial:expanded])[0].comparison.limitedNotation,true);
+ assert.equal(summarizeUpdates(catalog,()=>[expanded])[0].comparison.limitedNotation,undefined);
 }
 {
  const model=groups=>[{...field('root'),contentModel:['sequence','a','b','c','d'],contentModelBounds:{kind:'sequence',min:'1',max:'1',children:groups.map(children=>({kind:'sequence',min:'0',max:'1',children}))}}];

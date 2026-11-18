@@ -1,5 +1,5 @@
 /* Editable mappings remain a draft until the complete selection is applied. */
-(function(root,factory){"use strict";const api=factory();if(typeof module==="object"&&module.exports)module.exports=api;else root.SedoMappingDraft=api})(typeof globalThis!=="undefined"?globalThis:this,function(){
+(function(root,factory){"use strict";const common=typeof module==="object"&&module.exports;const api=factory(common?require("./comparison-export.js"):root.SedoComparisonExport);if(common)module.exports=api;else root.SedoMappingDraft=api})(typeof globalThis!=="undefined"?globalThis:this,function(Excel){
  "use strict";
  const key=p=>JSON.stringify([p.beforePath,p.afterPath]);
  const clean=p=>({beforePath:p.beforePath,afterPath:p.afterPath,comment:p.comment??""});
@@ -13,6 +13,7 @@
   function check(p){
    if(typeof p.beforePath!=="string"||typeof p.afterPath!=="string"||typeof(p.comment??"")!=="string"||!old.has(p.beforePath)||!next.has(p.afterPath))throw Error("Выберите существующий XML-путь в обеих схемах.");
   }
+  function checkEdit(p){check(p);Excel.checkMappingComment(p.comment??"")}
   function refresh(force){
    for(const row of rows){check(row);if(row.origin==="relative")auto.set(key(row),{id:row.id,selected:row.selected})}
    // Unconfirmed Excel rows reserve their branches but cannot infer child pairs.
@@ -37,14 +38,14 @@
    isProposal,
    get rows(){return rows.map(r=>({...r}))},
    get conflicts(){return conflicts.map(r=>({...r}))},
-   add(pair){check(pair);duplicate(pair);return transaction(()=>{const id=++serial;rows.push({...clean(pair),id,origin:"browser",selected:true});return id})},
-   edit(id,pair){check(pair);find(id);duplicate(pair,id);return transaction(()=>{rows=rows.map(r=>r.id===id?{...clean(pair),id,origin:"browser",selected:true}:r)})},
+   add(pair){checkEdit(pair);duplicate(pair);return transaction(()=>{const id=++serial;rows.push({...clean(pair),id,origin:"browser",selected:true});return id})},
+   edit(id,pair){checkEdit(pair);find(id);duplicate(pair,id);return transaction(()=>{rows=rows.map(r=>r.id===id?{...clean(pair),id,origin:"browser",selected:true}:r)})},
    remove(id){const row=find(id);return transaction(()=>{blocked.add(row.beforePath);rows=rows.filter(r=>r.id!==id)})},
    toggle(id,selected){find(id);return transaction(()=>{rows=rows.map(r=>r.id===id?{...r,selected:!!selected}:r)})},
    selectProposals(selected){return transaction(()=>{rows=rows.map(r=>isProposal(r)?{...r,selected:!!selected}:r)},!!selected)},
    summary(){
     const pairs=rows.filter(r=>r.selected).map(clean),errors=[],seen=new Set();
-    for(const p of pairs){try{check(p)}catch(error){errors.push(error.message)}const k=key(p);if(seen.has(k))errors.push("Дубликат выбранной пары: "+p.beforePath+" → "+p.afterPath);seen.add(k)}
+    for(const p of pairs){try{checkEdit(p)}catch(error){errors.push(p.beforePath+" → "+p.afterPath+". "+error.message)}const k=key(p);if(seen.has(k))errors.push("Дубликат выбранной пары: "+p.beforePath+" → "+p.afterPath);seen.add(k)}
     return {pairs,errors,dirty:deletionsChanged||fingerprint(pairs)!==saved,selectedCount:pairs.length,savedCount:savedPairs.length};
    }
   };

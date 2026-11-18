@@ -252,6 +252,146 @@ class WsdlSourcesTests(unittest.TestCase):
   fresh, _ = self.collect({SEED: wsdl, base+'part.xsd': part})
   self.assertIn('schemas/001/inline-0.xsd', {item['path'] for item in fresh['schemas']})
 
+ def test_qualified_inline_entry_binds_module_and_individual_documents(self):
+  import base64
+  import json
+  import subprocess
+  import sys
+  import tempfile
+  from pathlib import Path
+  from catalog import derive
+  from collector_snapshots import make_manifest, validate_manifest
+  from module_xsd import match_document
+  from wsdl_sources import _archive
+  from xsd_bundle import _prepare, _selected, _zip
+
+  base = BASE.rsplit('/', 1)[0] + '/'
+  schema = f'<xs:schema xmlns:xs="{XS}" xmlns:m="urn:main" targetNamespace="urn:main">'
+  wrapper = ('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>' + schema
+             + '<xs:include schemaLocation="root.xsd"/><xs:include schemaLocation="types.xsd"/>'
+             + '</xs:schema></w:types></w:definitions>').encode()
+  root = (schema + '<xs:element name="r" type="m:Code"/></xs:schema>').encode()
+  types = (schema + '<xs:simpleType name="Code"><xs:restriction base="xs:int"/></xs:simpleType></xs:schema>').encode()
+  support, objects = self.collect({SEED: wrapper, base+'root.xsd': root, base+'types.xsd': types})
+  document = dict(kind='docx', environment='test', url='https://example.test/Тип_сообщения_999.docx',
+                  sha256='a'*64, label='Example',
+                  structure=[['Корневой элемент','r'],['Пространство имен файла XML-схемы','urn:main']])
+  module = dict(document, module_bindings=[dict(number='999', root='r', namespace='urn:main')])
+  match, = derive(dict(format=7, entries=[document, support]))['revisions']
+  self.assertEqual(match['status'], 'matched')
+  self.assertIn('inline-', match['schema_path'])
+  matches, issues = match_document(module, [support], objects.__getitem__)
+  self.assertEqual(len(matches), 1, issues)
+  self.assertEqual(matches[0]['schema_path'], match['schema_path'])
+  named = dict(document, structure=document['structure'] + [['Расположение файла XML-схемы','root.xsd']])
+  explicit, = derive(dict(format=7, entries=[named, support]))['revisions']
+  self.assertTrue(explicit['schema_path'].endswith('/root.xsd'))
+
+  other = _archive({'root.xsd': root.replace(b'm:Code', b'xs:string')})
+  objects[sha(other)] = other
+  alternative = dict(kind='zip', environment='test', url='https://example.test/other.zip',
+                     sha256=sha(other), **inspect_file(other, 'zip'))
+  unmatched, = derive(dict(format=7, entries=[document, support, alternative]))['revisions']
+  self.assertEqual(unmatched['status'], 'review')
+  matches, issues = match_document(module, [support, alternative], objects.__getitem__)
+  self.assertEqual(matches, [])
+  self.assertIn('Неоднозначные схемы', [issue['reason'] for issue in issues])
+
+  original_archive = objects[support['sha256']]
+  old = dict(support, **inspect_file(original_archive, 'zip'))
+  self.assertNotEqual(support['schemas'], old['schemas'])
+  old_manifest = make_manifest(old, '2026-11-16T00:00:00+00:00')
+  self.assertEqual(validate_manifest(old_manifest, objects.__getitem__), old)
+  with zipfile.ZipFile(io.BytesIO(original_archive)) as archive:
+   output, records, constraints = _prepare(match, _selected(match, archive))
+  with tempfile.TemporaryDirectory() as tmp:
+   folder = Path(tmp)
+   with zipfile.ZipFile(io.BytesIO(_zip(match, output, records, constraints))) as package:
+    package.extractall(folder)
+   for value, expected in [('1',0), ('bad',1)]:
+    (folder/'input.xml').write_text(f'<r xmlns="urn:main">{value}</r>', encoding='utf8')
+    result = subprocess.run([sys.executable, 'validate.py', 'input.xml'], cwd=folder,
+                            capture_output=True, text=True, encoding='utf8')
+    self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
+  pack = dict(format=1, number='999', environment='test', revision_id=match['revision_id'], root='r',
+              namespace='urn:main', entrypoint='message.xsd', fields=['r'], field_namespaces=[['urn:main']],
+              files={name:base64.b64encode(raw).decode('ascii') for name, raw in output.items()
+                     if not name.startswith('originals/')})
+  script = Path(__file__).with_name('included_root_wasm.cjs')
+  result = subprocess.run(['node', str(script)], input=json.dumps([pack]), text=True, capture_output=True, timeout=40)
+  self.assertEqual(result.returncode, 0, result.stderr)
+
+ def test_exact_wsdl_import_uses_fetched_path_for_identical_bytes(self):
+  import posixpath
+  import tempfile
+  from pathlib import Path
+  from collector_snapshots import make_manifest, validate_manifest
+  from review_field_links import attach_schema_sources
+  from schema import dependency_set
+  from source_provenance import publish_sources
+  from sync import write
+
+  base = BASE.rsplit('/', 1)[0] + '/'
+  base_schema = f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:common">'
+  for nested in (False, True):
+   with self.subTest(nested=nested):
+    imports = ''.join(f'<xs:import namespace="urn:{v}" schemaLocation="{v}/root.xsd"/>' for v in ('v1','v2'))
+    resources = {SEED: (f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="{XS}">'
+                        f'<w:types><xs:schema>{imports}</xs:schema></w:types></w:definitions>').encode()}
+    restriction = '<xs:simpleType name="Code"><xs:restriction base="xs:string"><xs:length value="1"/></xs:restriction></xs:simpleType>'
+    for version, length in [('v1','1'), ('v2','2')]:
+     directory = base + version + '/'
+     resources[directory+'root.xsd'] = (f'<xs:schema xmlns:xs="{XS}" xmlns:c="urn:common" targetNamespace="urn:{version}">'
+        f'<xs:import namespace="urn:common" schemaLocation="{directory}Common.xsd"/>'
+        '<xs:element name="response" type="c:Code"/></xs:schema>').encode()
+     common_content = '<xs:include schemaLocation="types.xsd"/>' if nested else restriction
+     resources[directory+'Common.xsd'] = (base_schema + common_content + '</xs:schema>').encode()
+     if nested:
+      resources[directory+'types.xsd'] = (base_schema + restriction.replace('value="1"', f'value="{length}"') + '</xs:schema>').encode()
+    support, objects = self.collect(resources)
+    raw = objects[support['sha256']]
+    revisions = []
+    with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+     common_paths = [name for name in archive.namelist() if name.endswith('/Common.xsd')]
+     self.assertEqual(len(common_paths), 2)
+     for version, path in zip(('v1','v2'), common_paths):
+      entry = next(s['path'] for s in support['schemas'] if s['namespace'] == 'urn:' + version)
+      dependencies = dependency_set(support['schemas'], entry)
+      closure = {posixpath.normpath(posixpath.join(posixpath.dirname(entry), name)) for name, _ in dependencies}
+      self.assertIn(path, closure)
+      self.assertEqual(len(set(common_paths) & closure), 1)
+      tree = Schema(archive, entry, 'response'); tree.field(tree.root)
+      self.assertIn(['length', version[-1] if nested else '1'], tree.fields[0]['facets'])
+      expected = next(s for s in support['source_files'] if s['url'] == base+version+'/Common.xsd')
+      self.assertEqual(expected['archive_path'], path)
+      if not nested:
+       revision = dict(schema_path=entry, root='response', schema_sources=support['source_files'],
+                       archive_sha256=support['sha256'], schema_source_type='wsdl',
+                       archive_url=support['url'], status='matched', revision_id=version,
+                       dependencies=dependencies, environment='test')
+       finding = dict(kind='Ограничение длины', xlocation='Common.xsd · response', xsd='length = 1', field_paths=['response'])
+       linked, = attach_schema_sources(revision, [finding], io.BytesIO(raw))
+       self.assertEqual(linked['xsd_source'], dict(path=path, sha256=expected['sha256'],
+                                   url=expected['url'], download='sources/'+expected['sha256']+'.xsd'))
+       revisions.append((revision, linked['xsd_source']))
+    if not nested:
+     with tempfile.TemporaryDirectory() as tmp:
+      folder = Path(tmp)
+      state, site = folder/'state', folder/'site'
+      write(state/'objects'/support['sha256'], raw)
+      publish_sources({'revisions': [revision for revision, _ in revisions]}, state, site)
+      for revision, reference in revisions:
+       published, = [source for source in revision['schema_files'] if source['path'] == reference['path']]
+       self.assertEqual(published['download'], reference['download'])
+       self.assertEqual((site/reference['download']).read_bytes(), resources[reference['url']])
+     def blob(data):
+      objects[sha(data)] = data
+      return sha(data)
+     legacy = collect(SEED, 'test', resources.__getitem__, blob, legacy_wsdl_layout=True)
+     self.assertNotEqual(legacy['sha256'], support['sha256'])
+     manifest = make_manifest(legacy, '2026-11-16T00:00:00+00:00')
+     self.assertEqual(validate_manifest(manifest, objects.__getitem__), legacy)
+
  def test_inline_include_entry_keeps_a_single_root_candidate_but_not_unrelated_contracts(self):
   from module_xsd import match_document
   from wsdl_sources import _archive

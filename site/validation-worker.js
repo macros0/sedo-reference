@@ -2,7 +2,7 @@
 // A blob worker inherits the opaque frame's connect-src 'none' CSP.
 // This additional guard prevents even accidental attempts by the engine.
 for(const name of ['fetch','XMLHttpRequest','WebSocket','EventSource','importScripts'])Object.defineProperty(self,name,{value:()=>{throw Error('Сетевые обращения валидатора запрещены.')},writable:false,configurable:false});
-function runLint(args,inputFiles,filterBooleanAliases=false){return new Promise((resolve,reject)=>{
+function runLint(args,inputFiles,{booleanAliases:filterBooleanAliases=false,typedFixed=false,calendarAttributes=false}={}){return new Promise((resolve,reject)=>{
  let stdout='',stderr='',stderrTruncated=false,lintErrors=false,booleanAliases=0,otherOutput=false,pending=[],warning=false;
  const append=(old,text)=>(old+String(text)+'\n').slice(0,65536);
  const retain=s=>{
@@ -22,14 +22,17 @@ function runLint(args,inputFiles,filterBooleanAliases=false){return new Promise(
   if(!pending.length)return;
   const message=pending.join('\n');pending=[];
   const alias=message.match(/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+': The actual value '[ \t\r\n]*(true|1|false|0)[ \t\r\n]*' does not match the fixed value constraint '[ \t\r\n]*(true|1|false|0)[ \t\r\n]*'\.$/);
-  const typed=filterBooleanAliases==='typed'&&!alias&&/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+': The actual value '[\s\S]*' does not match the fixed value constraint '[\s\S]*'\.$/.test(message);
-  if(typed||alias&&(['1','true'].includes(alias[1])===['1','true'].includes(alias[2])))booleanAliases++;
+  const typed=typedFixed&&!alias&&/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+': The actual value '[\s\S]*' does not match the fixed value constraint '[\s\S]*'\.$/.test(message);
+  const calendar=calendarAttributes&&message.match(/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+', attribute '[^']+': The value '([^']*)' does not match the fixed value constraint '([^']*)'\.$/);
+  if(typed||calendar&&sameCalendarValue(calendar[2].includes('T')?'dateTime':'time',calendar[1],calendar[2])
+    ||alias&&(['1','true'].includes(alias[1])===['1','true'].includes(alias[2])))booleanAliases++;
   else retain(message);
  }
  const printErr=s=>{
   if(!filterBooleanAliases){retain(s);return}
   if(/^input\.xml(?:[: ])/.test(s))flush();
-  if(pending.length||/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+': The actual value '/.test(s))pending.push(s);
+  if(pending.length||/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+': The actual value '/.test(s)
+    ||calendarAttributes&&/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+', attribute '[^']+': The value '/.test(s))pending.push(s);
   else retain(s);
  };
  Module({wasmBinary:self.SEDO_WASM,inputFiles,arguments:[...args],wasmMemory:new WebAssembly.Memory({initial:256,maximum:2048}),print:s=>{stdout=append(stdout,s)},printErr,onExit:code=>{flush();resolve({code,stdout,stderr,stderrTruncated,lintErrors,booleanAliases,otherOutput})},onAbort:()=>reject(Error('Недостаточно памяти или ошибка WASM.'))}).catch(reject);
@@ -41,6 +44,10 @@ function lintDiagnostics(result){
  return {errors,diagnosticsTruncated:result.stderrTruncated||truncated};
 }
 const MONTH_START=[0,31,59,90,120,151,181,212,243,273,304,334];
+function sameCalendarValue(kind,left,right){
+ const a=calendarValue(kind,left),b=calendarValue(kind,right);
+ return a&&b&&a.every((part,i)=>part===b[i]);
+}
 function calendarValue(kind,value){
  const match=/^(?:(-?[0-9]{4,})-([0-9]{2})-([0-9]{2})T)?([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.([0-9]+))?(Z|[+-][0-9]{2}:[0-9]{2})?$/.exec(value.replace(/^[ \t\r\n]+|[ \t\r\n]+$/g,''));
  if(!match||Boolean(match[1])!==(kind==='dateTime'))return null;
@@ -213,8 +220,10 @@ self.onmessage=async event=>{
   const locations=self.SedoValidationPaths,index=locations.index(typeof event.data.source==='string'&&event.data.source.length<=core.MAX_BYTES?event.data.source:text);
   if(parsed.stdout.trim()!==pack.root+'|'+(pack.namespace||'')){self.postMessage({type:'result',valid:false,errors:locations.locate([{root:true,line:index?.[0]?.line||1,message:'Неверный корневой элемент или пространство имён. Ожидается {'+(pack.namespace||'')+'}'+pack.root+'.'}],index,pack.fields||[],pack.field_namespaces||[])});return}
   const schemaArgs=['--nonet','--noout','--schema','message.xsd','input.xml'];
-  const typedFixed=[pack.attribute_checks||[],...(pack.attribute_type_checks||[]).map(p=>p.checks),...(pack.attribute_element_checks||[]).map(p=>p.checks)].some(rules=>rules.some(rule=>rule.element_value));
-  let result=await runLint(schemaArgs,files,pack.boolean_fixed_replacements?(typedFixed?'typed':true):false);
+  const rules=[pack.attribute_checks||[],...(pack.attribute_type_checks||[]).map(p=>p.checks),...(pack.attribute_element_checks||[]).map(p=>p.checks)].flat();
+  const typedFixed=rules.some(rule=>rule.element_value);
+  const calendarAttributes=rules.some(rule=>rule.calendar_fixed&&!rule.element_value);
+  let result=await runLint(schemaArgs,files,pack.boolean_fixed_replacements?{booleanAliases:true,typedFixed,calendarAttributes}:{});
   if(![0,3,4].includes(result.code))throw Error('Не удалось выполнить XSD-проверку. '+result.stderr.slice(0,2000));
   if([3,4].includes(result.code)&&result.booleanAliases){
    // Keep all original lexical restrictions, including the actual xsi:type.
@@ -262,7 +271,8 @@ self.onmessage=async event=>{
      const element=(node.ns?'{'+node.ns+'}':'')+node.name;
      const reason=value?`The actual value '${actual}' does not match the fixed value constraint '${fixed}'.`
       :`'${actual}' is not a valid value of the atomic type 'xs:${kind}'.`;
-     const message=`Element '${element}': ${reason}`;
+     const attribute=(rule.attribute[0]?'{'+rule.attribute[0]+'}':'')+rule.attribute[1];
+     const message=`Element '${element}'${rule.element_value?'':", attribute '"+attribute+"'"}: ${reason}`;
      diagnosticsTruncated||=message.length>2000;
      errors.push({line:node.line,message:message.slice(0,2000)});
     }

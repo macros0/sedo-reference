@@ -7,6 +7,11 @@
 })(typeof globalThis!=="undefined"?globalThis:this,function(SedoCompare){
  "use strict";
  const statuses={added:"Добавлено",removed:"Удалено",changed:"Изменено",mapped:"Сопоставлено без изменений",same:"Без изменений"};
+ const mappingDecisions=Object.freeze(["Не проверено","Подтверждено","Удалено","Переработано","Требует уточнения"]);
+ const maxCellLength=32767;
+ function checkMappingComment(comment){
+  if(comment.length>maxCellLength)throw Error("Комментарий превышает лимит Excel ("+maxCellLength+" символов). Сократите комментарий.");
+ }
  const json=value=>JSON.stringify(value??null);
  const text=value=>value===null||value===undefined?"":typeof value==="object"?json(value):String(value);
  const xmlValue=(value,name)=>name?value+" ({"+name[0]+"}"+name[1]+")":value;
@@ -43,7 +48,7 @@
    widths.forEach((width,i)=>{ws.getColumn(i+1).width=width});
    ws.getRow(start).values=headers;
    rows.forEach(row=>{
-    for(const value of row)if(typeof value==="string"&&value.length>32767)throw Error("Текст превышает лимит Excel (32767 символов). Выгрузка остановлена без обрезки данных.");
+    for(const value of row)if(typeof value==="string"&&value.length>maxCellLength)throw Error("Текст превышает лимит Excel ("+maxCellLength+" символов). Выгрузка остановлена без обрезки данных.");
     ws.addRow(row.map(value=>value===""?null:value));
    });
    ws.eachRow((row,n)=>{
@@ -99,7 +104,7 @@
    for(const [column,sourceColumn,value] of [[6,"B",exact?.doc||""],[7,"C",exact?constraints(exact):""]]){
     mapping.getCell(row,column).value={formula:`IF(E${row}="","",IFERROR(INDEX('Стало'!$${sourceColumn}$2:$${sourceColumn}$${last},${match})&"","Путь не найден"))`,result:value};
    }
-   mapping.getCell(row,8).dataValidation={type:"list",allowBlank:true,formulae:['"Не проверено,Подтверждено,Удалено,Переработано,Требует уточнения"']};
+   mapping.getCell(row,8).dataValidation={type:"list",allowBlank:true,formulae:['"'+mappingDecisions.join(",")+'"'],showErrorMessage:true,errorStyle:"stop",errorTitle:"Неизвестное решение",error:"Выберите решение из списка."};
    for(const column of [5,8,9]){const cell=mapping.getCell(row,column);cell.fill={type:"pattern",pattern:"solid",fgColor:{argb:input}};cell.font={name:"Arial",size:10,color:{argb:"156582"}};cell.numFmt="@"}
   }
   const diffRows=results.flatMap(d=>{
@@ -123,6 +128,8 @@
    ["Сравнение","Подтверждённые ручные пары сравниваются между собой. Остальные поля сравниваются по полному XML-пути; при смене корня или имени считаются удалёнными/добавленными.",""],
    ...((before.some(SedoCompare.hasUnresolvedUnionValues)||after.some(SedoCompare.hasUnresolvedUnionValues))
     ?[["Покрытие сравнения union",SedoCompare.unionCoverageNote,""]]:[]),
+   ...((before.some(SedoCompare.hasUnresolvedNotationValues)||after.some(SedoCompare.hasUnresolvedNotationValues))
+    ?[["Покрытие сравнения NOTATION",SedoCompare.notationCoverageNote,""]]:[]),
    ["Как сопоставлять","На первом листе выберите или вставьте полный путь из «Стало» в жёлтую ячейку. Пары можно также добавлять и редактировать в браузере: сохраните строку в черновик, затем нажмите «Применить и обновить сравнение». Описание и ограничения подтянутся формулами Excel. Для родительского блока можно подтвердить его строку: при загрузке браузер предложит вложенные теги с одинаковыми относительными путями. Предложения можно проверить и исключить в предпросмотре.",""],
    ["Проверка смысла","Совпадение пути не подтверждает одинаковое назначение. Сверяйте описания, вложенные поля, группы, условия и ограничения. Переименования автоматически не определяются.",""],
    ["Разделение и объединение","При разделении старого поля на несколько новых дублируйте его строку и укажите разные пути. При объединении допускается один новый путь в нескольких строках. Поясните решение в комментарии.",""],
@@ -167,5 +174,5 @@
   const url=URL.createObjectURL(new Blob([bytes],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
   const link=document.createElement("a");link.href=url;link.download=filename(options.left,options.right);document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
  }
- return {constraints,edition,filename,createWorkbook,download,loadLibrary};
+ return {constraints,edition,filename,createWorkbook,download,loadLibrary,mappingDecisions,checkMappingComment};
 });

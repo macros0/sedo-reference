@@ -2,11 +2,12 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
 class Element{constructor(tag){Object.assign(this,{tagName:tag,children:[],dataset:{},disabled:false,checked:false,textContent:'',className:'',value:'',hidden:false})}append(...items){this.children.push(...items)}replaceChildren(...items){this.children=[...items]}setAttribute(){}}
 const storage=new Map(),ctx=vm.createContext({document:{createElement:tag=>new Element(tag)},localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)}});
-for(const name of ['mapping-draft.js','mapping-editor.js','comparison-mapping.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../web',name),'utf8'),ctx);
+for(const name of ['comparison-export.js','mapping-draft.js','mapping-editor.js','comparison-mapping.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../web',name),'utf8'),ctx);
 const api=ctx.SedoMapping,host=new Element('host'),walk=e=>[e,...e.children.flatMap(walk)],find=cls=>walk(host).filter(e=>e.className.split(' ').includes(cls));
 const opts={left:{revision_id:'left'},right:{revision_id:'right'},before:[{path:'old/a',doc:'Исходное поле'},{path:'old/b',doc:'Свободное поле'},{path:'outside/x',doc:'Другая ветка'}],after:[{path:'new/a',doc:'Новое поле'},{path:'new/b',doc:'Другое поле'},{path:'outside/y',doc:'Другая ветка'}],isCurrent:()=>true};let changed=0;
 const mount=saved=>{host.replaceChildren();api.mount(host,opts,{pairs:saved,notice:''},async()=>{await Promise.resolve();changed++;return true})};
 const choose=(side,value)=>{const select=find('mapping-tag-choice-'+side)[0];select.value=value;select.onchange()};
+const save=()=>find('mapping-edit-form')[0].onsubmit({preventDefault(){}});
 (async()=>{
  api.store.save(opts,[],{before:["old/a"],after:[]});
  const deletedOnly=api.store.load(opts);api.mount(host,opts,deletedOnly,async()=>true);
@@ -16,7 +17,7 @@ const choose=(side,value)=>{const select=find('mapping-tag-choice-'+side)[0];sel
  assert.ok(walk(host).some(n=>n.textContent.includes('Исключено из автосопоставления: 1')));
  await resetDeleted.onclick();assert.equal(api.store.load(opts).deleted?.before?.length||0,0);
  mount([]);find('mapping-add')[0].onclick();assert.equal(find('mapping-apply')[0].disabled,true,'unfinished editor blocks applying');
- choose('before','old/a');choose('after','new/a');find('mapping-edit-comment')[0].value='Первый комментарий';find('mapping-editor-save')[0].onclick();
+ choose('before','old/a');choose('after','new/a');find('mapping-edit-comment')[0].value='Первый комментарий';save();
  const draftBeforeUpload=find('mapping-explicit').length,input=find('mapping-file')[0];
  let completeRead;input.files=[{size:7,arrayBuffer:()=>new Promise(resolve=>{completeRead=resolve})}];const importing=input.onchange();
  assert.equal(find('mapping-preview')[0].inert,true,'freeze the prior editor while a replacement is being read');
@@ -25,16 +26,22 @@ const choose=(side,value)=>{const select=find('mapping-tag-choice-'+side)[0];sel
  assert.equal(find('mapping-preview')[0].inert,false,'restore the prior editor after a failed import');
  assert.equal(find('mapping-explicit').length,draftBeforeUpload,'unreadable XLSX must preserve the unapplied draft');
  assert.equal(find('mapping-row-editor')[0].hidden,false,'saving a draft pair must keep the form open for the next pair');assert.match(find('mapping-editor-feedback')[0].textContent,/old\/a.*new\/a/);assert.equal(find('mapping-tag-choice-before')[0].value,'');assert.equal(find('mapping-tag-choice-after')[0].value,'');assert.ok(!find('mapping-tag-choice-before')[0].children.some(e=>e.value==='old/a'),'saved draft endpoints must disappear from the next selection');assert.equal(find('mapping-apply')[0].disabled,false,'a blank continuation form must not block applying saved pairs');
- choose('before','old/b');assert.equal(find('mapping-apply')[0].disabled,true,'partial next pair must block applying');find('mapping-editor-cancel')[0].onclick();
+ const nextSearch=find('mapping-tag-search-before')[0];nextSearch.value='Свободное';nextSearch.oninput();
+ assert.equal(find('mapping-apply-top')[0].disabled,false,'search alone must not block applying ready pairs');
+ choose('before','old/b');
+ assert.equal(find('mapping-apply-top')[0].disabled,true,'partial next pair must block applying');
+ assert.match(find('mapping-draft-message')[0].textContent,/тег «Стало»/);
+ const abortPair=find('mapping-cancel-edit-top')[0];assert.equal(abortPair.hidden,false);abortPair.onclick();
+ assert.equal(find('mapping-apply-top')[0].disabled,false,'cancelling only the active pair makes ready pairs applicable');
  assert.equal(find('mapping-explicit').length,1);assert.equal(find('mapping-draft-notice')[0].hidden,false);assert.equal(api.store.load(opts).pairs.length,0,'draft never writes storage');
- find('mapping-edit-row')[0].onclick();choose('after','new/b');find('mapping-edit-comment')[0].value='Изменено в браузере';find('mapping-editor-save')[0].onclick();
+ find('mapping-edit-row')[0].onclick();choose('after','new/b');find('mapping-edit-comment')[0].value='Изменено в браузере';save();
  assert.equal(find('mapping-explicit')[0].dataset.afterPath,'new/b');assert.equal(find('mapping-row-editor')[0].hidden,false);find('mapping-editor-cancel')[0].onclick();
- find('mapping-add-row')[0].onclick();choose('before','old/a');choose('after','new/b');find('mapping-editor-save')[0].onclick();assert.match(find('mapping-editor-error')[0].textContent,/уже/);assert.equal(find('mapping-apply')[0].disabled,true);
+ find('mapping-add-row')[0].onclick();choose('before','old/a');choose('after','new/b');save();assert.match(find('mapping-editor-error')[0].textContent,/уже/);assert.equal(find('mapping-apply')[0].disabled,true);
  find('mapping-editor-cancel')[0].onclick();await find('mapping-apply')[0].onclick();assert.equal(changed,1);assert.equal(find('mapping-draft-notice')[0].hidden,true);
  const saved=api.store.load(opts).pairs;assert.equal(saved.length,1);assert.equal(saved[0].afterPath,'new/b');assert.equal(saved[0].comment,'Изменено в браузере');
  mount(saved);find('mapping-suggest')[0].onclick();
- find('mapping-edit-row')[0].onclick();find('mapping-edit-comment')[0].value='Черновик после просмотра';find('mapping-editor-save')[0].onclick();find('mapping-editor-cancel')[0].onclick();
- find('mapping-add-row')[0].onclick();choose('before','old/b');choose('after','new/a');find('mapping-editor-save')[0].onclick();find('mapping-editor-cancel')[0].onclick();
+ find('mapping-edit-row')[0].onclick();find('mapping-edit-comment')[0].value='Черновик после просмотра';save();find('mapping-editor-cancel')[0].onclick();
+ find('mapping-add-row')[0].onclick();choose('before','old/b');choose('after','new/a');save();find('mapping-editor-cancel')[0].onclick();
  find('mapping-explicit')[0].checked=false;find('mapping-explicit')[0].onchange();
  const reopenedRows=find('mapping-explicit');find('mapping-suggest')[0].onclick();
  assert.equal(find('mapping-explicit').length,2,'viewing mappings must preserve the new draft pair');
@@ -53,8 +60,8 @@ const choose=(side,value)=>{const select=find('mapping-tag-choice-'+side)[0];sel
  api.store.save(opts,saved);mount(saved);find('mapping-suggest')[0].onclick();find('mapping-remove-row')[0].onclick();find('mapping-discard')[0].onclick();assert.equal(api.store.load(opts).pairs.length,1,'discard must preserve saved mappings');assert.equal(find('mapping-draft-notice')[0].hidden,true);
  mount(saved);find('mapping-suggest')[0].onclick();opts.isCurrent=()=>false;changed=0;await find('mapping-apply')[0].onclick();assert.equal(changed,0);assert.match(find('mapping-draft-errors')[0].textContent,/редакций/);
  opts.isCurrent=()=>true;api.store.clear(opts);mount([]);find('mapping-add')[0].onclick();
- const setSearch=(side,value)=>{const query=find('mapping-tag-search-'+side)[0];query.value=value;query.oninput()};setSearch('before','  old/  ');setSearch('after','ПОЛЕ');choose('before','old/a');choose('after','new/a');find('mapping-edit-comment')[0].value='Первая';find('mapping-editor-save')[0].onclick();
+ const setSearch=(side,value)=>{const query=find('mapping-tag-search-'+side)[0];query.value=value;query.oninput()};setSearch('before','  old/  ');setSearch('after','ПОЛЕ');choose('before','old/a');choose('after','new/a');find('mapping-edit-comment')[0].value='Первая';save();
  assert.equal(find('mapping-tag-search-before')[0].value,'  old/  ','keep the exact before search after save');assert.equal(find('mapping-tag-search-after')[0].value,'ПОЛЕ','keep description search after save');assert.deepEqual(available('before').filter(Boolean),['old/b']);assert.deepEqual(available('after').filter(Boolean),['new/b']);
- choose('before','old/b');choose('after','new/b');find('mapping-edit-comment')[0].value='Вторая';find('mapping-editor-save')[0].onclick();assert.equal(find('mapping-tag-search-before')[0].value,'  old/  ');assert.equal(find('mapping-tag-search-after')[0].value,'ПОЛЕ');assert.equal(available('before').filter(Boolean).length,0,'retained filter must still exclude another block');assert.equal(available('after').filter(Boolean).length,0);assert.equal(find('mapping-explicit').length,2,'continuous entry retains both distinct pairs');assert.equal(find('mapping-edit-comment')[0].value,'','comment clears for next pair');assert.equal(find('mapping-row-editor')[0].hidden,false);assert.equal(find('mapping-apply')[0].disabled,false);await find('mapping-apply')[0].onclick();assert.equal(api.store.load(opts).pairs.length,2);assert.equal(api.store.load(opts).pairs[0].comment,'Первая');assert.equal(api.store.load(opts).pairs[1].comment,'Вторая');
+ choose('before','old/b');choose('after','new/b');find('mapping-edit-comment')[0].value='Вторая';save();assert.equal(find('mapping-tag-search-before')[0].value,'  old/  ');assert.equal(find('mapping-tag-search-after')[0].value,'ПОЛЕ');assert.equal(available('before').filter(Boolean).length,0,'retained filter must still exclude another block');assert.equal(available('after').filter(Boolean).length,0);assert.equal(find('mapping-explicit').length,2,'continuous entry retains both distinct pairs');assert.equal(find('mapping-edit-comment')[0].value,'','comment clears for next pair');assert.equal(find('mapping-row-editor')[0].hidden,false);assert.equal(find('mapping-apply')[0].disabled,false);await find('mapping-apply')[0].onclick();assert.equal(api.store.load(opts).pairs.length,2);assert.equal(api.store.load(opts).pairs[0].comment,'Первая');assert.equal(api.store.load(opts).pairs[1].comment,'Вторая');
  console.log('Mapping editor UI: add/edit/comment, duplicate validation, continuous entry with retained path/description searches, occupied tags, unfinished form, unapplied banner, awaited save, remove-all, discard and stale guards passed.');
 })().catch(e=>{console.error(e);process.exitCode=1});

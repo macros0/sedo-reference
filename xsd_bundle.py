@@ -95,6 +95,28 @@ def _element_scalar_source(tree, node, restrictions=None):
     return None
 
 
+CALENDAR_TYPES = {'dateTime', 'time'}
+
+
+def _calendar_attribute_type(tree, node):
+    reference = node.get('ref')
+    if reference:
+        node = tree.resolve(reference, node, ['attribute'])
+    seen = set()
+    while node is not None and node not in seen:
+        seen.add(node)
+        qname = node.get('type') or node.get('base')
+        if qname:
+            target = tree.resolve(qname, node, ['simpleType'])
+            if target is None:
+                kind = qname.rsplit(':', 1)[-1]
+                return kind if kind in CALENDAR_TYPES else None
+            node = target
+        else:
+            node = next((child for child in node if child.tag in (X+'simpleType', X+'restriction')), None)
+    return None
+
+
 def _boolean_element_type(tree,node):
     """Boolean equality needs only the two standard aliases, not extra probes."""
     seen=set()
@@ -368,25 +390,34 @@ def _attribute_checks(row, selected, files, local_paths):
         # check; the expanded Schema below selects the actual fixed uses.
         return (node.get('fixed') is not None or (node.nsmap.get(prefix or None,''),name) in fixed_globals
                 or ('',name) in fixed_globals)
-    if not any(affected(node) for _,root in files.values() for node in _schema_components(root)):return {},{}
+    if not any(affected(node) or node.tag==X+'attribute' and node.get('fixed') is not None
+               for _,root in files.values() for node in _schema_components(root)):return {},{},set()
     archive_bytes=io.BytesIO()
     with zipfile.ZipFile(archive_bytes,'w') as archive:
         write_archive_targets(archive,getattr(selected,'import_targets',{}))
         for name,content in selected.items():archive.writestr(name,content)
     with zipfile.ZipFile(archive_bytes) as archive:
         tree=Schema(archive,row['schema_path'],row['root'])
-        tree.field(tree.root,coalesce_choices=False,skip_inactive_particles=True)
     # Existing boolean-only packs need no profiles for unrelated named types.
     # Their equality is fully checked by the primary boolean-alias path.
-    attribute_constraints=any(affected(node) for _,root in files.values() for node in _schema_components(root) if node.tag==X+'attribute')
+    calendar_declarations={node for root,_,_ in tree.documents.values() for node in _schema_components(root)
+                           if node.tag==X+'attribute' and node.get('fixed') is not None
+                           and _calendar_attribute_type(tree,node)}
+    attribute_constraints=bool(calendar_declarations) or any(
+        affected(node) for _,root in files.values() for node in _schema_components(root) if node.tag==X+'attribute')
     scalar_constraints=any(node.tag==X+'element' and node.get('fixed') is not None
                            and _element_scalar_source(tree,node) is not None and not _boolean_element_type(tree,node)
                            for root,_,_ in tree.documents.values() for node in _schema_components(root))
-    if not attribute_constraints and not scalar_constraints:return {},{}
+    if not attribute_constraints and not scalar_constraints:return {},{},set()
+    tree.field(tree.root,coalesce_choices=False,skip_inactive_particles=True)
     nodes={}
     for (name,_namespace),(root,_,_) in tree.documents.items():
         native=[e for e in files[name][1].iter() if isinstance(e.tag,str)]
         nodes.update(zip(root.iter(),native))
+    # One chameleon declaration can have a calendar type in one namespace and
+    # a different type in another. Relaxing it requires a probe in each context.
+    calendar_sources={nodes[node] for node in calendar_declarations}
+    relaxed_attributes=set()
     namespace='urn:sedo:attribute-value-checks'
     while any(root.get('targetNamespace')==namespace for _,root in files.values()):namespace+=':checks'
     checks=etree.Element('{'+XS+'}schema',nsmap={'xs':XS,'probe':namespace},targetNamespace=namespace)
@@ -427,7 +458,7 @@ def _attribute_checks(row, selected, files, local_paths):
             constraint=decl if 'fixed' in decl.attrib else source
             fixed=field['flags'].get('fixed')
             needs_probe=(fixed is not None and
-                         (decl.get('ref') if field['kind']=='attribute' else
+                         (decl.get('ref') or nodes[constraint] in calendar_sources if field['kind']=='attribute' else
                           _element_scalar_source(tree,source) is not None and not _boolean_element_type(tree,source)))
             signature=(fixed,tree.owner[source],tree.context[source][2],etree.tostring(nodes[source],with_tail=False),
                        frozenset(tree.prefixes[constraint].items())) if needs_probe else None
@@ -479,7 +510,7 @@ def _attribute_checks(row, selected, files, local_paths):
             element_value=field['kind']=='element'
             fixed=field['flags']['fixed']
             base_type=field['base'].rsplit(':',1)[-1] if field.get('baseNs')==XS else None
-            calendar=element_value and base_type in ('dateTime','time')
+            calendar=base_type in CALENDAR_TYPES
             constraint=decl if 'fixed' in decl.attrib else source
             probe_key=(constraint,source)
             if probe_key not in probe_names:
@@ -541,7 +572,9 @@ def _attribute_checks(row, selected, files, local_paths):
                     copy_type(anonymous, probe, alias if adopted else None)
             rule=dict(path=path,attribute=[field['ns'],field['name'] if element_value else field['name'][1:]],element=probe_names[probe_key],field=field['path'])
             if element_value:rule['element_value']=True
-            if calendar:rule['calendar_fixed']=[base_type,fixed]
+            if calendar:
+                rule['calendar_fixed']=[base_type,fixed]
+                if not element_value:relaxed_attributes.add(nodes[constraint])
             if guards:rule['guards']=guards
             rules.append(rule)
         return rules
@@ -565,9 +598,12 @@ def _attribute_checks(row, selected, files, local_paths):
             for child in _schema_components(node,skip_inactive_particles=True):
                 if child.tag=='{'+XS+'}any' or any_type_element(child):return True
                 if child.tag==X+'element' and child.get('fixed') is not None:return True
-                if child.tag=='{'+XS+'}attribute' and child.get('ref'):
-                    attribute=tree.resolve(child.get('ref'),child,['attribute'])
-                    if child.get('fixed') is not None or attribute.get('fixed') is not None:return True
+                if child.tag==X+'attribute':
+                    if child.get('ref'):
+                        attribute=tree.resolve(child.get('ref'),child,['attribute'])
+                        if child.get('fixed') is not None or attribute.get('fixed') is not None:return True
+                    elif nodes[child] in calendar_sources:
+                        return True
                 qname=child.get('type') or child.get('base') or child.get('ref')
                 if not qname:continue
                 kinds=['simpleType','complexType'] if child.get('type') or child.get('base') else [child.tag.rsplit('}',1)[-1]]
@@ -666,7 +702,7 @@ def _attribute_checks(row, selected, files, local_paths):
         if wildcards:profile['wildcards']=wildcards
         if any_types:profile['any_type_paths']=any_types
         element_rules.append(profile)
-    if not probe_names:return {},{}
+    if not probe_names:return {},{},set()
     root=etree.SubElement(checks,'{'+XS+'}element',name='checks')
     choice=etree.SubElement(etree.SubElement(root,'{'+XS+'}complexType'),'{'+XS+'}choice',minOccurs='0',maxOccurs='unbounded')
     for element_name in probe_names.values():etree.SubElement(choice,'{'+XS+'}element',ref='probe:'+element_name)
@@ -682,16 +718,18 @@ def _attribute_checks(row, selected, files, local_paths):
     if root_wildcards or root_any_types or any(profile.get('wildcards') or profile.get('any_type_paths') for profile in [*type_rules,*element_rules]):
         manifest['attribute_known_elements']=[list(key) for key in sorted(global_elements)]
     if element_rules:manifest['attribute_element_checks']=sorted(element_rules,key=lambda item:item['element'])
-    return generated,manifest
+    return generated,manifest,relaxed_attributes
 
 
-def _boolean_fixed_copies(row, selected, files, local_paths):
+def _boolean_fixed_copies(row, selected, files, local_paths, relaxed_attributes):
     """Relax scalar fixed for a second pass; typed probes enforce value equality.
 
     The manifest key and file names retain their legacy boolean-only spelling.
     """
+    kinds = (X+'element', X+'attribute') if relaxed_attributes else (X+'element',)
     def candidates(root):
-        return [node for node in _schema_components(root) if node.tag==X+'element' and node.get('fixed') is not None]
+        return [node for node in _schema_components(root) if node.tag in kinds and node.get('fixed') is not None]
+
     if not any(candidates(root) for _, root in files.values()):
         return {}, {}
     buffer = io.BytesIO()
@@ -709,14 +747,17 @@ def _boolean_fixed_copies(row, selected, files, local_paths):
             continue
         # A chameleon file can acquire different types from different owners.
         contexts = [candidates(doc[0]) for (path, _), doc in tree.documents.items() if path == name]
-        indices = [i for i in range(len(declarations)) if contexts and all(
-            _element_scalar_source(tree,nodes[i]) is not None for nodes in contexts)]
+        indices = [i for i, declaration in enumerate(declarations)
+                   if declaration in relaxed_attributes or declaration.tag == X+'element' and contexts
+                   and all(_element_scalar_source(tree,nodes[i]) is not None for nodes in contexts)]
         if not indices:
             continue
         alternate = copy.deepcopy(root)
         nodes = candidates(alternate)
         for i in indices:
-            nodes[i].set('default', nodes[i].attrib.pop('fixed'))
+            value = nodes[i].attrib.pop('fixed')
+            if nodes[i].tag == X+'element' or nodes[i].get('use', 'optional') == 'optional':
+                nodes[i].set('default', value)
         alternate_name = f'schemas/boolean-fixed-{index}.xsd'
         generated[alternate_name] = etree.tostring(alternate, encoding='UTF-8', xml_declaration=True)
         replacements[local_paths[name]] = alternate_name
@@ -772,9 +813,9 @@ def _prepare(row, selected):
         local=etree.tostring(root,encoding='UTF-8',xml_declaration=True)
         output[original_paths[name]]=content;output[local_paths[name]]=local
         records.append(dict(source_path=name,original_path=original_paths[name],local_path=local_paths[name],original_sha256=sha(content),local_sha256=sha(local),rewrites=changes))
-    generated,constraints=_attribute_checks(row,selected,files,local_paths)
+    generated,constraints,relaxed_attributes=_attribute_checks(row,selected,files,local_paths)
     output.update(generated)
-    boolean_copies, replacements = _boolean_fixed_copies(row, selected, files, local_paths)
+    boolean_copies, replacements = _boolean_fixed_copies(row, selected, files, local_paths, relaxed_attributes)
     if replacements:
         output.update(boolean_copies)
         constraints['boolean_fixed_replacements'] = replacements
@@ -799,9 +840,9 @@ def _zip(row, output, records, constraints=None):
     output['manifest.json']=(json.dumps(manifest,ensure_ascii=False,indent=2,sort_keys=True)+'\n').encode('utf8')
     output['validate.py']=Path(__file__).with_name('xsd_validate.py').read_text('utf-8-sig').encode('utf8')
     output['requirements.txt']=('lxml=='+LXML_VERSION+'\n').encode('ascii')
-    constraint_note=('Дополнительная схема schemas/attribute-checks.xsd проверяет fixed на ссылках атрибутов и значения элементов.\n'
-                     'Для полной проверки используйте validate.py: обычная проверка libxml2 пропускает fixed на ссылках\n'
-                     'атрибутов и сравнивает fixed элементов по написанию вместо значения типа.\n' if constraints and 'supplementary_schema' in constraints else '')
+    constraint_note=('Дополнительная схема schemas/attribute-checks.xsd участвует в проверке fixed атрибутов и элементов.\n'
+                     'Используйте validate.py для полной проверки фиксированных значений с учётом типа XSD.\n'
+                     if constraints and 'supplementary_schema' in constraints else '')
     if constraints and constraints.get('boolean_fixed_replacements'):
         constraint_note += 'Скрипт validate.py сравнивает fixed в пространстве значений типа XSD, сохраняя pattern и фактический xsi:type.\n'
     readme=f'''Комплект XSD сообщения СЭДО {row['number']}

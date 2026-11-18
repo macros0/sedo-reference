@@ -1,6 +1,24 @@
 const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path");
-const {compare,hasUnresolvedUnionValues}=require("../web/compare-core.js");
-const {facets:facetTrees,bounds,enumWhitespace,union:unionTrees,unionFlags}=require('./fixtures/comparison-xsd.cjs');
+const {compare,hasUnresolvedUnionValues,hasUnresolvedNotationValues}=require("../web/compare-core.js");
+const {facets:facetTrees,bounds,enumWhitespace,union:unionTrees,unionFlags,notation}=require('./fixtures/comparison-xsd.cjs');
+for(const [kind,[before,after,alias]] of Object.entries(notation)){
+ const changes=compare(before,after).flatMap(row=>row.changes);
+ assert.equal(changes.filter(change=>change.key==='flags').length,2,kind);
+ assert.equal(changes.filter(change=>change.key==='values').length,2,kind);
+ assert.match(JSON.stringify(changes),/p:code.*urn:A.*p:code.*urn:B/);
+ assert.deepEqual(compare(before,alias),[],kind+' equivalent prefix');
+ assert.equal(before.some(hasUnresolvedNotationValues),false);
+ const legacy=structuredClone(before);
+ for(const field of legacy){
+  delete field.valueQNames;
+  delete field.flagQNames;
+  delete field.unionValueTypes;
+  delete field.unionFlagTypes;
+ }
+ assert.equal(legacy.some(hasUnresolvedNotationValues),true,kind+' legacy values limit coverage');
+ assert.deepEqual(compare(legacy,before),[],kind+' same legacy lexical values');
+ assert.deepEqual(compare(before,legacy),[],kind+' symmetric fallback to lexemes');
+}
 for(const [name,[before,after,alias]] of Object.entries(unionFlags)){
  const changes=compare(before,after).flatMap(row=>row.changes);
  if(name==='unresolved'){

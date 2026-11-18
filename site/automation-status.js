@@ -39,7 +39,12 @@
   const versionsText=check.state==='success'&&count!==null?(count?'Добавлено редакций: '+count:'Новых редакций нет'):check.state==='processing'?'Проверка справочника выполняется':check.state==='waiting'?'Ожидается обработка новых снимков SourceCraft':'Число новых редакций пока неизвестно';
   const publicationText={success:'Обновление опубликовано',failure:'Публикация завершилась ошибкой',processing:'Публикация выполняется',waiting:'Ожидает публикации',not_published:'Обновление не опубликовано',superseded:'Pages опубликовал другую версию справочника',cancelled:'Публикация отменена',unknown:'Публикация не подтверждена'}[pub.state]||'Публикация не подтверждена';
   const publicationLines=[publicationText];if(pub.finished_at)publicationLines.push(date(pub.finished_at));
-  if(!['success','superseded'].includes(pub.state)&&gh.last_successful_publication?.finished_at)publicationLines.push('Предыдущая успешная публикация: '+date(gh.last_successful_publication.finished_at));
+  const publicationURL=pagesRunURL(pub),lastRun=gh.last_successful_publication;
+  let latestDeployment;
+  if(lastRun?.state==='success'&&Number.isFinite(Date.parse(lastRun.finished_at))){
+   const url=pagesRunURL(lastRun);
+   latestDeployment={text:'Последняя успешная выкладка: '+date(lastRun.finished_at),url:url===publicationURL?null:url};
+  }
   const states=[sourceCard.state,checkState||'unknown',pub.state||'unknown'];
   let tone=states.includes('failure')||states.includes('not_published')?'failure':
    states.includes('stale')||now-Date.parse(data.generated_at)>STALE?'stale':
@@ -51,18 +56,33 @@
   return {tone,summary,updated:'Статус получен '+date(data.generated_at)+'. Фактический запуск может задержаться относительно расписания.',cards:[
    sourceCard,
    {title:'Новые редакции · '+(labels[checkState]||labels.unknown),state:checkState,lines:[versionsText,...(versions.checked_at?['Проверено '+date(versions.checked_at)]:[]),'Следующий забор по расписанию: '+nextRun('github',now)],url:check.url,link:'Открыть проверку GitHub'},
-   {title:'GitHub Pages · '+(labels[pub.state]||labels.unknown),state:pub.state,lines:publicationLines,url:pub.url,link:'Открыть публикацию'}
+   {title:'GitHub Pages · '+(labels[pub.state]||labels.unknown),state:pub.state,lines:publicationLines,url:publicationURL,link:'Открыть публикацию',latestDeployment}
   ]};
  }
- function safeLink(value){return typeof value==='string'&&(/^https:\/\/github\.com\/macros0\/sedo-reference\/actions\/runs\/\d+$/.test(value)||value==='https://sourcecraft.dev/alexey-sagitov/sedo-xsd-collector')?value:null}
+ function safeLink(value){return typeof value==='string'&&(/^https:\/\/github\.com\/macros0\/sedo-reference\/actions\/runs\/\d+(?:\/attempts\/[1-9]\d*)?$/.test(value)||value==='https://sourcecraft.dev/alexey-sagitov/sedo-xsd-collector')?value:null}
+ function pagesRunURL(run){
+  const url=safeLink(run.url);
+  if(!url?.startsWith('https://github.com/'))return null;
+  const attempt=run.run_attempt;
+  return Number.isInteger(attempt)&&attempt>0&&!url.includes('/attempts/')?url+'/attempts/'+attempt:url;
+ }
  function mount(document,fetcher){
   const host=document.getElementById('automation-status');if(!host)return;
   const summary=document.getElementById('automation-summary'),cards=document.getElementById('automation-cards'),note=document.getElementById('automation-note'),button=document.getElementById('automation-refresh');
+  function appendLink(box,value,text){
+   const url=safeLink(value);if(!url)return;
+   const a=document.createElement('a');a.textContent=text;a.href=url;a.target='_blank';a.rel='noopener';box.append(a);
+  }
   function render(view){
    host.dataset.tone=view.tone;summary.textContent=view.summary;note.textContent=view.updated;cards.replaceChildren();
    for(const card of view.cards){const box=document.createElement('article');box.className='automation-card';box.dataset.state=card.state||'unknown';const title=document.createElement('h2');title.textContent=card.title;box.append(title);
     for(const text of card.lines){const p=document.createElement('p');p.textContent=text;box.append(p)}
-    const url=safeLink(card.url);if(url){const a=document.createElement('a');a.textContent=card.link;a.href=url;a.target='_blank';a.rel='noopener';box.append(a)}cards.append(box)
+    appendLink(box,card.url,card.link);
+    if(card.latestDeployment){
+     const p=document.createElement('p');p.textContent=card.latestDeployment.text;box.append(p);
+     appendLink(box,card.latestDeployment.url,'Открыть последнюю выкладку');
+    }
+    cards.append(box)
    }
   }
   let busy=false,pollTimer;

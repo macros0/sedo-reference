@@ -120,7 +120,7 @@ class SchemaContentTests(unittest.TestCase):
                 self.assertEqual(field.get('unionValueTypes'), [selected])
                 self.assertEqual(field.get('valueQNames', [None]), [name])
 
-    def test_union_enum_marks_an_unavailable_member_probe_as_unknown(self):
+    def test_union_enum_selects_restricted_notation_member(self):
         from lxml import etree
         from tests.comparison_xsd_fixture import tree, union_source
 
@@ -132,8 +132,19 @@ class SchemaContentTests(unittest.TestCase):
         validator = etree.XMLSchema(etree.fromstring(source.encode()))
         self.assertTrue(validator.validate(etree.fromstring(b'<r>read</r>')))
         field = tree(source)[0]
-        self.assertEqual(field.get('unionValueTypes'), [None])
+        self.assertEqual(field.get('unionValueTypes'), [['NOTATION', 'collapse']])
+        self.assertEqual(field.get('valueQNames'), [['', 'read']])
         self.assertEqual(field['values'], [['read', '']])
+
+    def test_notation_values_retain_their_expanded_names(self):
+        from tests.comparison_xsd_fixture import notation_trees
+        for union, trees in notation_trees().items():
+            for fields, uri in zip(trees, ('urn:A', 'urn:B', 'urn:A')):
+                for field in fields[1:]:
+                    self.assertEqual(field.get('valueQNames'), [[uri, 'code']])
+                    self.assertEqual(next(iter(field.get('flagQNames', {}).values())), [uri, 'code'])
+                    if union == 'union':
+                        self.assertEqual(next(iter(field['unionFlagTypes'].values())), ['NOTATION', 'collapse'])
 
     def test_substitution_rules_are_explicitly_unsupported(self):
         for attribute in ('block="extension"', 'substitutionGroup="head"'):

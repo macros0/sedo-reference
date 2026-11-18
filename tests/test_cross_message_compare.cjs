@@ -92,3 +92,29 @@ console.log('Cross-type comparison verified: confirmed transitions, both directi
  context.loadComparisonData('same');
  assert.equal(scripts[1].src,'fields/same.js?v=bbb','rebuilt fields invalidate the in-memory cache too');
 }
+
+(async()=>{
+ const catalog={revisions:[{revision_id:'edition',fields_sha256:'aaa'}]};
+ const scripts=[],window={};
+ const context=vm.createContext({catalog,window,document:{createElement:()=>({remove(){}}),head:{append:script=>scripts.push(script)}}});
+ vm.runInContext(fs.readFileSync(path.join(root,'web/compare.js'),'utf8'),context);
+ for(const [complete,error] of [
+  [script=>script.onload(),/нет дерева/],
+  [script=>{window.SEDO_FIELDS.edition={};script.onload()},/нет дерева/],
+  [script=>script.onerror(),/Не удалось загрузить дерево/]
+ ]){
+  const promise=context.loadComparisonData('edition');
+  assert.equal(context.loadComparisonData('edition'),promise,'pending reads share one tree request');
+  complete(scripts.at(-1));
+  await assert.rejects(promise,error);
+ }
+ const pending=context.loadComparisonData('edition'),tree=[{path:'field'}];
+ window.SEDO_FIELDS.edition=tree;scripts.at(-1).onload();
+ assert.equal(await pending,tree);
+ assert.equal(context.loadComparisonData('edition'),pending);
+ assert.equal(scripts.length,4,'every failure permits a fresh request on the same page');
+ catalog.revisions[0].fields_sha256='bbb';
+ const updated=context.loadComparisonData('edition');
+ scripts.at(-1).onload();
+ await assert.rejects(updated,/нет дерева/,'the previous version cannot replace missing registration for a new digest');
+})().catch(error=>{console.error(error);process.exitCode=1});

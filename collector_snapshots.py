@@ -87,12 +87,12 @@ def validate_manifest(manifest, read_object):
     if len(archive) != row["bytes"]:
         raise ValueError("Incorrect library size")
     # Replay requires the exact old archive and schema metadata.
-    # Annotation traversal, root indexing and inline include entry points
-    # changed independently.
-    def matches(annotations, roots, inline_includes):
+    # Annotation traversal, root indexing, inline includes and the archive
+    # layout changed independently. Try the current behavior first.
+    def matches(annotations, roots, inline_includes, wsdl_layout):
         replay = collect(row["source_url"], manifest["environment"], resources.__getitem__, sha,
                          legacy_annotations=annotations, legacy_schema_roots=roots,
-                         legacy_inline_includes=inline_includes)
+                         legacy_inline_includes=inline_includes, legacy_wsdl_layout=wsdl_layout)
         for expected, actual in zip(row.get("schemas", []), replay.get("schemas", [])):
             for old, new in zip(expected.get("imports", []), actual.get("imports", [])):
                 if "kind" not in old:
@@ -100,9 +100,9 @@ def validate_manifest(manifest, read_object):
         return json.loads(encode(replay)) == row
     replayed=False;last_error=None
     from itertools import product
-    for inline_includes, annotations, roots in product((False, True), repeat=3):
+    for wsdl_layout, inline_includes, annotations, roots in product((False, True), repeat=4):
         try:
-            if matches(annotations, roots, inline_includes):return row
+            if matches(annotations, roots, inline_includes, wsdl_layout):return row
             replayed=True
         except ParseError as exc:
             raise ValueError("Malformed XML in collector closure: " + str(exc)) from exc

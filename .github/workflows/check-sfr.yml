@@ -13,7 +13,8 @@ jobs:
   update:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # The online capture and the full candidate test run have separate costs.
+    timeout-minutes: 120
     permissions:
       contents: write
       actions: write
@@ -84,7 +85,7 @@ jobs:
           node tests/test_attribute_ref_constraints.cjs --all-editions
       - name: Test generated candidate invariants
         run: |
-          python -m unittest discover -s tests -q
+          python -m tests.run_python_tests --jobs 2
           npm run test:node
       - name: Check candidate in Chromium before saving
         run: npm run test:browser

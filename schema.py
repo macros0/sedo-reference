@@ -20,6 +20,7 @@ MAX_FIELDS = 50000
 FACETS = set("length minLength maxLength pattern enumeration maxInclusive minInclusive maxExclusive minExclusive totalDigits fractionDigits whiteSpace".split())
 
 BUILTIN_SIMPLE_TYPES = set('anySimpleType string boolean decimal float double duration dateTime time date gYearMonth gYear gMonthDay gDay gMonth hexBinary base64Binary anyURI QName NOTATION normalizedString token language NMTOKEN NMTOKENS Name NCName ID IDREF IDREFS ENTITY ENTITIES integer nonPositiveInteger negativeInteger long int short byte nonNegativeInteger unsignedLong unsignedInt unsignedShort unsignedByte positiveInteger'.split())
+EXPANDED_NAME_TYPES = {'QName', 'NOTATION'}
 
 
 def scalar_whitespace(builtin):
@@ -324,15 +325,22 @@ class Schema:
 
     def _value_qname(self, node, value):
         prefix, _, name = value.strip(" \t\r\n").rpartition(":")
-        scope = self.prefixes[node]
         if prefix == "xml":
             return ["http://www.w3.org/XML/1998/namespace", name]
+        scope = self._value_scope(node)
         if prefix and prefix not in scope:
-            raise ValueError("Необъявленный префикс значения QName " + prefix + " в " + self.owner[node])
-        return [scope.get(prefix, ""), name]
+            owner = self.owner.get(node)
+            raise ValueError("Необъявленный префикс значения QName " + prefix + (" в " + owner if owner else ""))
+        return [scope.get(prefix or None, ""), name]
 
     def _value_scope(self, node):
+        if hasattr(node, 'nsmap'):
+            return node.nsmap
         return {prefix or None:uri for prefix,uri in self.prefixes[node].items() if uri}
+
+    @staticmethod
+    def _type_child(node, kind):
+        return next((child for child in node if child.tag in (X+kind, kind)), None)
 
     @staticmethod
     def _union_members(union):
@@ -344,6 +352,17 @@ class Schema:
     def _enum_member_type(self, qname, source):
         if qname is None:
             return source
+        if hasattr(source, 'nsmap'):
+            prefix, _, name = qname.rpartition(':')
+            namespace = source.nsmap.get(prefix or None, '')
+            if prefix and not namespace:
+                raise ValueError('Необъявленный префикс типа '+qname)
+            if namespace == XS and name in BUILTIN_SIMPLE_TYPES:
+                return name
+            member = self.symbol.get((namespace, 'simpleType', name))
+            if member is None:
+                raise ValueError('Не удалось раскрыть тип '+qname)
+            return member
         member = self.resolve(qname, source, ["simpleType"])
         return qname.rsplit(":", 1)[-1] if member is None else member
 
@@ -355,6 +374,8 @@ class Schema:
 
         def type_name(selected):
             if isinstance(selected, str):
+                if selected == 'NOTATION':
+                    raise ValueError('Тип NOTATION требует перечисления')
                 return "xs:"+selected
             if selected not in names:
                 names[selected] = "Type"+str(len(names))
@@ -363,20 +384,36 @@ class Schema:
             return names[selected]
 
         def append_content(simple, selected):
-            restriction = selected.find(X+"restriction")
+            if selected is None:
+                raise ValueError("Отсутствует тип значения")
+            restriction = self._type_child(selected, 'restriction')
             if restriction is not None:
                 target = etree.SubElement(simple, X+"restriction")
                 base = restriction.get("base")
                 if base:
-                    target.set("base", type_name(self._enum_member_type(base, restriction)))
+                    member = self._enum_member_type(base, restriction)
+                    if member == 'NOTATION':
+                        # For a valid NOTATION restriction the listed values are
+                        # declared expanded names. QName implements that same
+                        # membership test without importing notation schemas.
+                        enums = [facet for facet in restriction if local(facet) == 'enumeration']
+                        if not enums:
+                            raise ValueError('Тип NOTATION требует перечисления')
+                        for facet in enums:
+                            namespace, name = self._value_qname(facet, facet.get('value', ''))
+                            if (namespace, 'notation', name) not in self.symbol:
+                                raise ValueError('Не установлено объявление NOTATION')
+                        target.set('base', 'xs:QName')
+                    else:
+                        target.set("base", type_name(member))
                 else:
-                    append_content(etree.SubElement(target, X+"simpleType"), restriction.find(X+"simpleType"))
+                    append_content(etree.SubElement(target, X+"simpleType"), self._type_child(restriction, 'simpleType'))
                 for facet in restriction:
                     if local(facet) in FACETS:
-                        etree.SubElement(target, facet.tag, attrib=dict(facet.attrib),
+                        etree.SubElement(target, X+local(facet), attrib=dict(facet.attrib),
                                          nsmap=self._value_scope(facet))
                 return
-            union = selected.find(X+"union")
+            union = self._type_child(selected, 'union')
             if union is None:
                 raise ValueError("Неподдерживаемый тип перечисления union")
             target = etree.SubElement(simple, X+"union")
@@ -393,23 +430,45 @@ class Schema:
             etree.SubElement(root, X+"element", name="probe", type=type_name(member))
             probe = etree.XMLSchema(root)
         except (ValueError, etree.XMLSchemaParseError):
-            # The detached probe may lack a schema-wide declaration, e.g. a
-            # notation. Skipping such a member would change the union order.
+            # An unavailable member cannot be skipped without changing union order.
             probe = None
         self._enum_probes[member] = probe
         return probe
 
-    def _union_value(self, union, node, lexical):
+    def _typed_value(self, node, lexical, *, union=None, member=None):
         from lxml import etree
 
-        value = etree.Element("probe", nsmap=self._value_scope(node))
+        scope = self._value_scope(node)
+        value = etree.Element("probe", nsmap=scope)
         value.text = lexical
+        prefix, sep, name = lexical.strip(' \t\r\n').partition(':')
+        unbound = hasattr(node, 'nsmap') and sep and prefix != 'xml' and prefix not in scope
+        if unbound:
+            try:
+                etree.QName('urn:probe', prefix)
+                etree.QName('urn:probe', name)
+            except ValueError:
+                unbound = False
+
+        def uses_names(selected):
+            if isinstance(selected, str):
+                return selected in EXPANDED_NAME_TYPES
+            options = self._type_child(selected, 'union')
+            if options is not None:
+                return any(uses_names(self._enum_member_type(qname, source))
+                           for qname, source in self._union_members(options))
+            restriction = self._type_child(selected, 'restriction')
+            if restriction is None:
+                return False
+            base = restriction.get('base')
+            source = restriction if base else self._type_child(restriction, 'simpleType')
+            return uses_names(self._enum_member_type(base, source))
 
         def choose(options):
             for qname, source in self._union_members(options):
                 member = self._enum_member_type(qname, source)
                 probe = self._enum_probe(etree, member)
-                if probe is None:
+                if probe is None or unbound and uses_names(member):
                     return None
                 if probe.validate(value):
                     return atomic(member)
@@ -418,18 +477,42 @@ class Schema:
         def atomic(member):
             if isinstance(member, str):
                 return member, scalar_whitespace(member)
-            union = member.find(X+"union")
+            union = self._type_child(member, 'union')
             if union is not None:
                 return choose(union)
-            restriction = member.find(X+"restriction")
+            restriction = self._type_child(member, 'restriction')
             base = restriction.get("base")
-            source = restriction if base else restriction.find(X+"simpleType")
+            source = restriction if base else self._type_child(restriction, 'simpleType')
             selected = atomic(self._enum_member_type(base, source))
-            whitespace = restriction.find(X+"whiteSpace")
+            whitespace = self._type_child(restriction, 'whiteSpace')
             return (selected[0], whitespace.get("value")) if selected and whitespace is not None else selected
 
-        selected = choose(union)
+        if union is not None:
+            selected = choose(union)
+        else:
+            probe = self._enum_probe(etree, member)
+            selected = atomic(member) if probe is not None and not (unbound and uses_names(member)) and probe.validate(value) else None
         return list(selected) if selected else None
+
+    def quoted_value_type(self, declaration, lexical, *, owner=None):
+        """Resolve a quoted scalar type using the quote's own namespace bindings."""
+        node = declaration
+        try:
+            if node.get('ref'):
+                prefix, _, name = node.get('ref').rpartition(':')
+                namespace = self._value_scope(node).get(prefix or None, '')
+                if prefix and not namespace:
+                    return None
+                node = self.symbol.get((namespace, local(node), name))
+            while node is not None:
+                qname = node.get('type') or node.get('base')
+                if qname or local(node) == 'simpleType':
+                    member = self._enum_member_type(qname, node)
+                    return self._typed_value(owner if owner is not None else declaration, lexical, member=member)
+                node = next((child for child in node if local(child) in
+                             ('simpleType', 'complexType', 'simpleContent', 'restriction', 'extension')), None)
+        except (ValueError, RecursionError):
+            return None
 
     def instance_namespace(self, declaration):
         schema, _, target = self.context.get(declaration,self.files[self.owner[declaration]])
@@ -696,7 +779,7 @@ class Schema:
                 d["baseNs"] = XS
         value_flags = {key: (decl if key in decl.attrib else src, d["flags"][key])
                        for key in ("fixed", "default") if key in d["flags"]}
-        if d.get("baseNs") == XS and d["base"].rsplit(":", 1)[-1] == "QName":
+        if d.get("baseNs") == XS and d["base"].rsplit(":", 1)[-1] in EXPANDED_NAME_TYPES:
             if enum_nodes:
                 d["valueQNames"] = [self._value_qname(node,node.get("value")) for node in enum_nodes]
             if value_flags:
@@ -704,17 +787,17 @@ class Schema:
                                   for key, (node, lexical) in value_flags.items()}
         elif enum_union is not None:
             if enum_nodes:
-                selected = [self._union_value(enum_union, node, node.get("value")) for node in enum_nodes]
+                selected = [self._typed_value(node, node.get("value"), union=enum_union) for node in enum_nodes]
                 d["unionValueTypes"] = selected
-                names = [self._value_qname(node,node.get("value")) if member and member[0]=="QName" else None
+                names = [self._value_qname(node,node.get("value")) if member and member[0] in EXPANDED_NAME_TYPES else None
                          for node,member in zip(enum_nodes,selected)]
                 if any(names):
                     d["valueQNames"] = names
             if value_flags:
-                selections = d["unionFlagTypes"] = {key: self._union_value(enum_union, node, lexical)
+                selections = d["unionFlagTypes"] = {key: self._typed_value(node, lexical, union=enum_union)
                                                    for key, (node, lexical) in value_flags.items()}
                 names = {key: self._value_qname(node, lexical) for key, (node, lexical) in value_flags.items()
-                         if selections[key] and selections[key][0] == "QName"}
+                         if selections[key] and selections[key][0] in EXPANDED_NAME_TYPES}
                 if names:
                     d["flagQNames"] = names
         if enum_nodes and enum_union is None and enum_whitespace is not None and enum_whitespace != field_whitespace(d):

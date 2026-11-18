@@ -10,9 +10,9 @@ from urllib.error import HTTPError
 from urllib.request import Request, build_opener, HTTPRedirectHandler
 
 from collector_snapshots import (DIGEST, HOME_POINTER, HOME_POINTER_LIMIT, legacy_home_identity, make_manifest,
-                                 parse_home_pointer, read_home_pointer_file, validate_manifest)
+                                 observation_path, parse_home_pointer, validate_manifest)
 from sync import SITES, Links, get, sha, encode
-from wsdl_sources import collect, discover
+from wsdl_sources import MAX_TOTAL, collect, discover
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -72,34 +72,46 @@ def repaired_envelope(previous, manifest, objects, read_receipt, *, encoded=None
     return encoded if first == manifest["observed_at"] else encode_manifest(dict(manifest, observed_at=first))
 
 
+def observation_date(stamp):
+    try:
+        date = datetime.fromisoformat(stamp)
+        return date if date.tzinfo is not None else None
+    except (ValueError, TypeError):
+        return None
+
+
+def receipt_date(raw):
+    try:
+        return observation_date((raw or b'').decode('ascii').strip())
+    except UnicodeError:
+        return None
+
+
+def recorded_home_receipt(processed, environment, identity):
+    record = processed.get('sources', {}).get('home', {}).get(environment, {}).get(identity, {})
+    stamp = record.get('observed_at')
+    if record.get('status') in ('replayed', 'unavailable', 'recorded') and observation_date(stamp):
+        return (stamp + '\n').encode('ascii')
+    return None
+
+
 def repaired_home_receipt(raw, manifest, read_processed, *, current_id=None, unconfirmed=()):
     """Never invent an earlier home observation from another collector's envelope."""
-    def valid(value):
-        try:
-            return bool(datetime.fromisoformat(value).tzinfo)
-        except (ValueError, TypeError):
-            return False
-    def valid_receipt(value):
-        try:
-            return value is not None and valid(value.decode('ascii').strip())
-        except UnicodeError:
-            return False
-    if valid_receipt(raw):
+    if receipt_date(raw) is not None:
         return None
     try:
         processed = json.loads(read_processed() or b'{}')
-        record = processed['sources']['home'][manifest['environment']][manifest['content_id']]
-        stamp = record['observed_at']
-        if record.get('status') in ('replayed', 'unavailable', 'recorded') and valid(stamp):
-            return (stamp + '\n').encode('ascii')
-    except (KeyError, ValueError, TypeError):
-        pass
+        restored = recorded_home_receipt(processed, manifest['environment'], manifest['content_id'])
+    except (AttributeError, ValueError, TypeError):
+        restored = None
+    if restored is not None:
+        return restored
     if raw is None:
         if current_id == manifest['content_id']:
             raise ValueError('Missing home receipt for the current capture without confirmed historical home evidence: '
                              + manifest['content_id'])
         for saved in unconfirmed:
-            if valid_receipt(saved):
+            if receipt_date(saved) is not None:
                 return saved
         return (manifest['observed_at'] + '\n').encode('ascii')
     raise ValueError('Corrupt home receipt without confirmed historical home evidence: ' + manifest['content_id'])
@@ -118,24 +130,68 @@ def legacy_pointer_observation(raw):
     return identity, started
 
 
-def home_pointer_state(read, read_receipt):
-    """Read the active identity and the available ordering evidence."""
-    raw = read(HOME_POINTER)
+def home_pointer_state(read, environment, *, validated_id):
+    """Read the active identity and plan migration of a confirmed legacy receipt."""
+    prefix = 'collector/' + environment + '/'
+    raw = read(prefix + HOME_POINTER, HOME_POINTER_LIMIT)
     if raw is not None:
         current = parse_home_pointer(raw)
-        return raw, current[0], current
-    identity = legacy_home_identity(read("current"))
-    bound = legacy_pointer_observation(read("current-observed-at"))
-    if identity is not None and (bound is None or bound[0] != identity):
-        try:
-            first = datetime.fromisoformat((read_receipt(identity) or b"").decode("ascii").strip())
-        except ValueError:
-            first = None
-        if first is not None and first.tzinfo is not None and (bound is None or first >= bound[1]):
-            bound = (identity, first)
-    # The old marker can constrain promotion, but only the old current
-    # identifies what was actually published in the split format.
-    return None, identity, bound
+        return raw, current[0], current, None
+    identity = legacy_home_identity(read(prefix + 'current', HOME_POINTER_LIMIT))
+    bound = legacy_pointer_observation(read(prefix + 'current-observed-at', HOME_POINTER_LIMIT))
+    if identity is None:
+        return None, None, bound, None
+    first, migration = legacy_home_receipt(read, environment, identity, recaptured=identity == validated_id)
+    # The split marker orders captures, even if the last pointer write failed.
+    if bound is None or first >= bound[1]:
+        bound = identity, first
+    return None, identity, bound, migration
+
+
+def legacy_home_receipt(read, environment, identity, *, recaptured=False):
+    from collector_feed import MAX_INDEX, MAX_MANIFEST, manifest_path, validate_index
+
+    receipt = observation_path('home', environment, identity)
+    saved = read(receipt, HOME_POINTER_LIMIT)
+    first = receipt_date(saved)
+    if first is not None and recaptured:
+        # The caller already validated this exact identity from fresh inputs.
+        # It can restore the old files while keeping the confirmed Home date.
+        return first, None
+
+    name = manifest_path(environment, identity)
+    try:
+        envelope = json.loads(read(name, MAX_MANIFEST) or b'')
+        if envelope['content_id'] != identity or envelope['environment'] != environment:
+            raise ValueError('Manifest identity mismatch')
+        validate_manifest(envelope, lambda digest: read('objects/' + digest, MAX_TOTAL) or b'')
+    except (ValueError, TypeError, KeyError) as exc:
+        raise ValueError('Cannot validate legacy Home manifest ' + name + ': ' + str(exc)) from exc
+
+    restored = None
+    if first is None:
+        ledger = read('collector/processed.json', MAX_MANIFEST)
+        processed = json.loads(ledger) if ledger is not None else {}
+        restored = recorded_home_receipt(processed, environment, identity)
+        if restored is None:
+            sourcecraft = observation_path('sourcecraft', environment, identity)
+            shared = (read(sourcecraft, HOME_POINTER_LIMIT) is not None
+                      or identity in processed.get('manifests', {}).get(environment, {}))
+            if not shared:
+                entry = {'environment': environment, 'content_id': identity}
+                for path in ('collector/feed.json', 'index.json'):
+                    index = read(path, MAX_INDEX)
+                    if index is not None and entry in validate_index(json.loads(index))['manifests']:
+                        shared = True
+                        break
+            if shared:
+                raise ValueError('Ambiguous legacy Home first observation for ' + environment + ' ' + identity +
+                                 '. Restore the confirmed Home receipt ' + receipt + ' (docs/russian-collector.md).')
+            if saved is not None:
+                raise ValueError('Corrupt legacy Home receipt: ' + receipt)
+            restored = (envelope['observed_at'] + '\n').encode('ascii')
+        first = receipt_date(restored)
+    return first, (receipt, restored) if restored is not None else None
 
 
 def pointer_update(manifest, previous, *, canonical):
@@ -150,7 +206,6 @@ def pointer_update(manifest, previous, *, canonical):
 
 def publish_inputs(api, manifests, objects):
     from collector_feed import MAX_MANIFEST, encode_manifest
-    from collector_snapshots import observation_path
     files = {}
     pointers = []
     for manifest in manifests:
@@ -164,15 +219,17 @@ def publish_inputs(api, manifests, objects):
             files["state/objects/" + digest] = objects[digest]
     object_ids = {path: git_blob_sha(raw) for path, raw in files.items() if path.startswith("state/objects/")}
     existing_blobs = {}
-    def read_blob(digest):
+    def read_blob(digest, limit=MAX_MANIFEST):
         if digest not in existing_blobs:
             response = api("GET", "git/blobs/" + digest)
-            if response.get("encoding") != "base64" or response["size"] > MAX_MANIFEST:
+            if response.get("encoding") != "base64" or response["size"] > limit:
                 return None
             existing_blobs[digest] = base64.b64decode(response["content"])
-        return existing_blobs[digest]
+        raw = existing_blobs[digest]
+        return raw if len(raw) <= limit else None
 
     blobs = {}
+    legacy_currents = {}
     for attempt in range(3):
         head = api("GET", "git/ref/heads/main")["object"]["sha"]
         tree = api("GET", "git/commits/" + head)["tree"]["sha"]
@@ -188,12 +245,8 @@ def publish_inputs(api, manifests, objects):
             prefix = f"state/collector/{env}/"
             path, pointer = prefix + identity + ".json", prefix + HOME_POINTER
             def read_state(path, limit):
-                if path not in existing:
-                    return None
-                raw = read_blob(existing[path])
-                if raw is None or len(raw) > limit:
-                    raise ValueError("Unreadable Home input: " + path)
-                return raw
+                path = 'state/' + path
+                return (read_blob(existing[path], limit) or b'') if path in existing else None
             repaired_receipts = {}
             def read_receipt(source):
                 if source in repaired_receipts:
@@ -201,9 +254,28 @@ def publish_inputs(api, manifests, objects):
                 receipt = "state/" + observation_path(source, env, identity)
                 # None means absent only; an existing unreadable blob is corrupt.
                 return (read_blob(existing[receipt]) or b'') if receipt in existing else None
-            current, current_id, previous = home_pointer_state(
-                lambda name: read_state(prefix + name, HOME_POINTER_LIMIT),
-                lambda digest: read_state("state/" + observation_path("home", env, digest), HOME_POINTER_LIMIT))
+            current, current_id, previous, migration = home_pointer_state(read_state, env, validated_id=identity)
+            # A failed CAS can reveal another legacy current. Keep the first
+            # observation of each confirmed pointer, by rechecking it on the
+            # new base before retrying the write.
+            seen = legacy_currents.setdefault(env, set())
+            if current is None and current_id is not None:
+                seen.add(current_id)
+            for old_id in sorted(seen - {current_id} if current is None else seen):
+                receipt_path = observation_path('home', env, old_id)
+                if receipt_date(read_state(receipt_path, HOME_POINTER_LIMIT)) is not None:
+                    continue
+                _, prior_migration = legacy_home_receipt(read_state, env, old_id)
+                if prior_migration is not None:
+                    receipt_path, restored = prior_migration
+                    new['state/' + receipt_path] = restored
+                    if old_id == identity:
+                        repaired_receipts['home'] = restored
+            if migration is not None:
+                receipt_path, restored = migration
+                new['state/' + receipt_path] = restored
+                if current_id == identity:
+                    repaired_receipts['home'] = restored
             processed = 'state/collector/processed.json'
             restored_receipt = repaired_home_receipt(read_receipt('home'), manifest,
                 lambda: read_blob(existing[processed]) if processed in existing else None,
@@ -270,11 +342,15 @@ def capture(environment):
 
 def store_local_inputs(state, manifests, objects):
     from collector_feed import atomic_write, bounded_file, MAX_MANIFEST
-    from collector_snapshots import observation_path
     from sync import write
 
     verified_objects, envelopes, receipts, pending, pointers = {}, {}, {}, {}, {}
     markers = []
+    def read_state(path, limit):
+        path = state / path
+        raw = bounded_file(path, limit)
+        return b'' if raw is None and path.exists() else raw
+
     for manifest in manifests:
         row = validate_manifest(manifest, objects.__getitem__)
         for digest in [row["sha256"], *(source["sha256"] for source in row["source_files"])]:
@@ -287,12 +363,13 @@ def store_local_inputs(state, manifests, objects):
         def read_receipt(source):
             if source in repaired_receipts:
                 return repaired_receipts[source]
-            path = state / observation_path(source, env, identity)
-            raw = bounded_file(path, 256)
-            return b'' if raw is None and path.exists() else raw
-        current, current_id, previous = home_pointer_state(
-            lambda name: read_home_pointer_file(directory / name),
-            lambda digest: bounded_file(state / observation_path("home", env, digest), HOME_POINTER_LIMIT))
+            return read_state(observation_path(source, env, identity), HOME_POINTER_LIMIT)
+        current, current_id, previous, migration = home_pointer_state(read_state, env, validated_id=identity)
+        if migration is not None:
+            receipt_path, restored = migration
+            receipts[state / receipt_path] = restored
+            if current_id == identity:
+                repaired_receipts['home'] = restored
         receipt = state / observation_path("home", env, identity)
         marker = receipt.with_suffix(".pending-at")
         markers.append(marker)

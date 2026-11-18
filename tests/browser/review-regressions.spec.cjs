@@ -235,13 +235,13 @@ test('comparison keeps the declared whitespace of inherited enumeration values',
   expect(await row.locator('.after').textContent()).toBe('A');
 });
 
-test('the update journal marks partial union coverage and filters by proved changes', async ({ page }) => {
+test('the update journal marks partial union and NOTATION coverage and filters by proved changes', async ({ page }) => {
   const [left, right] = ['prod', 'test'].map(environment =>
     catalog.revisions.find(r => r.number === '104' && r.environment === environment && r.ready));
   const events = [{id:'partial-zero', changed:0, limitedUnion:true}, {id:'partial-change', changed:1, limitedUnion:true},
-    {id:'complete-zero', changed:0}].map(({id,changed,limitedUnion}) => ({
+    {id:'notation-zero', changed:0, limitedNotation:true}, {id:'complete-zero', changed:0}].map(({id,changed,limitedUnion,limitedNotation}) => ({
     event_id:id, revision_id:right.revision_id, previous_revision_id:left.revision_id, observed_at:'2026-11-16T09:00:00Z',
-    comparison:{status:'ready',left:left.revision_id,right:right.revision_id,counts:{added:0,removed:0,changed},limitedUnion},
+    comparison:{status:'ready',left:left.revision_id,right:right.revision_id,counts:{added:0,removed:0,changed},limitedUnion,limitedNotation},
   }));
   await page.route('**/catalog-data.js*',route=>route.fulfill({contentType:'application/javascript',
     body:'window.SEDO_CATALOG='+JSON.stringify({...catalog,schema_updates:events,source_updates:[]})+';'}));
@@ -250,9 +250,11 @@ test('the update journal marks partial union coverage and filters by proved chan
   for(const id of ['partial-zero','partial-change']){
     await expect(card(id)).toContainText('Для некоторых значений union тип не определён.');
   }
+  await expect(card('notation-zero')).toContainText('Для некоторых значений NOTATION пространство имён не установлено.');
   await expect(card('complete-zero')).not.toContainText('тип не определён');
   await page.locator('#updates-only-changes').check();
   await expect(card('partial-zero')).toHaveCount(0);
+  await expect(card('notation-zero')).toHaveCount(0);
   await expect(card('complete-zero')).toHaveCount(0);
   await expect(card('partial-change')).toBeVisible();
 });

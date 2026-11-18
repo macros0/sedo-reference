@@ -1,5 +1,5 @@
 /* Build journal counts using the same engine as the comparison page. No network. */
-const {compare,hasUnresolvedUnionValues}=require('./web/compare-core.js');
+const {compare,hasUnresolvedUnionValues,hasUnresolvedNotationValues}=require('./web/compare-core.js');
 
 function documentDate(value){
  const match=/^(\d{2})\.(\d{2})\.(\d{2}|\d{4})$/.exec(value||'');
@@ -8,6 +8,7 @@ function documentDate(value){
 }
 function summarizeUpdates(catalog,loadFields){
  const revisions=new Map(catalog.revisions.map(r=>[r.revision_id,r])),cache=new Map();
+ const displayId=revision=>revision.display_revision_id||revision.revision_id;
  const discoveries=new Map(),snapshots=new Map();
  const time=event=>{const value=Date.parse(event?.observed_at);return Number.isFinite(value)?value:null};
  for(const [index,event] of (catalog.updates||[]).entries()){
@@ -25,6 +26,16 @@ function summarizeUpdates(catalog,loadFields){
   if(observed!==null&&found!==null)return found<=observed;
   return !!event.snapshot&&!!discovery.event.snapshot&&snapshots.get(discovery.event.snapshot)<=snapshots.get(event.snapshot);
  }
+ function earlier(candidate,event,index){
+  const discovery=discoveries.get(candidate.revision_id);
+  if(!discovery)return false;
+  if(event.snapshot&&discovery.event.snapshot===event.snapshot)return false;
+  const observed=time(event),found=time(discovery.event);
+  if(observed!==null&&found!==null&&observed!==found)return found<observed;
+  const currentOrder=snapshots.get(event.snapshot)??index;
+  const candidateOrder=snapshots.get(discovery.event.snapshot)??discovery.index;
+  return candidateOrder<currentOrder;
+ }
  function baselineOrder(a,b){
   const left=discoveries.get(a.revision_id),right=discoveries.get(b.revision_id);
   const observed=(time(right?.event)??0)-(time(left?.event)??0);
@@ -35,16 +46,30 @@ function summarizeUpdates(catalog,loadFields){
   return observed||snapshotOrder||documentDate(source(b).label_date)-documentDate(source(a).label_date)||String(source(b).document_version||'').localeCompare(String(source(a).document_version||''),undefined,{numeric:true})||a.revision_id.localeCompare(b.revision_id);
  }
  const fields=id=>{if(!cache.has(id))cache.set(id,loadFields(id));return cache.get(id)};
- return (catalog.updates||[]).map(event=>{
+ const displayed=new Set();
+ return (catalog.updates||[]).map((event,index)=>{
   const current=revisions.get(event.revision_id);
   if(!current)throw Error('Unknown journal edition '+event.revision_id);
-  let before=null,basis='previous';
+  const group=displayId(current),firstEvent=!displayed.has(group);
+  displayed.add(group);
+  let previous=null;
   if(event.previous_revision_id){
-   before=revisions.get(event.previous_revision_id);
-   if(!before||before.number!==current.number||before.environment!==current.environment)throw Error('Invalid previous message or contour');
-  }else{
-   basis='other_contour';
-   before=catalog.revisions.filter(r=>r.number===current.number&&r.environment!==current.environment&&r.ready&&known(r,event)).sort(baselineOrder)[0];
+   previous=revisions.get(event.previous_revision_id);
+   if(!previous||previous.number!==current.number||previous.environment!==current.environment)throw Error('Invalid previous message or contour');
+  }
+  const alternatives=catalog.revisions.filter(r=>r.number===current.number&&displayId(r)!==group);
+  const sameContour=alternatives.filter(r=>r.environment===current.environment&&earlier(r,event,index)).sort(baselineOrder);
+  // Older events can name a predecessor without including its discovery event.
+  const unknownPrevious=previous&&!discoveries.has(previous.revision_id);
+  if(unknownPrevious&&displayId(previous)!==group)sameContour.push(previous);
+  // Import reports also consume later events hidden by display_updates.
+  const originalSourceComparison=!firstEvent&&previous?.ready&&previous!==current&&displayId(previous)===group
+   &&(unknownPrevious||earlier(previous,event,index));
+  let before=originalSourceComparison?previous:sameContour.find(r=>r.ready),basis='previous';
+  if(!before){
+   before=alternatives.filter(r=>r.environment!==current.environment&&r.ready&&known(r,event)).sort(baselineOrder)[0];
+   if(before||!sameContour.length)basis='other_contour';
+   else before=sameContour[0];
   }
   const comparison={status:!current.ready?'unavailable':!before?'no_baseline':!before.ready?'unavailable':'ready',basis,left:before?.revision_id||null,right:current.revision_id,counts:null};
   if(comparison.status==='ready'){
@@ -52,6 +77,7 @@ function summarizeUpdates(catalog,loadFields){
    const before=fields(comparison.left),after=fields(comparison.right);
    for(const difference of compare(before,after))comparison.counts[difference.status]++;
    if(before.some(hasUnresolvedUnionValues)||after.some(hasUnresolvedUnionValues))comparison.limitedUnion=true;
+   if(before.some(hasUnresolvedNotationValues)||after.some(hasUnresolvedNotationValues))comparison.limitedNotation=true;
   }
   return {...event,comparison};
  });

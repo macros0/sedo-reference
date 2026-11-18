@@ -77,8 +77,7 @@ test('two real tabs merge disjoint draft applies and retain conflicting drafts',
  // Exercise the current source through the ordinary comparison page even before
  // a site rebuild; no fixture bypasses the mounted editor or apply callback.
  await context.route('**/*',route=>new URL(route.request().url()).origin==='http://127.0.0.1:4173'?route.continue():route.abort());
- await context.route('**/comparison-mapping.js*',route=>route.fulfill({path:path.join(__dirname,'../../web/comparison-mapping.js'),contentType:'application/javascript'}));
- await context.route('**/compare.js*',route=>route.fulfill({path:path.join(__dirname,'../../web/compare.js'),contentType:'application/javascript'}));
+ for(const script of ['compare.js','compare-core.js','comparison-export.js','comparison-mapping.js','mapping-draft.js','mapping-editor.js'])await context.route('**/'+script+'*',route=>route.fulfill({path:path.join(__dirname,'../../web',script),contentType:'application/javascript'}));
  const second=await context.newPage();await page.goto(url);await second.goto(url);await expect(page.locator('.mapping-add')).toBeVisible();await expect(second.locator('.mapping-add')).toBeVisible();
  await add(page,'approveSocialAssistResult/status','benefitResponseResult/status','Первое поле');await add(second,'approveSocialAssistResult/socialAssistNum','benefitResponseResult/processNum','Второе поле');
  // Hold the same real Web Lock so both ordinary apply handlers queue before

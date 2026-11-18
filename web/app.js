@@ -35,7 +35,7 @@ function appendSchemaOrigin(card,r){
  if(r.schema_source_type==="wsdl"){
   if(service){line.append(external("WSDL шлюза СФР",service));step()}
   const digest=r.dependencies?.find(([name])=>name===file)?.[1];
-  const original=r.schema_sources?.find(s=>digest&&s.kind==="xsd"&&s.sha256===digest);
+  const original=window.SedoReviewJournal.remoteSchemaSource(r,r.schema_path,digest);
   if(r.schema_original_url||original)line.append(external(file,r.schema_original_url||original.url));
   else line.append(document.createTextNode(file));
  }else{

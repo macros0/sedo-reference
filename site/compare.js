@@ -7,11 +7,15 @@ function loadComparisonData(revision){
  if(!comparisonData.has(cacheKey)){
   const promise=new Promise((resolve,reject)=>{
    window.SEDO_FIELDS=window.SEDO_FIELDS||{};
+   delete window.SEDO_FIELDS[revision];
    const script=document.createElement("script");
    script.src="fields/"+revision+".js"+(version?"?v="+version:"");
-   script.onload=()=>{script.remove();const fields=window.SEDO_FIELDS[revision];fields?resolve(fields):reject(Error("В файле редакции нет дерева тегов."))};
-   script.onerror=()=>{script.remove();comparisonData.delete(cacheKey);reject(Error("Не удалось загрузить дерево. Проверьте, что папка fields находится рядом с index.html."))};
+   script.onload=()=>{script.remove();const fields=window.SEDO_FIELDS?.[revision];Array.isArray(fields)?resolve(fields):reject(Error("В файле редакции нет дерева тегов."))};
+   script.onerror=()=>{script.remove();reject(Error("Не удалось загрузить дерево. Проверьте, что папка fields находится рядом с index.html."))};
    document.head.append(script);
+  }).catch(error=>{
+   comparisonData.delete(cacheKey);
+   throw error;
   });
   comparisonData.set(cacheKey,promise);
  }
@@ -99,8 +103,10 @@ async function renderComparison(m,params,applied=false,view=null){
   const results=SedoCompare.compare(a,b,mappings);state.remove();
   const counts={added:0,removed:0,changed:0,mapped:0};results.forEach(r=>counts[r.status]++);
   const summaries=node("div","compare-counts");for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])summaries.append(node("span",key,text+" · "+counts[key]));if(mappings.length)summaries.append(node("span","mapped","Ручных соответствий · "+mappings.length));section.append(summaries);
-  const limited=a.some(SedoCompare.hasUnresolvedUnionValues)||b.some(SedoCompare.hasUnresolvedUnionValues);
-  if(limited)section.append(node("p","meta",SedoCompare.unionCoverageNote));
+  const unresolvedUnion=a.some(SedoCompare.hasUnresolvedUnionValues)||b.some(SedoCompare.hasUnresolvedUnionValues);
+  const unresolvedNotation=a.some(SedoCompare.hasUnresolvedNotationValues)||b.some(SedoCompare.hasUnresolvedNotationValues);
+  if(unresolvedUnion)section.append(node("p","meta",SedoCompare.unionCoverageNote));
+  if(unresolvedNotation)section.append(node("p","meta",SedoCompare.notationCoverageNote));
   if(applied){const feedback=node("p","mapping-applied-feedback",(applied==="cancelled"?"Сопоставление отменено. Сохранено пар: ":"Сравнение обновлено. Применено пар: ")+mappings.length);feedback.setAttribute("role","status");section.append(feedback)}
   const mappingPanel=SedoMapping.mount(section,mappingOptions,saved,()=>renderComparison(m,params,true));let cancelling=false;
   const exports=node("div","comparison-export"),exportButton=node("button","open","Выгрузить Excel для сопоставления"),exportState=node("span","meta");exportButton.type="button";exportState.setAttribute("role","status");
@@ -111,7 +117,7 @@ async function renderComparison(m,params,applied=false,view=null){
    finally{exportButton.disabled=false}
   };
   exports.append(exportButton,exportState,node("p","meta","Вся выбранная пара редакций: исходные поля, изменения и таблица ручного сопоставления. Поиск и фильтры не ограничивают выгрузку."));section.append(exports);
-  if(!results.length){section.append(node("p","empty",(limited?"":"Деревья совпадают. ")+"Изменений в тегах, ограничениях и описаниях не найдено."));if(applied)summaries.scrollIntoView?.({block:"start",behavior:"smooth"});return true}
+  if(!results.length){section.append(node("p","empty",(unresolvedUnion||unresolvedNotation?"":"Деревья совпадают. ")+"Изменений в тегах, ограничениях и описаниях не найдено."));if(applied)summaries.scrollIntoView?.({block:"start",behavior:"smooth"});return true}
   const filters=node("div","searchbar"),searchLabel=node("label","","Поиск по изменениям"),search=node("input");search.type="search";search.placeholder="Тег, путь, описание или ограничение";searchLabel.append(search);
   const kindLabel=node("label","","Вид изменения"),kind=node("select");for(const [value,text] of [["","Все изменения"],["added","Добавлено"],["removed","Удалено"],["changed","Изменено"],["mapped","Сопоставлено без изменений"]])kind.add(new Option(text,value));kindLabel.append(kind);filters.append(searchLabel,kindLabel);section.append(filters);
   if(view){search.value=view.search;kind.value=view.kind}

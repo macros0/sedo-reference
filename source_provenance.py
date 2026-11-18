@@ -6,6 +6,11 @@ from edition_groups import prepare_observed_sources, SCHEMA_SOURCE_KEYS
 from sync import SITES, catalog_resource, sha, write
 
 
+def original_schema_source(sources, path, digest):
+    return next((source for source in sources if source.get('kind') == 'xsd'
+                 and source.get('sha256') == digest and source.get('archive_path') in (None, path)), None)
+
+
 def publish_sources(catalog, state, site):
     publications, snapshots = {}, {}
     history_file, current_file = state / "history.json", state / "current.json"
@@ -41,6 +46,7 @@ def publish_sources(catalog, state, site):
         row.pop("schema_file_download", None)
         row.pop("schema_file_name", None)
         row.pop("schema_files", None)
+        row.pop("schema_original_url", None)
         if not row.get("schema_path") and not revision and snapshot in snapshots and revisions.get(row.get("revision_id"), {}).get("status") == "matched":
             # Old exports lack per-observation packaging. Recover it from the
             # original inventory, including when an external ZIP moved alone.
@@ -92,10 +98,9 @@ def publish_sources(catalog, state, site):
         row["schema_file_download"] = files[entry]["download"]
         row["schema_file_name"] = posixpath.basename(entry)
         if row.get("schema_source_type") == "wsdl":
-            original = next((s['url'] for s in row.get('schema_sources', [])
-                             if s.get('kind') == 'xsd' and s.get('sha256') == files[entry]['sha256']), None)
+            original = original_schema_source(row.get('schema_sources', []), entry, files[entry]['sha256'])
             if original:
-                row['schema_original_url'] = original
+                row['schema_original_url'] = original['url']
         if not revision:
             row.pop("dependencies", None)
             row.pop("schema_sources", None)

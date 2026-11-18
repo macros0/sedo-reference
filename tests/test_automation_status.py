@@ -459,6 +459,42 @@ class AutomationStatusTests(unittest.TestCase):
                 if listed and listed[0].get('run_attempt') == 2:
                     self.assertEqual(result['state'], 'processing')
 
+    def test_finished_pages_event_preserves_deploy_while_newer_attempt_runs(self):
+        from unittest.mock import patch
+        from automation_status import collect_status
+
+        check = run(1)
+        finished = dict(run(2), run_attempt=1, updated_at='2026-11-13T08:12:00Z')
+        for status, conclusion in (('in_progress', None), ('completed', 'cancelled')):
+            with self.subTest(status=status):
+                newer = dict(finished, run_attempt=2, status=status, conclusion=conclusion,
+                             run_started_at='2026-11-13T08:13:00Z', updated_at='2026-11-13T08:15:00Z')
+                attempts = iter([RuntimeError('GitHub API: HTTP 404'), finished])
+                def read(path):
+                    if path == 'actions/runs/2/attempts/1':
+                        value = next(attempts)
+                        if isinstance(value, Exception):
+                            raise value
+                        return value
+                    if path == 'actions/runs/2':
+                        return newer
+                    if 'check-sfr.yml' in path:
+                        return {'workflow_runs': [check]}
+                    if 'pages.yml' in path:
+                        return {'workflow_runs': []}
+                    raise KeyError(path)
+
+                reports = {'publication-target.json': {'update_run_id': 1, 'head_sha': check['head_sha']},
+                           'update-report.json': {'status': 'ok', 'new_revisions': []}}
+                with patch('automation_status.api', side_effect=read), patch('automation_status.time.sleep') as wait, \
+                     patch('automation_status.sourcecraft_status', return_value={}), \
+                     patch('automation_status.run_reports', return_value=reports):
+                    result = collect_status(publication_run_id=2, publication_run_attempt=1)['github']
+                wait.assert_called_once()
+                self.assertEqual(result['publication']['run_attempt'], 2)
+                self.assertEqual(result['publication']['state'], 'processing' if status == 'in_progress' else 'cancelled')
+                self.assertEqual(result['last_successful_publication']['run_attempt'], 1)
+
 
 class HeartbeatIdentityTests(unittest.TestCase):
     def test_success_requires_both_current_contour_identities(self):

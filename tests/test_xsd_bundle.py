@@ -91,6 +91,22 @@ class XsdBundleTests(unittest.TestCase):
                     if '<decimal>2</decimal>' in body:
                         self.assertRegex(result.stderr, r"Element 'decimal': .*does not match the fixed value constraint")
 
+    def test_downloaded_validator_enforces_exact_fixed_calendar_attributes(self):
+        from tests.typed_fixed_fixture import attribute_fixture, chameleon_attribute_fixture
+        from xsd_bundle import _prepare, _zip
+        for kind in ('direct', 'reference', 'neighbor', 'required', 'chameleon'):
+            row, files, cases = chameleon_attribute_fixture() if kind == 'chameleon' else attribute_fixture(kind)
+            directory = self.base/kind
+            directory.mkdir()
+            with zipfile.ZipFile(io.BytesIO(_zip(row, *_prepare(row, files)))) as archive:
+                archive.extractall(directory)
+            for xml, valid in cases:
+                with self.subTest(kind=kind, xml=xml):
+                    result = self.run_validator(directory, xml.encode())
+                    self.assertEqual(result.returncode, 0 if valid else 1, result.stderr)
+                    if not valid and '6782Z"' in xml:
+                        self.assertRegex(result.stderr, r"Element '(request|\{urn:calendar\}calendar)', attribute 'instant': .*does not match the fixed value")
+
     def test_audit_uses_same_typed_fixed_values_without_changing_originals(self):
         from tests.typed_fixed_fixture import fixture, CASES, xml
         from audit_xml_examples import _schema

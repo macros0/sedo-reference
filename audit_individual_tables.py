@@ -7,7 +7,7 @@ from xml.etree import ElementTree as ET
 from lxml import etree
 
 from module_xsd import W, text, word_text
-from schema import FACETS, Schema, X, XS, field_whitespace, local, occurrence, scalar_whitespace
+from schema import EXPANDED_NAME_TYPES, FACETS, Schema, X, XS, field_whitespace, local, occurrence, scalar_whitespace
 
 
 HEADING = re.compile(r"^Атрибут(?:ы элемента|ы (?:комплексного )?типа)?\s+(\S+)$", re.I)
@@ -31,6 +31,8 @@ INTEGER_TYPES = {
     "integer", "nonPositiveInteger", "negativeInteger", "long", "int", "short", "byte",
     "nonNegativeInteger", "unsignedLong", "unsignedInt", "unsignedShort", "unsignedByte", "positiveInteger",
 }
+STRING_TYPES = {'string', 'normalizedString', 'token', 'language', 'Name', 'NCName',
+                'NMTOKEN', 'ID', 'IDREF', 'ENTITY'}
 INTEGER_LEXICAL = re.compile(r"[+-]?[0-9]+")
 DECIMAL_LEXICAL = re.compile(r"[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)")
 TIME_LEXICAL = re.compile(r"([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.([0-9]+))?(Z|[+-][0-9]{2}:[0-9]{2})?")
@@ -243,13 +245,31 @@ def constraint_qname(value, owner, schema=None):
     return (scope.get(binding, ''), name)
 
 
+def constraint_type(value, field, owner, key, *, schema, actual):
+    if field.get('alternatives'):
+        if actual:
+            return field.get('unionFlagTypes', {}).get(key)
+        return schema.quoted_value_type(owner, value) if schema is not None and owner is not None else None
+    if field.get('baseNs') == XS:
+        return unprefixed(field.get('base', '')), None
+
+
+def constraint_name(value, field, owner, key, *, schema, actual):
+    recorded = field.get('flagQNames', {}).get(key) if actual else None
+    return tuple(recorded) if recorded is not None else constraint_qname(value, owner, schema)
+
+
 def constraint_label(value, field, owner, key, *, schema=None, actual=False):
-    if value is not None and field and field.get('baseNs') == XS and unprefixed(field.get('base', '')) == 'QName':
-        name = constraint_qname(value, owner, schema)
-        if name is None and actual:
-            name = field.get('flagQNames', {}).get(key)
-        if name is not None:
-            return value+' ('+(name[0] or 'без пространства имён')+')'
+    if value is not None and field:
+        selected = constraint_type(value, field, owner, key, schema=schema, actual=actual)
+        if selected:
+            base, _ = selected
+            if base in EXPANDED_NAME_TYPES:
+                name = constraint_name(value, field, owner, key, schema=schema, actual=actual)
+                if name is not None:
+                    return value+' ('+(name[0] or 'без пространства имён')+')'
+            elif field.get('alternatives'):
+                return value+' ('+base+')'
     return value
 
 
@@ -284,15 +304,41 @@ def time_value(value):
 
 
 def equal_constraint(left, right, field, *, quoted=None, source=None, schema=None, key=None, note=None):
-    if left is None or right is None or not field or field.get('baseNs') != XS:
+    if left is None or right is None or not field:
+        return left == right
+    if field.get('alternatives') and key in ('fixed', 'default'):
+        quoted_type = constraint_type(left, field, quoted, key, schema=schema, actual=False)
+        source_type = constraint_type(right, field, source, key, schema=schema, actual=True)
+        if quoted_type is None or source_type is None:
+            if note: note('Не установлен член union или его контекст для '+key+'; равенство автоматически не проверено.')
+            return True
+
+        def family(base):
+            if base in INTEGER_TYPES: return 'decimal'
+            if base in STRING_TYPES: return 'string'
+            return base
+
+        base = family(source_type[0])
+        if family(quoted_type[0]) != base:
+            return False
+        if base in EXPANDED_NAME_TYPES:
+            a = constraint_name(left, field, quoted, key, schema=schema, actual=False)
+            b = constraint_name(right, field, source, key, schema=schema, actual=True)
+            if a is None or b is None:
+                if note: note('Для значения union не установлено пространство имён '+base+'; равенство автоматически не проверено.')
+                return True
+            return a == b
+        if base == 'string':
+            return normalize_whitespace(left, quoted_type[1]) == normalize_whitespace(right, source_type[1])
+        return equal_constraint(left, right, {'baseNs': XS, 'base': base}, note=note)
+    if field.get('baseNs') != XS:
         return left == right
     base = unprefixed(field.get('base', ''))
-    if base == 'QName':
-        a = constraint_qname(left, quoted, schema)
-        b = constraint_qname(right, source, schema)
-        if b is None and key in field.get('flagQNames', {}): b = tuple(field['flagQNames'][key])
+    if base in EXPANDED_NAME_TYPES:
+        a = constraint_name(left, field, quoted, key, schema=schema, actual=False)
+        b = constraint_name(right, field, source, key, schema=schema, actual=True)
         if a is None or b is None:
-            if note: note('Для значения QName контекст пространства имён цитаты не установлен; равенство автоматически не проверено.')
+            if note: note('Для значения '+base+' контекст пространства имён цитаты не установлен; равенство автоматически не проверено.')
             return True
         return a == b
     if left == right: return True
@@ -366,9 +412,16 @@ def quoted_enum_whitespace(rule, schema, fallback):
     return fallback
 
 
+def normalize_whitespace(value, mode):
+    if mode in ('replace', 'collapse'):
+        value = re.sub(r'[\t\r\n]', ' ', value)
+    return re.sub(' +', ' ', value).strip(' ') if mode == 'collapse' else value
+
+
 def facet_difference(left, right, field, quoted, source, schema, note=None, *, effective=False):
     """Compare facet values in each declaration's datatype and namespace context."""
-    qname = bool(field and field.get('baseNs') == XS and unprefixed(field.get('base', '')) == 'QName')
+    base = unprefixed(field.get('base', '')) if field and field.get('baseNs') == XS else ''
+    qname = base in EXPANDED_NAME_TYPES
     string_enum = bool(field and field.get('baseNs') == XS
                        and unprefixed(field.get('base', '')) in ('string', 'normalizedString', 'token'))
     if string_enum:
@@ -376,11 +429,6 @@ def facet_difference(left, right, field, quoted, source, schema, note=None, *, e
         quoted_mode = source_mode
         if quoted is not None and not effective:
             quoted_mode = quoted_enum_whitespace(local_rule(quoted), schema, source_mode)
-
-    def normalized(value, mode):
-        if mode in ('replace', 'collapse'):
-            value = re.sub(r'[\t\r\n]', ' ', value)
-        return re.sub(' +', ' ', value).strip(' ') if mode == 'collapse' else value
 
     def records(pairs, root, actual=False):
         restriction=local_rule(root)[2] if root is not None else None
@@ -398,7 +446,7 @@ def facet_difference(left, right, field, quoted, source, schema, note=None, *, e
                 resolved=[constraint_qname(value,node,schema) for node in nodes] if nodes else [constraint_qname(value,root,schema)]
             for name in resolved:
                 if name is None and note:
-                    note('Для перечисления QName контекст пространства имён цитаты не установлен; равенство автоматически не проверено.')
+                    note('Для перечисления '+base+' контекст пространства имён цитаты не установлен; равенство автоматически не проверено.')
                 yield key,value,name,root
     a_rows=list(records(left,quoted)); b_rows=list(records(right,source,True))
     def same(a,b):
@@ -420,8 +468,8 @@ def facet_difference(left, right, field, quoted, source, schema, note=None, *, e
         return key,value
     a_exact={(row[0],row[1]) for row in a_rows};b_exact={(row[0],row[1]) for row in b_rows}
     if string_enum:
-        a_enums = {normalized(value, quoted_mode) for key, value, _, _ in a_rows if key == 'enumeration'}
-        b_enums = {normalized(value, source_mode) for key, value, _, _ in b_rows if key == 'enumeration'}
+        a_enums = {normalize_whitespace(value, quoted_mode) for key, value, _, _ in a_rows if key == 'enumeration'}
+        b_enums = {normalize_whitespace(value, source_mode) for key, value, _, _ in b_rows if key == 'enumeration'}
     def exact_scalar(row,exact):
         # Equal scalar spelling proves equal value without compiling a probe.
         # QName spelling needs its declaration URI. Keep every opposite row for
@@ -430,8 +478,8 @@ def facet_difference(left, right, field, quoted, source, schema, note=None, *, e
     def missing(row, opposite, exact, *, actual):
         if string_enum and row[0] == 'enumeration':
             if actual:
-                return normalized(row[1], source_mode) not in a_enums
-            return normalized(row[1], quoted_mode) not in b_enums
+                return normalize_whitespace(row[1], source_mode) not in a_enums
+            return normalize_whitespace(row[1], quoted_mode) not in b_enums
         return not exact_scalar(row, exact) and not any(same(other,row) if actual else same(row,other) for other in opposite)
     # The typed probe always keeps Word on the left and source on the right:
     # invalid Word tokens are rejected by the valid source constraint.
@@ -484,7 +532,7 @@ def check_card(cells, field, children, embedded, source, report, schema=None, *,
         if different_namespace or unprefixed(expected[0]) != unprefixed(rule[0]) or facet_missing or facet_extra:
             documented = rule_text(expected) or "Комплексное содержимое"
             actual = rule_text(rule) or "Комплексное содержимое"
-            if documented == actual or field and field.get('baseNs') == XS and unprefixed(field.get('base','')) == 'QName':
+            if documented == actual or field and field.get('baseNs') == XS and unprefixed(field.get('base','')) in EXPANDED_NAME_TYPES:
                 if facet_missing: documented += " · " + render_facets(facet_missing)
                 if facet_extra: actual += " · " + render_facets(facet_extra)
             if different_namespace:
@@ -533,7 +581,7 @@ def check_card(cells, field, children, embedded, source, report, schema=None, *,
         if expected != actual or key in ('fixed', 'default'):
             expected = constraint_label(expected, field, embedded, key, schema=schema)
             actual = constraint_label(actual, field, source, key, schema=schema, actual=True)
-            displayed = expected if field.get('baseNs') == XS and unprefixed(field.get('base', '')) == 'QName' else row[1]
+            displayed = expected if key in ('fixed', 'default') else row[1]
             report("Свойство поля", "Свойства", f"{row[0]} = {displayed}", f"{key} = {actual or 'не задано'}",
                    "Таблица и схема задают разные требования к этому полю.")
 
@@ -610,11 +658,14 @@ def check_card(cells, field, children, embedded, source, report, schema=None, *,
                     flags.get("default", ""), flags.get("fixed", "")]
         quoted_attribute = next((node for node in embedded.iter() if local(node) == 'attribute' and (node.get('name') or unprefixed(node.get('ref', ''))) == name), embedded) if embedded is not None else None
         same_constraints = True
-        for value, key in zip(expected[2:], ('default', 'fixed')):
+        for index, key in enumerate(('default', 'fixed'), 2):
+            value = expected[index]
             actual = flags.get(key)
             if actual is None and not value: value = None
-            if not equal_constraint(value, actual, attr, quoted=quoted_attribute, key=key, note=note):
+            if not equal_constraint(value, actual, attr, quoted=quoted_attribute, schema=schema, key=key, note=note):
                 same_constraints = False
+                expected[index] = constraint_label(value, attr, quoted_attribute, key, schema=schema) or ''
+                observed[index] = constraint_label(actual, attr, None, key, actual=True) or ''
         if expected[:2] != observed[:2] or not same_constraints:
             report("Свойства атрибута", "Атрибуты", name + " " + " ".join(expected).strip(),
                    name + " " + " ".join(observed).strip(), "Описания типа или использования атрибута расходятся.")

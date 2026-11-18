@@ -355,20 +355,37 @@ def event_attempt(run_id, attempt=None):
 
 def collect_status(publication_run_id=None, check_run_id=None, check_run_attempt=None, publication_run_attempt=None):
     finished_run = None
+    latest_page = None
+    errors = []
     if publication_run_id is not None:
+        run_id = int(publication_run_id)
+        requested = int(publication_run_attempt) if publication_run_attempt is not None else None
         # The final Pages job dispatches us just before its own run becomes terminal.
         for attempt in range(24):
-            current = event_attempt(publication_run_id, publication_run_attempt)
-            if current.get('head_branch') != 'main' or current.get('path') != '.github/workflows/pages.yml':
+            latest = api(f'actions/runs/{run_id}')
+            if latest.get('head_branch') != 'main' or latest.get('path') != '.github/workflows/pages.yml':
                 break
-            if current['status'] == 'completed':
-                finished_run = current
-                break
+            if latest_page is None or run_freshness(latest) >= run_freshness(latest_page):
+                latest_page = latest
+            reported = latest_page
+            if requested is not None and latest_page.get('run_attempt', 1) != requested:
+                try:
+                    reported = api(f'actions/runs/{run_id}/attempts/{requested}')
+                except RuntimeError as error:
+                    if 'HTTP 404' not in str(error):
+                        raise
+                    reported = None
+            if (reported and (requested is None or reported.get('run_attempt', 1) == requested)
+                    and reported.get('head_branch') == 'main' and reported.get('path') == '.github/workflows/pages.yml'):
+                if run_freshness(reported) > run_freshness(latest_page):
+                    latest_page = reported
+                if reported['status'] == 'completed':
+                    finished_run = reported
+                    break
             if attempt < 23:
                 time.sleep(5)
         else:
-            raise RuntimeError(f'Pages run {publication_run_id} did not finish in time')
-    errors = []
+            errors.append(f'Pages run {run_id} attempt {requested or "latest"} did not finish in time')
     try:
         source = sourcecraft_status()
     except Exception as error:
@@ -390,13 +407,16 @@ def collect_status(publication_run_id=None, check_run_id=None, check_run_attempt
     page_result = api('actions/workflows/pages.yml/runs?branch=main&per_page=10')
     pages = page_result['workflow_runs']
     incomplete = page_result.get('total_count', len(pages)) > len(pages)
-    if finished_run:
-        # Each rerun shares its run ID with older attempts. A listing can lag
-        # the direct lookup, omit the run, or already include a newer attempt.
+    if latest_page is not None:
+        # The latest attempt determines current status. An older event can
+        # independently prove which attempt deployed the live site.
         by_id = {page['id']: page for page in pages}
-        listed = by_id.get(finished_run['id'])
-        if listed is None or run_freshness(listed) <= run_freshness(finished_run):
-            by_id[finished_run['id']] = finished_run
+        for lookup in (latest_page, finished_run):
+            if lookup is None:
+                continue
+            listed = by_id.get(lookup['id'])
+            if listed is None or run_freshness(listed) <= run_freshness(lookup):
+                by_id[lookup['id']] = lookup
         pages = sorted(by_id.values(), key=lambda page: (page['created_at'], page['id']), reverse=True)
     pages = publication_history(pages, incomplete)
     first_successes = {}
@@ -494,6 +514,10 @@ def collect_status(publication_run_id=None, check_run_id=None, check_run_attempt
     result = build_status(source, checks, pages, reports, legacy,
                           configured_source=os.environ.get('SEDO_COLLECTOR_SOURCE') or 'sourcecraft')
     last = latest_deployment(pages)
+    if finished_run and not any(
+            page['id'] == finished_run['id'] and page.get('run_attempt', 1) == finished_run.get('run_attempt', 1)
+            for page in pages):
+        last = latest_deployment([deployment(finished_run)], last)
     if incomplete or result['github']['last_successful_publication']['state'] == 'unknown':
         # Run creation order does not reflect when a deployment was retried.
         # Read successes independently of the currently targeted SHA.

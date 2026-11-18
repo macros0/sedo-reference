@@ -100,11 +100,12 @@ def compile_schema(entry, package_root, *, replacements=None):
 
 
 class BooleanFixedValidator:
-    """Legacy boolean aliases, or scalar fixed with AttributeUseValidator probes."""
+    """Recheck fixed-value aliases with an alternate schema and typed probes."""
     def __init__(self, primary, alternate):
         self.primary = primary
         self.alternate = alternate
         self.typed = False
+        self.calendar_attributes = False
         self.error_log = []
 
     def validate(self, document):
@@ -113,6 +114,13 @@ class BooleanFixedValidator:
         if valid:
             return True
         def alias(error):
+            if self.calendar_attributes and error.type_name == 'SCHEMAV_CVC_AU':
+                match = re.search(r": The value '([^']*)' does not match the fixed value constraint '([^']*)'\.$", error.message)
+                if match:
+                    kind = 'dateTime' if 'T' in match[2] else 'time'
+                    actual = calendar_value(kind, match[1])
+                    if actual is not None and actual == calendar_value(kind, match[2]):
+                        return True
             match = re.search(r": The actual value '[ \t\r\n]*(true|1|false|0)[ \t\r\n]*' does not match the fixed value constraint '[ \t\r\n]*(true|1|false|0)[ \t\r\n]*'\.$", error.message)
             if self.typed and error.type_name == 'SCHEMAV_CVC_ELT_5_2_2_2_2' and not match:
                 return True
@@ -134,9 +142,10 @@ class AttributeUseValidator:
     def __init__(self, primary, supplementary, manifest):
         self.primary=primary;self.supplementary=supplementary
         if isinstance(primary, BooleanFixedValidator):
-            primary.typed=any(rule.get('element_value') for rules in
-                [manifest['attribute_checks'],*[p['checks'] for p in manifest.get('attribute_type_checks',[])],
-                 *[p['checks'] for p in manifest.get('attribute_element_checks',[])]] for rule in rules)
+            rules = [rule for checks in [manifest['attribute_checks'], *[p['checks'] for p in manifest.get('attribute_type_checks', [])],
+                                        *[p['checks'] for p in manifest.get('attribute_element_checks', [])]] for rule in checks]
+            primary.typed = any(rule.get('element_value') for rule in rules)
+            primary.calendar_attributes = any('calendar_fixed' in rule and not rule.get('element_value') for rule in rules)
         self.namespace=manifest['supplementary_namespace']
         self.complete_types = manifest.get('attribute_type_profiles_complete', False)
         self.type_whitespace={tuple(item['type']):item['mode'] for item in manifest.get('element_type_whitespace',[])}
@@ -272,9 +281,14 @@ class AttributeUseValidator:
                 type_name = 'SCHEMAV_CVC_DATATYPE_VALID_1_2_1'
             else:
                 reason = f"The actual value '{actual}' does not match the fixed value constraint '{fixed}'."
-                type_name = 'SCHEMAV_CVC_ELT_5_2_2_2_2'
+                type_name = 'SCHEMAV_CVC_ELT_5_2_2_2_2' if rule.get('element_value') else 'SCHEMAV_CVC_AU'
+            ns, name = rule['attribute']
+            attribute = name if not ns else '{'+ns+'}'+name
+            subject = f"Element '{node.tag}'"
+            if not rule.get('element_value'):
+                subject += f", attribute '{attribute}'"
             self.error_log.append(SimpleNamespace(line=node.sourceline, column=0, type_name=type_name,
-                message=f"Element '{node.tag}': {reason}", path=node.getroottree().getpath(node)))
+                message=f"{subject}: {reason}", path=node.getroottree().getpath(node)))
         return primary_valid and valid
 
 

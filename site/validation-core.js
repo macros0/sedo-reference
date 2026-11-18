@@ -86,7 +86,7 @@ function checkPack(pack,expected){
       &&subject.every((part,i)=>part===layout.children[layout.index][i]));
    });
   };
-  const calendar=value=>value.calendar_fixed===undefined||value.element_value===true&&Array.isArray(value.calendar_fixed)
+  const calendar=value=>value.calendar_fixed===undefined||Array.isArray(value.calendar_fixed)
    &&value.calendar_fixed.length===2&&['dateTime','time'].includes(value.calendar_fixed[0])&&typeof value.calendar_fixed[1]==='string';
   const rule=(value,relative)=>value&&path(value.path,relative)&&pair(value.attribute)&&typeof value.element==='string'&&/^value[0-9]+$/.test(value.element)&&typeof value.field==='string'&&value.field.length<=8192&&guards(value,relative)&&calendar(value);
   if(!Array.isArray(pack.attribute_checks)||pack.attribute_checks.length>50000||typeof pack.supplementary_namespace!=='string'||!pack.supplementary_namespace||pack.supplementary_namespace.length>8192||typeof pack.supplementary_schema!=='string'||!Object.hasOwn(pack.files,pack.supplementary_schema))throw Error('Некорректные дополнительные проверки XSD.');

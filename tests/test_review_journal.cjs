@@ -72,6 +72,17 @@ const revision={number:'6',environment:'prod',document_version:'3.1',label_date:
  const wsdlImport={...imported,schema_source_type:'wsdl_bridge',schema_source_url:bridged.schema_source_url,schema_sources:[{kind:'xsd',sha256:'common',url:'https://ecp.sfr.gov.ru/service?xsd=Common.xsd'}]};
  const importedRemote=journal.schemaSources(wsdlImport,{xlocation:'types/Common.xsd · value'});
  assert.equal(importedRemote.publication.url,bridged.schema_source_url);assert.equal(importedRemote.file.url,'sources/common.xsd');assert.equal(importedRemote.official.url,wsdlImport.schema_sources[0].url);
+ const copies=['v1','v2'].map(version=>({kind:'xsd',archive_path:`schemas/${version}/Common.xsd`,sha256:'c'.repeat(64),url:`https://ecp.sfr.gov.ru/sedo/${version}/Common.xsd`}));
+ const files=copies.map(copy=>({path:copy.archive_path,download:`sources/${copy.sha256}.xsd`,sha256:copy.sha256}));
+ const duplicate={...direct,schema_files:[entry,...files],schema_sources:copies};
+ const copiedFinding={...issue,xsd_source:files[1]};
+ const chain=journal.schemaSources(duplicate,copiedFinding);
+ assert.equal(chain.official.url,copies[1].url);
+ assert.equal(chain.file.text,files[1].path);
+ const copySheet=journal.createWorkbook(ExcelJS,[{revision:duplicate,finding:copiedFinding}],{baseURL}).getWorksheet('Замечания');
+ assert.deepEqual(copySheet.getCell('M2').value,{text:files[1].path,hyperlink:baseURL+files[1].download});
+ assert.ok(copySheet.getRow(2).values.some(value=>value?.hyperlink===copies[1].url));
+ assert.ok(!copySheet.getRow(2).values.some(value=>value?.hyperlink===copies[0].url));
  const shared={revision:{...imported,number:'7'},finding:issue};
  const differentDoc={revision:{...imported,number:'8',document_url:'https://lk.sfr.gov.ru/other.docx'},finding:issue};
  const differentFile={revision,finding:{...issue,xlocation:'types/Common.xsd / root/value'}};

@@ -238,6 +238,27 @@ class AuditIndividualTablesTests(unittest.TestCase):
         self.assertEqual(self.check(card, source, notes=notes), (1, []))
         self.assertTrue(any('QName' in item for item in notes), notes)
 
+    def test_union_constraints_compare_the_declared_member_and_expanded_name(self):
+        for key in ('fixed', 'default'):
+            with self.subTest(key=key):
+                source = (f'<xs:attribute name="code" xmlns:p="urn:one" {key}="p:value">'
+                          '<xs:simpleType><xs:union memberTypes="xs:QName xs:integer"/></xs:simpleType>'
+                          '</xs:attribute>')
+                root = '<xs:element name="root"><xs:complexType>{}</xs:complexType></xs:element>'
+                heading = 'Атрибут root/@code'
+                for quote, differs, limited in [
+                        (source.replace('urn:one', 'urn:two'), True, False),
+                        (source.replace('xmlns:p', 'xmlns:q').replace('p:value', 'q:value'), False, False),
+                        (source.replace(' xmlns:p="urn:one"', ''), False, True),
+                        (source.replace('xs:QName', 'xs:string'), True, False)]:
+                    notes = []
+                    count, issues = self.check(document(heading, {'Схема': quote}), root.format(source), notes=notes)
+                    self.assertEqual(count, 1)
+                    self.assertEqual(bool(issues), differs, issues)
+                    self.assertEqual(any('union' in message for message in notes), limited, notes)
+                    if differs:
+                        self.assertIn('urn:one', issues[0]['xsd'])
+
     def test_attribute_table_distinguishes_qname_constraint_presence(self):
         for key in ('fixed', 'default'):
             for constrained, differs in [(False, True), (True, False)]:

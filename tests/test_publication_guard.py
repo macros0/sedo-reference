@@ -42,8 +42,22 @@ class PublicationGuardTests(unittest.TestCase):
     def test_candidate_invariants_run_after_build_in_the_pr_job(self):
         workflow = (Path(__file__).resolve().parents[1] / '.github/workflows/validate-incoming.yml').read_text('utf8')
         browser = workflow.split('  browser:', 1)[1].split('  validate:', 1)[0]
-        self.assertIn('python -m unittest discover -s tests -q', browser)
-        self.assertLess(browser.index('python build_site.py'), browser.index('python -m unittest discover -s tests -q'))
+        gate = 'python -m tests.run_python_tests --jobs 2'
+        self.assertIn(gate, browser)
+        self.assertLess(browser.index('python build_site.py'), browser.index(gate))
+
+    def test_full_python_run_has_headroom_and_precedes_publication(self):
+        root = Path(__file__).resolve().parents[1] / '.github/workflows'
+        gate = 'python -m tests.run_python_tests --jobs 2'
+        daily = (root / 'check-sfr.yml').read_text('utf8')
+        self.assertIn('timeout-minutes: 120', daily)
+        for prerequisite in ('python auto_update.py', 'python verify.py'):
+            self.assertLess(daily.index(prerequisite), daily.index(gate))
+        for gated in ('npm run test:browser', 'git push origin HEAD:main', 'gh workflow run pages.yml'):
+            self.assertLess(daily.index(gate), daily.index(gated))
+        pr = (root / 'validate-incoming.yml').read_text('utf8')
+        self.assertEqual(pr.count('timeout-minutes: 120'), 2)
+        self.assertEqual(pr.count(gate), 2)
 
     def test_deploy_job_uses_build_output_and_rechecks_main_on_every_attempt(self):
         workflow = (Path(__file__).resolve().parents[1] / '.github/workflows/pages.yml').read_text('utf8')

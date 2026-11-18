@@ -103,14 +103,97 @@ def xml(body):
     return '<request xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xs="'+XS+'">'+body+'</request>'
 
 
-def pack():
+def attribute_fixture(kind):
+    clock = kind == 'required'
+    base_type = 'time' if clock else 'dateTime'
+    day = '' if clock else '2026-11-17T'
+    previous_day = '' if clock else '2026-11-16T'
+    fixed = day+'00:00:00.1234567890123456781Z'
+    direct = f'<xs:attribute name="instant" type="Stamp" fixed="{fixed}"/>'
+    if clock:
+        direct = direct.replace(' type=', ' use="required" type=')
+    reference = '<xs:attribute ref="instant"/>' if kind == 'reference' else direct
+    definition = direct if kind == 'reference' else ''
+    neighbor = (f'<xs:sequence><xs:element name="instant" type="Stamp" fixed="{fixed}"/></xs:sequence>'
+                if kind == 'neighbor' else '')
+    source = f'''<xs:schema xmlns:xs="{XS}">
+    <xs:simpleType name="Stamp"><xs:restriction base="xs:{base_type}"/></xs:simpleType>
+    {definition}
+    <xs:element name="request"><xs:complexType>{neighbor}{reference}
+      <xs:attribute name="literal" type="xs:string" fixed="{fixed}"/>
+    </xs:complexType></xs:element>
+    </xs:schema>'''
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    cases = []
+    alias = previous_day+'23:00:00.1234567890123456781000-01:00'
+    for value, valid in [(fixed, True), (alias, True), (day+'00:00:00.1234567890123456782Z', False)]:
+        body = f'<instant>{fixed}</instant>' if neighbor else ''
+        cases.append((f'<request instant="{value}">{body}</request>', valid))
+        if neighbor:
+            cases.append((f'<request instant="{fixed}"><instant>{value}</instant></request>', valid))
+    if kind == 'direct':
+        cases.append((f'<request instant="{alias}" literal="{alias}"/>', False))
+    if clock:
+        cases.append(('<request/>', False))
+    return row, {'main.xsd': source.encode()}, cases
+
+
+def pack(row, files):
     from xsd_bundle import _prepare
-    row, files = fixture()
     output, _, constraints = _prepare(row, files)
     return dict(row, format=1, entrypoint='message.xsd', fields=[], field_namespaces=[],
                 files={name:base64.b64encode(raw).decode() for name, raw in output.items()
                        if not name.startswith('originals/')}, **constraints)
 
 
+def chameleon_attribute_fixture():
+    fixed = '2026-11-17T00:00:00.1234567890123456781Z'
+    alias = '2026-11-16T23:00:00.1234567890123456781000-01:00'
+    source = {
+        'main.xsd': f'''<xs:schema xmlns:xs="{XS}" xmlns:c="urn:calendar" xmlns:s="urn:literal">
+          <xs:import namespace="urn:calendar" schemaLocation="calendar.xsd"/>
+          <xs:import namespace="urn:literal" schemaLocation="literal.xsd"/>
+          <xs:element name="request"><xs:complexType><xs:sequence>
+            <xs:element ref="c:calendar"/><xs:element ref="s:literal"/>
+          </xs:sequence></xs:complexType></xs:element>
+        </xs:schema>''',
+        'shared.xsd': f'''<xs:schema xmlns:xs="{XS}">
+          <xs:complexType name="Shared"><xs:attribute name="instant" type="Stamp" fixed="{fixed}"/></xs:complexType>
+        </xs:schema>''',
+    }
+    for name, primitive in (('calendar', 'dateTime'), ('literal', 'string')):
+        uri = 'urn:'+name
+        source[name+'.xsd'] = f'''<xs:schema xmlns:xs="{XS}" xmlns="{uri}" targetNamespace="{uri}">
+          <xs:include schemaLocation="shared.xsd"/>
+          <xs:simpleType name="Stamp"><xs:restriction base="xs:{primitive}"/></xs:simpleType>
+          <xs:element name="{name}" type="Shared"/>
+        </xs:schema>'''
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    cases = [(f'<request xmlns:c="urn:calendar" xmlns:s="urn:literal">'
+              f'<c:calendar instant="{calendar}"/><s:literal instant="{literal}"/></request>', valid)
+             for calendar, literal, valid in ((fixed, fixed, True), (alias, fixed, True), (fixed, alias, False),
+                                              (alias, alias, False), (fixed.replace('6781Z', '6782Z'), fixed, False))]
+    return row, {name: content.encode() for name, content in source.items()}, cases
+
+
+def notation_packs():
+    from tests.comparison_xsd_fixture import notation_examples, notation_schema
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='r', namespace=None, schema_path='main.xsd')
+    for union in (False, True):
+        for prefix, uri in (('p', 'urn:A'), ('p', 'urn:B'), ('q', 'urn:A')):
+            sources = notation_schema(prefix, uri, union)
+            yield dict(pack=pack(row, {name: content.encode() for name, content in sources.items()}),
+                       cases=notation_examples(uri))
+
+
 if __name__ == '__main__':
-    print(json.dumps(dict(pack=pack(), cases=[(xml(body), expected) for body, expected in CASES])))
+    attributes = [(kind, attribute_fixture(kind)) for kind in ('direct', 'reference', 'neighbor', 'required')]
+    attributes.append(('chameleon', chameleon_attribute_fixture()))
+    payload = dict(pack=pack(*fixture()), cases=[(xml(body), expected) for body, expected in CASES],
+                   attributes={kind: dict(pack=pack(row, files), cases=cases)
+                               for kind, (row, files, cases) in attributes},
+                   notation=list(notation_packs()))
+    print(json.dumps(payload))

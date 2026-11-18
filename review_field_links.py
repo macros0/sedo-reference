@@ -12,6 +12,7 @@ def attach_schema_sources(revision, findings, archive_path):
     import zipfile
     from decimal import Decimal, InvalidOperation
     from schema import FACETS, Schema, X, local
+    from source_provenance import original_schema_source
 
     if not findings:
         return findings
@@ -28,8 +29,7 @@ def attach_schema_sources(revision, findings, archive_path):
             if path not in resources:
                 digest = hashlib.sha256(archive.read(path)).hexdigest()
                 item = dict(path=path, sha256=digest, download='sources/' + digest + '.xsd')
-                remote = next((s for s in revision.get('schema_sources', [])
-                               if s.get('kind') == 'xsd' and s.get('sha256') == digest), None)
+                remote = original_schema_source(revision.get('schema_sources', []), path, digest)
                 if remote and remote.get('url'):
                     item['url'] = remote['url']
                 resources[path] = item

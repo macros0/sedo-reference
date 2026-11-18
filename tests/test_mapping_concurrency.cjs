@@ -7,12 +7,13 @@ const locks={request(name,callback){assert.equal(name,'sedo-field-mappings:v1:ne
 const opts={left:{revision_id:'old'},right:{revision_id:'new'},before:['old/a','old/b','old/c'].map(path=>({path})),after:['new/a','new/b','new/c'].map(path=>({path})),isCurrent:()=>true};
 function tab(useLocks=true){
  const ctx=vm.createContext({document:{createElement:tag=>new Element(tag)},localStorage:storage,navigator:useLocks?{locks}:{}});
- for(const name of ['mapping-draft.js','mapping-editor.js','comparison-mapping.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../web',name),'utf8'),ctx);
+ for(const name of ['comparison-export.js','mapping-draft.js','mapping-editor.js','comparison-mapping.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../web',name),'utf8'),ctx);
  const api=ctx.SedoMapping,host=new Element('host');let changes=0,ui;
  const find=cls=>walk(host).filter(e=>e.className.split(' ').includes(cls)),mount=()=>{host.replaceChildren();ui=api.mount(host,opts,api.store.load(opts),async()=>{changes++;return true})};
  const choose=(side,value)=>{const select=find('mapping-tag-choice-'+side)[0];select.value=value;select.onchange()};
- const add=(beforePath,afterPath,comment='')=>{find('mapping-add')[0].onclick();choose('before',beforePath);choose('after',afterPath);find('mapping-edit-comment')[0].value=comment;find('mapping-editor-save')[0].onclick();find('mapping-editor-cancel')[0].onclick()};
- const edit=comment=>{find('mapping-suggest')[0].onclick();find('mapping-edit-row')[0].onclick();find('mapping-edit-comment')[0].value=comment;find('mapping-editor-save')[0].onclick();find('mapping-editor-cancel')[0].onclick()};
+ const save=()=>find('mapping-edit-form')[0].onsubmit({preventDefault(){}});
+ const add=(beforePath,afterPath,comment='')=>{find('mapping-add')[0].onclick();choose('before',beforePath);choose('after',afterPath);find('mapping-edit-comment')[0].value=comment;save();find('mapping-editor-cancel')[0].onclick()};
+ const edit=comment=>{find('mapping-suggest')[0].onclick();find('mapping-edit-row')[0].onclick();find('mapping-edit-comment')[0].value=comment;save();find('mapping-editor-cancel')[0].onclick()};
  return {api,mount,find,add,edit,apply:()=>find('mapping-apply')[0].onclick(),get changes(){return changes},get dirty(){return ui.hasUnapplied()}};
 }
 const pairs=t=>JSON.parse(JSON.stringify(t.api.store.load(opts).pairs));

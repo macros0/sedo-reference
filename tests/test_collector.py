@@ -10,6 +10,186 @@ from collector import publish_inputs
 
 
 class CollectorTests(unittest.TestCase):
+    def test_legacy_home_without_receipt_migrates_same_and_replaced_content(self):
+        from unittest.mock import patch
+        from collector import store_local_inputs
+        from collector_snapshots import feed_manifests, observation_path
+        from sync import write
+
+        old, old_objects = self.capture(9, '2026-11-16T01:00:00+00:00')
+        new, new_objects = self.capture(10, '2026-11-16T04:00:00+00:00')
+        identity = old['content_id']
+        old_receipt = observation_path('home', 'test', identity)
+        for incoming, objects in ((dict(old, observed_at=new['observed_at']), old_objects), (new, new_objects)):
+            for marker in (False, True):
+                with self.subTest(same=incoming['content_id'] == identity, marker=marker), \
+                        tempfile.TemporaryDirectory() as tmp, patch.dict('os.environ', SEDO_COLLECTOR_SOURCE='home'):
+                    state = Path(tmp)
+                    folder = state / 'collector/test'
+                    write(folder / 'current', (identity + '\n').encode())
+                    original = encode(old).replace(b'\n', b'\r\n')
+                    write(folder / (identity + '.json'), original)
+                    if marker:
+                        write(folder / 'current-observed-at', (identity + '\n2026-11-16T03:00:00+00:00\n').encode())
+                    for digest, raw in old_objects.items():
+                        write(state / 'objects' / digest, raw)
+                    store_local_inputs(state, [incoming], objects)
+                    self.assertEqual(load_library(state, 'test'), incoming['library'])
+                    self.assertEqual((folder / (identity + '.json')).read_bytes(), original)
+                    self.assertEqual((state / old_receipt).read_text().strip(), old['observed_at'])
+                    self.assertEqual(feed_manifests(state), [old] if incoming['content_id'] == identity else [old, new])
+
+    def test_legacy_home_shared_envelope_requires_confirmed_home_first_observation(self):
+        from unittest.mock import patch
+        from collector import store_local_inputs
+        from collector_snapshots import feed_manifests, observation_path
+        from sync import write
+
+        shared, objects = self.capture(9, '2026-11-16T01:00:00+00:00')
+        prod, prod_objects = self.capture(10, '2026-11-16T01:00:00+00:00', environment='prod')
+        returned = dict(shared, observed_at='2026-11-16T04:00:00+00:00')
+        identity = shared['content_id']
+        stamp = '2026-11-16T02:00:00+00:00'
+        with tempfile.TemporaryDirectory() as tmp, patch.dict('os.environ', SEDO_COLLECTOR_SOURCE='home'):
+            state = Path(tmp)
+            folder = state / 'collector/test'
+            write(folder / 'current', (identity + '\n').encode())
+            write(folder / (identity + '.json'), encode(shared))
+            write(folder / 'current-observed-at', (identity + '\n2026-11-16T03:00:00+00:00\n').encode())
+            write(state / observation_path('sourcecraft', 'test', identity), (shared['observed_at'] + '\n').encode())
+            for digest, raw in objects.items():
+                write(state / 'objects' / digest, raw)
+            with self.assertRaisesRegex(ValueError, 'Ambiguous legacy Home first observation'):
+                store_local_inputs(state, [prod, returned], objects | prod_objects)
+            self.assertFalse((state / 'collector/prod/current.json').exists())
+            self.assertFalse((folder / 'current.json').exists())
+            self.assertEqual(feed_manifests(state), [])
+
+            write(state / observation_path('home', 'test', identity), (stamp + '\n').encode())
+            store_local_inputs(state, [prod, returned], objects | prod_objects)
+            self.assertEqual(json.loads((folder / 'current.json').read_bytes())['capture_started_at'], returned['observed_at'])
+            self.assertEqual(load_library(state, 'prod'), prod['library'])
+            self.assertEqual(feed_manifests(state), [prod, dict(shared, observed_at=stamp)])
+
+    def test_git_migrates_legacy_receipt_with_original_date_after_cas_conflict(self):
+        from collector import git_blob_sha
+        from collector_snapshots import observation_path
+
+        old, old_objects = self.capture(9, '2026-11-16T01:00:00+00:00')
+        incoming = dict(old, observed_at='2026-11-16T03:00:00+00:00')
+        prod, prod_objects = self.capture(10, '2026-11-16T02:00:00+00:00', environment='prod')
+        api = AtomicGitAPI()
+        identity = old['content_id']
+        prefix = 'state/collector/test/'
+        for path, raw in {prefix + 'current': (identity + '\n').encode(),
+                          prefix + identity + '.json': encode(old),
+                          **{'state/objects/' + digest: raw for digest, raw in old_objects.items()}}.items():
+            blob = git_blob_sha(raw)
+            api.blobs[blob] = raw
+            api.trees['empty'][path] = blob
+        api.before_update = lambda: publish_inputs(api, [prod], prod_objects)
+        self.assertTrue(publish_inputs(api, [incoming], old_objects))
+        self.assertEqual(api.conflicts, 1)
+        self.assertEqual(json.loads(api.read(prefix + 'current.json'))['capture_started_at'], incoming['observed_at'])
+        self.assertEqual(api.read(prefix + identity + '.json'), encode(old))
+        receipt = 'state/' + observation_path('home', 'test', identity)
+        self.assertEqual(api.read(receipt).decode().strip(), old['observed_at'])
+        self.assertEqual(json.loads(api.read('state/collector/prod/current.json'))['content_id'], prod['content_id'])
+
+    def test_same_id_recapture_repairs_incomplete_legacy_home_with_confirmed_receipt(self):
+        from unittest.mock import patch
+        from collector import git_blob_sha, store_local_inputs
+        from collector_snapshots import feed_manifests, observation_path
+        from sync import write
+
+        old, objects = self.capture(9, '2026-11-16T01:00:00+00:00')
+        returned = dict(old, observed_at='2026-11-16T04:00:00+00:00')
+        other, other_objects = self.capture(10, returned['observed_at'])
+        identity = old['content_id']
+        prefix = 'collector/test/'
+        envelope = prefix + identity + '.json'
+        archive = 'objects/' + old['library']['sha256']
+        receipt = observation_path('home', 'test', identity)
+        files = {prefix + 'current': (identity + '\r\n').encode(),
+                 envelope: encode(old), receipt: (old['observed_at'] + '\n').encode(),
+                 **{'objects/' + digest: raw for digest, raw in objects.items()}}
+
+        for publish in (False, True):
+            for damaged in (envelope, archive):
+                for missing in (False, True):
+                    with self.subTest(publish=publish, damaged=damaged, missing=missing), \
+                            tempfile.TemporaryDirectory() as tmp, patch.dict('os.environ', SEDO_COLLECTOR_SOURCE='home'):
+                        state = Path(tmp)
+                        api = AtomicGitAPI()
+                        for name, raw in files.items():
+                            if name == damaged:
+                                if missing:
+                                    continue
+                                raw = b'partial write'
+                            if publish:
+                                blob = git_blob_sha(raw)
+                                api.blobs[blob] = raw
+                                api.trees['empty']['state/' + name] = blob
+                            else:
+                                write(state / name, raw)
+
+                        save = (lambda manifest, blobs: publish_inputs(api, [manifest], blobs)) if publish else (
+                            lambda manifest, blobs: store_local_inputs(state, [manifest], blobs))
+                        read = (lambda name: api.read('state/' + name)) if publish else (
+                            lambda name: (state / name).read_bytes())
+                        with self.assertRaisesRegex(ValueError, 'Cannot validate legacy Home manifest'):
+                            save(other, other_objects)
+                        with self.assertRaises(KeyError if publish else FileNotFoundError):
+                            read(prefix + 'current.json')
+                        self.assertEqual(read(prefix + 'current'), files[prefix + 'current'])
+                        save(returned, objects)
+                        self.assertEqual(read(prefix + 'current'), files[prefix + 'current'])
+                        self.assertEqual(read(receipt), files[receipt])
+                        self.assertEqual(read(envelope), files[envelope])
+                        self.assertEqual(read(archive), files[archive])
+                        self.assertEqual(json.loads(read(prefix + 'current.json')),
+                                         dict(format=1, content_id=identity,
+                                              capture_started_at=returned['observed_at']))
+                        if not publish:
+                            self.assertEqual(load_library(state, 'test'), old['library'])
+                            self.assertEqual(feed_manifests(state), [old])
+
+    def test_interrupted_legacy_switch_preserves_receipt_and_validated_active_content(self):
+        from unittest.mock import patch
+        from collector import store_local_inputs
+        from collector_snapshots import feed_manifests, observation_path
+        from sync import write
+
+        old, old_objects = self.capture(9, '2026-11-16T01:00:00+00:00')
+        new, new_objects = self.capture(10, '2026-11-16T04:00:00+00:00')
+        identity = old['content_id']
+        with tempfile.TemporaryDirectory() as tmp, patch.dict('os.environ', SEDO_COLLECTOR_SOURCE='home'):
+            state = Path(tmp)
+            folder = state / 'collector/test'
+            pointer = folder / 'current.json'
+            write(folder / 'current', (identity + '\n').encode())
+            write(folder / (identity + '.json'), encode(old))
+            for digest, raw in old_objects.items():
+                write(state / 'objects' / digest, raw)
+            archive = state / 'objects' / old['library']['sha256']
+            archive.write_bytes(b'incomplete archive')
+            with self.assertRaisesRegex(ValueError, 'Cannot validate legacy Home manifest'):
+                store_local_inputs(state, [new], new_objects)
+            self.assertFalse(pointer.exists())
+            self.assertFalse((folder / (new['content_id'] + '.json')).exists())
+            archive.write_bytes(old_objects[archive.name])
+
+            with patch('collector_feed.atomic_write', side_effect=OSError('interrupted')), \
+                    self.assertRaisesRegex(OSError, 'interrupted'):
+                store_local_inputs(state, [new], new_objects)
+            self.assertFalse(pointer.exists())
+            self.assertEqual(load_library(state, 'test'), old['library'])
+            receipt = state / observation_path('home', 'test', identity)
+            self.assertEqual(receipt.read_text().strip(), old['observed_at'])
+            store_local_inputs(state, [new], new_objects)
+            self.assertEqual(load_library(state, 'test'), new['library'])
+            self.assertEqual(feed_manifests(state), [old, new])
+
     def test_home_switch_is_one_commit_and_older_capture_can_follow_a_failed_switch(self):
         from unittest.mock import patch
         from collector import store_local_inputs
@@ -182,11 +362,22 @@ for path in sorted(pathlib.Path('state/collector').glob('*/*.json')):
                 for path in manifests:
                     self.assertIn(path.stem, result.stdout)
 
-    def capture(self, value=10, observed_at="2026-11-13T00:00:00+00:00"):
+    def capture(self, value=10, observed_at="2026-11-13T00:00:00+00:00", *, environment='test'):
         fixture = fixtures.WsdlSourcesTests()
         bundle = {url: raw.replace(b'value="10"', f'value="{value}"'.encode("ascii"))
                   for url, raw in fixture.bundle().items()}
-        row, objects = fixture.collect(bundle)
+        if environment == 'prod':
+            from wsdl_sources import collect
+            resources = {url.replace('ecp-test.', 'ecp.'): raw.replace(b'ecp-test.', b'ecp.')
+                         for url, raw in bundle.items()}
+            objects = {}
+            def blob(raw):
+                digest = sha(raw)
+                objects[digest] = raw
+                return digest
+            row = collect(fixtures.SEED.replace('ecp-test.', 'ecp.'), environment, resources.__getitem__, blob)
+        else:
+            row, objects = fixture.collect(bundle)
         return make_manifest(row, observed_at), objects
 
     def test_home_capture_promotes_each_contour_by_start_time(self):
@@ -740,33 +931,43 @@ collector.main()
             self.assertEqual(json.loads(pointer.read_bytes())["content_id"], self.capture()[0]["content_id"])
 
     def test_retry_keeps_another_home_writers_newer_pointer_and_archives_our_inputs(self):
-        from tests.test_collector_feed import FeedTests
-        from urllib.error import HTTPError
+        from collector import git_blob_sha
+        from collector_snapshots import observation_path
 
-        pointer = "state/collector/test/current"
-        first_pointer = "a" * 40
-        newer_pointer = "b" * 40
+        first, first_objects = self.capture(9, '2026-11-16T01:00:00+00:00')
+        incoming, objects = self.capture(10, '2026-11-16T02:00:00+00:00')
+        winner, winner_objects = self.capture(11, '2026-11-16T03:00:00+00:00')
+        api = AtomicGitAPI()
+        prefix = 'state/collector/test/'
 
-        class ConcurrentPublisher(FakeAPI):
-            def __call__(self, method, path, payload=None):
-                if path.startswith("git/trees/"):
-                    return {"tree": [{"path": pointer, "type": "blob", "sha": self.tree[pointer]}]}
-                try:
-                    return super().__call__(method, path, payload)
-                except HTTPError:
-                    self.tree = {pointer: newer_pointer}
-                    raise
+        def legacy_commit(manifest, resources):
+            identity = manifest['content_id']
+            tree = dict(api.trees[api.commits[api.head][1]])
+            for path, raw in {prefix + 'current': (identity + '\n').encode(),
+                              prefix + identity + '.json': encode(manifest),
+                              **{'state/objects/' + digest: raw for digest, raw in resources.items()}}.items():
+                blob = git_blob_sha(raw)
+                api.blobs[blob] = raw
+                tree[path] = blob
+            name = 'legacy-' + identity
+            api.trees[name] = tree
+            api.commits[name] = (api.head, name)
+            api.head = name
 
-        fixture = FeedTests()
-        a, objects = fixture.capture()
-        api = ConcurrentPublisher()
-        api.tree[pointer] = first_pointer
-        api.blobs[first_pointer] = b"1" * 64 + b"\n"
-        api.blobs[newer_pointer] = b"2" * 64 + b"\n"
-        self.assertTrue(publish_inputs(api, [a], objects))
-        self.assertEqual(api.tree[pointer], newer_pointer)
-        self.assertIn("state/collector/test/" + a["content_id"] + ".json", api.tree)
-        self.assertIn("state/objects/" + a["library"]["sha256"], api.tree)
+        legacy_commit(first, first_objects)
+        api.before_update = lambda: legacy_commit(winner, winner_objects)
+        self.assertTrue(publish_inputs(api, [incoming], objects))
+        self.assertEqual(api.conflicts, 1)
+        self.assertEqual(api.read(prefix + 'current').decode().strip(), winner['content_id'])
+        with self.assertRaises(KeyError):
+            api.read(prefix + 'current.json')
+        for manifest in (first, incoming, winner):
+            archived = api.read(prefix + manifest['content_id'] + '.json')
+            self.assertEqual(json.loads(archived), manifest)
+            receipt = observation_path('home', 'test', manifest['content_id'])
+            self.assertEqual(api.read('state/' + receipt).decode().strip(), manifest['observed_at'])
+        self.assertEqual(api.read('state/objects/' + incoming['library']['sha256']),
+                         objects[incoming['library']['sha256']])
 
     def test_publisher_rejects_forged_input_before_api_calls(self):
         manifest, objects = self.capture()

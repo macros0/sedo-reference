@@ -238,7 +238,8 @@ function flagValues(field,other){
   if(["fixed","default"].includes(key)){
    if(field.alternatives?.length||other.alternatives?.length){
     const selected=field.unionFlagTypes?.[key],otherSelected=other.unionFlagTypes?.[key];
-    return [key,selected&&otherSelected?selectedUnionValue(selected,value,name):value];
+     return [key,provedSelection(selected,name)&&provedSelection(otherSelected,other.flagQNames?.[key])
+      ?selectedUnionValue(selected,value,name):value];
    }
    return [key,name&&other.flagQNames?.[key]?name:typedValue(field,value)];
   }
@@ -251,9 +252,11 @@ function selectedUnionValue(selection,value,name){
  const family=integers.has(type)?'decimal':strings.has(type)?'string':type;
  return [family,name??enumerationValue(type,normalizeWhitespace(whitespace,value))];
 }
+const expandedNameType=type=>type==='QName'||type==='NOTATION';
+const provedSelection=(selection,name)=>selection&&(!expandedNameType(selection[0])||name);
 function unionValue(field,value,index){
- const selection=field.unionValueTypes?.[index];
- return selection?selectedUnionValue(selection,value,field.valueQNames?.[index]):null;
+ const selection=field.unionValueTypes?.[index],name=field.valueQNames?.[index];
+ return provedSelection(selection,name)?selectedUnionValue(selection,value,name):null;
 }
 function hasUnresolvedUnionValues(field){
  const members=field.alternatives||[];
@@ -262,6 +265,17 @@ function hasUnresolvedUnionValues(field){
   ||members.some(hasUnresolvedUnionValues));
 }
 const unionCoverageNote="Для некоторых значений union тип не определён. Перечисления, фиксированные значения и значения по умолчанию с неопределённым типом сопоставлены по исходному тексту.";
+function hasNotationMember(field){
+ return builtinType(field)==='NOTATION'||(field.alternatives||[]).some(hasNotationMember);
+}
+function hasUnresolvedNotationValues(field){
+ const members=field.alternatives||[],direct=builtinType(field)==='NOTATION',possible=members.some(hasNotationMember);
+ const missing=(selection,name)=>!name&&(direct||selection?.[0]==='NOTATION'||possible&&!selection);
+ return (field.values||[]).some((_,index)=>missing(field.unionValueTypes?.[index],field.valueQNames?.[index]))
+  ||['fixed','default'].some(key=>Object.hasOwn(field.flags||{},key)&&missing(field.unionFlagTypes?.[key],field.flagQNames?.[key]))
+  ||members.some(hasUnresolvedNotationValues);
+}
+const notationCoverageNote="Для некоторых значений NOTATION пространство имён не установлено. Такие значения сопоставлены по исходному тексту.";
 function enumRows(field,other){
  const union=field.unionValueTypes||other?.unionValueTypes,typedUnion=field.unionValueTypes&&other?.unionValueTypes;
  const knownLexemes=new Set(),knownValues=new Set(),unknownLexemes=new Set();
@@ -457,7 +471,7 @@ function compare(left,right,mappings=[]){
  }
  return results.sort((x,y)=>x.path.localeCompare(y.path)||(x.afterPath||"").localeCompare(y.afterPath||""));
 }
-const api={compare,fieldNamespace,hasUnresolvedUnionValues,unionCoverageNote};root.SedoCompare=api;
+const api={compare,fieldNamespace,hasUnresolvedUnionValues,unionCoverageNote,hasUnresolvedNotationValues,notationCoverageNote};root.SedoCompare=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);
 

@@ -60,6 +60,9 @@
   return ['https:','http:','file:'].includes(resolved.protocol)?{text,hyperlink:resolved.href}:text;
  }
  function schemaSources(r,finding){return schemaChains(r,finding)[0]}
+ function remoteSchemaSource(r,path,digest){
+  return r.schema_sources?.find(s=>digest&&s.kind==='xsd'&&s.sha256===digest&&(s.archive_path==null||s.archive_path===path));
+ }
  function schemaChains(r,finding){
   const selections=[finding?.xsd_source,...(finding?.xsd_sources||[])].filter(source=>source?.path);
   const chains=selections.length?selections.map(source=>schemaChain(r,finding,source)):[schemaChain(r,finding)];
@@ -82,7 +85,7 @@
   const path=explicit?.path||compared?.path||r.schema_path;
   const file=path?.split('/').pop();
   const digest=explicit?.sha256||compared?.sha256||r.dependencies?.find(([name])=>name===file)?.[1];
-  const remote=['wsdl','wsdl_bridge'].includes(r.schema_source_type)?r.schema_sources?.find(s=>digest&&s.kind==='xsd'&&s.sha256===digest):null;
+  const remote=['wsdl','wsdl_bridge'].includes(r.schema_source_type)?remoteSchemaSource(r,path,digest):null;
   const embedded=r.schema_source_type==='wsdl_bridge'||r.archive_url?.includes('#embedded=');
   const manual=origin?.startsWith('manual:');
   const publication=r.schema_source_type==='wsdl'||remote
@@ -268,7 +271,7 @@
   };
   render();
  }
- const api={collect,filter,createWorkbook,mount,schemaSources,fieldLinks,specificationKey,xsdKey,sourceOptions,sourceFilename,documentName};
+ const api={collect,filter,createWorkbook,mount,schemaSources,fieldLinks,specificationKey,xsdKey,sourceOptions,sourceFilename,documentName,remoteSchemaSource};
  if(typeof module==='object'&&module.exports)module.exports=api;
  else root.SedoReviewJournal=api;
 })(typeof window==='undefined'?globalThis:window);

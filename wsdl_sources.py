@@ -136,14 +136,14 @@ def _references(root, url, seed, legacy):
             yield target, "wsdl_import" if element.tag == WSDL + "import" else "import", element.get("namespace")
 
 
-def _relative_archive(files, origins, requested, expanded):
+def _relative_archive(files, origins, requested, expanded, schema_sources, *, legacy=False):
     """Keep the original layout when its offline edges select the fetched schemas."""
     from schema import import_metadata, resolve_import
     from sync import sha
     roots = {name: ET.fromstring(raw) for name, raw in files.items()}
     metadata = {name: import_metadata(root, sha(files[name]))
                 for name, root in roots.items()}
-    targets = {url: name for name, url in requested.items()}
+    targets = {url: name for name, url in requested.items() if legacy or name in schema_sources}
     contexts = {name: {metadata[name]["namespace"]} if metadata[name]["namespace"] else
                 {namespace for url, namespace in expanded if url == requested[name]}
                 for name in origins}
@@ -167,7 +167,8 @@ def _relative_archive(files, origins, requested, expanded):
                 namespace = effective if kind == "include" else edge.get("namespace")
                 resolved = resolve_import(inventory, path, location, namespace, kind)
                 target = targets[urljoin(origins[source], location)]
-                if inventory[resolved]["sha256"] != metadata[target]["sha256"]:
+                correct = inventory[resolved]["sha256"] == metadata[target]["sha256"] if legacy else resolved == paths[target]
+                if not correct:
                     raise ValueError("WSDL archive selected a different dependency: " + location)
                 # Equal bytes at different paths can have different child dependencies.
                 pending.append((target, resolved, metadata[target]["namespace"] or namespace))
@@ -178,7 +179,7 @@ def _relative_archive(files, origins, requested, expanded):
     except ValueError:
         pass
     else:
-        return files
+        return files, paths
     result = {}
     # Reserve real filenames before synthetic inline/query schema names.
     for name in sorted(files, key=lambda n: bool(urlsplit(origins[n]).query)):
@@ -186,11 +187,15 @@ def _relative_archive(files, origins, requested, expanded):
         origin = urlsplit(origins[name])
         directory = posixpath.dirname(posixpath.normpath(unquote(origin.path))).lstrip("/")
         path = posixpath.join("schemas", directory, posixpath.basename(name))
-        if path in result and result[path] != raw:
+        if path in result and (not legacy or result[path] != raw):
             if not origin.query:
-                raise ValueError("Conflicting WSDL archive paths: " + path)
+                if legacy:
+                    raise ValueError("Conflicting WSDL archive paths: " + path)
+                # Several requested URLs can redirect to the same final URL.
+                path = name
             # Preserve the base directory for relative includes in this WSDL.
-            path = posixpath.join("schemas", directory, name.replace("/", "-"))
+            else:
+                path = posixpath.join("schemas", directory, name.replace("/", "-"))
             if path in result:
                 raise ValueError("Conflicting WSDL archive paths: " + path)
         result[path] = raw
@@ -204,16 +209,16 @@ def _relative_archive(files, origins, requested, expanded):
                for name in files}
         exact={path: edges for path,edges in exact.items() if edges}
         check_layout(paths,exact)
-        return SchemaFiles(result,import_targets=exact)
-    return result
+        return SchemaFiles(result,import_targets=exact), paths
+    return result, paths
 
 
-def _index_inline_entry_members(content, schemas, sources):
+def _index_inline_entry_members(content, schemas, inline_paths, *, legacy_originals=None):
     """Record candidate paths that expose the same declaration via an inline entry."""
     from schema import Schema
-    originals = {source["sha256"] for source in sources}
-    entries = [schema for schema in schemas if not schema["namespace"]
-               and schema["sha256"] not in originals and schema["roots"]]
+    entries = [schema for schema in schemas if schema["path"] in inline_paths and schema["roots"]]
+    if legacy_originals is not None:
+        entries = [schema for schema in entries if not schema['namespace'] and schema['sha256'] not in legacy_originals]
     if not entries:
         return
     with zipfile.ZipFile(io.BytesIO(content)) as archive:
@@ -229,7 +234,7 @@ def _index_inline_entry_members(content, schemas, sources):
                     tree = Schema(archive, path, name)
                 except (ValueError, KeyError):
                     continue
-                declaration = tree.owner[tree.root]
+                declaration = tree.owner[tree.root], tree.context[tree.root][2]
                 matching = []
                 for schema in schemas:
                     member = schema["path"]
@@ -240,7 +245,7 @@ def _index_inline_entry_members(content, schemas, sources):
                         standalone = Schema(archive, member, name)
                     except (ValueError, KeyError):
                         continue
-                    if standalone.owner[standalone.root] == declaration:
+                    if (standalone.owner[standalone.root], standalone.context[standalone.root][2]) == declaration:
                         matching.append(member)
                 if matching:
                     members[name] = matching
@@ -258,7 +263,7 @@ def prefer_wsdl_inline_entries(candidates, root):
 
 
 def collect(seed, environment, fetch, blob, *, legacy_annotations=False, legacy_schema_roots=False,
-            legacy_inline_includes=False):
+            legacy_inline_includes=False, legacy_wsdl_layout=False):
     from schema import import_basename
     from sync import inspect_file
     if seed not in discover([dict(environment=environment, url=seed)], environment):
@@ -270,6 +275,7 @@ def collect(seed, environment, fetch, blob, *, legacy_annotations=False, legacy_
     origins = {}
     requested = {}
     sources = []
+    schema_sources = {}
     total = 0
     while pending:
         url, relation, expected = pending.pop(0)
@@ -306,6 +312,7 @@ def collect(seed, environment, fetch, blob, *, legacy_annotations=False, legacy_
                 files[path] = raw
                 origins[path] = final_url
                 requested[path] = url
+                schema_sources[path] = source
             else:
                 for i, content in enumerate(_inline_schemas(raw, legacy_annotations,
                                                             legacy_inline_includes=legacy_inline_includes)):
@@ -330,10 +337,23 @@ def collect(seed, environment, fetch, blob, *, legacy_annotations=False, legacy_
             pending.append((target, edge, required))
     if not files:
         raise ValueError("WSDL contains no XSD schemas")
-    content = _archive(_relative_archive(files, origins, requested, expanded))
+    archive_files, paths = _relative_archive(files, origins, requested, expanded, schema_sources,
+                                             legacy=legacy_wsdl_layout)
+    if not legacy_wsdl_layout:
+        from collections import Counter
+        counts = Counter(source['sha256'] for source in schema_sources.values())
+        # Keep the historic manifest shape where the bytes already identify
+        # exactly one remote source. Identical copies require path evidence.
+        for path, source in schema_sources.items():
+            if counts[source['sha256']] > 1:
+                source['archive_path'] = paths[path]
+    content = _archive(archive_files)
     metadata = inspect_file(content, "zip", legacy_schema_roots=legacy_schema_roots)
     if not legacy_inline_includes:
-        _index_inline_entry_members(content, metadata["schemas"], sources)
+        originals = {source['sha256'] for source in sources} if legacy_wsdl_layout else None
+        _index_inline_entry_members(content, metadata['schemas'],
+                                    {paths[name] for name in files.keys() - schema_sources.keys()},
+                                    legacy_originals=originals)
     return dict(environment=environment, url=seed + "#xsd-bundle", kind="zip",
                 label="XSD по WSDL шлюза СФР", archive_name="wsdl-schemas.zip",
                 source_type="wsdl", source_url=seed, source_files=sources,
@@ -353,6 +373,10 @@ def bridge(document, support, read_object, *, include_combined=True, legacy_sche
     with zipfile.ZipFile(io.BytesIO(read_object(support["sha256"]))) as z:
         dependencies = {"wsdl/" + name: z.read(name) for name in z.namelist()}
         support_targets=prefixed_targets(z,'wsdl/')
+    sources = copy.deepcopy(support['source_files'])
+    for source in sources:
+        if 'archive_path' in source:
+            source['archive_path'] = 'wsdl/' + source['archive_path']
     seen = set()
     archives = document.get("embedded_archives", [])
     combined = [archive for archive in archives if archive.get("container", "").endswith("#combined")]
@@ -419,7 +443,7 @@ def bridge(document, support, read_object, *, include_combined=True, legacy_sche
                            url=document["url"] + "#wsdl=" + support["sha256"] + "&schema=" + archive["sha256"],
                            label="Схема DOCX и зависимости WSDL", archive_name="module-wsdl-schemas.zip",
                            sha256=digest, bytes=len(content), content=content,
-                           source_url=support["source_url"], source_files=copy.deepcopy(support["source_files"]),
+                           source_url=support["source_url"], source_files=copy.deepcopy(sources),
                            document_container=archive.get("container",""), document_archive_sha256=archive["sha256"], **inspect_file(content, "zip",legacy_schema_roots=legacy_schema_roots)))
     return result
 

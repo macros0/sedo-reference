@@ -18,6 +18,38 @@ const left={number:"101",environment:"prod",revision_id:"old-edition",document_v
 const options={left,right,before,after};
 const workbook=()=>exporter.createWorkbook(ExcelJS,{...options,results:core.compare(before,after),baseURL:"https://example.test/"});
 (async()=>{
+ for(const [decision,confirmed] of [['  Подтверждено  ',true],['подтверждено',true],['ПОДТВЕРЖДЕНО',true],['',false]]){
+  const book=workbook(),sheet=book.getWorksheet('Сопоставление');
+  sheet.getCell('E6').value=pair.afterPath;
+  sheet.getCell('H6').value=decision;
+  sheet.getCell('I6').value=pair.comment;
+  const report=mapping.parseWorkbook(book,options);
+  assert.deepEqual(report.errors,[],decision);
+  assert.deepEqual(report.pairs,confirmed?[pair]:[],decision);
+  assert.equal(report.candidates.find(p=>p.beforePath===pair.beforePath)?.decision,confirmed?undefined:'Не проверено');
+ }
+ const typoBook=workbook();
+ typoBook.getWorksheet('Сопоставление').getCell('H6').value='Подтверждно';
+ assert.match(mapping.parseWorkbook(typoBook,options).errors.join(' '),/Строка 6:.*Подтверждно/);
+ for(const decision of ['Подтверждено','Не проверено']){
+  const book=workbook(),sheet=book.getWorksheet('Сопоставление');
+  sheet.getCell('E6').value=pair.afterPath;
+  sheet.getCell('H6').value=decision;
+  sheet.getCell('I6').value='я'.repeat(32768);
+  assert.match(mapping.parseWorkbook(book,options).errors.join(' '),/Строка 6:.*32767/);
+  sheet.getCell('I6').value='я'.repeat(16384);
+  const duplicate=sheet.addRow(sheet.getRow(6).values);
+  duplicate.getCell(9).value='ю'.repeat(16383);
+  const report=mapping.parseWorkbook(book,options);
+  const rowError=new RegExp('Строка '+duplicate.number+':.*32767');
+  if(decision==='Подтверждено')assert.match(report.errors.join(' '),rowError);
+  else assert.throws(()=>mapping.preparePreview(report,before,after),rowError);
+  duplicate.getCell(9).value='ю'.repeat(16382);
+  const accepted=mapping.parseWorkbook(book,options);
+  assert.deepEqual(accepted.errors,[]);
+  const merged=decision==='Подтверждено'?accepted.pairs:mapping.preparePreview(accepted,before,after).suggestions;
+  assert.equal(merged[0].comment,'я'.repeat(16384)+'\n'+'ю'.repeat(16382));
+ }
  for(const rich of [false,true])for(const reverse of [false,true]){
   const comment='  <number>1</number>\n    keep indentation\n',manual={...pair,comment};
   const wb=exporter.createWorkbook(ExcelJS,{...options,results:core.compare(before,after,[manual]),mappings:[manual],baseURL:'https://example.test/'});

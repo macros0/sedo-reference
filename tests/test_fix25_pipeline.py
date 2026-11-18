@@ -1,6 +1,7 @@
 import io
 import json
 import os
+import shutil
 import tempfile
 import unittest
 import zipfile
@@ -22,6 +23,78 @@ def word_table(rows):
 
 
 class HistoryTests(unittest.TestCase):
+    def summaries(self, root):
+        raw = (root / 'site/catalog-data.js').read_text('utf-8')
+        return json.loads(raw.removeprefix('window.SEDO_CATALOG=').rstrip(';\r\n'))['schema_updates']
+
+    def test_journal_compares_late_sourcecraft_captures_in_observation_order(self):
+        import build_site
+        from collector_feed import store_feed
+        from collector_snapshots import replay_archived_inputs
+        from fields import build
+        from tests.test_collector import CollectorTests as Captures
+
+        fixture = sources.SourceCollectionTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        page = SITES['test']
+        href = '/specs_sedo/Тип_сообщения_999.docx'
+        fixture.resources[page] = f'<a href="/specs_sedo/file.zip">XSD</a><a href="{href}">DOCX</a>'.encode()
+        fixture.resources[page.replace('/sedo.html', href)] = sources.individual_document('response')
+        captures = Captures()
+        first, first_objects = captures.capture(10, '2026-11-14T01:00:00+00:00')
+        late, late_objects = captures.capture(11, '2026-11-14T03:00:00+00:00')
+        latest, latest_objects = captures.capture(12, '2026-11-14T04:00:00+00:00')
+        with patch.dict(os.environ, SEDO_COLLECTOR_SOURCE='sourcecraft'):
+            store_feed(fixture.state, [first], first_objects)
+            fixture.collect(2)
+            store_feed(fixture.state, [latest], latest_objects)
+            fixture.collect(5)
+            store_feed(fixture.state, [late], late_objects)
+            store_feed(fixture.state, [latest], latest_objects)
+            replay_archived_inputs(fixture.state)
+
+        root = fixture.root
+        export(fixture.state, root / 'data/catalog.json')
+        build(root / 'data/catalog.json', fixture.state, root / 'data/fields')
+        shutil.copytree(build_site.HERE / 'web', root / 'web')
+        shutil.copy2(build_site.HERE / 'viewer-template.html', root)
+        with patch.object(build_site, 'HERE', root):
+            build_site.main()
+        rows = {row['observed_at']: row for row in self.summaries(root)}
+        earliest = rows['2026-11-14T02:00:00+00:00']
+        historical = rows['2026-11-14T03:00:00+00:00']
+        current = rows['2026-11-14T04:00:00+00:00']
+        self.assertEqual(historical['comparison']['left'], earliest['revision_id'])
+        self.assertEqual(current['comparison']['left'], historical['revision_id'])
+
+    def test_journal_compares_inbox_zip_with_previous_ready_edition(self):
+        from import_inbox import process_inbox
+        from tests.test_fix15_sources import FilenameImportReviewTests
+
+        fixture = FilenameImportReviewTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        root = fixture.root
+        incoming = root / 'incoming/test'
+        doc = sources.individual_document('response')
+        schema = (b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:main">'
+                  b'<xs:element name="response" type="xs:string"/></xs:schema>')
+        write(incoming / 'first/999_v1.docx', doc)
+        write(incoming / 'first/schema.zip', sources.archive('main.xsd', schema))
+        first = process_inbox(root)['files'][0]
+        with zipfile.ZipFile(io.BytesIO(doc)) as package:
+            next_doc = package.read('word/document.xml').replace(
+                b'</w:body>', b'<w:p><w:r><w:t>Revision 2</w:t></w:r></w:p></w:body>')
+        write(incoming / 'next/999_v2.docx', sources.archive('word/document.xml', next_doc))
+        doc_only = process_inbox(root)['files'][0]
+        self.assertEqual(doc_only['status'], 'document_only')
+        write(incoming / 'next/schema.zip', sources.archive('main.xsd', schema.replace(b'xs:string', b'xs:int')))
+        next_edition = process_inbox(root)['files'][0]
+        updated = next(row for row in self.summaries(root) if row['revision_id'] == next_edition['revision_id'])
+        self.assertEqual(updated['comparison']['left'], first['revision_id'])
+        self.assertEqual(updated['comparison']['counts']['changed'], 1)
+
     def test_both_update_modes_refuse_truncated_ready_history_before_install(self):
         for offline in (False, True):
             with self.subTest(offline=offline):

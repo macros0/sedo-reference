@@ -7,12 +7,23 @@ const field=(path,doc="Описание")=>({path,name:path.split("/").at(-1),ki
 const left={number:"101",environment:"prod",revision_id:"left123456",document_version:"2.28",document_url:"https://example.com/old.docx"};
 const right={number:"10110",environment:"test",revision_id:"right123456",document_version:"3.0",document_download:"documents/new.docx"};
 (async()=>{
- const {facets,bounds,enumWhitespace,union,unionFlags}=require('./fixtures/comparison-xsd.cjs');
+ const {facets,bounds,enumWhitespace,union,unionFlags,notation}=require('./fixtures/comparison-xsd.cjs');
  for(const [trees,expected] of [[unionFlags.unresolved,true],[union.mixedSameLexeme,true],[union.mixedNumeric.slice(0,2),false]]){
   const [before,after]=trees;
   const workbook=createWorkbook(ExcelJS,{left,right,before,after,results:core.compare(before,after)});
   const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(await workbook.xlsx.writeBuffer());
   assert.equal(JSON.stringify(loaded.getWorksheet('О выгрузке').getSheetValues()).includes('исходному тексту'),expected);
+ }
+ for(const trees of Object.values(notation)){
+  const [before,after]=trees;
+  const legacy=before.map(({valueQNames,flagQNames,...field})=>field);
+  for(const [old,unresolved] of [[before,false],[legacy,true]]){
+   const workbook=createWorkbook(ExcelJS,{left,right,before:old,after,results:core.compare(old,after)});
+   const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(await workbook.xlsx.writeBuffer());
+   const summary=JSON.stringify(loaded.getWorksheet('О выгрузке').getSheetValues());
+   assert.equal(/NOTATION.*исходному тексту/.test(summary),unresolved);
+   if(!unresolved)assert.match(JSON.stringify(loaded.getWorksheet('Изменения').getSheetValues()),/p:code.*urn:A.*p:code.*urn:B/);
+  }
  }
  for(const [before,after] of [enumWhitespace.inherited,enumWhitespace.sameRestriction]){
   const workbook=createWorkbook(ExcelJS,{left,right,before,after,results:core.compare(before,after)});
@@ -153,6 +164,10 @@ const right={number:"10110",environment:"test",revision_id:"right123456",documen
  const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(bytes);
  assert.equal(loaded.getWorksheet("Было").rowCount,4);
  assert.equal(loaded.getWorksheet("Сопоставление").getCell("E6").dataValidation.type,"list");
+ const decision=loaded.getWorksheet("Сопоставление").getCell("H6").dataValidation;
+ assert.equal(decision.allowBlank,true);
+ assert.equal(decision.showErrorMessage,true);
+ assert.deepEqual(decision.formulae,['"Не проверено,Подтверждено,Удалено,Переработано,Требует уточнения"']);
  assert.equal(loaded.getWorksheet("Сопоставление").getCell("F7").result,"Изменено");
  const reverse=createWorkbook(ExcelJS,{...options,left:right,right:left,before:b,after:a,results:core.compare(b,a)});
  assert.equal(reverse.getWorksheet("Было").getCell("A2").value,"new/root");

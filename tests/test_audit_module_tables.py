@@ -218,6 +218,25 @@ class ModuleAuditTests(unittest.TestCase):
         self.assertEqual(self.check_schema_card(source, source.replace(' xmlns:p="urn:actual"', ''), notes=notes), (1, []))
         self.assertTrue(any('QName' in note for note in notes), notes)
 
+    def test_union_constraints_compare_the_declared_member_and_expanded_name(self):
+        for key in ('fixed', 'default'):
+            source = (f'<xs:element name="request"><xs:complexType><xs:attribute name="code" xmlns:p="urn:one" {key}="p:value">'
+                      '<xs:simpleType><xs:union memberTypes="xs:QName xs:integer"/></xs:simpleType>'
+                      '</xs:attribute></xs:complexType></xs:element>')
+            for quote, differs, limited in [
+                    (source.replace('urn:one', 'urn:two'), True, False),
+                    (source.replace('xmlns:p', 'xmlns:q').replace('p:value', 'q:value'), False, False),
+                    (source.replace(' xmlns:p="urn:one"', ''), False, True),
+                    (source.replace('xs:QName', 'xs:string'), True, False)]:
+                with self.subTest(key=key, quote=quote):
+                    notes = []
+                    count, issues = self.check_schema_card(source, quote, notes=notes)
+                    self.assertEqual(count, 2)
+                    self.assertEqual(bool(issues), differs, issues)
+                    self.assertEqual(any('union' in message for message in notes), limited, notes)
+                    if differs:
+                        self.assertIn('urn:one', issues[0]['xsd'])
+
     def test_referenced_attribute_compares_local_override_to_inherited_default(self):
         global_flag = '<xs:attribute name="flag" type="xs:boolean" default="true"/>'
         template = ('<xs:element name="request"><xs:complexType>'

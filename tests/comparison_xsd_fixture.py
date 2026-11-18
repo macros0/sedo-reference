@@ -2,13 +2,17 @@
 import io
 import json
 import zipfile
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from schema import Schema, XS
 
 
-def tree(source):
+def tree(source, dependencies=()):
     with zipfile.ZipFile(io.BytesIO(), "w") as archive:
         archive.writestr("main.xsd", source)
+        for name, content in dependencies:
+            archive.writestr(name, content)
         schema = Schema(archive, "main.xsd", "r")
         schema.field(schema.root)
     return schema.fields
@@ -129,7 +133,7 @@ def union_trees():
       <xs:pattern value="a"/>
     </xs:restriction></xs:simpleType>'''
 
-    return {
+    result = {
         "qname": [tree(union_source()), tree(union_source(uri="urn:B")), tree(union_source("q"))],
         "stringFirst": [tree(union_source(uri=uri, members="xs:string xs:QName")) for uri in ("urn:A", "urn:B")],
         "integer": [tree(union_source(value=value)) for value in ("01", "1", "2")],
@@ -143,6 +147,11 @@ def union_trees():
             definitions=notation+qname_choice, extra_enum='<xs:enumeration xmlns:p="urn:other" value="p:read"/>'))
             for uri in ("urn:A", "urn:B")],
     }
+    # Old snapshots could not select a member after a detached NOTATION probe.
+    for case in ('mixed', 'mixedSameLexeme'):
+        for fields in result[case]:
+            fields[0]['unionValueTypes'][-1] = None
+    return result
 
 
 def union_flag_trees():
@@ -180,9 +189,54 @@ def union_flag_trees():
                                                build('urn:A', 'q', flag=flag, declaration=declaration)]
               for declaration in ('direct', 'global', 'local') for flag in ('fixed', 'default')}
     result['unresolved'] = [build(uri, uncertain=True) for uri in ('urn:A', 'urn:B')]
+    for fields in result['unresolved']:
+        fields[1]['unionFlagTypes']['fixed'] = None
+        fields[1].pop('flagQNames', None)
     return result
+
+
+def notation_schema(prefix, uri, union):
+    source = f'''<xs:schema xmlns:xs="{XS}" xmlns:{prefix}="{uri}">
+          <xs:import namespace="{uri}" schemaLocation="notation.xsd"/>
+          <xs:simpleType name="N"><xs:restriction base="xs:NOTATION">
+            <xs:enumeration value="{prefix}:code"/>
+          </xs:restriction></xs:simpleType>
+          <xs:simpleType name="U"><xs:union memberTypes="N xs:integer"/></xs:simpleType>
+          <xs:simpleType name="Code"><xs:restriction base="{'U' if union else 'N'}">
+            <xs:enumeration value="{prefix}:code"/>
+          </xs:restriction></xs:simpleType>
+          <xs:element name="r"><xs:complexType>
+            <xs:attribute name="first" type="Code" fixed="{prefix}:code"/>
+            <xs:attribute name="second" type="Code" default="{prefix}:code"/>
+          </xs:complexType></xs:element>
+        </xs:schema>'''
+    notation = f'<xs:schema xmlns:xs="{XS}" targetNamespace="{uri}"><xs:notation name="code" public="test"/></xs:schema>'
+    return {'main.xsd': source, 'notation.xsd': notation}
+
+
+def notation_examples(uri):
+    return [(f'<r xmlns:i="{candidate}" first="i:code" second="i:code"/>', candidate == uri)
+            for candidate in ('urn:A', 'urn:B')]
+
+
+def notation_trees():
+    from lxml import etree
+
+    def build(prefix, uri, union):
+        sources = notation_schema(prefix, uri, union)
+        with TemporaryDirectory() as directory:
+            base = Path(directory)
+            for name, source in sources.items():
+                (base/name).write_text(source, encoding='utf-8')
+            validator = etree.XMLSchema(etree.parse(str(base/'main.xsd')))
+            for xml, expected in notation_examples(uri):
+                assert validator.validate(etree.XML(xml)) == expected, str(validator.error_log)
+        return tree(sources['main.xsd'], [('notation.xsd', sources['notation.xsd'])])
+
+    return {kind: [build(prefix, uri, kind == 'union') for prefix, uri in
+                   [('p', 'urn:A'), ('p', 'urn:B'), ('q', 'urn:A')]] for kind in ('direct', 'union')}
 
 
 if __name__ == "__main__":
     print(json.dumps({"facets": facet_trees(), "bounds": bound_trees(), "enumWhitespace": enum_whitespace_trees(),
-                      "union": union_trees(), "unionFlags": union_flag_trees()}))
+                      "union": union_trees(), "unionFlags": union_flag_trees(), "notation": notation_trees()}))

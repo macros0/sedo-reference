@@ -1,7 +1,13 @@
 /* Local-only XLSX mappings: no uploads, no evaluation of workbook formulas. */
-(function(root,factory){"use strict";const api=factory(typeof module==="object"&&module.exports?require("./mapping-draft.js"):root.SedoMappingDraft,typeof module==="object"&&module.exports?require("./mapping-editor.js"):root.SedoMappingEditor);if(typeof module==="object"&&module.exports)module.exports=api;else root.SedoMapping=api})(typeof globalThis!=="undefined"?globalThis:this,function(Drafts,Editor){
+(function(root,factory){"use strict";const common=typeof module==="object"&&module.exports;const api=factory(common?require("./mapping-draft.js"):root.SedoMappingDraft,common?require("./mapping-editor.js"):root.SedoMappingEditor,common?require("./comparison-export.js"):root.SedoComparisonExport);if(common)module.exports=api;else root.SedoMapping=api})(typeof globalThis!=="undefined"?globalThis:this,function(Drafts,Editor,Excel){
  "use strict";
  const MAX_FILE=10*1024*1024,MAX_EXPANDED=64*1024*1024,MAX_ROWS=50000;
+ const decisions=new Map(Excel.mappingDecisions.map(decision=>[decision.toLowerCase(),decision]));
+ function mergeComments(previous,added){
+  const combined=added&&added!==previous?[previous,added].filter(Boolean).join("\n"):previous;
+  Excel.checkMappingComment(combined);
+  return combined;
+ }
  function preflightArchive(bytes){
   if(bytes.byteLength>MAX_FILE)throw Error("Размер XLSX превышает 10 МиБ.");
   if(bytes.byteLength<22)throw Error("Файл не является XLSX (ZIP).");
@@ -149,32 +155,36 @@
    });
    for(let row=headerRow+1;row<=sheet.rowCount;row++){
     try{
-     const decision=cellText(sheet.getCell(row,columns.decision));
+     const value=cellText(sheet.getCell(row,columns.decision));
+     const decision=value?decisions.get(value.toLowerCase()):"Не проверено";
+     if(!decision)throw Error("Неизвестное решение «"+value+"». Выберите решение из списка Excel.");
      if(decision!=="Подтверждено"){
       report.ignored++;
       if(decision==="Удалено"){
        const path=cellText(sheet.getCell(row,columns.beforePath)),paths=report.reversed?newPaths:oldPaths;
        if(paths.has(path))report.deleted[report.reversed?"after":"before"].push(path);
        else report.warnings.push("Строка "+row+": не найден удалённый путь из столбца «Было»: "+path);
-      }
-      if(["","Не проверено","Переработано","Требует уточнения"].includes(decision)){
+      }else{
+       let candidate;
        try{
         const afterPath=cellText(sheet.getCell(row,columns.afterPath));
         if(afterPath){
-         const candidate={beforePath:cellText(sheet.getCell(row,columns.beforePath)),afterPath,comment:cellText(sheet.getCell(row,columns.comment),false)};
-         if(report.reversed)[candidate.beforePath,candidate.afterPath]=[candidate.afterPath,candidate.beforePath];
-         validatePair(candidate,oldPaths,newPaths);report.candidates.push({...candidate,decision:decision||"Не проверено",row});
+         const pair={beforePath:cellText(sheet.getCell(row,columns.beforePath)),afterPath,comment:cellText(sheet.getCell(row,columns.comment),false)};
+         if(report.reversed)[pair.beforePath,pair.afterPath]=[pair.afterPath,pair.beforePath];
+         validatePair(pair,oldPaths,newPaths);candidate={...pair,decision,row};
         }
        }catch(error){report.warnings.push("Строка "+row+": неподтверждённая пара не предложена. "+error.message)}
+       if(candidate){Excel.checkMappingComment(candidate.comment);report.candidates.push(candidate)}
       }
       continue;
      }
      const pair={beforePath:cellText(sheet.getCell(row,columns.beforePath)),afterPath:cellText(sheet.getCell(row,columns.afterPath)),comment:cellText(sheet.getCell(row,columns.comment),false)};
      if(report.reversed)[pair.beforePath,pair.afterPath]=[pair.afterPath,pair.beforePath];
      validatePair(pair,oldPaths,newPaths);
+     Excel.checkMappingComment(pair.comment);
      const key=JSON.stringify([pair.beforePath,pair.afterPath]);
      if(seen.has(key)){
-      report.duplicates++;const existing=seen.get(key);if(pair.comment&&pair.comment!==existing.comment)existing.comment=[existing.comment,pair.comment].filter(Boolean).join("\n");continue;
+      report.duplicates++;const existing=seen.get(key);existing.comment=mergeComments(existing.comment,pair.comment);continue;
      }
      seen.set(key,pair);report.pairs.push(pair);
     }catch(error){report.errors.push("Строка "+row+": "+error.message)}
@@ -190,7 +200,8 @@
    const key=JSON.stringify([candidate.beforePath,candidate.afterPath]);if(confirmed.has(key))continue;
    const existing=pending.get(key);
    if(existing){
-    if(candidate.comment&&candidate.comment!==existing.comment)existing.comment=[existing.comment,candidate.comment].filter(Boolean).join("\n");
+    try{existing.comment=mergeComments(existing.comment,candidate.comment)}
+    catch(error){throw Error("Строка "+candidate.row+": "+error.message)}
     if(candidate.decision==="Требует уточнения")existing.defaultSelected=false;
    }else pending.set(key,{...candidate,origin:"workbook",defaultSelected:candidate.decision!=="Требует уточнения"});
   }
@@ -362,13 +373,14 @@
   const upload=button("swap","Загрузить сопоставления из Excel"),reset=button("swap","Сбросить сопоставления"),add=button("swap mapping-add","Добавить соответствие");reset.disabled=!hasSaved&&!saved.notice;
   let active=null,activeReport=null,generation=0,resetting=false;
   const savedReport=()=>{saved=store.load(options);return {pairs:saved.pairs,deleted:saved.deleted,candidates:[],errors:[],warnings:[],ignored:0,duplicates:0,reversed:false}};
-  function showPreview(report,label,resumedDraft){
-   const baselineSaved=resumedDraft?retained.saved:store.load(options),baseline=baselineSaved.pairs.map(p=>({...p}));
+  function showPreview(report,label,resumedSession){
+   const baselineSaved=resumedSession?.saved??store.load(options),baseline=baselineSaved.pairs.map(p=>({...p}));
    const prepared=preparePreview(report,options.before,options.after),entries=[...report.pairs.map(p=>({...p,origin:"confirmed",selected:true})),...prepared.suggestions.map(p=>({...p,selected:p.defaultSelected}))];
-   const draft=resumedDraft||Drafts.create({before:options.before,after:options.after,savedPairs:baseline,savedDeleted:baselineSaved.deleted,entries,deleted:report.deleted,suggest:report.errors.length?()=>({suggestions:[],conflicts:[]}):suggestDescendants});
+   const draft=resumedSession?.draft??Drafts.create({before:options.before,after:options.after,savedPairs:baseline,savedDeleted:baselineSaved.deleted,entries,deleted:report.deleted,suggest:report.errors.length?()=>({suggestions:[],conflicts:[]}):suggestDescendants});
    active?.destroy();activeReport=report;
-   draftSessions.set(draftKey,{draft,report,label,saved:baselineSaved});
-   active=Editor.mount({container:preview,notice,status,options,report,draft,manualLabel:label,onCancel:()=>{draftSessions.delete(draftKey);active?.destroy();active=null;activeReport=null;preview.replaceChildren();saved=store.load(options);restoreStatus()},onApply:async pairs=>{
+   const session=resumedSession??{draft,report,label,saved:baselineSaved,form:null};
+   draftSessions.set(draftKey,session);
+   active=Editor.mount({container:preview,notice,status,options,report,draft,session,manualLabel:label,onCancel:()=>{draftSessions.delete(draftKey);active?.destroy();active=null;activeReport=null;preview.replaceChildren();saved=store.load(options);restoreStatus()},onApply:async pairs=>{
     if(!options.isCurrent())throw Error("Выбранная пара редакций изменилась. Откройте предпросмотр снова.");
     await store.apply(options,baseline,pairs,{base:baselineSaved.deleted,draft:report.deleted});draftSessions.delete(draftKey);const result=await onChange();if(result===false)throw Error("Пары сохранены, но обновить результат не удалось. Повторите открытие сравнения.");
    }});
@@ -394,7 +406,7 @@
    catch(e){if(token===generation&&options.isCurrent())status.textContent="Не удалось загрузить соответствия. "+e.message}
    finally{if(token===generation){upload.disabled=add.disabled=false;reset.disabled=!hasSaved&&!saved.notice;preview.inert=notice.inert=false;if(savedSuggest)savedSuggest.disabled=false;input.value=""}}
   };
-  if(retained)showPreview(retained.report,retained.label,retained.draft);
+  if(retained)showPreview(retained.report,retained.label,retained);
   return {hasUnapplied:()=>active?.hasUnapplied()??false};
  }
  return {preflightArchive,suggestDescendants,parseWorkbook,preparePreview,storageKey,createStore,store,readFile,mount};
