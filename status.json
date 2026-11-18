@@ -1,36 +1,44 @@
 {
   "format": 1,
-  "generated_at": "2026-11-18T12:47:44.214499+00:00",
+  "generated_at": "2026-11-18T13:11:09.305402+00:00",
   "collector_source": "sourcecraft",
   "sourcecraft": {
-    "state": "unknown",
-    "started_at": null,
-    "finished_at": null,
-    "contours": {},
-    "run_id": null,
+    "state": "success",
+    "started_at": "2026-11-18T04:01:23.667603+00:00",
+    "finished_at": "2026-11-18T04:03:02.038252+00:00",
+    "contours": {
+      "prod": {
+        "content_id": "9b194ccd99775c37a0f925ce0436a44101040de33820daac069b945e54f38e68",
+        "source_count": 9,
+        "observed_at": "2026-11-18T04:02:10.854328+00:00",
+        "changed": false
+      },
+      "test": {
+        "content_id": "42e44b408e7edf8f9540e3758d727bd4944a1ddd5dfa1fbdd14d75f00f0cddc3",
+        "source_count": 9,
+        "observed_at": "2026-11-18T04:03:01.972698+00:00",
+        "changed": false
+      }
+    },
+    "run_id": "10",
     "url": "https://sourcecraft.dev/alexey-sagitov/sedo-xsd-collector",
-    "last_success_at": null
+    "last_success_at": "2026-11-18T04:03:02.038252+00:00"
   },
   "github": {
     "check": {
-      "state": "success",
-      "run_id": 44094371221,
-      "url": "https://github.com/macros0/sedo-reference/actions/runs/44094371221",
+      "state": "processing",
+      "run_id": 44311054429,
+      "url": "https://github.com/macros0/sedo-reference/actions/runs/44311054429",
       "run_attempt": 1,
-      "started_at": "2026-11-17T13:36:12Z",
-      "finished_at": "2026-11-17T14:32:19Z"
+      "started_at": "2026-11-18T13:10:41Z",
+      "finished_at": null
     },
     "versions": {
       "count": null,
       "checked_at": null
     },
     "publication": {
-      "state": "success",
-      "run_id": 44104185740,
-      "url": "https://github.com/macros0/sedo-reference/actions/runs/44104185740",
-      "run_attempt": 1,
-      "started_at": "2026-11-17T14:32:15Z",
-      "finished_at": "2026-11-17T15:31:58Z"
+      "state": "waiting"
     },
     "last_successful_publication": {
       "state": "success",
@@ -41,7 +49,5 @@
       "finished_at": "2026-11-18T11:51:16Z"
     }
   },
-  "errors": [
-    "SourceCraft: Command '['git', '-c', 'credential.helper=', 'ls-remote', 'https://git@git.sourcecraft.dev/alexey-sagitov/sedo-xsd-collector.git', 'refs/heads/status']' timed out after 45 seconds"
-  ]
+  "errors": []
 }
