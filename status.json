@@ -1,28 +1,15 @@
 {
   "format": 1,
-  "generated_at": "2026-11-18T11:52:02.444616+00:00",
+  "generated_at": "2026-11-18T12:47:44.214499+00:00",
   "collector_source": "sourcecraft",
   "sourcecraft": {
-    "state": "success",
-    "started_at": "2026-11-18T04:01:23.667603+00:00",
-    "finished_at": "2026-11-18T04:03:02.038252+00:00",
-    "contours": {
-      "prod": {
-        "content_id": "9b194ccd99775c37a0f925ce0436a44101040de33820daac069b945e54f38e68",
-        "source_count": 9,
-        "observed_at": "2026-11-18T04:02:10.854328+00:00",
-        "changed": false
-      },
-      "test": {
-        "content_id": "42e44b408e7edf8f9540e3758d727bd4944a1ddd5dfa1fbdd14d75f00f0cddc3",
-        "source_count": 9,
-        "observed_at": "2026-11-18T04:03:01.972698+00:00",
-        "changed": false
-      }
-    },
-    "run_id": "10",
+    "state": "unknown",
+    "started_at": null,
+    "finished_at": null,
+    "contours": {},
+    "run_id": null,
     "url": "https://sourcecraft.dev/alexey-sagitov/sedo-xsd-collector",
-    "last_success_at": "2026-11-18T04:03:02.038252+00:00"
+    "last_success_at": null
   },
   "github": {
     "check": {
@@ -34,8 +21,8 @@
       "finished_at": "2026-11-17T14:32:19Z"
     },
     "versions": {
-      "count": 0,
-      "checked_at": "2026-11-17T14:09:14.690241+00:00"
+      "count": null,
+      "checked_at": null
     },
     "publication": {
       "state": "success",
@@ -54,5 +41,7 @@
       "finished_at": "2026-11-18T11:51:16Z"
     }
   },
-  "errors": []
+  "errors": [
+    "SourceCraft: Command '['git', '-c', 'credential.helper=', 'ls-remote', 'https://git@git.sourcecraft.dev/alexey-sagitov/sedo-xsd-collector.git', 'refs/heads/status']' timed out after 45 seconds"
+  ]
 }
