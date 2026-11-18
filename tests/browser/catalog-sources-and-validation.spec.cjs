@@ -19,6 +19,21 @@ test('7810 production shows label date and version history from its DOCX',async(
  await expect(source).toContainText('17.11.2025');
  const revision=catalog.revisions.find(r=>r.number==='7810'&&r.environment==='prod');
  await expect(source.getByRole('link',{name:'Источник таблицы версий — DOCX'})).toHaveAttribute('href',revision.document_url);
+ const changes=source.locator('details.document-change-history');
+ const summary=changes.locator('summary');
+ const changeSource=changes.locator('a');
+ const entries=changes.locator('.document-version-entry');
+ await expect(summary).toHaveText('История изменений документа (2)');
+ await expect(entries).toHaveCount(2);
+ await expect(entries.first()).toBeHidden();
+ await expect(changeSource).toBeHidden();
+ await summary.click();
+ await expect(entries.first()).toBeVisible();
+ await expect(changeSource).toHaveAttribute('href',revision.document_url);
+ await expect(changeSource).toBeVisible();
+ await summary.press('Enter');
+ await expect(entries.first()).toBeHidden();
+ await expect(summary).toBeFocused();
  await expect(panel.getByRole('link',{name:'Открыть дерево'})).toBeVisible();
 });
 

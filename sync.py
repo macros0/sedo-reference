@@ -356,14 +356,15 @@ def recover_confirmation(base):
     journal.unlink()
 
 
-def sync(base, *, wsdl_entries=None, snapshot_format=None):
+def sync(base, *, wsdl_entries=None, snapshot_format=None, individual_wsdl=False):
     base = Path(base)
     base.mkdir(parents=True, exist_ok=True)
     with confirmation_lock(base):
-        _collect_confirmed(base, wsdl_entries=wsdl_entries, snapshot_format=snapshot_format)
+        _collect_confirmed(base, wsdl_entries=wsdl_entries, snapshot_format=snapshot_format,
+                           individual_wsdl=individual_wsdl)
 
 
-def _collect_confirmed(base, *, wsdl_entries=None, snapshot_format=None):
+def _collect_confirmed(base, *, wsdl_entries=None, snapshot_format=None, individual_wsdl=False):
     recover_confirmation(base)
     success, pointer = base / "last-success.json", base / "current.json"
     if not success.exists() and pointer.exists():
@@ -380,7 +381,7 @@ def _collect_confirmed(base, *, wsdl_entries=None, snapshot_format=None):
     report = dict(status="processing", started_at=started_at, observed_at=started_at, errors=[])
     try:
         write(base / "last-run.json", encode(report))
-        _sync(base, report, wsdl_entries=wsdl_entries, snapshot_format=snapshot_format)
+        _sync(base, report, wsdl_entries=wsdl_entries, snapshot_format=snapshot_format, individual_wsdl=individual_wsdl)
         write(success, encode(dict(snapshot=report["snapshot"], observed_at=report["observed_at"])))
         report["status"] = "ok"
         write(base / "last-run.json", encode(report))
@@ -394,7 +395,7 @@ def _collect_confirmed(base, *, wsdl_entries=None, snapshot_format=None):
         raise
 
 
-def _sync(base, report, *, wsdl_entries=None, snapshot_format=None):
+def _sync(base, report, *, wsdl_entries=None, snapshot_format=None, individual_wsdl=False):
     """Collect sources, optionally replaying the recorded WSDL observations offline."""
     entries=[]; pages={}; errors=[]; tasks=[]
     # Keep the original snapshot identity when none of the new inputs is needed.
@@ -584,6 +585,12 @@ def _sync(base, report, *, wsdl_entries=None, snapshot_format=None):
         output_format = max(output_format, 6)
     if {"included_roots", "docx_text", "docx_url"} & match_changes:
         output_format = max(output_format, 7)
+    if snapshot_format is None or individual_wsdl:
+        from catalog import record_individual_wsdl_matches
+        evidence_version = {'version': individual_wsdl} if type(individual_wsdl) is int else {}
+        record_individual_wsdl_matches(entries, lambda digest: (base / 'objects' / digest).read_bytes(),
+                                       legacy_filenames=snapshot_format is not None and snapshot_format < 7,
+                                       **evidence_version)
     result=dict(format=max(output_format, 3) if page_redirects else output_format,pages=pages,entries=entries)
     if page_redirects:
         result["page_redirects"] = page_redirects

@@ -32,6 +32,35 @@ def validate_publications(previous, current):
                                  + ', '.join(sorted(removed)[:10]))
 
 
+def validate_published_trees(previous, current, inventory):
+    """Keep a ready tree for an unchanged DOCX matched to the confirmed WSDL."""
+    def document(row):
+        return (row['environment'], row['number'], row['document_url'], row['document_sha256'])
+
+    def ready(catalog):
+        for row in catalog['revisions']:
+            if row['status'] == 'matched' and row.get('listed_now', True) and row.get('source_type') != 'manual':
+                for source in row.get('listed_sources') or [row]:
+                    yield row | source
+
+    publications = {(row['environment'], row['url'], row['sha256']) for row in inventory['entries']
+                    if row['kind'] == 'docx' and row.get('sha256')}
+    failures = {document(row): row for row in current.get('document_sources', [])
+                if row.get('listed_now', True)}
+    old_rows = list(ready(previous))
+    previous_wsdl = {document(row) for row in old_rows if row.get('schema_source_type') == 'wsdl'}
+    errors = []
+    for identity in sorted({document(row) for row in old_rows} - {document(row) for row in ready(current)}):
+        environment, number, url, digest = identity
+        failure = failures.get(identity, {})
+        direct_wsdl = identity in previous_wsdl or failure.get('schema_docx_location')
+        if direct_wsdl and (environment, url, digest) in publications:
+            reason = failure.get('schema_reason', 'Полная XSD больше не сопоставлена.')
+            errors.append(f'{environment}/{number} {url} — {reason}')
+    if errors:
+        raise ValueError('Опубликованные документы потеряли готовое дерево XSD: ' + '; '.join(errors))
+
+
 def validate_inventory(previous, current):
     """Compare the links published by each contour, including guides and navigation."""
     def resources(snapshot, env):
@@ -288,6 +317,7 @@ def _run(root, *, history_only=False):
             validate_inventory(active_inventory(root / "state"), snapshot)
             export(stage / "state", stage / "data/catalog.json")
             current = json.loads((stage / "data/catalog.json").read_bytes())
+            validate_published_trees(previous, current, snapshot)
             validate_publications(previous, current)
             if not history_only:
                 current["checked_at"] = json.loads((stage / "state/last-run.json").read_bytes())["observed_at"]
@@ -306,14 +336,31 @@ def _run(root, *, history_only=False):
             new_messages = sorted({(r["environment"], r["number"]) for r in current["registry"]+current["revisions"]}-known)
             if not history_only:
                 collector_replay=json.loads((stage/"state/last-run.json").read_bytes()).get("collector_replay", [])
-            schema_diagnostics=[dict(environment=r["environment"],source=r["url"],issues=r["schema_diagnostics"]) for r in snapshot["entries"] if r.get("schema_diagnostics")]
+            diagnostics = {(r['environment'], r['url']): list(r['schema_diagnostics'])
+                           for r in snapshot['entries'] if r.get('schema_diagnostics')}
+            document_failures = {}
+            for r in current.get('document_sources', []):
+                if not r.get('listed_now', True) or 'namespace_declared' not in r:
+                    continue
+                env, number = r['environment'], r['number']
+                issue = dict(number=number, root=r['root'], reason=r['schema_reason'])
+                source_issues = diagnostics.setdefault((env, r['document_url']), [])
+                if issue not in source_issues:
+                    source_issues.append(issue)
+                document_failures.setdefault((env, number), []).append(r)
+            schema_diagnostics = [dict(environment=env, source=url, issues=issues)
+                                  for (env, url), issues in diagnostics.items()]
             wsdl_status=[dict(environment=r["environment"],source=r["url"],status=r.get("status",r.get("retrieval_status","ok")),error=r.get("error")) for r in snapshot["entries"] if r.get("source_type")=="wsdl" or r["kind"]=="wsdl_status"]
             ready_pairs={(r["environment"],r["number"]) for r in current["revisions"] if r["status"]=="matched" and r.get("listed_now", True)}
             registry_pairs={(r["environment"],r["number"]):r for r in current["registry"] if r.get("listed_now", True)}
+            for pair, documents in document_failures.items():
+                registry_pairs.setdefault(pair, documents[0])
             missing=[]
             for (env,number),row in sorted(registry_pairs.items(),key=lambda i:(i[0][0],int(i[0][1]))):
                 if (env,number) in ready_pairs:continue
-                reasons=list(dict.fromkeys(issue["reason"] for record in schema_diagnostics if record["environment"]==env for issue in record["issues"] if issue.get("number")==number))
+                reasons=list(dict.fromkeys(r['schema_reason'] for r in document_failures.get((env, number), [])))
+                if not reasons:
+                    reasons=list(dict.fromkeys(issue["reason"] for record in schema_diagnostics if record["environment"]==env for issue in record["issues"] if issue.get("number")==number))
                 for source in wsdl_status:
                     if source["environment"]==env and source["status"]=="unavailable":
                         reasons.append("WSDL недоступен: "+source["source"].split("#")[0]+" — "+source["error"])

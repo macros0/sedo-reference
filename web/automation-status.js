@@ -37,13 +37,25 @@
   const sourceCard=data.collector_source==='home'?homeCard(check,checkState,versions):sourcecraftCard(sc,now);
   const count=Number.isInteger(versions.count)&&versions.count>=0?versions.count:null;
   const versionsText=check.state==='success'&&count!==null?(count?'Добавлено редакций: '+count:'Новых редакций нет'):check.state==='processing'?'Проверка справочника выполняется':check.state==='waiting'?'Ожидается обработка новых снимков SourceCraft':'Число новых редакций пока неизвестно';
-  const publicationText={success:'Обновление опубликовано',failure:'Публикация завершилась ошибкой',processing:'Публикация выполняется',waiting:'Ожидает публикации',not_published:'Обновление не опубликовано',superseded:'Pages опубликовал другую версию справочника',cancelled:'Публикация отменена',unknown:'Публикация не подтверждена'}[pub.state]||'Публикация не подтверждена';
-  const publicationLines=[publicationText];if(pub.finished_at)publicationLines.push(date(pub.finished_at));
   const publicationURL=pagesRunURL(pub),lastRun=gh.last_successful_publication;
+  // Older reports could put an independent Pages run in the check's slot.
+  const ambiguousPublication=!Object.hasOwn(gh,'independent_publication')&&['failure','cancelled'].includes(check.state)
+   &&(pub.run_id||publicationURL)&&!pub.candidate_sha;
+  const publicationTexts={success:'Обновление опубликовано',failure:'Публикация завершилась ошибкой',processing:'Публикация выполняется',waiting:'Ожидает публикации',not_published:'Публикация по итогам проверки СФР не состоялась',superseded:'Pages опубликовал другую версию справочника',cancelled:'Публикация отменена',unknown:'Публикация не подтверждена'};
+  const publicationLines=[ambiguousPublication?'Связь с проверкой СФР не подтверждена':publicationTexts[pub.state]||publicationTexts.unknown];
+  if(pub.finished_at)publicationLines.push(date(pub.finished_at));
+  const independent=gh.independent_publication;
+  let independentDeployment;
+  if(independent?.run_id){
+   const finished=independent.finished_at?' · '+date(independent.finished_at):'';
+   independentDeployment={text:'Независимая выкладка · '+(labels[independent.state]||labels.unknown)+finished,
+    url:pagesRunURL(independent),link:'Открыть независимую выкладку'};
+  }
   let latestDeployment;
   if(lastRun?.state==='success'&&Number.isFinite(Date.parse(lastRun.finished_at))){
    const url=pagesRunURL(lastRun);
-   latestDeployment={text:'Последняя успешная выкладка: '+date(lastRun.finished_at),url:url===publicationURL?null:url};
+   latestDeployment={text:'Последняя успешная выкладка: '+date(lastRun.finished_at),
+    url:url===publicationURL||url===independentDeployment?.url?null:url};
   }
   const states=[sourceCard.state,checkState||'unknown',pub.state||'unknown'];
   let tone=states.includes('failure')||states.includes('not_published')?'failure':
@@ -56,7 +68,8 @@
   return {tone,summary,updated:'Статус получен '+date(data.generated_at)+'. Фактический запуск может задержаться относительно расписания.',cards:[
    sourceCard,
    {title:'Новые редакции · '+(labels[checkState]||labels.unknown),state:checkState,lines:[versionsText,...(versions.checked_at?['Проверено '+date(versions.checked_at)]:[]),'Следующий забор по расписанию: '+nextRun('github',now)],url:check.url,link:'Открыть проверку GitHub'},
-   {title:'GitHub Pages · '+(labels[pub.state]||labels.unknown),state:pub.state,lines:publicationLines,url:publicationURL,link:'Открыть публикацию',latestDeployment}
+   {title:'GitHub Pages · '+(labels[pub.state]||labels.unknown),state:pub.state,lines:publicationLines,url:publicationURL,
+    link:ambiguousPublication?'Открыть запуск Pages':'Открыть публикацию',independentDeployment,latestDeployment}
   ]};
  }
  function safeLink(value){return typeof value==='string'&&(/^https:\/\/github\.com\/macros0\/sedo-reference\/actions\/runs\/\d+(?:\/attempts\/[1-9]\d*)?$/.test(value)||value==='https://sourcecraft.dev/alexey-sagitov/sedo-xsd-collector')?value:null}
@@ -78,9 +91,10 @@
    for(const card of view.cards){const box=document.createElement('article');box.className='automation-card';box.dataset.state=card.state||'unknown';const title=document.createElement('h2');title.textContent=card.title;box.append(title);
     for(const text of card.lines){const p=document.createElement('p');p.textContent=text;box.append(p)}
     appendLink(box,card.url,card.link);
-    if(card.latestDeployment){
-     const p=document.createElement('p');p.textContent=card.latestDeployment.text;box.append(p);
-     appendLink(box,card.latestDeployment.url,'Открыть последнюю выкладку');
+    for(const deployment of [card.independentDeployment,card.latestDeployment]){
+     if(!deployment)continue;
+     const p=document.createElement('p');p.textContent=deployment.text;box.append(p);
+     appendLink(box,deployment.url,deployment.link||'Открыть последнюю успешную выкладку');
     }
     cards.append(box)
    }

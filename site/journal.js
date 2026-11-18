@@ -79,6 +79,7 @@ function renderUpdates(params){
     card.append(counts);
     if(summary.limitedUnion)card.append(node("p","meta",SedoCompare.unionCoverageNote));
     if(summary.limitedNotation)card.append(node("p","meta",SedoCompare.notationCoverageNote));
+    if(summary.limitedList)card.append(node("p","meta",SedoCompare.listCoverageNote));
    }else card.append(node("p","meta",r.status==="document_only"?"DOCX сохранён. Схема XSD не загружена.":summary?.status==="no_baseline"?"Первая сохранённая редакция: подходящей редакции для сравнения пока нет.":"Подсчёт изменений недоступен: нет готового дерева для сравнения."));
    const links=node("div","journal-links");if(r.ready)links.append(anchor("Открыть дерево",route(r.number,r.environment,r.revision_id)));
    if(summary?.status==="ready")links.append(anchor("Открыть сравнение",comparisonRoute(r.number,summary.left,summary.right)));

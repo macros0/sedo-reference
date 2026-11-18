@@ -1,23 +1,60 @@
 """Parse the version and date from an official label or uploaded filename."""
 import re
 import posixpath
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qsl, unquote, urljoin, urlsplit
 
 MODULE_FILENAME = re.compile(r"Пр[ _]+(\d+)[ _]+(.+?)(?:\s*\(|\.docx$)", re.I)
 
 
-def prefer_schema_location(candidates, structure):
-    """Prefer only the XSD entry explicitly named by the original Word table."""
-    if len(candidates) < 2:
-        return candidates
+def schema_location(structure):
     locations = [value.strip() for label,value in structure
                  if 'расположение файла xml-схемы' in normalized_heading(label)]
-    if len(locations) != 1:
+    return locations[0] if len(locations) == 1 else None
+
+
+def schema_location_candidates(candidates, structure):
+    """Find the archive members named by the original Word table."""
+    location = schema_location(structure)
+    if not location:
+        return []
+    named = posixpath.normpath(unquote(urlsplit(location).path).replace('\\','/')).lstrip('/')
+    if not named.lower().endswith('.xsd'):
+        return []
+    return [(archive,schema) for archive,schema in candidates
+            if schema['path'] == named or schema['path'].endswith('/'+named)]
+
+
+def wsdl_location_matches(location, archive, source):
+    """Compare the DOCX locator to the requested and redirected XSD URLs."""
+    try:
+        location = location.replace('\\', '/')
+        requested = urlsplit(location)
+        query = dict(parse_qsl(requested.query))
+        if not (unquote(requested.path).lower().endswith('.xsd') or query.get('xsd')):
+            return False
+        urls = [urlsplit(source[key]) for key in ('url', 'final_url') if source.get(key)]
+        if not (requested.scheme or requested.netloc or requested.query or '/' in requested.path):
+            # A bare filename refers to all resources of that name, including
+            # schemas served as an xsd query, even if one is beside the WSDL.
+            return any(unquote(requested.path) == posixpath.basename(
+                dict(parse_qsl(url.query)).get('xsd') or unquote(url.path)) for url in urls)
+
+        def key(url):
+            return (url.scheme, url.hostname, url.port or 443, url.username, url.password,
+                    posixpath.normpath(unquote(url.path)), sorted(parse_qsl(url.query, keep_blank_values=True)))
+
+        bases = [archive['source_url']]
+        bases.extend(item.get('final_url', item['url']) for item in archive['source_files'] if item['kind'] == 'wsdl')
+        keys = [key(url) for url in urls]
+        return any(key(urlsplit(urljoin(base, location))) in keys for base in bases)
+    except ValueError:
+        return False
+
+
+def prefer_schema_location(candidates, structure):
+    if len(candidates) < 2:
         return candidates
-    named = posixpath.normpath(unquote(urlsplit(locations[0]).path).replace('\\','/')).lstrip('/')
-    selected = [(archive,schema) for archive,schema in candidates
-                if schema['path'] == named or schema['path'].endswith('/'+named)]
-    return selected if named.lower().endswith('.xsd') and selected else candidates
+    return schema_location_candidates(candidates, structure) or candidates
 
 
 def cell_text(node):

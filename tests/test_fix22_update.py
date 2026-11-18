@@ -80,7 +80,7 @@ class LocalGenerationTests(unittest.TestCase):
         self.run_update()
         source = SITES['prod'].replace('sedo.html', 'specs_sedo/a.zip')
         good = self.resources[source]
-        self.resources[source] = archive('main.xsd', b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:main"><xs:element name="response"><xs:simpleType><xs:list itemType="xs:string"/></xs:simpleType></xs:element></xs:schema>')
+        self.resources[source] = archive('main.xsd', b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:main"><xs:element name="response"><xs:simpleType><xs:restriction base="xs:string"><xs:assertion test="true()"/></xs:restriction></xs:simpleType></xs:element></xs:schema>')
         with patch('sync.get', side_effect=self.resources.__getitem__):
             sync(self.state)
         export(self.state, self.out/'catalog.json')
@@ -114,7 +114,7 @@ class LocalGenerationTests(unittest.TestCase):
     def test_repair_only_the_predecessor_of_a_ready_edition_after_a_legacy_review(self):
         self.run_update()
         source = SITES['prod'].replace('sedo.html', 'specs_sedo/a.zip')
-        unsupported = archive('main.xsd', b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:main"><xs:element name="response"><xs:simpleType><xs:list itemType="xs:string"/></xs:simpleType></xs:element></xs:schema>')
+        unsupported = archive('main.xsd', b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:main"><xs:element name="response"><xs:simpleType><xs:restriction base="xs:string"><xs:assertion test="true()"/></xs:restriction></xs:simpleType></xs:element></xs:schema>')
         for content in (unsupported, archive('main.xsd', b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:main"><xs:element name="response" type="xs:int"/></xs:schema>')):
             self.resources[source] = content
             with patch('sync.get', side_effect=self.resources.__getitem__):

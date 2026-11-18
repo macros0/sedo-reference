@@ -1,5 +1,5 @@
 /* Build journal counts using the same engine as the comparison page. No network. */
-const {compare,hasUnresolvedUnionValues,hasUnresolvedNotationValues}=require('./web/compare-core.js');
+const {compare,hasUnresolvedUnionValues,hasUnresolvedNotationValues,hasUnresolvedListValues}=require('./web/compare-core.js');
 
 function documentDate(value){
  const match=/^(\d{2})\.(\d{2})\.(\d{2}|\d{4})$/.exec(value||'');
@@ -78,6 +78,7 @@ function summarizeUpdates(catalog,loadFields){
    for(const difference of compare(before,after))comparison.counts[difference.status]++;
    if(before.some(hasUnresolvedUnionValues)||after.some(hasUnresolvedUnionValues))comparison.limitedUnion=true;
    if(before.some(hasUnresolvedNotationValues)||after.some(hasUnresolvedNotationValues))comparison.limitedNotation=true;
+   if(before.some(hasUnresolvedListValues)||after.some(hasUnresolvedListValues))comparison.limitedList=true;
   }
   return {...event,comparison};
  });

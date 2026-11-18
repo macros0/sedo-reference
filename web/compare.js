@@ -1,6 +1,23 @@
 "use strict";
 const comparisonData=new Map();
 let comparisonRequest=0;
+function validComparisonTree(fields){
+ if(!fields.length)return false;
+ const linked=new Set(),paths=new Set();
+ for(let i=0;i<fields.length;i++){
+  const field=fields[i];
+  if(!field||typeof field.name!=="string"||!field.name.trim()||typeof field.path!=="string"||
+     !Number.isInteger(field.parent)||field.parent< -1||field.parent>=i||!Array.isArray(field.children))return false;
+  const prefix=field.parent===-1?"":fields[field.parent].path+"/";
+  if(field.path!==prefix+field.name||paths.has(field.path)||(field.parent!==-1&&!linked.has(i)))return false;
+  paths.add(field.path);
+  for(const child of field.children){
+   if(!Number.isInteger(child)||child<=i||fields[child]?.parent!==i||linked.has(child))return false;
+   linked.add(child);
+  }
+ }
+ return true;
+}
 function loadComparisonData(revision){
  const version=catalog.revisions.find(row=>row.revision_id===revision)?.fields_sha256;
  const cacheKey=revision+(version?"?v="+version:"");
@@ -10,7 +27,13 @@ function loadComparisonData(revision){
    delete window.SEDO_FIELDS[revision];
    const script=document.createElement("script");
    script.src="fields/"+revision+".js"+(version?"?v="+version:"");
-   script.onload=()=>{script.remove();const fields=window.SEDO_FIELDS?.[revision];Array.isArray(fields)?resolve(fields):reject(Error("В файле редакции нет дерева тегов."))};
+   script.onload=()=>{
+    script.remove();
+    const fields=window.SEDO_FIELDS?.[revision];
+    if(!Array.isArray(fields))reject(Error("В файле редакции нет дерева тегов."));
+    else if(!validComparisonTree(fields))reject(Error("В файле редакции дерево тегов пустое или повреждено."));
+    else resolve(fields);
+   };
    script.onerror=()=>{script.remove();reject(Error("Не удалось загрузить дерево. Проверьте, что папка fields находится рядом с index.html."))};
    document.head.append(script);
   }).catch(error=>{
@@ -66,8 +89,10 @@ function comparisonDefaults(m){
  const right=test||prod,left=prod&&test?prod:ready.find(r=>r.revision_id!==right?.revision_id)||right;
  return {left:left?.revision_id,right:right?.revision_id};
 }
-function formatDifference(value){
+function formatDifference(value,key){
  if(value===undefined||value===null||value==="")return "Не указано";
+ if(key==="listItem")return SedoComparisonExport.constraints(value)||"Без ограничений в этом свойстве";
+ if(key==="alternatives"&&value.length)return SedoComparisonExport.constraints({alternatives:value});
  if(Array.isArray(value))return value.length?value.map(v=>Array.isArray(v)?v.join(" — "):v&&typeof v==="object"?JSON.stringify(v,null,2):String(v)).join("\n"):"Без ограничений в этом свойстве";
  if(typeof value==="object")return Object.keys(value).length?Object.entries(value).map(([k,v])=>k+" = "+v).join("\n"):"Без дополнительных свойств";
  return String(value);
@@ -105,8 +130,10 @@ async function renderComparison(m,params,applied=false,view=null){
   const summaries=node("div","compare-counts");for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])summaries.append(node("span",key,text+" · "+counts[key]));if(mappings.length)summaries.append(node("span","mapped","Ручных соответствий · "+mappings.length));section.append(summaries);
   const unresolvedUnion=a.some(SedoCompare.hasUnresolvedUnionValues)||b.some(SedoCompare.hasUnresolvedUnionValues);
   const unresolvedNotation=a.some(SedoCompare.hasUnresolvedNotationValues)||b.some(SedoCompare.hasUnresolvedNotationValues);
+  const unresolvedList=a.some(SedoCompare.hasUnresolvedListValues)||b.some(SedoCompare.hasUnresolvedListValues);
   if(unresolvedUnion)section.append(node("p","meta",SedoCompare.unionCoverageNote));
   if(unresolvedNotation)section.append(node("p","meta",SedoCompare.notationCoverageNote));
+  if(unresolvedList)section.append(node("p","meta",SedoCompare.listCoverageNote));
   if(applied){const feedback=node("p","mapping-applied-feedback",(applied==="cancelled"?"Сопоставление отменено. Сохранено пар: ":"Сравнение обновлено. Применено пар: ")+mappings.length);feedback.setAttribute("role","status");section.append(feedback)}
   const mappingPanel=SedoMapping.mount(section,mappingOptions,saved,()=>renderComparison(m,params,true));let cancelling=false;
   const exports=node("div","comparison-export"),exportButton=node("button","open","Выгрузить Excel для сопоставления"),exportState=node("span","meta");exportButton.type="button";exportState.setAttribute("role","status");
@@ -117,23 +144,42 @@ async function renderComparison(m,params,applied=false,view=null){
    finally{exportButton.disabled=false}
   };
   exports.append(exportButton,exportState,node("p","meta","Вся выбранная пара редакций: исходные поля, изменения и таблица ручного сопоставления. Поиск и фильтры не ограничивают выгрузку."));section.append(exports);
-  if(!results.length){section.append(node("p","empty",(unresolvedUnion||unresolvedNotation?"":"Деревья совпадают. ")+"Изменений в тегах, ограничениях и описаниях не найдено."));if(applied)summaries.scrollIntoView?.({block:"start",behavior:"smooth"});return true}
+  if(!results.length){section.append(node("p","empty",(unresolvedUnion||unresolvedNotation||unresolvedList?"":"Деревья совпадают. ")+"Изменений в тегах, ограничениях и описаниях не найдено."));if(applied)summaries.scrollIntoView?.({block:"start",behavior:"smooth"});return true}
   const filters=node("div","searchbar"),searchLabel=node("label","","Поиск по изменениям"),search=node("input");search.type="search";search.placeholder="Тег, путь, описание или ограничение";searchLabel.append(search);
   const kindLabel=node("label","","Вид изменения"),kind=node("select");for(const [value,text] of [["","Все изменения"],["added","Добавлено"],["removed","Удалено"],["changed","Изменено"],["mapped","Сопоставлено без изменений"]])kind.add(new Option(text,value));kindLabel.append(kind);filters.append(searchLabel,kindLabel);section.append(filters);
   if(view){search.value=view.search;kind.value=view.kind}
   const count=node("p","meta");count.setAttribute("role","status");const list=node("div","differences");section.append(count,list);
+  function fieldText(field){
+   if(!field)return "";
+   // Formatters quote values for display and can escape literal XSD characters.
+   return [field.type,field.base,field.doc,field.group,field.min,field.max,field.contentModel?.[0],
+    ...(field.facets||[]).flat(),...(field.patternGroups||[]).flat(),...Object.entries(field.flags||{}).flat(),
+    ...(field.values||[]).flat(),...(field.alternatives||[]).map(fieldText),fieldText(field.listItem)].join(" ");
+  }
+  const indexedResults=results.map(result=>{
+   const changes=result.changes.map(({key,label,before,after})=>({label,before:formatDifference(before,key),after:formatDifference(after,key)}));
+   const terms=[result.path,result.beforePath,result.afterPath,result.comment,fieldText(result.before),fieldText(result.after),...changes.flatMap(c=>[c.label,c.before,c.after])];
+   return {result,changes,text:normalize(terms.join(" "))};
+  });
   function draw(){
    const terms=normalize(search.value).split(/\s+/).filter(Boolean);
-   const fieldText=f=>f?[f.type,f.base,f.doc,f.group,f.min,f.max,f.contentModel?.[0],...(f.facets||[]).flat(),...Object.entries(f.flags||{}).flat(),...(f.values||[]).flat(),...(f.alternatives||[]).map(fieldText)].join(" "):"";
-   const visible=results.filter(r=>(!kind.value||r.status===kind.value)&&terms.every(t=>normalize([r.path,r.beforePath,r.afterPath,r.comment,fieldText(r.before),fieldText(r.after),...r.changes.map(c=>c.label+" "+formatDifference(c.before)+" "+formatDifference(c.after))].join(" ")).includes(t)));
+   const visible=indexedResults.filter(({result,text})=>(!kind.value||result.status===kind.value)&&terms.every(t=>text.includes(t)));
    count.textContent="Показано изменений · "+visible.length;list.replaceChildren();
-   for(const r of visible){
+   for(const {result:r,changes} of visible){
     const card=node("article","difference "+r.status),head=node("div","difference-head");head.append(node("span","badge",({added:"Добавлено",removed:"Удалено",changed:"Изменено",mapped:"Сопоставлено без изменений"})[r.status]),node("code","",r.manual&&r.beforePath!==r.afterPath?r.beforePath+" → "+r.afterPath:r.path));if(r.manual)head.append(node("span","badge mapped","Ручное соответствие"));card.append(head);if(r.comment)card.append(node("p","mapping-comment",r.comment));
     if(r.status==="mapped")card.append(node("p","","Ограничения и описания сопоставленных полей совпадают."));
-    if(r.status!=="changed")card.append(node("p","",r.after?.doc||r.before?.doc||""));
+    if(r.status!=="changed"){
+     const field=r.after||r.before;
+     if(field?.doc)card.append(node("p","",field.doc));
+     if((r.status==="added"||r.status==="removed")&&(field?.listItem||field?.alternatives?.length)){
+      const constraints=node("p","meta",SedoComparisonExport.constraints(field));
+      constraints.style.whiteSpace="pre-wrap";
+      card.append(constraints);
+     }
+    }
     else{
      const table=node("table","diff-table"),thead=node("thead"),tr=node("tr");["Свойство","Было","Стало"].forEach(s=>tr.append(node("th","",s)));thead.append(tr);table.append(thead);const body=node("tbody");
-     for(const c of r.changes){const row=node("tr");row.append(node("th","",c.label),node("td","before",formatDifference(c.before)),node("td","after",formatDifference(c.after)));body.append(row)}
+     for(const c of changes){const row=node("tr");row.append(node("th","",c.label),node("td","before",c.before),node("td","after",c.after));body.append(row)}
      table.append(body);const scroll=node("div","table-scroll");scroll.append(table);card.append(scroll);
     }
     const links=node("div","difference-links");

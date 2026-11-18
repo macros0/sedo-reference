@@ -1,5 +1,6 @@
 const {test,expect}=require('@playwright/test');
 const fs=require('node:fs'),path=require('node:path');
+const ExcelJS=require('../../web/vendor/exceljs.min.js');
 const catalog=JSON.parse(fs.readFileSync(path.join(__dirname,'../../site/catalog-data.js'),'utf8').replace(/^window.SEDO_CATALOG=/,'').replace(/;\s*$/,''));
 const edition=(number,version)=>catalog.revisions.find(r=>r.number===number&&r.environment==='prod'&&r.document_version===version&&r.ready);
 const left=edition('105','2.28'),right=edition('10510','3.0'),key='sedo-field-mappings:v1:'+[left.revision_id,right.revision_id].sort().map(encodeURIComponent).join(':'),url='/site/#'+new URLSearchParams({message:'10510',compare:'1',left:left.revision_id,right:right.revision_id});
@@ -9,6 +10,175 @@ async function add(page,before,after,comment){
 async function editFirst(page,comment){
  await page.locator('.mapping-suggest').click();await page.locator('.mapping-edit-row').first().click();await page.locator('.mapping-edit-comment').fill(comment);await page.locator('.mapping-editor-save').click();await page.locator('.mapping-editor-cancel').click();
 }
+test.describe('comparison panel while its Web Lock is pending',()=>{
+ const oldPath='approveSocialAssistResult/status',newPath='benefitResponseResult/status';
+ const savedComment='Сохранённая пара',draftComment='Ожидающий черновик',excelComment='Предпросмотр Excel';
+ const upload=page=>page.getByRole('button',{name:'Загрузить сопоставления из Excel',exact:true});
+ const reset=page=>page.getByRole('button',{name:'Сбросить сопоставления',exact:true});
+ const record=page=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
+ async function swap(page,before){
+  await page.getByRole('button',{name:'Поменять местами',exact:true}).click();
+  await expect(page.locator('.compare-controls select').first()).toHaveValue(before.revision_id);
+  await expect(page.locator('.mapping-add')).toBeVisible();
+ }
+ async function importedFile(){
+  const workbook=new ExcelJS.Workbook();
+  workbook.addWorksheet('О выгрузке').addRow(['Идентификатор редакции',left.revision_id,right.revision_id]);
+  const sheet=workbook.addWorksheet('Сопоставление');
+  sheet.addRow(['Путь «Было»','Путь «Стало» — введите или выберите','Решение — вручную','Комментарий — вручную']);
+  sheet.addRow([oldPath,newPath,'Подтверждено',excelComment]);
+  return {name:'pending.xlsx',mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',buffer:Buffer.from(await workbook.xlsx.writeBuffer())};
+ }
+ async function holdLock(context){
+  const locker=await context.newPage();await locker.goto(url);
+  await locker.evaluate(key=>new Promise(acquired=>{
+   navigator.locks.request(key,()=>new Promise(release=>{window.releaseMappingLock=release;acquired()}));
+  }),key);
+  return locker;
+ }
+ async function waitForQueuedOperation(page){
+  await expect.poll(()=>page.evaluate(async key=>(await navigator.locks.query()).pending.filter(lock=>lock.name===key).length,key)).toBe(1);
+ }
+ test.beforeEach(async({context,page})=>{
+  for(const script of ['compare.js','compare-core.js','comparison-export.js','comparison-mapping.js','mapping-draft.js','mapping-editor.js'])await context.route('**/'+script+'*',route=>route.fulfill({path:path.join(__dirname,'../../web',script),contentType:'application/javascript'}));
+  await page.goto(url);
+  await add(page,oldPath,newPath,savedComment);
+  await page.locator('.mapping-apply').click();
+  await expect(page.locator('.mapping-applied-feedback')).toBeVisible();
+  await editFirst(page,draftComment);
+ });
+ for(const action of ['apply','reset']){
+  for(const navigate of [false,true]){
+   test(action+' serializes commands while waiting'+(navigate?' and leaves a newer preview alone after navigation':''),async({page,context})=>{
+    const file=await importedFile(),locker=await holdLock(context);
+    const command=action==='apply'?page.locator('.mapping-apply-top'):reset(page);
+    if(action==='reset'){
+     const accepted=page.waitForEvent('dialog').then(dialog=>dialog.accept());
+     await Promise.all([command.click(),accepted]);
+    }else await command.click();
+    await waitForQueuedOperation(page);
+    await expect(upload(page)).toBeDisabled();
+    await expect(reset(page)).toBeDisabled();
+    // A file chooser can have been opened before the operation queued.
+    await page.locator('.mapping-file').setInputFiles(file);
+    await expect(page.locator('.mapping-preview')).toContainText(draftComment);
+    expect((await record(page)).pairs[0].comment).toBe(savedComment);
+    if(navigate){
+     await page.evaluate(()=>{location.hash=''});
+     await expect(page.locator('#catalog')).toBeVisible();
+     await page.goBack();
+     await expect(page.locator('.mapping-preview')).toContainText(draftComment);
+     const accepted=page.waitForEvent('dialog').then(dialog=>dialog.accept());
+     await Promise.all([page.locator('.mapping-file').setInputFiles(file),accepted]);
+     await expect(page.locator('.mapping-preview')).toContainText(excelComment);
+    }
+    await locker.evaluate(()=>window.releaseMappingLock());
+    await expect.poll(()=>page.evaluate(async key=>(await navigator.locks.query()).pending.filter(lock=>lock.name===key).length,key)).toBe(0);
+    if(navigate){
+     expect((await record(page)).pairs[0].comment).toBe(savedComment);
+     await expect(page.locator('.mapping-preview')).toContainText(excelComment);
+     await page.evaluate(()=>{location.hash=''});
+     await expect(page.locator('#catalog')).toBeVisible();
+     await page.goBack();
+     await expect(page.locator('.mapping-preview')).toContainText(excelComment);
+    }else{
+     await expect(page.locator('.mapping-applied-feedback')).toBeVisible();
+     if(action==='apply')expect((await record(page)).pairs[0].comment).toBe(draftComment);
+     else expect(await record(page)).toBeNull();
+    }
+   });
+  }
+ }
+ for(const accept of [false,true]){
+  test('reset names both directions and '+(accept?'clears drafts with permission':'keeps both drafts if declined'),async({page})=>{
+   const reverseComment='Несохранённая обратная правка';
+   const reverseSource='benefitResponseResult/processNum',reverseTarget='approveSocialAssistResult/socialAssistNum';
+   await swap(page,right);
+   await page.locator('.mapping-add').click();
+   await page.locator('.mapping-tag-choice-before').selectOption(reverseSource);
+   await page.locator('.mapping-edit-comment').fill(reverseComment);
+   await swap(page,left);
+   const decision=page.waitForEvent('dialog',{timeout:3000}).then(async dialog=>{
+    const message=dialog.message();
+    await (accept?dialog.accept():dialog.dismiss());
+    expect(message).toMatch(/текущ[а-я]+ направлен/iu);
+    expect(message).toMatch(/обратн[а-я]+ направлен/iu);
+   });
+   await Promise.all([reset(page).click(),decision]);
+   if(accept){
+    await expect(page.locator('.mapping-applied-feedback')).toContainText('Применено пар: 0');
+    expect(await record(page)).toBeNull();
+    await expect(page.locator('.mapping-table')).toHaveCount(0);
+    await swap(page,right);
+    await expect(page.locator('.mapping-edit-form')).toHaveCount(0);
+    return;
+   }
+   expect((await record(page)).pairs[0].comment).toBe(savedComment);
+   await expect(page.locator('.mapping-preview')).toContainText(draftComment);
+   await swap(page,right);
+   await expect(page.locator('.mapping-tag-choice-before')).toHaveValue(reverseSource);
+   await expect(page.locator('.mapping-edit-comment')).toHaveValue(reverseComment);
+   await page.locator('.mapping-tag-choice-after').selectOption(reverseTarget);
+   await page.locator('.mapping-editor-save').click();
+   await page.locator('.mapping-apply-top').click();
+   await expect(page.locator('.mapping-applied-feedback')).toContainText('Применено пар: 2');
+   expect((await record(page)).pairs).toContainEqual({beforePath:reverseSource,afterPath:reverseTarget,comment:reverseComment});
+  });
+ }
+ for(const conflict of [false,true]){
+  test('pending apply prevents edits in an open form and '+(conflict?'restores it on conflict':'applies the ready draft'),async({page,context})=>{
+   const locker=await holdLock(context),preview=page.locator('.mapping-preview'),apply=page.locator(conflict?'.mapping-apply':'.mapping-apply-top');
+   const form=page.locator('.mapping-edit-form'),query=page.locator('.mapping-tag-search-before');
+   const beforePath='approveSocialAssistResult/socialAssistNum',afterPath='benefitResponseResult/processNum';
+   await page.locator('.mapping-add-row').click();
+   await query.fill('socialAssistNum');
+   await apply.click();
+   await waitForQueuedOperation(page);
+   // Action handlers can still be reached by synthetic events on an inert form.
+   await form.evaluate((element,{beforePath,afterPath})=>{
+    for(const [side,value] of [['before',beforePath],['after',afterPath]]){
+     const select=element.querySelector('.mapping-tag-choice-'+side);
+     select.value=value;
+     select.dispatchEvent(new Event('change',{bubbles:true}));
+    }
+    element.requestSubmit();
+   },{beforePath,afterPath});
+   await expect(preview.locator('.mapping-explicit')).toHaveCount(1);
+   await expect(preview).toHaveJSProperty('inert',true);
+   await expect(upload(page)).toBeDisabled();
+   expect((await record(page)).pairs[0].comment).toBe(savedComment);
+   const competingComment='Правка другой вкладки';
+   await locker.evaluate(({key,conflict,competingComment})=>{
+    if(conflict){
+     const saved=JSON.parse(localStorage.getItem(key));
+     saved.pairs[0].comment=competingComment;
+     localStorage.setItem(key,JSON.stringify(saved));
+    }
+    window.releaseMappingLock();
+   },{key,conflict,competingComment});
+   if(!conflict){
+    await expect(page.locator('.mapping-applied-feedback')).toContainText('Применено пар: 1');
+    expect((await record(page)).pairs.map(pair=>pair.comment)).toEqual([draftComment]);
+    return;
+   }
+   await expect(page.locator('.mapping-draft-errors')).toContainText('Конфликт');
+   await expect(preview).toContainText(draftComment);
+   await expect(preview).toHaveJSProperty('inert',false);
+   await expect(apply).toBeFocused();
+   await expect(upload(page)).toBeEnabled();
+   await expect(reset(page)).toBeEnabled();
+   await expect(query).toHaveValue('socialAssistNum');
+   await expect(page.locator('.mapping-tag-choice-before')).toHaveValue('');
+   await expect(page.locator('.mapping-tag-choice-after')).toHaveValue('');
+   expect((await record(page)).pairs.map(pair=>pair.comment)).toEqual([competingComment]);
+   await page.locator('.mapping-tag-choice-before').selectOption(beforePath);
+   await page.locator('.mapping-tag-choice-after').selectOption(afterPath);
+   await page.locator('.mapping-editor-save').click();
+   await expect(preview.locator('.mapping-explicit')).toHaveCount(2);
+  });
+ }
+});
+
 test('storage recovery merges isolated tab edits into the stored comparison',async({page,context})=>{
  await page.goto(url);
  await page.evaluate(key=>{

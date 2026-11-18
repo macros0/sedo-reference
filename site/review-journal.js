@@ -61,7 +61,10 @@
  }
  function schemaSources(r,finding){return schemaChains(r,finding)[0]}
  function remoteSchemaSource(r,path,digest){
-  return r.schema_sources?.find(s=>digest&&s.kind==='xsd'&&s.sha256===digest&&(s.archive_path==null||s.archive_path===path));
+  const matches=r.schema_sources?.filter(s=>digest&&s.kind==='xsd'&&s.sha256===digest)||[];
+  const exact=matches.filter(s=>s.archive_path===path);
+  if(exact.length===1)return exact[0];
+  if(matches.length===1&&matches[0].archive_path==null)return matches[0];
  }
  function schemaChains(r,finding){
   const selections=[finding?.xsd_source,...(finding?.xsd_sources||[])].filter(source=>source?.path);
@@ -125,6 +128,8 @@
    columns.push(['Файл XSD '+i,65],['Официальная публикация XSD '+i,65],
     ['Архив, документ или WSDL с XSD '+i,65],['Расположение схемы '+i+' в документе',42],['Зависимости WSDL '+i,65]);
   }
+  const wsdlLocation=rows.some(({revision})=>revision.schema_docx_location);
+  if(wsdlLocation)columns.push(['Ссылка на XSD в DOCX',65],['Файл объявления корня',65],['Точка входа XSD',65]);
   sheet.columns=columns.map(([header,width])=>({header,width}));
   for(const [index,{revision:r,finding:f}] of rows.entries()){
    const chains=chainsByRow[index],sources=chains[0],cell=s=>s?link(s.text,s.url,baseURL):'';
@@ -147,6 +152,11 @@
      sameSource(additional.publication,sources.publication)?'':cell(additional.publication),
      additional.container===sources.container?'':additional.container,
      sameSource(additional.wsdl,sources.wsdl)?'':cell(additional.wsdl));
+   }
+   if(wsdlLocation){
+    values.push(r.schema_docx_location?link(r.schema_docx_location,r.schema_docx_url||r.schema_docx_download,baseURL):'',
+     r.schema_declaration_path?link(r.schema_declaration_path,r.schema_declaration_download||r.schema_declaration_url,baseURL):'',
+     r.schema_docx_location?link(r.schema_path,r.schema_file_download,baseURL):'');
    }
    for(const value of values)if(typeof value==='string'&&value.length>32767)throw Error('Текст превышает лимит ячейки Excel. Выгрузка остановлена без обрезки.');
    const row=sheet.addRow(values);

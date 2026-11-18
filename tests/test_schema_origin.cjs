@@ -27,11 +27,34 @@ if (process.argv[2]) {
   vm.runInNewContext(fs.readFileSync(process.argv[2], 'utf8'), {window:published});
   const row = published.SEDO_CATALOG.revisions.find(r => r.revision_id === process.argv[3]);
   const origin = walk(cardFor(row)).find(n => n.className === 'meta schema-origin');
-  assert.deepEqual(origin.children.filter(n => n.href).map(n => n.href), [
-    'https://lk-test.fss.ru/sedo.html',
-    'https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl',
-    'https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?xsd=main.xsd',
-  ]);
+  const links = origin.children.filter(n => n.href);
+  const common = ['https://lk-test.fss.ru/sedo.html',
+    'https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/SedoGatewaySimple?wsdl'];
+  const base = 'https://ecp-test.sfr.gov.ru/sedo/fss/api/soap/';
+  if (process.argv[4] === 'composition') {
+    assert.deepEqual(links.map(n => n.href), [...common, `${base}root.xsd`,
+      row.schema_declaration_download, row.schema_file_download]);
+    assert.deepEqual(links.slice(-2).map(n => [n.textContent, n.download]), [
+      ['schemas/002/root.xsd', 'root.xsd'], ['schemas/001/inline-0.xsd', 'inline-0.xsd']]);
+  } else if (process.argv[4] === 'transitive') {
+    assert.deepEqual(links.map(n => n.href), [...common, row.schema_docx_url, row.schema_docx_download,
+      row.schema_declaration_url, row.schema_declaration_download, row.schema_file_download]);
+    for (const label of ['Файл из DOCX', 'Файл объявления корня', 'Точка входа XSD']) {
+      assert.ok(origin.children.some(n => n.textContent.includes(label)));
+    }
+    const journal = require('../web/review-journal.js'), ExcelJS = require('../web/vendor/exceljs.min.js');
+    const actual = row.schema_files.find(file => file.path === row.schema_declaration_path);
+    const baseURL = 'https://example.test/reference/';
+    const workbook = journal.createWorkbook(ExcelJS, [{revision: row,
+      finding: {kind: 'Кратность', location: 'Таблица', xsd_source: actual}}], {baseURL});
+    const sheet = workbook.getWorksheet('Замечания');
+    const cell = name => sheet.getCell(2, sheet.getRow(1).values.indexOf(name)).value;
+    assert.deepEqual(cell('Ссылка на XSD в DOCX'), {text: 'root.xsd', hyperlink: row.schema_docx_url});
+    assert.deepEqual(cell('Файл объявления корня'), {text: row.schema_declaration_path, hyperlink: baseURL + actual.download});
+    assert.deepEqual(cell('Точка входа XSD'), {text: row.schema_path, hyperlink: baseURL + row.schema_file_download});
+  } else {
+    assert.deepEqual(links.map(n => n.href), [...common, `${base}SedoGatewaySimple?xsd=main.xsd`]);
+  }
 }
 {
  const rows=[...catalog.revisions,...catalog.registry].filter(row=>row.number==='600');

@@ -31,6 +31,8 @@ def field_whitespace(field, *, before=None):
     explicit = next((value for key, value in reversed(field['facets'][:before]) if key == 'whiteSpace'), None)
     if explicit is not None:
         return explicit
+    if field.get('listItem'):
+        return 'collapse'
     if field.get('baseNs') == XS:
         builtin = field['base'].rsplit(':', 1)[-1]
         if builtin in BUILTIN_SIMPLE_TYPES:
@@ -224,7 +226,7 @@ def notes(node):
     return "\n".join(" ".join("".join(d.itertext()).split()) for d in node.findall(X+"annotation/"+X+"documentation"))
 
 class Schema:
-    def __init__(self, archive, entry, root_name):
+    def __init__(self, archive, entry, root_name, *, inherited_namespace=None):
         self.files = {}
         # A chameleon document can contribute distinct components to several
         # namespaces. Keep a separate parsed tree for every effective namespace,
@@ -241,10 +243,12 @@ class Schema:
         self.expanded_fields = 0
         self.main = entry
         self.inventory = None
-        self.load(archive, self.main)
+        self.load(archive, self.main, inherited_namespace)
         main_namespace = self.files[self.main][2]
         candidates = {path: import_metadata(doc[0], '') | {'roots': [node for node in doc[0] if node.tag == X+'element'], 'import_targets': archive_targets(archive).get(path,{})}
                       for (path, namespace), doc in self.documents.items() if namespace == main_namespace}
+        if inherited_namespace:
+            candidates[self.main]['namespace'] = main_namespace
         self.root = next((node for node in included_roots(candidates,self.main) if node.get('name') == root_name), None)
         if self.root is None:
             raise ValueError("Корневой элемент " + root_name + " не найден.")
@@ -413,6 +417,15 @@ class Schema:
                         etree.SubElement(target, X+local(facet), attrib=dict(facet.attrib),
                                          nsmap=self._value_scope(facet))
                 return
+            sequence = self._type_child(selected, 'list')
+            if sequence is not None:
+                item_type = sequence.get('itemType')
+                target = etree.SubElement(simple, X+'list')
+                if item_type:
+                    target.set('itemType', type_name(self._enum_member_type(item_type, sequence)))
+                else:
+                    append_content(etree.SubElement(target, X+'simpleType'), self._type_child(sequence, 'simpleType'))
+                return
             union = self._type_child(selected, 'union')
             if union is None:
                 raise ValueError("Неподдерживаемый тип перечисления union")
@@ -435,40 +448,63 @@ class Schema:
         self._enum_probes[member] = probe
         return probe
 
-    def _typed_value(self, node, lexical, *, union=None, member=None):
+    def _list_item_type(self, declaration):
+        name = declaration.get('itemType')
+        return self._enum_member_type(name, declaration if name else self._type_child(declaration, 'simpleType'))
+
+    def _list_value_items(self, sequence, node, lexical):
+        item = self._list_item_type(sequence)
+        result = []
+        for token in re.findall(r'[^ \t\r\n]+', lexical):
+            selected = self._typed_value(node, token, member=item)
+            if selected is None or selected[0] == 'list':
+                return None
+            name = self._value_qname(node, token) if selected[0] in EXPANDED_NAME_TYPES else None
+            result.append([*selected, token, name])
+        return result
+
+    def _typed_value(self, node, lexical, *, union=None, member=None, detailed=False):
         from lxml import etree
 
         scope = self._value_scope(node)
         value = etree.Element("probe", nsmap=scope)
         value.text = lexical
-        prefix, sep, name = lexical.strip(' \t\r\n').partition(':')
-        unbound = hasattr(node, 'nsmap') and sep and prefix != 'xml' and prefix not in scope
-        if unbound:
+        quoted_names = hasattr(node, 'nsmap') and ':' in lexical
+
+        def unbound_name(text):
+            prefix, sep, name = text.strip(' \t\r\n').partition(':')
+            if not sep or prefix == 'xml' or prefix in scope:
+                return False
             try:
                 etree.QName('urn:probe', prefix)
                 etree.QName('urn:probe', name)
             except ValueError:
-                unbound = False
+                return False
+            return True
 
-        def uses_names(selected):
+        def missing_binding(selected, text):
             if isinstance(selected, str):
-                return selected in EXPANDED_NAME_TYPES
+                return selected in EXPANDED_NAME_TYPES and unbound_name(text)
             options = self._type_child(selected, 'union')
             if options is not None:
-                return any(uses_names(self._enum_member_type(qname, source))
+                return any(missing_binding(self._enum_member_type(qname, source), text)
                            for qname, source in self._union_members(options))
+            sequence = self._type_child(selected, 'list')
+            if sequence is not None:
+                item = self._list_item_type(sequence)
+                return any(missing_binding(item, token) for token in re.findall(r'[^ \t\r\n]+', text))
             restriction = self._type_child(selected, 'restriction')
             if restriction is None:
                 return False
             base = restriction.get('base')
             source = restriction if base else self._type_child(restriction, 'simpleType')
-            return uses_names(self._enum_member_type(base, source))
+            return missing_binding(self._enum_member_type(base, source), text)
 
         def choose(options):
             for qname, source in self._union_members(options):
                 member = self._enum_member_type(qname, source)
                 probe = self._enum_probe(etree, member)
-                if probe is None or unbound and uses_names(member):
+                if probe is None or quoted_names and missing_binding(member, lexical):
                     return None
                 if probe.validate(value):
                     return atomic(member)
@@ -480,21 +516,25 @@ class Schema:
             union = self._type_child(member, 'union')
             if union is not None:
                 return choose(union)
+            sequence = self._type_child(member, 'list')
+            if sequence is not None:
+                selected = ('list', 'collapse')
+                return (*selected, self._list_value_items(sequence, node, lexical)) if detailed else selected
             restriction = self._type_child(member, 'restriction')
             base = restriction.get("base")
             source = restriction if base else self._type_child(restriction, 'simpleType')
             selected = atomic(self._enum_member_type(base, source))
             whitespace = self._type_child(restriction, 'whiteSpace')
-            return (selected[0], whitespace.get("value")) if selected and whitespace is not None else selected
+            return (selected[0], whitespace.get("value"), *selected[2:]) if selected and whitespace is not None else selected
 
         if union is not None:
             selected = choose(union)
         else:
             probe = self._enum_probe(etree, member)
-            selected = atomic(member) if probe is not None and not (unbound and uses_names(member)) and probe.validate(value) else None
+            selected = atomic(member) if probe is not None and not (quoted_names and missing_binding(member, lexical)) and probe.validate(value) else None
         return list(selected) if selected else None
 
-    def quoted_value_type(self, declaration, lexical, *, owner=None):
+    def quoted_value_type(self, declaration, lexical, *, owner=None, detailed=False):
         """Resolve a quoted scalar type using the quote's own namespace bindings."""
         node = declaration
         try:
@@ -508,7 +548,7 @@ class Schema:
                 qname = node.get('type') or node.get('base')
                 if qname or local(node) == 'simpleType':
                     member = self._enum_member_type(qname, node)
-                    return self._typed_value(owner if owner is not None else declaration, lexical, member=member)
+                    return self._typed_value(owner if owner is not None else declaration, lexical, member=member, detailed=detailed)
                 node = next((child for child in node if local(child) in
                              ('simpleType', 'complexType', 'simpleContent', 'restriction', 'extension')), None)
         except (ValueError, RecursionError):
@@ -627,6 +667,7 @@ class Schema:
         pattern_groups = []
         enum_nodes = []
         enum_union = None
+        enum_list = None
         enum_whitespace = None
         complex_type = False
         def expand_type(q,elem,stack,particles,bounded_particles,restricted_base=None,excluded_attributes=frozenset(),kinds=None):
@@ -654,8 +695,34 @@ class Schema:
                     if obj in visited:raise ValueError("Рекурсивная группа в "+path)
                     keys.update(restriction_attributes(obj,visited+(obj,)))
             return keys
+        def scalar_option(qname, simple, context, stack):
+            temporary = ET.Element(X+'element', name='scalarOption')
+            self.owner[temporary] = self.owner[context]
+            self.prefixes[temporary] = self.prefixes[context]
+            self.context[temporary] = self.context[context]
+            original = self.fields, self.field_declarations
+            try:
+                if qname:
+                    self.resolve(qname, context, ['simpleType'])
+                    temporary.set('type', qname)
+                else:
+                    if simple is None:
+                        raise ValueError('Отсутствует простой тип в '+path)
+                    temporary.append(simple)
+                self.fields, self.field_declarations = [], {}
+                self.field(temporary, chain=stack)
+                if len(self.fields) != 1:
+                    raise ValueError('Нескалярный тип в '+path)
+                option = self.fields[0]
+                return {key: option[key] for key in ('type', 'base', 'facets', 'values', 'flags', 'typeNs', 'baseNs',
+                        'patternGroups', 'alternatives', 'listItem', 'valueQNames', 'flagQNames', 'unionValueTypes',
+                        'valueListItems', 'flagListItems', 'enumWhiteSpace') if key in option}
+            finally:
+                self.fields, self.field_declarations = original
+                for metadata in (self.owner, self.prefixes, self.context):
+                    metadata.pop(temporary, None)
         def walk(e,group,stack,particles,bounded_particles,restricted_base=None,excluded_attributes=frozenset(),parent_kind=None):
-            nonlocal nodegroups, complex_type, enum_union, enum_whitespace
+            nonlocal nodegroups, complex_type, enum_union, enum_list, enum_whitespace
             kind = local(e)
             replace_enum = kind == "restriction"
             if kind == 'complexType':
@@ -733,24 +800,12 @@ class Schema:
                     walk(obj,group_label,stack+(obj,),particles,group_particles,restricted_base,excluded_attributes)
                 elif t=="union":
                     enum_union=c
-                    alternatives=[]
                     variants=list(self._union_members(c))
                     if not variants:raise ValueError("Пустое объединение типов в "+path)
-                    for q,source in variants:
-                        if q:self.resolve(q,c,['simpleType'])
-                        temporary=ET.Element(X+"element",dict(name="unionOption",**({"type":q} if q else {})))
-                        self.owner[temporary]=self.owner[c]
-                        self.prefixes[temporary]=self.prefixes[c]
-                        self.context[temporary]=self.context[c]
-                        if q is None:temporary.append(source)
-                        original=self.fields
-                        try:
-                            self.fields=[];self.field(temporary,chain=stack)
-                            if len(self.fields)!=1:raise ValueError("Нескалярный вариант union в "+path)
-                            option=self.fields[0]
-                            alternatives.append({k:option[k] for k in ("type","base","facets","values","flags","typeNs","baseNs","patternGroups","alternatives","valueQNames","flagQNames","unionValueTypes","enumWhiteSpace") if k in option})
-                        finally:self.fields=original
-                    d["alternatives"]=alternatives
+                    d['alternatives'] = [scalar_option(qname, source, c, stack) for qname, source in variants]
+                elif t == 'list':
+                    enum_list = c
+                    d['listItem'] = scalar_option(c.get('itemType'), c.find(X+'simpleType'), c, stack)
                 elif t=="enumeration":
                     if replace_enum:
                         d["values"].clear()
@@ -787,19 +842,31 @@ class Schema:
                                   for key, (node, lexical) in value_flags.items()}
         elif enum_union is not None:
             if enum_nodes:
-                selected = [self._typed_value(node, node.get("value"), union=enum_union) for node in enum_nodes]
-                d["unionValueTypes"] = selected
+                selected = [self._typed_value(node, node.get("value"), union=enum_union, detailed=True) for node in enum_nodes]
+                d["unionValueTypes"] = [member[:2] if member else None for member in selected]
+                if any(member and member[0] == 'list' for member in selected):
+                    d["valueListItems"] = [member[2] if member and member[0] == 'list' else None for member in selected]
                 names = [self._value_qname(node,node.get("value")) if member and member[0] in EXPANDED_NAME_TYPES else None
                          for node,member in zip(enum_nodes,selected)]
                 if any(names):
                     d["valueQNames"] = names
             if value_flags:
-                selections = d["unionFlagTypes"] = {key: self._typed_value(node, lexical, union=enum_union)
-                                                   for key, (node, lexical) in value_flags.items()}
+                selections = {key: self._typed_value(node, lexical, union=enum_union, detailed=True)
+                              for key, (node, lexical) in value_flags.items()}
+                d["unionFlagTypes"] = {key: member[:2] if member else None for key, member in selections.items()}
+                lists = {key: member[2] for key, member in selections.items() if member and member[0] == 'list'}
+                if lists:
+                    d["flagListItems"] = lists
                 names = {key: self._value_qname(node, lexical) for key, (node, lexical) in value_flags.items()
                          if selections[key] and selections[key][0] in EXPANDED_NAME_TYPES}
                 if names:
                     d["flagQNames"] = names
+        elif enum_list is not None:
+            if enum_nodes:
+                d['valueListItems'] = [self._list_value_items(enum_list, node, node.get('value')) for node in enum_nodes]
+            if value_flags:
+                d['flagListItems'] = {key: self._list_value_items(enum_list, node, lexical)
+                                     for key, (node, lexical) in value_flags.items()}
         if enum_nodes and enum_union is None and enum_whitespace is not None and enum_whitespace != field_whitespace(d):
             d['enumWhiteSpace'] = enum_whitespace
         if content:

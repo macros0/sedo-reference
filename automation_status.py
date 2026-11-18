@@ -14,6 +14,7 @@ from urllib.request import Request, urlopen
 REPO = 'macros0/sedo-reference'
 STATUS_BRANCH = 'automation-status'
 SOURCE = 'alexey-sagitov/sedo-xsd-collector'
+INTERRUPTED_CHECK_STATES = ('failure', 'cancelled')
 
 
 def utcnow():
@@ -55,6 +56,22 @@ def publication_receipt_matches(page, target):
             and re.fullmatch('[0-9a-f]{64}', str(receipt.get('catalog_sha256'))))
 
 
+def run_start(run):
+    return run.get('run_started_at') or run.get('created_at', '')
+
+
+def latest_independent_page(pages, linked_run_id):
+    standalone = (page for page in pages if page.get('event') in ('push', 'workflow_dispatch')
+                  and page['id'] != linked_run_id
+                  and not page.get('publication_receipt')
+                  and not (page.get('display_title') or '').startswith('Publish reference for check '))
+    return max(standalone, key=lambda page: (run_start(page), page['id']), default=None)
+
+
+def successful_capture(record):
+    return record.get('state') == 'success' or record.get('complete') is True
+
+
 def build_status(source, checks, pages, reports, legacy_catalogs, now=None, configured_source="sourcecraft"):
     heartbeat_error = None
     if source:
@@ -79,32 +96,37 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None, conf
     complete = check_info['state'] == 'success' and report.get('status') == 'ok'
     imported = (reports.get('sourcecraft-report.json') or {}).get('latest', {})
     collector_source = report.get('collector_source') or ('sourcecraft' if imported else configured_source)
-    source_complete = latest.get('state') == 'success' or latest.get('complete') is True
-    source_synced = collector_source == 'home' or (
-        not heartbeat_error and (not source_complete or all(
-            re.fullmatch(r'[0-9a-f]{64}', sc['contours'].get(env, {}).get('content_id') or '')
-            and imported.get(env) == sc['contours'][env]['content_id']
-            for env in ('prod', 'test'))))
+    confirmed = latest if successful_capture(latest) else (source or {}).get('last_success') or {}
+    contours = confirmed.get('contours', {})
+    if collector_source == 'home':
+        source_synced = True
+    elif heartbeat_error:
+        source_synced = False
+    elif all(re.fullmatch(r'[0-9a-f]{64}', contours.get(env, {}).get('content_id') or '') for env in ('prod', 'test')):
+        source_synced = all(imported.get(env) == contours[env]['content_id'] for env in ('prod', 'test'))
+    else:
+        source_synced = False if successful_capture(latest) else None
     if not source_synced:
         complete = False
-        if check_info['state'] == 'success':
-            check_info['state'] = 'waiting'
-    if collector_source != 'home' and not latest:
-        complete = False
+        if check_info['state'] == 'success' and (latest or source_synced is False):
+            check_info['state'] = 'waiting' if source_synced is False else 'unknown'
     revisions = report.get('new_schema_revisions', report.get('new_revisions'))
     versions = dict(count=len(revisions) if complete and isinstance(revisions, list) else None,
                     checked_at=report.get('checked_at') if complete else None)
     target = reports.get('publication-target.json') or {}
-    publication = dict(state='not_published' if check_info['state'] in ('failure','cancelled') else 'waiting' if check else 'unknown')
-    if check and report.get('status') == 'ok' and (source_synced or not latest and not heartbeat_error):
+    started = run_start(check) if check else ''
+    interrupted = check_info['state'] in INTERRUPTED_CHECK_STATES
+    publication = dict(state='not_published' if interrupted else 'waiting' if check else 'unknown')
+    if check and report.get('status') == 'ok':
         expected = target.get('head_sha') if targets_check(target, check) else None
-        started = check.get('run_started_at') or check.get('created_at', '')
-        candidates = sorted((p for p in pages if (p.get('run_started_at') or p.get('created_at', '')) >= started),
-                            key=lambda p: (p.get('run_started_at') or p.get('created_at', ''), p['id']), reverse=True)
+        candidates = sorted((p for p in pages if run_start(p) >= started),
+                            key=lambda p: (run_start(p), p['id']), reverse=True)
+        matched = None
         if 'catalog_sha256' in target:
             matched = next((p for p in candidates if expected and (
                 publication_receipt_matches(p, target) or publication_dispatch_matches(p, target))), None)
-        else:
+        elif not interrupted and (source_synced or not latest and not heartbeat_error):
+            # A standalone push can share the SHA and catalog time of an interrupted check.
             matched = next((p for p in candidates if
                 (expected and p.get('head_sha') == expected) or
                 (not target and report.get('checked_at') and
@@ -119,19 +141,11 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None, conf
                         publication['state'] = 'superseded'
                 elif publication['state'] == 'success':
                     publication['state'] = 'unknown'
-    # A cancelled/failed check without a deployment target has no candidate to
-    # track. A later independent Pages run still has its own actual outcome.
-    has_target = targets_check(target, check) and target.get('head_sha')
-    if check and check_info['state'] in ('failure', 'cancelled') and publication['state'] == 'not_published' and not has_target:
-        started = check.get('run_started_at') or check.get('created_at', '')
-        independent = max((page for page in pages if page.get('created_at', '') > started
-                           and not (page.get('display_title') or '').startswith('Publish reference for check ')),
-                          key=lambda page: (page['created_at'], page['id']), default=None)
-        if independent:
-            publication = run_info(independent)
+    independent = latest_independent_page(pages, publication.get('run_id'))
     previous = latest_success(pages)
     return dict(format=1, generated_at=now or utcnow(), collector_source=collector_source, sourcecraft=sc,
                 github=dict(check=check_info, versions=versions, publication=publication,
+                            independent_publication=run_info(independent),
                             last_successful_publication=run_info(previous)))
 
 def latest_success(runs):
@@ -205,31 +219,35 @@ def sourcecraft_status():
 def validate_heartbeat(data):
     if not isinstance(data, dict) or not isinstance(data.get('latest'), dict):
         raise ValueError('Invalid SourceCraft heartbeat')
-    latest = data['latest']
-    contours = latest.get('contours', {})
-    if not isinstance(contours, dict) or set(contours) - {'prod', 'test'}:
-        raise ValueError('Invalid SourceCraft heartbeat contours')
     def check_fields(record, fields):
         if not isinstance(record, dict):
             raise ValueError('Invalid SourceCraft heartbeat record')
         for name, types in fields.items():
             if record.get(name) is not None and type(record[name]) not in types:
                 raise ValueError('Invalid SourceCraft heartbeat field: ' + name)
-    check_fields(latest, dict(state=(str,), complete=(bool,), started_at=(str,), finished_at=(str,),
-                              error=(str,), run_id=(str, int)))
-    for record in contours.values():
-        check_fields(record, dict(content_id=(str,), observed_at=(str,), changed=(bool,)))
-    if latest.get('state') == 'success' or latest.get('complete') is True:
-        timestamps = [latest.get('finished_at'), *(contours.get(env, {}).get('observed_at') for env in ('prod', 'test'))]
-        for value in timestamps:
-            try:
-                parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
-                if parsed.tzinfo is None:
-                    raise ValueError('Timestamp requires timezone')
-            except (AttributeError, TypeError, ValueError) as error:
-                raise ValueError('Successful SourceCraft heartbeat requires completion and contour observation timestamps') from error
+    def check_capture(record, *, historical=False):
+        check_fields(record, dict(state=(str,), complete=(bool,), started_at=(str,), finished_at=(str,),
+                                  error=(str,), run_id=(str, int)))
+        contours = record.get('contours', {})
+        if not isinstance(contours, dict) or set(contours) - {'prod', 'test'}:
+            raise ValueError('Invalid SourceCraft heartbeat contours')
+        for contour in contours.values():
+            check_fields(contour, dict(content_id=(str,), observed_at=(str,), changed=(bool,)))
+        # Older heartbeats retained only the date of their last success.
+        require_dates = 'contours' in record if historical else successful_capture(record)
+        if require_dates:
+            timestamps = [record.get('finished_at'), *(contours.get(env, {}).get('observed_at') for env in ('prod', 'test'))]
+            for value in timestamps:
+                try:
+                    parsed = datetime.fromisoformat(value.replace('Z', '+00:00'))
+                    if parsed.tzinfo is None:
+                        raise ValueError('Timestamp requires timezone')
+                except (AttributeError, TypeError, ValueError) as error:
+                    raise ValueError('Successful SourceCraft heartbeat requires completion and contour observation timestamps') from error
+
+    check_capture(data['latest'])
     if data.get('last_success') is not None:
-        check_fields(data['last_success'], dict(finished_at=(str,)))
+        check_capture(data['last_success'], historical=True)
 
 
 def artifact_reports(run, names, filenames):
@@ -447,12 +465,18 @@ def collect_status(publication_run_id=None, check_run_id=None, check_run_attempt
 
     known_success = latest_deployment(page for page in pages if page.get('run_attempt', 1) == 1)
     current_target = None
+    independent_id = None
+    check = checks[0] if checks else None
+    check_started = run_start(check) if check else ''
+    legacy_allowed = run_info(check)['state'] not in INTERRUPTED_CHECK_STATES
     def deployment(run):
+        independent = run['id'] == independent_id
         if (known_success and run.get('updated_at', '') < known_success['updated_at']
-                and (run['id'], run.get('run_attempt', 1)) != current_target):
+                and (run['id'], run.get('run_attempt', 1)) != current_target and not independent):
             return run
         try:
-            if ('catalog_sha256' in target and (run['id'], 1) == current_target
+            if ((independent and run.get('run_attempt', 1) == 1 or
+                 'catalog_sha256' in target and (run['id'], 1) == current_target)
                     and run_info(run)['state'] == 'success'):
                 return first_deployment(run)
             return publication_evidence(run)
@@ -462,44 +486,44 @@ def collect_status(publication_run_id=None, check_run_id=None, check_run_attempt
                 return dict(run, conclusion='unknown')
             return run
     try:
-        reports = run_reports(checks[0] if checks else None)
+        reports = run_reports(check)
     except Exception as error:
         reports = {}
         errors.append('Reports: '+str(error)[:350])
     legacy = {}
     target = reports.get('publication-target.json') or {}
-    check_started = (checks[0].get('run_started_at') or checks[0].get('created_at', '')) if checks else ''
+    eligible_targets = []
     if 'catalog_sha256' in target:
-        pages = publication_receipts(pages, target, checks[0] if checks else None, errors)
+        pages = publication_receipts(pages, target, check, errors)
         eligible_targets = [page for page in pages if publication_receipt_matches(page, target)
                             or publication_dispatch_matches(page, target)]
-    else:
+    elif legacy_allowed:
         eligible_targets = [page for page in pages if target.get('head_sha')
                             and page.get('head_sha') == target['head_sha']
                             and (page.get('run_started_at') or page.get('created_at', '')) >= check_started]
     target_page = max(eligible_targets, key=lambda page: (page.get('run_started_at') or page.get('created_at', ''), page['id']), default=None)
     if target_page:
         current_target = (target_page['id'], target_page.get('run_attempt', 1))
+    independent_page = latest_independent_page(pages, target_page['id'] if target_page else None)
+    independent_id = independent_page['id'] if independent_page else None
     deployments = []
     for page in pages:
         actual = deployment(page)
         if 'catalog_sha256' in target and actual.get('run_attempt', 1) != page.get('run_attempt', 1):
-            actual, = publication_receipts([actual], target, checks[0] if checks else None, errors)
+            actual, = publication_receipts([actual], target, check, errors)
         deployments.append(actual)
     pages = deployments
     expected = target.get('head_sha')
-    if ('catalog_sha256' not in target and checks and str(target.get('update_run_id')) == str(checks[0]['id'])
+    if (legacy_allowed and 'catalog_sha256' not in target and check and str(target.get('update_run_id')) == str(check['id'])
             and isinstance(expected, str) and re.fullmatch('[0-9a-f]{40}', expected)
-            and not any(p.get('head_sha') == expected and (p.get('run_started_at') or p.get('created_at', '')) >=
-                        (checks[0].get('run_started_at') or checks[0].get('created_at', '')) for p in pages)):
+            and not any(p.get('head_sha') == expected and run_start(p) >= check_started for p in pages)):
         matches = api('actions/workflows/pages.yml/runs?branch=main&head_sha='+expected+'&per_page=100')['workflow_runs']
         by_id = {p['id']: p for p in [*(deployment(page) for page in matches), *pages]}
         pages = sorted(by_id.values(), key=lambda p: (p['created_at'], p['id']), reverse=True)
     update = reports.get('update-report.json') or {}
-    if update.get('status') == 'ok' and not reports.get('publication-target.json'):
-        started = (checks[0].get('run_started_at') or checks[0].get('created_at', '')) if checks else ''
-        candidates = sorted((page for page in pages if (page.get('run_started_at') or page.get('created_at', '')) >= started),
-                            key=lambda page: (page.get('run_started_at') or page.get('created_at', ''), page['id']), reverse=True)
+    if legacy_allowed and update.get('status') == 'ok' and not reports.get('publication-target.json'):
+        candidates = sorted((page for page in pages if run_start(page) >= check_started),
+                            key=lambda page: (run_start(page), page['id']), reverse=True)
         for page in candidates:
             digest = page.get('head_sha', '')
             if not re.fullmatch('[0-9a-f]{40}', digest) or digest in legacy:

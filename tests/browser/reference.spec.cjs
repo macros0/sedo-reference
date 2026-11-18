@@ -107,6 +107,41 @@ test('legacy comparison swaps counts and opens a field in its own edition', asyn
     .locator('code').first()).toHaveText(route.get('field'));
 });
 
+test('shows and searches item type and its constraints in standalone lists and union branches', async ({ page }) => {
+  const revision = edition('205', 'prod');
+  const url = '/site/editions/' + revision.revision_id + '.html';
+  await page.route('**' + url, async route => {
+    const response = await route.fetch();
+    const body = (await response.text()).replace(/(<script[^>]*id="catalog"[^>]*>)([\s\S]*?)(<\/script>)/, (_, start, raw, end) => {
+      const data = JSON.parse(raw), field = data.fields[0];
+      data.fields = [
+        {...field, name: 'periods', path: 'periods', type: '', base: '', parent: -1, children: [1], flags: {},
+          values: [], facets: [['maxLength', '2']], listItem: {base: 'xs:dateTime', facets: [['pattern', '[0-9]+Z']]}},
+        {...field, name: 'options', path: 'periods/options', type: '', base: '', parent: 0, children: [], flags: {},
+          values: [], facets: [], alternatives: [{base: 'xs:string'}, {listItem: {type: 'CodeValue', base: 'xs:int',
+            facets: [['minInclusive', '5']], values: [['7', 'Семь']]}}]},
+      ];
+      return start + JSON.stringify(data) + end;
+    });
+    await route.fulfill({ response, body });
+  });
+  await page.goto(url);
+  const card = page.getByRole('region', { name: 'Карточка поля' });
+  await expect(card).toContainText('Список значений');
+  await expect(card).toContainText('Тип элемента списка');
+  await expect(card).toContainText('xs:dateTime');
+  await expect(card).toContainText('[0-9]+Z');
+
+  const query = page.locator('#query');
+  await query.fill('CodeValue');
+  await page.locator('#tree').getByRole('button', { name: /options/ }).click();
+  await expect(card).toContainText('CodeValue');
+  await expect(card).toContainText('Минимум включительно: 5');
+  await expect(card).toContainText('Семь');
+  await query.fill('[0-9]+Z');
+  await expect(page.locator('#tree').getByRole('button', { name: /periods/ })).toHaveCount(1);
+});
+
 test('error links select the XML tag and show its dictionary restrictions', async ({ page }) => {
   const validator = await openValidator(page, result);
   await validate(validator, validXml.replace('RECEIVED', 'INVALID'));

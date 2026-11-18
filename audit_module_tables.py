@@ -302,7 +302,7 @@ class Comparison:
                             f'{local} ({namespace or "без пространства имён"})',
                             'XML по цитате обращается к другому объявлению XSD.')
                 return
-        schema = self.source_schema() if reference or field.get('alternatives') else None
+        schema = self.source_schema() if reference or field.get('alternatives') or field.get('listItem') else None
         target = schema.symbol.get((name[0], declaration.tag, name[1])) if reference and schema is not None else None
         local_constraint = any(key in declaration.attrib for key in ('fixed', 'default'))
 

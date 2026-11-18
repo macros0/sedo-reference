@@ -44,7 +44,7 @@ test('Pages card keeps the linked check result while showing the latest actual d
  await page.locator('#automation-summary').click();
  const card=page.locator('.automation-card').filter({hasText:'GitHub Pages'});
  const linkedControl=card.getByRole('link',{name:'Открыть публикацию',exact:true});
- const latestControl=card.getByRole('link',{name:'Открыть последнюю выкладку',exact:true});
+ const latestControl=card.getByRole('link',{name:'Открыть последнюю успешную выкладку',exact:true});
  await expect(linkedControl).toHaveAttribute('href',linked.url+'/attempts/2');
  await expect(card.getByRole('link')).toHaveCount(1);
  report.github.last_successful_publication=latest;

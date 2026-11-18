@@ -51,6 +51,59 @@ class AutomationStatusTests(unittest.TestCase):
         self.assertEqual(build_status(None, [check], [unproven], reports, {})['github']['publication']['state'],
                          'waiting')
 
+    def test_new_sourcecraft_capture_does_not_erase_confirmed_publication(self):
+        check, pages, reports, receipt = self.publication_fixture()
+        reports['update-report.json']['collector_source'] = 'sourcecraft'
+        reports['sourcecraft-report.json'] = {'latest': {'prod': '1'*64, 'test': '2'*64}}
+        observed = '2026-11-13T08:55:00Z'
+        source = {'latest': dict(state='success', finished_at=observed, contours={
+            'prod': dict(observed_at=observed, content_id='3'*64),
+            'test': dict(observed_at=observed, content_id='2'*64)})}
+        status = build_status(source, [check], [dict(pages, publication_receipt=receipt)], reports, {})['github']
+        self.assertEqual(status['check']['state'], 'waiting')
+        self.assertIsNone(status['versions']['count'])
+        self.assertEqual((status['publication']['state'], status['publication']['run_id'],
+                          status['publication']['candidate_sha']), ('success', 20, 'd'*40))
+
+    def test_last_successful_inputs_remain_pending_during_the_next_capture(self):
+        check, pages, reports, receipt = self.publication_fixture()
+        reports['update-report.json']['collector_source'] = 'sourcecraft'
+        imported = {'prod': '1'*64, 'test': '2'*64}
+        reports['sourcecraft-report.json'] = {'latest': imported}
+        time_b = '2026-11-13T08:55:00Z'
+        ready_b = dict(state='success', finished_at=time_b, contours={
+            'prod': dict(observed_at=time_b, content_id='3'*64),
+            'test': dict(observed_at=time_b, content_id='2'*64),
+        })
+        for latest in (ready_b, dict(state='processing'), dict(state='failure', error='capture failed')):
+            with self.subTest(latest=latest):
+                source = dict(latest=latest, last_success=ready_b)
+                status = build_status(source, [check], [dict(pages, publication_receipt=receipt)], reports, {})['github']
+                self.assertEqual((status['check']['state'], status['versions']['count']), ('waiting', None))
+                self.assertEqual((status['publication']['state'], status['publication']['run_id']), ('success', 20))
+        imported['prod'] = '3'*64
+        source = dict(latest=dict(state='failure'), last_success=ready_b)
+        status = build_status(source, [check], [dict(pages, publication_receipt=receipt)], reports, {})['github']
+        self.assertEqual((status['check']['state'], status['versions']['count']), ('success', 0))
+        source['last_success'] = dict(finished_at=time_b)
+        status = build_status(source, [check], [dict(pages, publication_receipt=receipt)], reports, {})['github']
+        self.assertEqual((status['check']['state'], status['versions']['count']), ('unknown', None))
+        self.assertEqual(status['publication']['state'], 'success')
+
+    def test_independent_attempt_has_its_own_timeline_before_or_without_a_check(self):
+        success = dict(run(10, created='2026-11-13T07:00:00Z'),
+                       event='push', updated_at='2026-11-13T07:10:00Z')
+        failure = dict(run(11, conclusion='failure', created='2026-11-13T07:15:00Z'),
+                       event='push', updated_at='2026-11-13T07:18:00Z')
+        correlated = dict(run(12, conclusion='failure', created='2026-11-13T09:00:00Z'),
+                          event='workflow_dispatch', display_title='Publish reference for check 6 attempt 1 at '+ 'a'*40)
+        for checks in ([], [run(14, status='in_progress', conclusion=None)]):
+            with self.subTest(checks=checks):
+                status = build_status(None, checks, [correlated, failure, success], {}, {})['github']
+                self.assertEqual((status['independent_publication']['state'],
+                                  status['independent_publication']['run_id']), ('failure', 11))
+                self.assertEqual(status['last_successful_publication']['run_id'], 10)
+
     def test_collect_status_reads_receipt_for_correlated_pages_attempt(self):
         import io
         import json
@@ -273,22 +326,76 @@ class AutomationStatusTests(unittest.TestCase):
             if matches:
                 self.assertEqual(result["last_successful_publication"]["run_id"], 9)
 
-    def test_later_standalone_pages_is_visible_after_cancelled_check(self):
-        check=run(1,conclusion='cancelled',created='2026-11-13T08:00:00Z')
-        for status,conclusion,state in [('completed','success','success'),('completed','failure','failure'),('in_progress',None,'processing')]:
-            page=run(2,sha='b'*40,status=status,conclusion=conclusion,created='2026-11-13T09:00:00Z')
-            result=build_status({},[check],[page],{}, {})
-            self.assertEqual(result['github']['check']['state'],'cancelled')
-            self.assertIsNone(result['github']['versions']['count'])
-            self.assertEqual(result['github']['publication']['state'],state)
-            self.assertEqual(result['github']['publication']['run_id'],2)
+    def test_later_standalone_pages_does_not_publish_the_interrupted_check(self):
+        deployed = dict(run(2, sha='b'*40, created='2026-11-13T09:00:00Z'),
+                        event='workflow_dispatch', display_title='Publish reference',
+                        updated_at='2026-11-13T09:15:00Z')
+        for conclusion in ('cancelled', 'failure'):
+            check = run(1, conclusion=conclusion)
+            for status, outcome, state in [('completed', 'success', 'success'),
+                                           ('completed', 'failure', 'failure'),
+                                           ('in_progress', None, 'processing')]:
+                with self.subTest(check=conclusion, standalone=state):
+                    later = dict(run(3, sha='c'*40, created='2026-11-13T10:00:00Z',
+                                     status=status, conclusion=outcome), event='push',
+                                 updated_at='2026-11-13T10:15:00Z')
+                    other_check = dict(later, id=4, created_at='2026-11-13T11:00:00Z',
+                                       event='workflow_dispatch', conclusion='failure',
+                                       display_title='Publish reference for check 99 attempt 1 at ' + 'a'*40)
+                    result = build_status({}, [check], [deployed, later, other_check], {}, {})['github']
+                    self.assertEqual(result['check']['state'], conclusion)
+                    self.assertIsNone(result['versions']['count'])
+                    self.assertEqual(result['publication'], {'state': 'not_published'})
+                    self.assertEqual(result['independent_publication']['state'], state)
+                    self.assertEqual(result['independent_publication']['url'], later['html_url'])
+                    self.assertEqual(result['last_successful_publication']['run_id'], 3 if state == 'success' else 2)
 
     def test_cancelled_check_keeps_target_and_older_page_unconfirmed(self):
         check=run(1,conclusion='cancelled')
-        for page,target in [(run(2,created='2026-11-13T07:00:00Z'),None),
-                            (run(2,sha='b'*40,created='2026-11-13T09:00:00Z'),dict(update_run_id=1,head_sha='a'*40))]:
+        for page,target,standalone in [(run(2,created='2026-11-13T07:00:00Z'),None,'unknown'),
+                            (dict(run(2,sha='b'*40,created='2026-11-13T09:00:00Z'), event='push'),
+                             dict(update_run_id=1,head_sha='a'*40),'success')]:
             result=build_status({},[check],[page],{'publication-target.json':target}, {})
             self.assertEqual(result['github']['publication']['state'],'not_published')
+            self.assertEqual(result['github']['independent_publication']['state'],standalone)
+
+    def test_standalone_failed_retry_keeps_initial_deployment_live(self):
+        from unittest.mock import patch
+        from automation_status import collect_status
+
+        check = run(1, conclusion='cancelled')
+        first = dict(run(22, created='2026-11-13T09:00:00Z'), event='push',
+                     updated_at='2026-11-13T09:15:00Z')
+        next_run = dict(run(23, created='2026-11-13T10:00:00Z', conclusion='failure'), event='push',
+                        updated_at='2026-11-13T10:15:00Z')
+        retry = dict(first, run_attempt=2, conclusion='failure', run_started_at='2026-11-13T11:00:00Z',
+                     updated_at='2026-11-13T11:15:00Z')
+        deployed_at = '2026-11-13T09:10:00Z'
+
+        def read(path):
+            if 'check-sfr.yml' in path:
+                return {'workflow_runs': [check]}
+            if 'pages.yml' in path:
+                return {'workflow_runs': [next_run, retry]}
+            if path == 'actions/runs/22/attempts/1':
+                return first
+            if path.startswith('actions/runs/22/attempts/1/jobs?'):
+                return {'jobs': [{'name': 'deploy', 'conclusion': 'success', 'completed_at': deployed_at}]}
+            if path.startswith(('actions/runs/22/attempts/2/jobs?', 'actions/runs/23/attempts/1/jobs?')):
+                return {'jobs': [{'name': 'deploy', 'conclusion': 'failure'}]}
+            self.fail(path)
+
+        with patch('automation_status.api', side_effect=read), patch('automation_status.run_reports', return_value={}), \
+                patch('automation_status.successful_prior_attempts', successful_prior_attempts), \
+                patch('automation_status.sourcecraft_status', return_value=None):
+            result = collect_status()['github']
+
+        self.assertEqual(result['publication'], {'state': 'not_published'})
+        independent = result['independent_publication']
+        self.assertEqual((independent['state'], independent['run_id'], independent['run_attempt']), ('failure', 22, 2))
+        last = result['last_successful_publication']
+        self.assertEqual((last['state'], last['run_id'], last['run_attempt'], last['finished_at']),
+                         ('success', 22, 1, deployed_at))
 
     def test_published_target_is_found_after_ten_newer_runs(self):
         from automation_status import collect_status
@@ -341,6 +448,19 @@ class AutomationStatusTests(unittest.TestCase):
         self.assertEqual(result['github']['publication']['state'],'success')
         result=self.result(pages=[run(2)],legacy={'a'*40:'2026-11-12T08:09:00Z'})
         self.assertEqual(result['github']['publication']['state'],'waiting')
+
+    def test_legacy_matching_sha_or_catalog_time_does_not_link_an_interrupted_check(self):
+        page = dict(run(2, created='2026-11-13T09:00:00Z'), event='push', updated_at='2026-11-13T09:15:00Z')
+        for conclusion in ('cancelled', 'failure'):
+            for target, catalogs in ((dict(update_run_id=1, head_sha='a'*40), {}),
+                                     (None, {'a'*40: '2026-11-13T08:09:00Z'})):
+                with self.subTest(conclusion=conclusion, target=target):
+                    report = self.result(checks=[run(1, conclusion=conclusion)], pages=[page],
+                                         target=target, legacy=catalogs)['github']
+                    self.assertEqual(report['check']['state'], conclusion)
+                    self.assertEqual(report['publication'], {'state': 'not_published'})
+                    self.assertEqual(report['independent_publication']['run_id'], 2)
+                    self.assertEqual(report['last_successful_publication']['run_id'], 2)
 
     def test_running_or_failed_check_does_not_report_zero_new_versions(self):
         for status,conclusion in [('in_progress',None),('completed','failure')]:
@@ -395,10 +515,13 @@ class AutomationStatusTests(unittest.TestCase):
         self.assertEqual(result['sourcecraft']['state'],'processing')
 
     def test_post_publication_check_failure_does_not_hide_actual_deployment(self):
-        result=self.result(checks=[run(1,conclusion='failure')],pages=[run(2)],
-                           target=dict(update_run_id='1',head_sha='a'*40))
+        check, page, reports, receipt = self.publication_fixture()
+        check = dict(check, conclusion='failure')
+        page = dict(page, publication_receipt=receipt)
+        result = build_status(None, [check], [page], reports, {})
         self.assertEqual(result['github']['check']['state'],'failure')
         self.assertEqual(result['github']['publication']['state'],'success')
+        self.assertEqual(result['github']['publication']['candidate_sha'], receipt['candidate_sha'])
 
     def test_final_refresh_reads_finished_run_when_workflow_list_still_shows_processing(self):
         from unittest.mock import patch

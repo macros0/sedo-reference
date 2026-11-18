@@ -84,7 +84,7 @@ console.log('Cross-type comparison verified: confirmed transitions, both directi
 
 {
  const scripts=[],catalog={revisions:[{revision_id:'same',fields_sha256:'aaa'}]};
- const context=vm.createContext({catalog,window:{},document:{createElement:()=>({remove(){}}),head:{append(script){scripts.push(script);context.window.SEDO_FIELDS.same=[];script.onload()}}},Map,Promise});
+ const context=vm.createContext({catalog,window:{},document:{createElement:()=>({remove(){}}),head:{append(script){scripts.push(script);context.window.SEDO_FIELDS.same=[{name:'root',path:'root',parent:-1,children:[]}];script.onload()}}},Map,Promise});
  vm.runInContext(fs.readFileSync(path.join(root,'web/compare.js'),'utf8'),context);
  context.loadComparisonData('same');
  assert.equal(scripts[0].src,'fields/same.js?v=aaa');
@@ -101,6 +101,8 @@ console.log('Cross-type comparison verified: confirmed transitions, both directi
  for(const [complete,error] of [
   [script=>script.onload(),/нет дерева/],
   [script=>{window.SEDO_FIELDS.edition={};script.onload()},/нет дерева/],
+  [script=>{window.SEDO_FIELDS.edition=[];script.onload()},/пустое или повреждено/],
+  [script=>{window.SEDO_FIELDS.edition=[{name:'root',path:'root',parent:-1,children:[1]}];script.onload()},/пустое или повреждено/],
   [script=>script.onerror(),/Не удалось загрузить дерево/]
  ]){
   const promise=context.loadComparisonData('edition');
@@ -108,11 +110,11 @@ console.log('Cross-type comparison verified: confirmed transitions, both directi
   complete(scripts.at(-1));
   await assert.rejects(promise,error);
  }
- const pending=context.loadComparisonData('edition'),tree=[{path:'field'}];
+ const pending=context.loadComparisonData('edition'),tree=[{name:'root',path:'root',parent:-1,children:[1]},{name:'field',path:'root/field',parent:0,children:[]}];
  window.SEDO_FIELDS.edition=tree;scripts.at(-1).onload();
  assert.equal(await pending,tree);
  assert.equal(context.loadComparisonData('edition'),pending);
- assert.equal(scripts.length,4,'every failure permits a fresh request on the same page');
+ assert.equal(scripts.length,6,'every failure permits a fresh request on the same page');
  catalog.revisions[0].fields_sha256='bbb';
  const updated=context.loadComparisonData('edition');
  scripts.at(-1).onload();

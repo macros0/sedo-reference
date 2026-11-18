@@ -104,6 +104,7 @@ test('the apply banner explains a half-selected next pair and lets me discard on
  await expect(page.locator('.mapping-edit-form')).toHaveCount(0);
  await expect(apply).toHaveText(readyLabel);
  await expect(apply).toBeEnabled();
+ await expect(apply).toBeFocused();
  await apply.click();
  await expect(page.locator('.mapping-applied-feedback')).toBeVisible();
  expect((await readSaved(page)).pairs).toEqual(expect.arrayContaining([statusPair,expect.objectContaining({beforePath,afterPath})]));
@@ -186,6 +187,9 @@ test('duplicate XLSX comments over the Excel limit preserve the existing preview
 for(const [reason,response,message] of [
  ['missing registration',{body:''},'нет дерева тегов'],
  ['non-array registration',{body:'window.SEDO_FIELDS['+JSON.stringify(left.revision_id)+'] = {}'},'нет дерева тегов'],
+ ['empty tree',{body:'window.SEDO_FIELDS['+JSON.stringify(left.revision_id)+'] = []'},'дерево тегов пустое или повреждено'],
+ ['malformed root',{body:'window.SEDO_FIELDS['+JSON.stringify(left.revision_id)+'] = [{name:"broken",path:"",parent:-1,children:[]}]'},'дерево тегов пустое или повреждено'],
+ ['duplicate path',{body:'window.SEDO_FIELDS['+JSON.stringify(left.revision_id)+'] = [0,1].map(()=>({name:"request",path:"request",parent:-1,children:[]}))'},'дерево тегов пустое или повреждено'],
  ['HTTP error',{status:503,body:''},'Не удалось загрузить дерево']
 ]){
  test('comparison retries a field tree after '+reason,async({page})=>{
@@ -196,9 +200,11 @@ for(const [reason,response,message] of [
   });
   await page.goto(url);
   await expect(page.locator('#comparison .empty').first()).toContainText(message,{timeout:2000});
+  await expect(page.locator('.compare-counts')).toHaveCount(0);
   await page.evaluate(()=>{location.hash=''});
   await expect(page.locator('#catalog')).toBeVisible();
   await page.goBack();await expect(page.locator('.mapping-add')).toBeVisible({timeout:2000});
+  await expect(page.locator('.compare-counts')).toBeVisible();
   expect(requests).toBe(2);
  });
 }
@@ -223,6 +229,152 @@ test('unapplied browser draft survives field navigation with comment and selecti
  await visitField(page);await expect(page.locator('.mapping-table')).toHaveCount(0);await page.locator('.mapping-suggest').click();await expect(page.locator('.mapping-preview')).not.toContainText('Отменённый комментарий');
 });
 
+for(const mode of ['ready draft','unfinished pair']){
+ test('valid Excel requires confirmation before replacing a '+mode,async({page})=>{
+  await loadSaved(page);
+  await page.locator('.mapping-add').click();
+  const beforePath=rootPair.beforePath+'/socialAssistNum',afterPath=rootPair.afterPath+'/processNum';
+  await choosePaths(page,beforePath,afterPath);
+  await page.locator('.mapping-edit-comment').fill('Пара из браузера');
+  await page.locator('.mapping-editor-save').click();
+  await page.locator('.mapping-editor-cancel').click();
+  const savedRow=page.locator('.mapping-explicit[data-before-path="'+statusPair.beforePath+'"]');
+  await savedRow.uncheck();
+  if(mode==='unfinished pair'){
+   await page.locator('.mapping-add-row').click();
+   await page.locator('.mapping-tag-choice-before').selectOption(rootPair.beforePath+'/errorList');
+   await page.locator('.mapping-edit-comment').fill('Незавершённая пара');
+  }
+  const book=new ExcelJS.Workbook();
+  book.addWorksheet('О выгрузке').addRow(['Идентификатор редакции',left.revision_id,right.revision_id]);
+  const sheet=book.addWorksheet('Сопоставление');
+  sheet.addRow(['Путь «Было»','Путь «Стало» — введите или выберите','Решение — вручную','Комментарий — вручную']);
+  sheet.addRow([statusPair.beforePath,statusPair.afterPath,'Подтверждено','Замена из Excel']);
+  const cancelled=page.waitForEvent('dialog').then(dialog=>dialog.dismiss());
+  await Promise.all([uploadWorkbook(page,book),cancelled]);
+  await expect(page.locator('.mapping-preview')).toContainText('Пара из браузера');
+  await expect(savedRow).not.toBeChecked();
+  await expect(page.locator('.mapping-comment')).toHaveText(statusPair.comment);
+  if(mode==='unfinished pair'){
+   await expect(page.locator('.mapping-tag-choice-before')).toHaveValue(rootPair.beforePath+'/errorList');
+   await expect(page.locator('.mapping-edit-comment')).toHaveValue('Незавершённая пара');
+  }
+  expect((await readSaved(page)).pairs).toEqual([statusPair]);
+  const accepted=page.waitForEvent('dialog').then(dialog=>dialog.accept());
+  await Promise.all([uploadWorkbook(page,book),accepted]);
+  await expect(page.locator('.mapping-preview')).toContainText('Замена из Excel');
+  await expect(page.locator('.mapping-preview')).not.toContainText('Пара из браузера');
+  await expect(page.locator('.mapping-edit-form')).toHaveCount(0);
+  expect((await readSaved(page)).pairs).toEqual([statusPair]);
+ });
+}
+
+test('keyboard selection keeps its row across redraw and Tab reaches its edit button',async({page})=>{
+ await loadSaved(page,{...rootPair,comment:'Блок для предложений'});
+ await page.locator('.mapping-suggest').click();
+ const rows=page.locator('.mapping-table input[type=checkbox]');
+ for(const choice of [rows.last(),rows.first()]){
+  const before=await choice.getAttribute('data-before-path');
+  const unchangedRow=page.locator('.mapping-table [data-before-path="'+before+'"]');
+  await choice.focus();
+  await choice.press('Space');
+  await expect(unchangedRow).not.toBeChecked();
+  await expect(unchangedRow).toBeFocused();
+  await page.keyboard.press('Tab');
+  await expect(unchangedRow.locator('xpath=ancestor::tr').locator('.mapping-edit-row')).toBeFocused();
+ }
+});
+
+for(const mode of ['unchecked edit','untouched preview']){
+ test('Excel replacement distinguishes an '+mode,async({page})=>{
+  await loadSaved(page,mode==='unchecked edit'?statusPair:rootPair);
+  const manualPath=rootPair.beforePath+'/socialAssistNum';
+  if(mode==='unchecked edit'){
+   await page.locator('.mapping-add').click();
+   await choosePaths(page,manualPath,rootPair.afterPath+'/processNum');
+   await page.locator('.mapping-edit-comment').fill('Пара без отметки');
+   await page.locator('.mapping-editor-save').click();
+   await page.locator('.mapping-editor-cancel').click();
+   await page.locator('.mapping-explicit[data-before-path="'+manualPath+'"]').uncheck();
+  }else{
+   await page.locator('.mapping-suggest').click();
+   await expect(page.locator('.mapping-proposal:checked').first()).toBeVisible();
+  }
+  const book=new ExcelJS.Workbook();
+  book.addWorksheet('О выгрузке').addRow(['Идентификатор редакции',left.revision_id,right.revision_id]);
+  const sheet=book.addWorksheet('Сопоставление');
+  sheet.addRow(['Путь «Было»','Путь «Стало» — введите или выберите','Решение — вручную','Комментарий — вручную']);
+  sheet.addRow([statusPair.beforePath,statusPair.afterPath,'Подтверждено','Заменённый предпросмотр']);
+  if(mode==='unchecked edit'){
+   const refused=page.waitForEvent('dialog',{timeout:3000}).then(dialog=>dialog.dismiss());
+   await Promise.all([uploadWorkbook(page,book),refused]);
+   const pair=page.locator('.mapping-explicit[data-before-path="'+manualPath+'"]');
+   await expect(pair).not.toBeChecked();
+   await expect(pair.locator('xpath=ancestor::tr')).toContainText('Пара без отметки');
+   expect((await readSaved(page)).pairs).toEqual([statusPair]);
+  }else{
+   await uploadWorkbook(page,book);
+   await expect(page.locator('.mapping-preview')).toContainText('Заменённый предпросмотр',{timeout:3000});
+   expect((await readSaved(page)).pairs).toEqual([rootPair]);
+  }
+ });
+}
+
+test('keyboard pagination keeps focus at both boundaries and while filtering',async({page})=>{
+ const legacy=catalog.revisions.find(r=>r.number==='101'&&r.environment==='prod'&&r.document_version==='2.28'&&r.ready);
+ const current=catalog.revisions.find(r=>r.number==='10110'&&r.environment==='prod'&&r.document_version==='3.0'&&r.ready);
+ await page.goto('/site/#'+new URLSearchParams({message:'10110',compare:'1',left:legacy.revision_id,right:current.revision_id}));
+ await page.locator('.mapping-add').click();
+ await choosePaths(page,'approveSocialAssist/benefit1Approve','benefitResponse/benefit1');
+ await page.locator('.mapping-editor-save').click();
+ await page.locator('.mapping-editor-cancel').click();
+ const table=page.locator('.mapping-table'),caption=table.locator('.mapping-visible-count');
+ const previous=table.locator('.mapping-prev'),next=table.locator('.mapping-next'),search=page.locator('.mapping-preview-search');
+ await expect(caption).toContainText('страница 1 из 2');
+ for(const key of ['Enter','Space']){
+  await next.press(key);
+  await expect(caption).toContainText('страница 2 из 2');
+  await expect(previous).toBeFocused({timeout:2000});
+  await previous.press(key);
+  await expect(caption).toContainText('страница 1 из 2');
+  await expect(next).toBeFocused({timeout:2000});
+ }
+ await next.press('Space');
+ await search.fill('elnInfo');
+ await expect(caption).toContainText('страница 1 из 1');
+ await expect(next).toBeHidden();
+ await expect(search).toBeFocused();
+});
+
+test('keyboard removal focuses the nearest filtered row or the search when none remain',async({page})=>{
+ await loadSaved(page,{...rootPair,comment:'Блок для предложений'});
+ await page.locator('.mapping-suggest').click();
+ const search=page.locator('.mapping-preview-search'),remove=page.locator('.mapping-table .mapping-remove-row');
+ await search.fill('errorList');
+ const total=await remove.count();
+ expect(total).toBeGreaterThan(1);
+ const first=await remove.first().getAttribute('data-row-id');
+ await remove.last().press('Enter');
+ await expect(remove.last()).toBeFocused();
+ for(let count=total-1;count>1;count--){
+  await remove.last().press('Enter');
+  await expect(remove.last()).toBeFocused();
+ }
+ await expect(remove.last()).toHaveAttribute('data-row-id',first);
+ await remove.last().press('Enter');
+ await expect(search).toBeFocused();
+});
+
+test('cancelling a partial pair on a clean draft focuses the panel add button',async({page})=>{
+ await page.goto(url);
+ const add=page.locator('.mapping-add');
+ await add.click();
+ await page.locator('.mapping-tag-choice-before').selectOption(statusPair.beforePath);
+ await page.locator('.mapping-cancel-edit-top').press('Enter');
+ await expect(page.locator('.mapping-draft-notice')).toBeHidden();
+ await expect(add).toBeFocused();
+});
+
 test('exported workbook reopens descendants of an explicitly mapped nested block',async({page})=>{
  const before=rootPair.beforePath+'/errorList',after=rootPair.afterPath+'/errorList';
  const block={beforePath:before+'/error',afterPath:after+'/error',comment:'Открытый блок'};
@@ -234,7 +386,8 @@ test('exported workbook reopens descendants of an explicitly mapped nested block
  const field=page.locator('.mapping-proposal[data-before-path="'+block.beforePath+'/code"]');
  await expect(field).toBeChecked();const count=await nested.count();
  const downloadPromise=page.waitForEvent('download');await page.getByRole('button',{name:'Выгрузить Excel для сопоставления'}).click();
- const download=await downloadPromise;await page.locator('.mapping-file').setInputFiles(await download.path());
+ const download=await downloadPromise;
+ await page.locator('.mapping-file').setInputFiles(await download.path());
  await expect(page.locator('.mapping-explicit').first().locator('xpath=ancestor::tr')).toContainText('Из Excel');
  await expect(field).toBeChecked();expect(await nested.count()).toBe(count);
  await page.locator('.mapping-apply').click();await expect(page.locator('.mapping-applied-feedback')).toBeVisible();

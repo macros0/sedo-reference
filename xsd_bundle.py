@@ -19,6 +19,10 @@ from xsd_validate import compile_schema
 XS='http://www.w3.org/2001/XMLSchema'
 REFERENCES={'{'+XS+'}'+name for name in ('import','include','redefine','override')}
 LXML_VERSION='6.1.3'
+NCNAME_START = ('A-Z_a-z\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff'
+                '\u200c\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd'
+                '\U00010000-\U000effff')
+NCNAME = re.compile(f'[{NCNAME_START}][{NCNAME_START}.0-9\u00b7\u0300-\u036f\u203f-\u2040-]*')
 
 
 class IntegrityError(ValueError):pass
@@ -96,25 +100,50 @@ def _element_scalar_source(tree, node, restrictions=None):
 
 
 CALENDAR_TYPES = {'dateTime', 'time'}
+CALENDAR_VALUE_FACETS = {'enumeration', 'minInclusive', 'minExclusive', 'maxInclusive', 'maxExclusive'}
 
 
-def _calendar_attribute_type(tree, node):
+def _scalar_type(tree, node):
     reference = node.get('ref')
     if reference:
         node = tree.resolve(reference, node, ['attribute'])
-    seen = set()
-    while node is not None and node not in seen:
-        seen.add(node)
-        qname = node.get('type') or node.get('base')
-        if qname:
-            target = tree.resolve(qname, node, ['simpleType'])
-            if target is None:
-                kind = qname.rsplit(':', 1)[-1]
-                return kind if kind in CALENDAR_TYPES else None
-            node = target
-        else:
-            node = next((child for child in node if child.tag in (X+'simpleType', X+'restriction')), None)
-    return None
+    qname = node.get('type') or node.get('base')
+    return tree._enum_member_type(qname, node if qname else node.find(X+'simpleType'))
+
+
+def _value_shape(tree, member, stack=()):
+    """Keep the ordered, fully typed members needed to identify calendar values."""
+    if member is None or isinstance(member, str):
+        return (member if member in CALENDAR_TYPES else 'native'), False
+    if member in stack:
+        raise ValueError('Циклический простой тип XSD')
+    stack = (*stack, member)
+    restriction = member.find(X+'restriction')
+    if restriction is not None:
+        base = restriction.get('base')
+        source = restriction if base else restriction.find(X+'simpleType')
+        shape, limited = _value_shape(tree, tree._enum_member_type(base, source), stack)
+        # The member probe uses the same libxml2 value-space implementation as
+        # the primary schema. Rounded calendar facets cannot prove selection.
+        value_facets = any(facet.tag in {X+name for name in CALENDAR_VALUE_FACETS} for facet in restriction)
+        return shape, limited or shape != 'native' and value_facets
+    union = member.find(X+'union')
+    if union is not None:
+        choices, limited = [], False
+        for name, source in tree._union_members(union):
+            shape, constrained = _value_shape(tree, tree._enum_member_type(name, source), stack)
+            choices.append((name, source, shape))
+            limited |= constrained
+        if any(shape != 'native' for _, _, shape in choices):
+            return ('union', choices), limited
+    sequence = member.find(X+'list')
+    if sequence is not None:
+        item = sequence.get('itemType')
+        source = sequence if item else sequence.find(X+'simpleType')
+        shape, limited = _value_shape(tree, tree._enum_member_type(item, source), stack)
+        if shape != 'native':
+            return ('list', (item, source, shape)), limited
+    return 'native', False
 
 
 def _boolean_element_type(tree,node):
@@ -400,9 +429,15 @@ def _attribute_checks(row, selected, files, local_paths):
         tree=Schema(archive,row['schema_path'],row['root'])
     # Existing boolean-only packs need no profiles for unrelated named types.
     # Their equality is fully checked by the primary boolean-alias path.
+    from functools import lru_cache
+
+    @lru_cache(maxsize=None)
+    def attribute_shape(node):
+        return _value_shape(tree, _scalar_type(tree, node))
+
     calendar_declarations={node for root,_,_ in tree.documents.values() for node in _schema_components(root)
                            if node.tag==X+'attribute' and node.get('fixed') is not None
-                           and _calendar_attribute_type(tree,node)}
+                           and attribute_shape(node)[0] != 'native'}
     attribute_constraints=bool(calendar_declarations) or any(
         affected(node) for _,root in files.values() for node in _schema_components(root) if node.tag==X+'attribute')
     scalar_constraints=any(node.tag==X+'element' and node.get('fixed') is not None
@@ -417,6 +452,9 @@ def _attribute_checks(row, selected, files, local_paths):
     # One chameleon declaration can have a calendar type in one namespace and
     # a different type in another. Relaxing it requires a probe in each context.
     calendar_sources={nodes[node] for node in calendar_declarations}
+    global_attributes={(ns,name):node for (ns,kind,name),node in tree.symbol.items()
+                       if kind=='attribute' and node.get('fixed') is not None and nodes[node] in calendar_sources}
+    all_global_attributes=frozenset(global_attributes)
     relaxed_attributes=set()
     namespace='urn:sedo:attribute-value-checks'
     while any(root.get('targetNamespace')==namespace for _,root in files.values()):namespace+=':checks'
@@ -442,8 +480,63 @@ def _attribute_checks(row, selected, files, local_paths):
         attributes={'namespace':ns} if ns else {}
         etree.SubElement(checks,'{'+XS+'}import',schemaLocation=posixpath.relpath(target,'schemas'),**attributes)
     probe_names={}
-    def collect(fields, relative=False):
+    member_probes={}
+    item_probes={}
+    compound_probes={}
+
+    @lru_cache(maxsize=None)
+    def attribute_wildcard(declaration):
+        if declaration is None or declaration.tag != X+'complexType':
+            return None
+        derivation = next((selected for kind in ('simpleContent','complexContent')
+                           if (content := declaration.find(X+kind)) is not None
+                           for selected in content if selected.tag in (X+'extension',X+'restriction')), None)
+        local = wildcard_constraints(derivation if derivation is not None else declaration)
+        if derivation is None or derivation.tag != X+'extension':
+            return local
+        base = derivation.get('base')
+        kind = (tree.qname_namespace(base, derivation), base.rsplit(':',1)[-1])
+        inherited = ((all_global_attributes, 'lax') if kind == ANY_TYPE
+                     else attribute_wildcard(tree.resolve(base, derivation, ['complexType','simpleType'])))
+        if local is None:
+            return inherited
+        if inherited is None:
+            return local
+        return inherited[0] | local[0], local[1]
+
+    @lru_cache(maxsize=None)
+    def wildcard_constraints(declaration):
+        wildcard = declaration.find(X+'anyAttribute')
+        parts = []
+        if wildcard is not None:
+            namespace = tree.context[wildcard][2]
+            allowed = wildcard.get('namespace','##any').split()
+            parts.append((frozenset(key for key in global_attributes if _wildcard_accepts(allowed, namespace, key[0])),
+                          wildcard.get('processContents','strict')))
+        for group in declaration.findall(X+'attributeGroup'):
+            constraints = wildcard_constraints(tree.resolve(group.get('ref'),group,['attributeGroup']))
+            if constraints is not None:
+                parts.append(constraints)
+        if parts:
+            return parts[0][0].intersection(*(keys for keys,_ in parts[1:])), parts[0][1]
+
+    def wildcard_attributes(element, fields, field):
+        if (qname := element.get('type')):
+            declaration = tree.resolve(qname, element, ['complexType','simpleType'])
+        else:
+            declaration = element.find(X+'complexType')
+        # Built-in anyType and unknown lax children are handled at runtime.
+        effective = attribute_wildcard(declaration)
+        if not effective or effective[1] == 'skip':
+            return frozenset()
+        explicit = {(fields[i]['ns'],fields[i]['name'][1:]) for i in field['children']
+                    if fields[i]['kind'] == 'attribute'}
+        return effective[0] - explicit
+
+    def collect(fields, relative=False, global_only=False):
         definitions={}
+        locations={}
+        declarations={}
         for index,field in enumerate(fields):
             if field['kind'] not in ('attribute','element'):continue
             decl,source=tree.field_declarations[id(field)]
@@ -454,6 +547,9 @@ def _attribute_checks(row, selected, files, local_paths):
             ancestry=tuple(reversed(ancestry))
             path=tuple((fields[i]['ns'],fields[i]['name']) for i in ancestry)
             if relative:path=path[1:]
+            if global_attributes and field['kind']=='element':
+                matches=wildcard_attributes(source, fields, field)
+                locations.setdefault(path,[]).append((ancestry, matches))
             key=(path,field['kind'],field['ns'],field['name'])
             constraint=decl if 'fixed' in decl.attrib else source
             fixed=field['flags'].get('fixed')
@@ -463,6 +559,16 @@ def _attribute_checks(row, selected, files, local_paths):
             signature=(fixed,tree.owner[source],tree.context[source][2],etree.tostring(nodes[source],with_tail=False),
                        frozenset(tree.prefixes[constraint].items())) if needs_probe else None
             definitions.setdefault(key,[]).append((index,ancestry,signature))
+
+        for path,locations_at_path in locations.items():
+            for ns,name in sorted(set().union(*(matches for _,matches in locations_at_path))):
+                source=global_attributes[(ns,name)]
+                field_path='/'.join(name for _,name in path)
+                entries=definitions.setdefault((path,'wildcard-attribute',ns,name),[])
+                for ancestry,matches in locations_at_path:
+                    index=len(fields)+len(declarations)
+                    declarations[index]=(source,source,False,ns,name,'/'.join(filter(None,(field_path,'@'+name))))
+                    entries.append((index,ancestry,source if (ns,name) in matches else None))
 
         plans={};parent_layouts={}
         for (path,*_),entries in definitions.items():
@@ -484,6 +590,11 @@ def _attribute_checks(row, selected, files, local_paths):
                 seen.add(identity)
                 plans[index]=([list(name) for name in path],guards)
 
+        if global_only:
+            for index, ((ns,name), source) in enumerate(sorted(global_attributes.items())):
+                declarations[index]=(source,source,False,ns,name,'@'+name)
+                plans[index]=([],[])
+
         rules=[]
 
         def copy_type(node, parent, adopted_alias=None):
@@ -503,25 +614,98 @@ def _attribute_checks(row, selected, files, local_paths):
                     copy_type(nested, child, adopted_alias)
                 else:
                     child.append(copy.deepcopy(nested))
+            return child
+
+        def typed_attribute(parent, qname, source):
+            attributes = {'name': 'value', 'use': 'required'}
+            bindings = {}
+            alias = None
+            if qname:
+                ns = tree.qname_namespace(qname, source)
+                local_name = qname.rsplit(':', 1)[-1]
+                attributes['type'] = 'sedotype:'+local_name if ns else local_name
+                if ns:
+                    bindings['sedotype'] = ns
+            else:
+                anonymous = nodes[source]
+                ns = tree.context[source][2] if not tree.context[source][0].get('targetNamespace') else None
+                if ns:
+                    alias = 'sedochameleon'
+                    while any(alias in node.nsmap for node in anonymous.iter()):
+                        alias += 'x'
+                    bindings[alias] = ns
+            probe = etree.SubElement(parent, X+'attribute', nsmap=bindings, **attributes)
+            if not qname:
+                copy_type(anonymous, probe, alias)
+
+        def item_comparison(qname, source):
+            identity = tree._enum_member_type(qname, source)
+            if identity not in item_probes:
+                name = item_probes[identity] = 'item'+str(len(item_probes))
+                scalar = etree.SubElement(checks, X+'complexType', name=name)
+                typed_attribute(scalar, qname, source)
+                pair = etree.SubElement(checks, X+'element', name=name)
+                children = etree.SubElement(etree.SubElement(pair, X+'complexType'), X+'sequence')
+                for child in ('expected', 'actual'):
+                    etree.SubElement(children, X+'element', name=child, form='qualified', type='probe:'+name)
+                key = etree.SubElement(pair, X+'key', name=name+'Expected')
+                etree.SubElement(key, X+'selector', xpath='probe:expected')
+                etree.SubElement(key, X+'field', xpath='@value')
+                keyref = etree.SubElement(pair, X+'keyref', name=name+'Actual', refer='probe:'+name+'Expected')
+                etree.SubElement(keyref, X+'selector', xpath='probe:actual')
+                etree.SubElement(keyref, X+'field', xpath='@value')
+            return item_probes[identity]
+
+        def compound_shape(shape):
+            if isinstance(shape, str):
+                return shape
+            kind, content = shape
+            if kind == 'list':
+                qname, source, nested = content
+                # The ordered native items are compared under the selected list
+                # member's item type and each value's original namespace scope.
+                encoded = [kind, compound_shape(nested)]
+                if nested not in ('dateTime', 'time'):
+                    encoded.append(item_comparison(qname, source))
+                return encoded
+            members = []
+            for qname, source, nested in content:
+                identity = (qname, source)
+                name = member_probes.get(identity)
+                if name is None:
+                    name = member_probes[identity] = 'member'+str(len(member_probes))
+                    element = etree.SubElement(checks, X+'element', name=name)
+                    typed_attribute(etree.SubElement(element, X+'complexType'), qname, source)
+                members.append([name, compound_shape(nested)])
+            return [kind, members]
 
         for index,(path,guards) in sorted(plans.items()):
-            field=fields[index]
-            decl,source=tree.field_declarations[id(field)]
-            element_value=field['kind']=='element'
-            fixed=field['flags']['fixed']
-            base_type=field['base'].rsplit(':',1)[-1] if field.get('baseNs')==XS else None
-            calendar=base_type in CALENDAR_TYPES
+            if index in declarations:
+                decl,source,element_value,field_ns,field_name,field_path=declarations[index]
+            else:
+                field=fields[index]
+                decl,source=tree.field_declarations[id(field)]
+                element_value=field['kind']=='element'
+                field_ns,field_path=field['ns'],field['path']
+                field_name=field['name'] if element_value else field['name'][1:]
             constraint=decl if 'fixed' in decl.attrib else source
+            fixed=constraint.get('fixed')
             probe_key=(constraint,source)
+            restrictions=[]
+            scalar_source=_element_scalar_source(tree,source,restrictions) if element_value else source
+            shape, limited = _value_shape(tree,_scalar_type(tree,scalar_source)) if element_value else attribute_shape(source)
+            compound = isinstance(shape, tuple)
+            calendar = not compound and shape in CALENDAR_TYPES
+            if compound and any(facet.tag in {X+name for name in CALENDAR_VALUE_FACETS}
+                                for restriction in restrictions for facet in restriction):
+                limited = True
             if probe_key not in probe_names:
-                restrictions=[]
-                scalar_source=_element_scalar_source(tree,source,restrictions) if element_value else source
                 fixed_source=nodes[constraint];actual=nodes[scalar_source];bindings=dict(fixed_source.nsmap)
                 element_name='value'+str(len(probe_names));probe_names[probe_key]=element_name
                 attributes={'name':'value','fixed':fixed,'use':'required'}
-                if calendar:
-                    # Keep native type/facet validation. The standalone and
-                    # browser validators compare this fixed value exactly.
+                if calendar or compound:
+                    # Keep native lexical and facet validation, then compare the
+                    # calendar value without libxml2's fractional rounding.
                     del attributes['fixed']
                 type_reference=actual.get('type') or actual.get('base')
                 separate_type_scope=False
@@ -570,10 +754,23 @@ def _attribute_checks(row, selected, files, local_paths):
                 probe=etree.SubElement(etree.SubElement(probe_element,'{'+XS+'}complexType'),'{'+XS+'}attribute',nsmap=bindings,**attributes)
                 if anonymous is not None:
                     copy_type(anonymous, probe, alias if adopted else None)
-            rule=dict(path=path,attribute=[field['ns'],field['name'] if element_value else field['name'][1:]],element=probe_names[probe_key],field=field['path'])
+                if compound:
+                    fixed_name = 'compound'+str(len(compound_probes))
+                    native_probe = copy.deepcopy(probe_element)
+                    native_probe.set('name', fixed_name)
+                    native_probe.find(X+'complexType/'+X+'attribute').set('fixed', fixed)
+                    checks.append(native_probe)
+                    compound_probes[probe_key] = dict(shape=compound_shape(shape), fixed=fixed, comparison=fixed_name,
+                        namespaces={prefix or '': uri for prefix, uri in tree._value_scope(constraint).items()})
+                    if limited:
+                        compound_probes[probe_key]['limited'] = True
+            rule=dict(path=path,attribute=[field_ns,field_name],element=probe_names[probe_key],field=field_path)
             if element_value:rule['element_value']=True
-            if calendar:
-                rule['calendar_fixed']=[base_type,fixed]
+            if compound:
+                rule['calendar_compound'] = compound_probes[probe_key]
+                if not element_value:relaxed_attributes.add(nodes[constraint])
+            elif calendar:
+                rule['calendar_fixed']=[shape,fixed]
                 if not element_value:relaxed_attributes.add(nodes[constraint])
             if guards:rule['guards']=guards
             rules.append(rule)
@@ -597,6 +794,7 @@ def _attribute_checks(row, selected, files, local_paths):
             visited.add(node)
             for child in _schema_components(node,skip_inactive_particles=True):
                 if child.tag=='{'+XS+'}any' or any_type_element(child):return True
+                if global_attributes and child.tag==X+'anyAttribute':return True
                 if child.tag==X+'element' and child.get('fixed') is not None:return True
                 if child.tag==X+'attribute':
                     if child.get('ref'):
@@ -666,6 +864,7 @@ def _attribute_checks(row, selected, files, local_paths):
     # xsi:type can replace the static type at any reachable element. Only
     # materialize those profiles, sharing the field budget with the root tree.
     reachable_types = _reachable_profile_types(tree, wildcard_elements)
+    global_rules=collect([], global_only=True) if global_attributes and ANY_TYPE in reachable_types else []
     for (namespace_uri,kind,name),declaration in sorted(tree.symbol.items()):
         if (kind != 'complexType' or declaration not in reachable_types
                 or declaration.get('abstract') in ('true', '1') or not needs_checks(declaration)):
@@ -705,7 +904,9 @@ def _attribute_checks(row, selected, files, local_paths):
     if not probe_names:return {},{},set()
     root=etree.SubElement(checks,'{'+XS+'}element',name='checks')
     choice=etree.SubElement(etree.SubElement(root,'{'+XS+'}complexType'),'{'+XS+'}choice',minOccurs='0',maxOccurs='unbounded')
-    for element_name in probe_names.values():etree.SubElement(choice,'{'+XS+'}element',ref='probe:'+element_name)
+    for element_name in [*probe_names.values(), *member_probes.values(), *item_probes.values(),
+                         *(rule['comparison'] for rule in compound_probes.values())]:
+        etree.SubElement(choice,'{'+XS+'}element',ref='probe:'+element_name)
     generated[entry]=etree.tostring(checks,encoding='UTF-8',xml_declaration=True)
     manifest=dict(attribute_checks=rules,attribute_type_checks=type_rules,attribute_type_profiles_complete=True,supplementary_schema=entry,supplementary_namespace=namespace,generated_files=[dict(local_path=name,local_sha256=sha(content)) for name,content in sorted(generated.items())])
     if any(rule.get('element_value') for profile in [rules,*[item['checks'] for item in type_rules],*[item['checks'] for item in element_rules]] for rule in profile):
@@ -718,6 +919,7 @@ def _attribute_checks(row, selected, files, local_paths):
     if root_wildcards or root_any_types or any(profile.get('wildcards') or profile.get('any_type_paths') for profile in [*type_rules,*element_rules]):
         manifest['attribute_known_elements']=[list(key) for key in sorted(global_elements)]
     if element_rules:manifest['attribute_element_checks']=sorted(element_rules,key=lambda item:item['element'])
+    if global_rules:manifest['attribute_global_checks']=global_rules
     return generated,manifest,relaxed_attributes
 
 
@@ -834,6 +1036,9 @@ def _prepare(row, selected):
 
 def _zip(row, output, records, constraints=None):
     manifest={k:row.get(k) for k in ('number','environment','revision_id','document_version','label_date','root','namespace','schema_path','archive_sha256','archive_url','document_url','schema_source_type','schema_source_url','schema_sources')}
+    for key in ('schema_declaration_path', 'schema_docx_location', 'schema_docx_path'):
+        if row.get(key):
+            manifest[key] = row[key]
     manifest.update(format=1,entrypoint='message.xsd',files=records)
     manifest.update(constraints or {})
     output=dict(output)
@@ -919,12 +1124,40 @@ def _browser_compatible(pack, raw, compressed):
             if not all(path(layout['children'],False) and 0<=layout['index']<len(layout['children'])
                        and layout['children'][layout['index']]==subject for layout in layouts):return False
         return True
+    def compound_shape(shape,depth=0):
+        nonlocal total
+        total+=1
+        if depth>64 or total>50000:return False
+        if isinstance(shape,str):return shape in ('native','dateTime','time')
+        if not isinstance(shape,list) or len(shape) not in (2,3):return False
+        kind,content=shape[:2]
+        if kind=='list':
+            return (len(shape)==2 or isinstance(shape[2],str) and bool(re.fullmatch(r'item[0-9]+',shape[2]))) and compound_shape(content,depth+1)
+        return (len(shape)==2 and kind=='union' and isinstance(content,list) and bool(content)
+                and all(isinstance(member,list) and len(member)==2 and isinstance(member[0],str)
+                        and re.fullmatch(r'member[0-9]+',member[0]) and compound_shape(member[1],depth+1)
+                        for member in content))
+    def scalar(value):
+        if 'element_value' in value and not isinstance(value['element_value'],bool):return False
+        if 'calendar_fixed' in value:
+            fixed=value['calendar_fixed']
+            if not (isinstance(fixed,list) and len(fixed)==2 and fixed[0] in ('dateTime','time') and isinstance(fixed[1],str)):return False
+        if 'calendar_compound' not in value:return True
+        check=value['calendar_compound']
+        return (isinstance(check,dict) and 'calendar_fixed' not in value and isinstance(check.get('fixed'),str)
+                and isinstance(check.get('comparison'),str) and bool(re.fullmatch(r'compound[0-9]+',check['comparison']))
+                and ('limited' not in check or isinstance(check['limited'],bool)) and isinstance(check.get('namespaces'),dict)
+                and all((not prefix or NCNAME.fullmatch(prefix)) and isinstance(uri,str) for prefix,uri in check['namespaces'].items())
+                and isinstance(check.get('shape'),list) and compound_shape(check['shape']))
     def rule(value,relative):
         return (path(value['path'],relative) and pair(value['attribute']) and bool(re.fullmatch(r'value[0-9]+',value['element']))
-                and isinstance(value['field'],str) and len(value['field'])<=8192 and guards(value,relative))
+                and isinstance(value['field'],str) and len(value['field'])<=8192 and guards(value,relative) and scalar(value))
     total=len(pack['attribute_checks'])
     if not pack.get('supplementary_namespace') or len(pack['supplementary_namespace'])>8192 or pack.get('supplementary_schema') not in files:return False
     if not all(rule(value,False) for value in pack['attribute_checks']):return False
+    global_attributes=pack.get('attribute_global_checks',[])
+    total+=len(global_attributes)
+    if not all(rule(value,True) and not value['path'] and not value.get('element_value') for value in global_attributes):return False
     def profile(value,relative):
         nonlocal total
         for key in ('wildcard_paths','any_type_paths'):

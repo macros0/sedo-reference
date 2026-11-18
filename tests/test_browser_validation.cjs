@@ -71,12 +71,20 @@ async function validate(xml,custom=pack,source){const w=new Worker(workerSource,
    const bytes=Buffer.concat([...Array(count).fill(bom),content]),result=await validate(bytes);
    assert.equal(result.valid,count<2,encoding+' with '+count+' byte-order marks must preserve the XML document');
   }
-  for(const {pack,cases} of Object.values(typed.attributes))for(const [xml,valid] of cases){
+ for(const [kind,{pack,cases}] of Object.entries(typed.attributes))for(const [xml,valid] of cases){
    const result=await validate(xml,pack);
    assert.equal(result.runtime,undefined,JSON.stringify(result));
    assert.equal(result.valid,valid,xml+' '+JSON.stringify(result));
-   if(!valid&&xml.includes('6782Z"'))assert.ok(result.errors.some(error=>
-    /Element '(request|\{urn:calendar\}calendar)', attribute 'instant': .*does not match the fixed value/.test(error.message)),JSON.stringify(result));
+  if(!valid&&kind==='calendar-facet')assert.ok(result.errors.some(error=>
+   error.message.includes('Не удалось точно сравнить')),JSON.stringify(result));
+  else if(!valid&&kind.includes('patterned-')&&!xml.includes('note="bad"')){
+   const reason=xml.includes(' 007')?'pattern':'does not match the fixed value';
+   assert.ok(result.errors.some(error=>error.message.includes(reason)),JSON.stringify(result));
+  }
+  else if(!valid&&xml.includes('6782Z"'))assert.ok(result.errors.some(error=>
+   /Element '[^']+', attribute '(?:\{urn:wildcard\})?instant': .*does not match the fixed value/.test(error.message)),JSON.stringify(result));
+  else if(!valid&&/^(element|simple-content)-/.test(kind)&&xml.includes('6782Z<'))assert.ok(result.errors.some(error=>
+   /Element 'request': .*does not match the fixed value/.test(error.message)),JSON.stringify(result));
   }
   for(const {pack,cases} of typed.notation)for(const [xml,valid] of cases){
    const result=await validate(xml,pack);

@@ -8,10 +8,12 @@ from sync import sha
 
 SOURCE_KEYS = ("revision_id", "number", "environment", "title", "document_version", "label_date", "document_url", "document_sha256",
                "document_download", "document_filename", "source_type", "manual_source", "module", "listed_now", "document_history", "display_metadata_applied")
-SCHEMA_SOURCE_KEYS = ("archive_url", "archive_sha256", "archive_name", "schema_path", "schema_source_type",
-                      "schema_source_url", "schema_sources", "dependencies")
+SCHEMA_SOURCE_KEYS = ("archive_url", "archive_sha256", "archive_name", "schema_path", "schema_declaration_path", "schema_source_type",
+                      "schema_source_url", "schema_sources", "dependencies",
+                      "schema_docx_location", "schema_docx_path", "schema_docx_url")
 PUBLIC_SOURCE_KEYS = SOURCE_KEYS + tuple(k for k in SCHEMA_SOURCE_KEYS if k not in ("dependencies", "schema_sources")) + (
-    "schema_publication_page", "schema_file_download", "schema_file_name", "schema_original_url")
+    "schema_publication_page", "schema_file_download", "schema_file_name", "schema_original_url",
+    "schema_declaration_download", "schema_declaration_url", "schema_docx_download")
 
 
 def prepare_observed_sources(catalog):

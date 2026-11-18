@@ -237,6 +237,37 @@ def notation_trees():
                    [('p', 'urn:A'), ('p', 'urn:B'), ('q', 'urn:A')]] for kind in ('direct', 'union')}
 
 
+def list_value_trees():
+    from lxml import etree
+
+    def build(item, value, uri='', *, union=False, flag=None):
+        value_type = 'Choice' if union else 'Items'
+        choice = '<xs:simpleType name="Choice"><xs:union memberTypes="Items xs:boolean"/></xs:simpleType>' if union else ''
+        binding = f'xmlns:{value.split(":")[0]}="{uri}"' if uri else ''
+        declaration = (f'<xs:element name="r" {binding} type="{value_type}" {flag}="{value}"/>' if flag else
+                       f'<xs:element name="r"><xs:simpleType><xs:restriction base="{value_type}">'
+                       f'<xs:enumeration {binding} value="{value}"/></xs:restriction></xs:simpleType></xs:element>')
+        source = (f'<xs:schema xmlns:xs="{XS}"><xs:simpleType name="Items"><xs:list itemType="xs:{item}"/>'
+                  '</xs:simpleType>'+choice+declaration+'</xs:schema>')
+        validator = etree.XMLSchema(etree.XML(source))
+        if not flag:
+            accepted = (f'<r xmlns:q="{uri}">{value.replace(value.split(":")[0]+":", "q:")}</r>' if uri else '<r>1 2</r>')
+            assert validator.validate(etree.XML(accepted))
+            if uri:
+                assert not validator.validate(etree.XML(accepted.replace(uri, 'urn:unrelated')))
+        return tree(source)
+
+    return {
+        'numeric': [build('int', value) for value in ('1 2', '+01 002')],
+        'order': [build('int', value, flag='default') for value in ('1 2', '2 1')],
+        'qname': [build('QName', value, uri) for value, uri in (
+            ('p:one p:two', 'urn:A'), ('p:one p:two', 'urn:B'), ('q:one q:two', 'urn:A'))],
+        'unionFixed': [build('QName', value, uri, union=True, flag='fixed') for value, uri in (
+            ('p:one p:two', 'urn:A'), ('p:one p:two', 'urn:B'), ('q:one q:two', 'urn:A'))],
+    }
+
+
 if __name__ == "__main__":
     print(json.dumps({"facets": facet_trees(), "bounds": bound_trees(), "enumWhitespace": enum_whitespace_trees(),
-                      "union": union_trees(), "unionFlags": union_flag_trees(), "notation": notation_trees()}))
+                      "union": union_trees(), "unionFlags": union_flag_trees(), "notation": notation_trees(),
+                      "listValues": list_value_trees()}))

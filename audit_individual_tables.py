@@ -3,11 +3,13 @@ import re
 import zipfile
 from collections import defaultdict
 from decimal import Decimal, InvalidOperation
+from functools import lru_cache
 from xml.etree import ElementTree as ET
 from lxml import etree
 
 from module_xsd import W, text, word_text
 from schema import EXPANDED_NAME_TYPES, FACETS, Schema, X, XS, field_whitespace, local, occurrence, scalar_whitespace
+from xsd_validate import calendar_value
 
 
 HEADING = re.compile(r"^Атрибут(?:ы элемента|ы (?:комплексного )?типа)?\s+(\S+)$", re.I)
@@ -35,8 +37,6 @@ STRING_TYPES = {'string', 'normalizedString', 'token', 'language', 'Name', 'NCNa
                 'NMTOKEN', 'ID', 'IDREF', 'ENTITY'}
 INTEGER_LEXICAL = re.compile(r"[+-]?[0-9]+")
 DECIMAL_LEXICAL = re.compile(r"[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)")
-TIME_LEXICAL = re.compile(r"([0-9]{2}):([0-9]{2}):([0-9]{2})(?:\.([0-9]+))?(Z|[+-][0-9]{2}:[0-9]{2})?")
-TIME_FRACTION = re.compile(r":[0-9]{2}\.([0-9]+)(?=Z|[+-]|$)")
 
 
 def cards(body):
@@ -259,8 +259,56 @@ def constraint_name(value, field, owner, key, *, schema, actual):
     return tuple(recorded) if recorded is not None else constraint_qname(value, owner, schema)
 
 
+def value_proof(value, selected, context):
+    if not selected:
+        return None
+    base, whitespace = selected[:2]
+    if base in EXPANDED_NAME_TYPES or base == 'list':
+        if context is None:
+            return None
+    return base, whitespace, value, context
+
+
+def quoted_proof(value, declaration, schema, *, owner=None):
+    if schema is None or declaration is None:
+        return None
+    selected = schema.quoted_value_type(declaration, value, owner=owner, detailed=True)
+    if not selected:
+        return None
+    if selected[0] == 'list':
+        context = selected[2]
+    elif selected[0] in EXPANDED_NAME_TYPES:
+        context = constraint_qname(value, owner if owner is not None else declaration, schema)
+    else:
+        context = None
+    return value_proof(value, selected, context)
+
+
+def flag_proof(value, field, owner, key, schema):
+    if field.get('listItem'):
+        return value_proof(value, ('list', 'collapse'), field.get('flagListItems', {}).get(key))
+    selected = field.get('unionFlagTypes', {}).get(key)
+    if selected and selected[0] == 'list':
+        return value_proof(value, selected, field.get('flagListItems', {}).get(key))
+    name = constraint_name(value, field, owner, key, schema=schema, actual=True) if selected and selected[0] in EXPANDED_NAME_TYPES else None
+    return value_proof(value, selected, name)
+
+
+def proof_label(proof):
+    base, _, value, context = proof
+    if base == 'list':
+        return value+' ('+', '.join(proof_label(item) for item in context)+')' if context else value+' (list)'
+    if base in EXPANDED_NAME_TYPES:
+        return value+' ({'+context[0]+'}'+context[1]+')'
+    return value+' ('+base+')'
+
+
 def constraint_label(value, field, owner, key, *, schema=None, actual=False):
     if value is not None and field:
+        if field.get('listItem') or field.get('alternatives'):
+            proof = flag_proof(value, field, owner, key, schema) if actual else quoted_proof(value, owner, schema)
+            if proof:
+                return proof_label(proof)
         selected = constraint_type(value, field, owner, key, schema=schema, actual=actual)
         if selected:
             base, _ = selected
@@ -283,54 +331,63 @@ def equal_decimal(left, right, lexical):
     return bool(lexical.fullmatch(left) and lexical.fullmatch(right) and Decimal(left) == Decimal(right))
 
 
-def time_value(value):
-    match = TIME_LEXICAL.fullmatch(value.strip(' \t\r\n'))
-    if not match:
-        return None
-    hour, minute, second = map(int, match.groups()[:3])
-    fraction = (match[4] or '').rstrip('0')
-    if hour > 24 or minute > 59 or second > 59 or (hour == 24 and (minute or second or fraction)):
-        return None
-    zone = match[5]
-    offset = 0
-    if zone and zone != 'Z':
-        hours, minutes = int(zone[1:3]), int(zone[4:])
-        if hours > 14 or minutes > 59 or (hours == 14 and minutes):
-            return None
-        offset = (-1 if zone[0] == '-' else 1) * (hours * 60 + minutes)
-    # xs:time recurs daily, including when UTC normalization crosses midnight.
-    utc_seconds = (hour * 3600 + (minute - offset) * 60 + second) % 86400
-    return bool(zone), utc_seconds, fraction
+@lru_cache(maxsize=2)
+def calendar_lexical_validator(base):
+    root = etree.Element(X+'schema', nsmap={'xs': XS})
+    element = etree.SubElement(root, X+'element', name='value')
+    etree.SubElement(etree.SubElement(element, X+'complexType'), X+'attribute',
+                     name='v', type='xs:'+base, use='required')
+    return etree.XMLSchema(root)
+
+
+def equal_list_constraint(left, right, item, *, quoted, source, schema, note):
+    a, b = [re.findall(r'[^ \t\r\n]+', value) for value in (left, right)]
+    if len(a) != len(b):
+        return False
+    if (not item or item.get('baseNs') != XS or item.get('alternatives')
+            or item.get('listItem')):
+        if note: note('Не установлен тип элемента списка; равенство автоматически не проверено.')
+        return True
+    return all(
+        equal_constraint(x, y, item, quoted=quoted, source=source, schema=schema, note=note)
+        for x, y in zip(a, b))
+
+
+def value_family(base):
+    if base in INTEGER_TYPES:
+        return 'decimal'
+    return 'string' if base in STRING_TYPES else base
+
+
+def equal_proved_values(left, right, note=None):
+    left_type, left_space, a, left_context = left
+    right_type, right_space, b, right_context = right
+    family = value_family(right_type)
+    if value_family(left_type) != family:
+        return False
+    if family == 'list':
+        return len(left_context) == len(right_context) and all(
+            equal_proved_values(x, y, note) for x, y in zip(left_context, right_context))
+    if family in EXPANDED_NAME_TYPES:
+        return tuple(left_context) == tuple(right_context)
+    if family == 'string':
+        return normalize_whitespace(a, left_space) == normalize_whitespace(b, right_space)
+    return equal_constraint(a, b, {'baseNs': XS, 'base': family}, note=note)
 
 
 def equal_constraint(left, right, field, *, quoted=None, source=None, schema=None, key=None, note=None):
     if left is None or right is None or not field:
         return left == right
-    if field.get('alternatives') and key in ('fixed', 'default'):
-        quoted_type = constraint_type(left, field, quoted, key, schema=schema, actual=False)
-        source_type = constraint_type(right, field, source, key, schema=schema, actual=True)
-        if quoted_type is None or source_type is None:
+    if key in ('fixed', 'default') and (field.get('alternatives') or field.get('listItem')):
+        a = quoted_proof(left, quoted, schema)
+        b = flag_proof(right, field, source, key, schema)
+        if a and b:
+            return equal_proved_values(a, b, note)
+        if field.get('alternatives'):
             if note: note('Не установлен член union или его контекст для '+key+'; равенство автоматически не проверено.')
             return True
-
-        def family(base):
-            if base in INTEGER_TYPES: return 'decimal'
-            if base in STRING_TYPES: return 'string'
-            return base
-
-        base = family(source_type[0])
-        if family(quoted_type[0]) != base:
-            return False
-        if base in EXPANDED_NAME_TYPES:
-            a = constraint_name(left, field, quoted, key, schema=schema, actual=False)
-            b = constraint_name(right, field, source, key, schema=schema, actual=True)
-            if a is None or b is None:
-                if note: note('Для значения union не установлено пространство имён '+base+'; равенство автоматически не проверено.')
-                return True
-            return a == b
-        if base == 'string':
-            return normalize_whitespace(left, quoted_type[1]) == normalize_whitespace(right, source_type[1])
-        return equal_constraint(left, right, {'baseNs': XS, 'base': base}, note=note)
+    if field.get('listItem'):
+        return equal_list_constraint(left, right, field['listItem'], quoted=quoted, source=source, schema=schema, note=note)
     if field.get('baseNs') != XS:
         return left == right
     base = unprefixed(field.get('base', ''))
@@ -341,20 +398,19 @@ def equal_constraint(left, right, field, *, quoted=None, source=None, schema=Non
             if note: note('Для значения '+base+' контекст пространства имён цитаты не установлен; равенство автоматически не проверено.')
             return True
         return a == b
+    if base in ('dateTime', 'time'):
+        # Raw Word quotations have not passed the XSD lexical check. In
+        # particular, an invalid day must not normalize into the next month.
+        validator = calendar_lexical_validator(base)
+        if not all(validator.validate(etree.Element('value', v=value)) for value in (left, right)):
+            return False
+        expected = calendar_value(base, right)
+        return expected is not None and calendar_value(base, left) == expected
     if left == right: return True
     if base in INTEGER_TYPES:
         return equal_decimal(left, right, INTEGER_LEXICAL)
     if base == 'decimal':
         return equal_decimal(left, right, DECIMAL_LEXICAL)
-    if base == 'time':
-        known = time_value(right)
-        return known is not None and time_value(left) == known
-    if base == 'dateTime':
-        def fraction(value):
-            match = TIME_FRACTION.search(value.strip(' \t\r\n'))
-            return match[1].rstrip('0') if match else ''
-        if fraction(left) != fraction(right):
-            return False
     # libxml2 compares attribute fixed in the XSD value space.
     try:
         root = etree.Element(X+'schema', nsmap={'xs': XS})
@@ -422,6 +478,7 @@ def facet_difference(left, right, field, quoted, source, schema, note=None, *, e
     """Compare facet values in each declaration's datatype and namespace context."""
     base = unprefixed(field.get('base', '')) if field and field.get('baseNs') == XS else ''
     qname = base in EXPANDED_NAME_TYPES
+    compound = field and (field.get('alternatives') or field.get('listItem'))
     string_enum = bool(field and field.get('baseNs') == XS
                        and unprefixed(field.get('base', '')) in ('string', 'normalizedString', 'token'))
     if string_enum:
@@ -433,26 +490,43 @@ def facet_difference(left, right, field, quoted, source, schema, note=None, *, e
     def records(pairs, root, actual=False):
         restriction=local_rule(root)[2] if root is not None else None
         for key,value in pairs:
-            if key != 'enumeration' or not qname:
+            if key != 'enumeration' or not (qname or compound):
                 yield key,value,None,root
                 continue
             # Several equal lexical tokens may denote distinct values, because
             # xmlns can be rebound on each enumeration declaration.
             nodes=[node for node in restriction if local(node) == 'enumeration' and node.get('value') == value] if restriction is not None else []
             resolved=[]
-            if actual and effective:
+            if compound:
+                if actual and effective:
+                    for index, (lexical, _) in enumerate(field.get('values', [])):
+                        if lexical != value:
+                            continue
+                        selections = field.get('unionValueTypes', [])
+                        selected = ('list', 'collapse') if field.get('listItem') else (
+                            selections[index] if index < len(selections) else None)
+                        contexts = field.get('valueListItems', []) if selected and selected[0]=='list' else field.get('valueQNames', [])
+                        resolved.append(value_proof(value, selected, contexts[index] if index < len(contexts) else None))
+                if not resolved:
+                    resolved = [quoted_proof(value, restriction, schema, owner=node) for node in nodes or [root]]
+            elif actual and effective:
                 resolved=[tuple(name) for (lexical,_),name in zip(field.get('values',[]),field.get('valueQNames',[])) if lexical == value]
             if not resolved:
                 resolved=[constraint_qname(value,node,schema) for node in nodes] if nodes else [constraint_qname(value,root,schema)]
-            for name in resolved:
-                if name is None and note:
-                    note('Для перечисления '+base+' контекст пространства имён цитаты не установлен; равенство автоматически не проверено.')
-                yield key,value,name,root
+            for proof in resolved:
+                if proof is None and note:
+                    if compound:
+                        note('Для перечисления не установлен тип элемента списка или член union и его контекст; равенство автоматически не проверено.')
+                    else:
+                        note('Для перечисления '+base+' контекст пространства имён цитаты не установлен; равенство автоматически не проверено.')
+                yield key,value,proof,root
     a_rows=list(records(left,quoted)); b_rows=list(records(right,source,True))
     def same(a,b):
         if a[0] != b[0]:return False
         if a[0] == 'enumeration' and qname:
             return a[2] is None or b[2] is None or a[2] == b[2]
+        if a[0] == 'enumeration' and compound:
+            return a[2] is None or b[2] is None or equal_proved_values(a[2], b[2], note)
         if a[1] == b[1]:return True
         if a[0] in INTEGER_FACETS:
             return equal_decimal(a[1], b[1], INTEGER_LEXICAL)
@@ -463,6 +537,8 @@ def facet_difference(left, right, field, quoted, source, schema, note=None, *, e
         key,value,name,_=row
         if key == 'enumeration' and qname and name is not None:
             value += ' ({'+name[0]+'}'+name[1]+')'
+        if key == 'enumeration' and compound and name is not None:
+            value = proof_label(name)
         if key == 'enumeration' and string_enum and quoted_mode != source_mode:
             value += ' (whiteSpace базы: '+(source_mode if actual else quoted_mode)+')'
         return key,value
@@ -474,7 +550,7 @@ def facet_difference(left, right, field, quoted, source, schema, note=None, *, e
         # Equal scalar spelling proves equal value without compiling a probe.
         # QName spelling needs its declaration URI. Keep every opposite row for
         # unmatched aliases: {1,1.0} and {1} still have the same decimal values.
-        return not qname and (row[0],row[1]) in exact
+        return (row[0] != 'enumeration' or not (qname or compound)) and (row[0],row[1]) in exact
     def missing(row, opposite, exact, *, actual):
         if string_enum and row[0] == 'enumeration':
             if actual:

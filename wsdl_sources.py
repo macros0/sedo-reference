@@ -262,8 +262,103 @@ def prefer_wsdl_inline_entries(candidates, root):
             if (candidate[0]["url"], candidate[0]["sha256"], candidate[1]["path"]) not in covered]
 
 
+def archived_wsdl_member(archive, source):
+    """Resolve a fetched XSD to a single archived resource."""
+    path = source.get('archive_path')
+    matches = [schema for schema in archive['schemas']
+               if schema['sha256'] == source['sha256'] and (path is None or schema['path'] == path)]
+    return matches[0] if len(matches) == 1 else None
+
+
+def explicit_wsdl_entrypoints(archive, member, root_info, read_object, *, legacy=False):
+    """Find usable entry points for the exact declaration named by the DOCX."""
+    from lxml import etree
+    from schema import Schema, dependency_set
+    from sync import sha
+    from xsd_bundle import _prepare, _selected
+
+    root, namespace, namespace_declared = root_info
+    raw = read_object(archive["sha256"])
+    if sha(raw) != archive["sha256"]:
+        raise ValueError("Не совпадает контрольная сумма подтверждённого архива WSDL")
+    path = member["path"]
+    with zipfile.ZipFile(io.BytesIO(raw)) as source:
+        if sha(source.read(path)) != member['sha256']:
+            raise ValueError("Не совпадает контрольная сумма указанного файла XSD")
+
+        def complete(tree, schema):
+            try:
+                tree.field(tree.root)
+                if len({field['path'] for field in tree.fields}) != len(tree.fields):
+                    return False
+                row = dict(schema_path=schema["path"], root=root, namespace=schema["namespace"] or None,
+                           dependencies=dependency_set(archive["schemas"], schema["path"]))
+                _prepare(row, _selected(row, source))
+            except (ValueError, KeyError, etree.LxmlError):
+                return False
+            return True
+
+        member_trees = {}
+
+        def named_tree(inherited):
+            if inherited not in member_trees:
+                try:
+                    member_trees[inherited] = Schema(source, path, root, inherited_namespace=inherited)
+                except (ValueError, KeyError):
+                    member_trees[inherited] = None
+            return member_trees[inherited]
+
+        has_root = False
+        if not namespace_declared or member['namespace'] == namespace:
+            standalone = named_tree(member['namespace'] or '')
+            if standalone is not None:
+                has_root = True
+                if complete(standalone, member):
+                    return [path] if legacy else {
+                        'has_root': True, 'entrypoints': [dict(path=path, declaration=standalone.owner[standalone.root])]}
+
+        fetched = {(item['sha256'], item.get('archive_path')) for item in archive['source_files'] if item['kind'] == 'xsd'}
+        if not legacy:
+            fetched = {(schema['sha256'], schema['path']) for item in archive['source_files']
+                       if item['kind'] == 'xsd' and (schema := archived_wsdl_member(archive, item)) is not None}
+        inline_digests = set()
+        for item in archive['source_files']:
+            if item['kind'] != 'wsdl':
+                continue
+            wsdl = read_object(item['sha256'])
+            if sha(wsdl) != item['sha256']:
+                raise ValueError("Не совпадает контрольная сумма исходного WSDL")
+            inline_digests.update(sha(schema) for schema in _inline_schemas(wsdl, False))
+        entries = []
+        for entry in archive['schemas']:
+            entry_path, digest, effective = entry['path'], entry['sha256'], entry['namespace']
+            if (entry_path == path or (namespace_declared and effective != namespace)
+                    or (member['namespace'] and effective != member['namespace'])):
+                continue
+            if digest not in inline_digests and (digest, entry_path) not in fetched and (digest, None) not in fetched:
+                continue
+            # Check the owning node and effective namespace in the actual
+            # include closure, including for old manifest indexes.
+            try:
+                tree = Schema(source, entry_path, root)
+            except (ValueError, KeyError):
+                continue
+            inherited = effective or ''
+            if (path, inherited) not in tree.documents:
+                continue
+            anchor = named_tree(inherited)
+            if (anchor is not None and tree.owner[tree.root] == anchor.owner[anchor.root]
+                    and tree.context[tree.root][2] == inherited):
+                has_root = True
+                if complete(tree, entry):
+                    entries.append(entry_path if legacy else dict(path=entry_path, declaration=tree.owner[tree.root]))
+        if legacy:
+            return sorted(entries)
+        return dict(has_root=has_root, entrypoints=sorted(entries, key=lambda item: item['path']))
+
+
 def collect(seed, environment, fetch, blob, *, legacy_annotations=False, legacy_schema_roots=False,
-            legacy_inline_includes=False, legacy_wsdl_layout=False):
+            legacy_inline_includes=False, legacy_wsdl_layout=False, legacy_source_paths=False):
     from schema import import_basename
     from sync import inspect_file
     if seed not in discover([dict(environment=environment, url=seed)], environment):
@@ -342,10 +437,9 @@ def collect(seed, environment, fetch, blob, *, legacy_annotations=False, legacy_
     if not legacy_wsdl_layout:
         from collections import Counter
         counts = Counter(source['sha256'] for source in schema_sources.values())
-        # Keep the historic manifest shape where the bytes already identify
-        # exactly one remote source. Identical copies require path evidence.
+        # Old manifests only recorded a path for duplicate source bytes.
         for path, source in schema_sources.items():
-            if counts[source['sha256']] > 1:
+            if not legacy_source_paths or counts[source['sha256']] > 1:
                 source['archive_path'] = paths[path]
     content = _archive(archive_files)
     metadata = inspect_file(content, "zip", legacy_schema_roots=legacy_schema_roots)

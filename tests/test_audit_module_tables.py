@@ -206,6 +206,46 @@ class ModuleAuditTests(unittest.TestCase):
                 self.assertEqual((count, len(findings)), (1, 1))
                 self.assertEqual((findings[0]['spec'], findings[0]['xsd']), (f'fixed={documented}', f'fixed={actual}'))
 
+    def test_calendar_and_list_values_are_consistent_with_xml_validation(self):
+        for key in ('fixed', 'default'):
+            for declaration, actual, quoted, different in (
+                ('<xs:restriction base="xs:dateTime"/>', '2026-11-17T00:00:00.1234567890123456781Z',
+                 '2026-11-16T23:00:00.1234567890123456781000-01:00', False),
+                ('<xs:union memberTypes="xs:dateTime xs:integer"/>', '2026-11-17T00:00:00.1234567890123456781Z',
+                 '2026-11-16T23:00:00.1234567890123456782000-01:00', True),
+                ('<xs:list itemType="xs:int"/>', '1 2', '01 +02', False),
+                ('<xs:list itemType="xs:int"/>', '1 2', '2 1', True),
+            ):
+                with self.subTest(key=key, declaration=declaration, quoted=quoted):
+                    stem = ('<xs:element name="request" '+key+'="{}"><xs:simpleType>'
+                            +declaration+'</xs:simpleType></xs:element>')
+                    count, findings = self.check_schema_card(stem.format(actual), stem.format(quoted))
+                    self.assertEqual((count, bool(findings)), (1, different), findings)
+
+    def test_list_values_keep_each_declarations_type_and_namespace(self):
+        for key in ('fixed', 'default'):
+            def element(item, value, namespace=''):
+                binding = f'xmlns:{value.split(":")[0]}="{namespace}"' if namespace else ''
+                return (f'<xs:element name="request" {binding} {key}="{value}"><xs:simpleType>'
+                        f'<xs:list itemType="xs:{item}"/></xs:simpleType></xs:element>')
+            cases = (
+                (element('QName', 'p:code', 'urn:one'), element('QName', 'p:code', 'urn:two'), True, False),
+                (element('QName', 'p:code', 'urn:one'), element('QName', 'q:code', 'urn:one'), False, False),
+                (element('int', '1'), element('string', '01'), True, False),
+                (element('QName', 'p:code', 'urn:one'), element('QName', 'p:code'), False, True),
+            )
+            for source, quote, differs, limited in cases:
+                with self.subTest(key=key, quote=quote):
+                    notes = []
+                    count, findings = self.check_schema_card(source, quote, notes=notes)
+                    self.assertEqual((count, bool(findings), bool(notes)), (1, differs, limited))
+                    if 'urn:two' in quote:
+                        self.assertIn('urn:one', findings[0]['xsd'])
+                        self.assertIn('urn:two', findings[0]['spec'])
+                    if 'xs:string' in quote:
+                        self.assertIn('int', findings[0]['xsd'])
+                        self.assertIn('string', findings[0]['spec'])
+
     def test_fixed_qname_uses_local_declaration_contexts(self):
         source = '<xs:element name="request" type="xs:QName" xmlns:p="urn:actual" fixed="p:code"/>'
         quote = source.replace('urn:actual', 'urn:quoted')

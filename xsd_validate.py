@@ -51,6 +51,59 @@ def calendar_value(kind, value):
     return bool(zone), ordinal + day_delta, seconds, fraction
 
 
+def _compound_value(shape, value, matches):
+    if isinstance(shape, str):
+        return shape, value
+    kind, members = shape[:2]
+    if kind == 'list':
+        item_probe = shape[2] if len(shape) == 3 else None
+        items = [_compound_value(members, token, matches) for token in re.findall(r'[^ \t\r\n]+', value)]
+        return kind, (item_probe, items)
+    for probe, member in members:
+        if matches(probe, value):
+            return _compound_value(member, value, matches)
+    return 'unknown', None
+
+
+def _compare_compound(actual, expected, compare_item):
+    kind, value = actual
+    expected_kind, fixed = expected
+    if 'unknown' in (kind, expected_kind):
+        return 'unknown', ''
+    if kind != expected_kind:
+        return 'different', ''
+    if kind == 'native':
+        return 'native', value
+    if kind in ('dateTime', 'time'):
+        parsed = calendar_value(kind, value)
+        return ('equal', fixed) if parsed is not None and parsed == calendar_value(kind, fixed) else ('different', '')
+    probe, items = value
+    fixed_probe, fixed_items = fixed
+    if len(items) != len(fixed_items):
+        return 'different', ''
+    results = []
+    for left, right in zip(items, fixed_items):
+        status, token = _compare_compound(left, right, compare_item)
+        if status == 'native' and (probe or fixed_probe):
+            status = compare_item(probe, left[1], right[1]) if probe == fixed_probe else 'unknown'
+        results.append((status, token))
+    kinds = {status for status, _ in results}
+    for failure in ('different', 'unknown'):
+        if failure in kinds:
+            return failure, ''
+    if 'native' in kinds:
+        # Legacy validation packs used a fixed probe for the whole list.
+        return 'native', ' '.join(token for _, token in results)
+    return 'equal', ''
+
+
+def _same_scoped_literal(actual, fixed, namespaces, fixed_namespaces):
+    if actual != fixed:
+        return False
+    prefixes = {token.rpartition(':')[0] for token in re.findall(r'[^ \t\r\n]+', fixed)}
+    return all(namespaces.get(prefix, '') == fixed_namespaces.get(prefix, '') for prefix in prefixes)
+
+
 def compile_schema(entry, package_root, *, replacements=None):
     from lxml import etree
     base=Path(package_root).resolve()
@@ -93,7 +146,8 @@ def compile_schema(entry, package_root, *, replacements=None):
             if manifest.get('boolean_fixed_replacements'):
                 alternate = compile_schema(entry, base, replacements=manifest['boolean_fixed_replacements'])
                 primary = BooleanFixedValidator(primary, alternate)
-            if manifest.get('attribute_checks') or manifest.get('attribute_type_checks') or manifest.get('attribute_element_checks'):
+            if any(manifest.get(key) for key in ('attribute_checks', 'attribute_type_checks',
+                                                 'attribute_element_checks', 'attribute_global_checks')):
                 supplement=compile_schema(base/manifest['supplementary_schema'],base)
                 return AttributeUseValidator(primary,supplement,manifest)
     return primary
@@ -106,6 +160,7 @@ class BooleanFixedValidator:
         self.alternate = alternate
         self.typed = False
         self.calendar_attributes = False
+        self.compound_attributes = False
         self.error_log = []
 
     def validate(self, document):
@@ -114,9 +169,13 @@ class BooleanFixedValidator:
         if valid:
             return True
         def alias(error):
-            if self.calendar_attributes and error.type_name == 'SCHEMAV_CVC_AU':
-                match = re.search(r": The value '([^']*)' does not match the fixed value constraint '([^']*)'\.$", error.message)
+            if (self.calendar_attributes or self.compound_attributes) and error.type_name == 'SCHEMAV_CVC_AU':
+                match = re.search(r": The value '(.*)' does not match the fixed value constraint '(.*)'\.$", error.message, re.S)
                 if match:
+                    if self.compound_attributes:
+                        # The alternate and the exact probes together keep
+                        # unrelated string or datatype constraints in force.
+                        return True
                     kind = 'dateTime' if 'T' in match[2] else 'time'
                     actual = calendar_value(kind, match[1])
                     if actual is not None and actual == calendar_value(kind, match[2]):
@@ -141,11 +200,15 @@ class AttributeUseValidator:
     """Apply native attribute fixed comparison to attribute uses and scalar text."""
     def __init__(self, primary, supplementary, manifest):
         self.primary=primary;self.supplementary=supplementary
+        global_rules=manifest.get('attribute_global_checks', [])
+        self.global_attributes={('{'+ns+'}' if ns else '')+name: rule for rule in global_rules
+                                for ns,name in [rule['attribute']]}
         if isinstance(primary, BooleanFixedValidator):
-            rules = [rule for checks in [manifest['attribute_checks'], *[p['checks'] for p in manifest.get('attribute_type_checks', [])],
+            rules = [rule for checks in [manifest['attribute_checks'], global_rules, *[p['checks'] for p in manifest.get('attribute_type_checks', [])],
                                         *[p['checks'] for p in manifest.get('attribute_element_checks', [])]] for rule in checks]
             primary.typed = any(rule.get('element_value') for rule in rules)
             primary.calendar_attributes = any('calendar_fixed' in rule and not rule.get('element_value') for rule in rules)
+            primary.compound_attributes = any('calendar_compound' in rule and not rule.get('element_value') for rule in rules)
         self.namespace=manifest['supplementary_namespace']
         self.complete_types = manifest.get('attribute_type_profiles_complete', False)
         self.type_whitespace={tuple(item['type']):item['mode'] for item in manifest.get('element_type_whitespace',[])}
@@ -227,6 +290,8 @@ class AttributeUseValidator:
                 if profile:scopes=(*scopes,(len(path),profile))
             applicable=list(fixed_rules)
             for depth,(rules,_,_,_) in scopes:applicable.extend(rules.get(path[depth:],[]))
+            if lax_children and self.global_attributes:
+                applicable.extend(self.global_attributes[name] for name in node.attrib if name in self.global_attributes)
             seen=set()
             for rule in applicable:
                 if not all(matches_guard(node,guard) for guard in rule.get('guards',())):continue
@@ -267,21 +332,72 @@ class AttributeUseValidator:
                 else:message=error.message
                 self.error_log.append(SimpleNamespace(line=error.line,column=error.column,message=message,
                     path=node.getroottree().getpath(node) if subject else None))
+        @lru_cache(maxsize=1024)
+        def accepts(element, value, namespaces):
+            root = etree.Element('{'+self.namespace+'}checks', nsmap={prefix:self.namespace})
+            candidate = etree.SubElement(root, '{'+self.namespace+'}'+element,
+                                         nsmap={key or None: uri for key, uri in namespaces})
+            candidate.set('value', value)
+            result = self.supplementary.validate(root)
+            facet_error = any(error.type_name != 'SCHEMAV_CVC_AU' for error in self.supplementary.error_log)
+            return result, facet_error
+
+        @lru_cache(maxsize=1024)
+        def compare_item(element, actual, expected, actual_bindings, fixed_bindings):
+            root = etree.Element('{'+self.namespace+'}checks', nsmap={prefix:self.namespace})
+            pair = etree.SubElement(root, '{'+self.namespace+'}'+element)
+            for child, value, bindings in (('expected', expected, fixed_bindings),
+                                          ('actual', actual, actual_bindings)):
+                node = etree.SubElement(pair, '{'+self.namespace+'}'+child,
+                                        nsmap={key or None: uri for key, uri in bindings})
+                node.set('value', value)
+            if self.supplementary.validate(root):
+                return 'equal'
+            errors = self.supplementary.error_log
+            if errors and all(error.type_name == 'SCHEMAV_CVC_IDC' and 'No match found for key-sequence' in error.message
+                              for error in errors):
+                return 'different'
+            return 'unknown'
+
         for probe, (node, rule) in subjects.items():
-            if 'calendar_fixed' not in rule or probe in failed:
+            if probe in failed or not ('calendar_fixed' in rule or 'calendar_compound' in rule):
                 continue
-            kind, fixed = rule['calendar_fixed']
             actual = probe.get('value')
-            parsed = calendar_value(kind, actual)
-            if parsed is not None and parsed == calendar_value(kind, fixed):
-                continue
-            valid = False
-            if parsed is None:
-                reason = f"'{actual}' is not a valid value of the atomic type 'xs:{kind}'."
-                type_name = 'SCHEMAV_CVC_DATATYPE_VALID_1_2_1'
+            type_name = 'SCHEMAV_CVC_ELT_5_2_2_2_2' if rule.get('element_value') else 'SCHEMAV_CVC_AU'
+            if 'calendar_compound' in rule:
+                compound = rule['calendar_compound']
+                fixed, shape = compound['fixed'], compound['shape']
+                namespaces = {key or '': uri for key, uri in node.nsmap.items()}
+                fixed_namespaces = compound['namespaces']
+                if compound.get('limited'):
+                    outcome = 'equal' if _same_scoped_literal(actual, fixed, namespaces, fixed_namespaces) else 'unknown'
+                else:
+                    bindings = tuple(sorted(namespaces.items()))
+                    fixed_bindings = tuple(sorted(fixed_namespaces.items()))
+                    outcome = 'unknown'
+                    if accepts(rule['element'], fixed, fixed_bindings)[0]:
+                        left = _compound_value(shape, actual, lambda name, value: accepts(name, value, bindings)[0])
+                        right = _compound_value(shape, fixed, lambda name, value: accepts(name, value, fixed_bindings)[0])
+                        outcome, lexical = _compare_compound(left, right,
+                            lambda name, a, b: compare_item(name, a, b, bindings, fixed_bindings))
+                        if outcome == 'native':
+                            equivalent, facet_error = accepts(compound['comparison'], lexical, bindings)
+                            outcome = 'equal' if equivalent else 'unknown' if facet_error and lexical != actual else 'different'
+                if outcome == 'equal':
+                    continue
+                reason = (f"Не удалось точно сравнить значение '{actual}' с fixed '{fixed}'." if outcome == 'unknown'
+                          else f"The actual value '{actual}' does not match the fixed value constraint '{fixed}'.")
             else:
-                reason = f"The actual value '{actual}' does not match the fixed value constraint '{fixed}'."
-                type_name = 'SCHEMAV_CVC_ELT_5_2_2_2_2' if rule.get('element_value') else 'SCHEMAV_CVC_AU'
+                kind, fixed = rule['calendar_fixed']
+                parsed = calendar_value(kind, actual)
+                if parsed is not None and parsed == calendar_value(kind, fixed):
+                    continue
+                if parsed is None:
+                    reason = f"'{actual}' is not a valid value of the atomic type 'xs:{kind}'."
+                    type_name = 'SCHEMAV_CVC_DATATYPE_VALID_1_2_1'
+                else:
+                    reason = f"The actual value '{actual}' does not match the fixed value constraint '{fixed}'."
+            valid = False
             ns, name = rule['attribute']
             attribute = name if not ns else '{'+ns+'}'+name
             subject = f"Element '{node.tag}'"

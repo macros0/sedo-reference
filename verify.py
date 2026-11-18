@@ -78,7 +78,12 @@ def verify(state,data):
                               lambda digest: (state/"objects"/digest).read_bytes())
     with TemporaryDirectory() as tmp:
         base=Path(tmp)
-        replay = dict(wsdl_entries=wsdl_entries, snapshot_format=snapshot.get("format", 1))
+        versions = {evidence.get('version', 1) if isinstance(evidence, dict) else 1 for row in snapshot['entries']
+                    if (evidence := row.get('wsdl_schema_matches'))}
+        if len(versions) > 1:
+            raise ValueError("Mixed WSDL evidence versions in active snapshot")
+        replay = dict(wsdl_entries=wsdl_entries, snapshot_format=snapshot.get("format", 1),
+                      individual_wsdl=next(iter(versions), False))
         # These are inputs of this exact snapshot, independent of today's
         # collector configuration, links and availability.
         for row in wsdl_entries:

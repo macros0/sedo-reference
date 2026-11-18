@@ -2,8 +2,9 @@
 // A blob worker inherits the opaque frame's connect-src 'none' CSP.
 // This additional guard prevents even accidental attempts by the engine.
 for(const name of ['fetch','XMLHttpRequest','WebSocket','EventSource','importScripts'])Object.defineProperty(self,name,{value:()=>{throw Error('Сетевые обращения валидатора запрещены.')},writable:false,configurable:false});
-function runLint(args,inputFiles,{booleanAliases:filterBooleanAliases=false,typedFixed=false,calendarAttributes=false}={}){return new Promise((resolve,reject)=>{
+function runLint(args,inputFiles,{booleanAliases:filterBooleanAliases=false,typedFixed=false,calendarAttributes=false,compoundAttributes=false,captureInvalidLines=false}={}){return new Promise((resolve,reject)=>{
  let stdout='',stderr='',stderrTruncated=false,lintErrors=false,booleanAliases=0,otherOutput=false,pending=[],warning=false;
+ const invalidLines=new Map();let unlocatedError=false;
  const append=(old,text)=>(old+String(text)+'\n').slice(0,65536);
  const retain=s=>{
   for(const line of String(s).split('\n')){
@@ -11,6 +12,14 @@ function runLint(args,inputFiles,{booleanAliases:filterBooleanAliases=false,type
    if(/^[^\n]*:\d+:/.test(line))warning=false;
    if(warning)continue;
    const diagnosedError=/^[^\n]*:\d+:\s+(?:[^\n]*?Schemas validity|parser|namespace) error\s*:/i.test(line);
+   if(captureInvalidLines&&diagnosedError){
+    const location=/^input\.xml:(\d+): [^\n]*Schemas validity error :/.exec(line);
+    if(!location)unlocatedError=true;
+    else{
+     const number=Number(location[1]),facet=!/does not match the fixed value constraint|No match found for key-sequence/.test(line);
+     invalidLines.set(number,facet||invalidLines.get(number)||false);
+    }
+   }
    lintErrors||=diagnosedError;
    // Excluding complete warning blocks keeps the byte budget for errors.
    otherOutput||=diagnosedError;
@@ -23,8 +32,8 @@ function runLint(args,inputFiles,{booleanAliases:filterBooleanAliases=false,type
   const message=pending.join('\n');pending=[];
   const alias=message.match(/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+': The actual value '[ \t\r\n]*(true|1|false|0)[ \t\r\n]*' does not match the fixed value constraint '[ \t\r\n]*(true|1|false|0)[ \t\r\n]*'\.$/);
   const typed=typedFixed&&!alias&&/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+': The actual value '[\s\S]*' does not match the fixed value constraint '[\s\S]*'\.$/.test(message);
-  const calendar=calendarAttributes&&message.match(/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+', attribute '[^']+': The value '([^']*)' does not match the fixed value constraint '([^']*)'\.$/);
-  if(typed||calendar&&sameCalendarValue(calendar[2].includes('T')?'dateTime':'time',calendar[1],calendar[2])
+  const calendar=(calendarAttributes||compoundAttributes)&&message.match(/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+', attribute '[^']+': The value '([\s\S]*)' does not match the fixed value constraint '([\s\S]*)'\.$/);
+  if(typed||calendar&&(compoundAttributes||sameCalendarValue(calendar[2].includes('T')?'dateTime':'time',calendar[1],calendar[2]))
     ||alias&&(['1','true'].includes(alias[1])===['1','true'].includes(alias[2])))booleanAliases++;
   else retain(message);
  }
@@ -32,10 +41,10 @@ function runLint(args,inputFiles,{booleanAliases:filterBooleanAliases=false,type
   if(!filterBooleanAliases){retain(s);return}
   if(/^input\.xml(?:[: ])/.test(s))flush();
   if(pending.length||/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+': The actual value '/.test(s)
-    ||calendarAttributes&&/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+', attribute '[^']+': The value '/.test(s))pending.push(s);
+    ||(calendarAttributes||compoundAttributes)&&/^input\.xml:\d+: [^\n]*Schemas validity error : Element '[^']+', attribute '[^']+': The value '/.test(s))pending.push(s);
   else retain(s);
  };
- Module({wasmBinary:self.SEDO_WASM,inputFiles,arguments:[...args],wasmMemory:new WebAssembly.Memory({initial:256,maximum:2048}),print:s=>{stdout=append(stdout,s)},printErr,onExit:code=>{flush();resolve({code,stdout,stderr,stderrTruncated,lintErrors,booleanAliases,otherOutput})},onAbort:()=>reject(Error('Недостаточно памяти или ошибка WASM.'))}).catch(reject);
+ Module({wasmBinary:self.SEDO_WASM,inputFiles,arguments:[...args],wasmMemory:new WebAssembly.Memory({initial:256,maximum:2048}),print:s=>{stdout=append(stdout,s)},printErr,onExit:code=>{flush();resolve({code,stdout,stderr,stderrTruncated,lintErrors,booleanAliases,otherOutput,invalidLines,unlocatedError})},onAbort:()=>reject(Error('Недостаточно памяти или ошибка WASM.'))}).catch(reject);
 })}
 // libxml2 can emit namespace/parser errors while xmllint still exits with zero.
 // Keep success messages and warnings separate from diagnosed errors.
@@ -74,11 +83,108 @@ function calendarValue(kind,value){
   +BigInt(MONTH_START[month-1]+day+(leap&&month>2?1:0));
  return [Boolean(zone),ordinal+BigInt(dayDelta),clock,fraction];
 }
+const escapeAttribute=value=>String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;').replace(/\t/g,'&#9;').replace(/\n/g,'&#10;').replace(/\r/g,'&#13;');
+function probeLine(pack,name,value,namespaces){
+ let bindings='',prefix='sedoprobe';
+ for(const key in namespaces){if(key!=='xml')bindings+=' xmlns'+(key?':'+key:'')+'="'+escapeAttribute(namespaces[key])+'"'}
+ while(prefix in namespaces)prefix+='x';
+ return '<'+prefix+':'+name+' xmlns:'+prefix+'="'+escapeAttribute(pack.supplementary_namespace)+'"'+bindings+' value="'+escapeAttribute(value)+'"/>';
+}
+function probeBatch(pack,files){
+ const lines=['<sedoprobe:checks xmlns:sedoprobe="'+escapeAttribute(pack.supplementary_namespace)+'">'],seen=new Map();let size=0;
+ function addLine(line){
+  if(seen.has(line))return seen.get(line);
+  size+=line.length+1;
+  if(size>32*1024*1024)throw Error('Дополнительная проверка XSD превышает 32 МиБ. Используйте Python-валидатор из ZIP.');
+  lines.push(line);seen.set(line,lines.length);return lines.length;
+ }
+ return {
+  add(name,value,namespaces){
+   return addLine(probeLine(pack,name,value,namespaces));
+  },
+  addPair(name,actual,expected,namespaces,fixedNamespaces){
+   return addLine('<sedoprobe:'+name+'>'+probeLine(pack,'expected',expected,fixedNamespaces)
+    +probeLine(pack,'actual',actual,namespaces)+'</sedoprobe:'+name+'>');
+  },
+  async check(){
+   if(lines.length===1)return new Map();
+   const xml=new TextEncoder().encode([...lines,'</sedoprobe:checks>'].join('\n'));
+   const input=files.map(file=>file.fileName==='input.xml'?{fileName:'input.xml',contents:xml}:file);
+   const result=await runLint(['--nonet','--noout','--schema',pack.supplementary_schema,'input.xml'],input,{captureInvalidLines:true});
+   if(result.unlocatedError||!(result.code===0||result.code===3&&result.invalidLines.size))throw Error('Не удалось выполнить дополнительную проверку типов XSD. '+result.stderr.slice(0,2000));
+   return result.invalidLines;
+  }
+ };
+}
+function resolveCompound(shape,value,namespaces,batch){
+ if(typeof shape==='string')return ()=>[shape,value];
+ const [kind,content,itemProbe]=shape;
+ if(kind==='list'){
+  const items=(value.match(/[^ \t\r\n]+/g)||[]).map(item=>resolveCompound(content,item,namespaces,batch));
+  return invalid=>[kind,[itemProbe,items.map(get=>get(invalid))]];
+ }
+ const members=content.map(([name,member])=>[batch.add(name,value,namespaces),resolveCompound(member,value,namespaces,batch)]);
+ return invalid=>members.find(([line])=>!invalid.has(line))?.[1](invalid)||['unknown',null];
+}
+function compareCompound([kind,value],[other,fixed],compareItem){
+ if(kind==='unknown'||other==='unknown')return ['unknown',''];
+ if(kind!==other)return ['different',''];
+ if(kind==='native')return [kind,value];
+ if(kind!=='list')return sameCalendarValue(kind,value,fixed)?['equal',fixed]:['different',''];
+ const [probe,items]=value,[fixedProbe,fixedItems]=fixed;
+ if(items.length!==fixedItems.length)return ['different',''];
+ const results=items.map((item,index)=>{
+  const expected=fixedItems[index],result=compareCompound(item,expected,compareItem);
+  if(result[0]!=='native'||!(probe||fixedProbe))return result;
+  if(probe!==fixedProbe)return ['unknown',''];
+  compareItem(probe,item[1],expected[1]);return ['equal',''];
+ });
+ for(const failure of ['different','unknown'])if(results.some(([status])=>status===failure))return [failure,''];
+ // Legacy validation packs used a fixed probe for the whole list.
+ return results.some(([status])=>status==='native')?['native',results.map(row=>row[1]).join(' ')]:['equal',''];
+}
+function sameScopedLiteral(actual,fixed,namespaces,fixedNamespaces){
+ if(actual!==fixed)return false;
+ return (fixed.match(/[^ \t\r\n]+/g)||[]).every(token=>{
+  const prefix=token.slice(0,Math.max(0,token.lastIndexOf(':')));
+  return (namespaces[prefix]||'')===(Object.hasOwn(fixedNamespaces,prefix)?fixedNamespaces[prefix]:'');
+ });
+}
+async function checkCompoundValues(pack,files,subjects,failed){
+ const selectors=probeBatch(pack,files),checks=probeBatch(pack,files),pending=[],outcomes=new Map();
+ for(const [line,subject] of subjects){
+  const compound=subject.rule.calendar_compound;
+  if(!compound||failed.has(line))continue;
+  const {shape,fixed,namespaces}=compound;
+  if(compound.limited){
+   outcomes.set(line,sameScopedLiteral(subject.calendarValue,fixed,subject.namespaces,namespaces)?'equal':'unknown');
+   continue;
+  }
+  pending.push({line,subject,
+   fixedProbe:selectors.add(subject.rule.element,fixed,namespaces),
+   actual:resolveCompound(shape,subject.calendarValue,subject.namespaces,selectors),
+   expected:resolveCompound(shape,fixed,namespaces,selectors)});
+ }
+ const invalid=await selectors.check(),native=[],pairs=[];
+ for(const {line,subject,fixedProbe,actual,expected} of pending){
+  if(invalid.has(fixedProbe)){outcomes.set(line,'unknown');continue}
+  const items=[],compound=subject.rule.calendar_compound;
+  const [outcome,lexical]=compareCompound(actual(invalid),expected(invalid),(...item)=>items.push(item));
+  outcomes.set(line,outcome);
+  if(outcome==='native')native.push({line,probe:checks.add(compound.comparison,lexical,subject.namespaces),changed:lexical!==subject.calendarValue});
+  else if(outcome==='equal')for(const item of items)pairs.push({line,probe:checks.addPair(...item,subject.namespaces,compound.namespaces)});
+ }
+ const rejected=await checks.check();
+ for(const {line,probe,changed} of native)outcomes.set(line,!rejected.has(probe)?'equal':rejected.get(probe)&&changed?'unknown':'different');
+ for(const {line,probe} of pairs)if(rejected.has(probe)&&outcomes.get(line)!=='different')outcomes.set(line,rejected.get(probe)?'unknown':'different');
+ return outcomes;
+}
 // libxml2 skips fixed constraints placed on attribute refs. Validate all actual
 // uses in one auxiliary document with direct local-attribute declarations. The
 // scalar types and fixed values are compiled from the same exact XSD closure.
 function attributeProbes(pack,source){
- if(!pack.attribute_checks?.length&&!pack.attribute_type_checks?.length&&!pack.attribute_element_checks?.length)return null;
+ if(!pack.attribute_checks?.length&&!pack.attribute_type_checks?.length&&!pack.attribute_element_checks?.length
+    &&!pack.attribute_global_checks?.length)return null;
  const text=source.replace(/\r\n?/g,'\n');
  const guardedLayouts=new Set();let maxChildren=0;
  function indexProfile(checks=[],paths=[],wildcards=[],anyTypes=[]){
@@ -125,9 +231,9 @@ function attributeProbes(pack,source){
   return actual&&guard.layouts.some(({layout,index})=>actual.layout===layout&&actual.index===index);
  };
  const globals=new Set((pack.attribute_known_elements||[]).map(name=>JSON.stringify(name)));
+ const globalAttributes=new Map((pack.attribute_global_checks||[]).map(rule=>[JSON.stringify(rule.attribute),rule]));
  const typeWhitespace=new Map((pack.element_type_whitespace||[]).map(item=>[JSON.stringify(item.type),item.mode]));
  const matchesNamespace=(w,ns)=>w.names.some(value=>value==='##any'||(value==='##other'?!!ns&&ns!==w.target_namespace:value==='##targetNamespace'?ns===w.target_namespace:value==='##local'?!ns:value===ns));
- const escape=value=>String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;').replace(/\t/g,'&#9;').replace(/\n/g,'&#10;').replace(/\r/g,'&#13;');
  const decodeText=value=>value.replace(/&(#x[\da-fA-F]+|#\d+|amp|lt|gt|quot|apos);/g,(_,key)=>key[0]==='#'?String.fromCodePoint(key[1]==='x'?parseInt(key.slice(2),16):Number(key.slice(1))):({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'"})[key]);
  const decode=value=>decodeText(value.replace(/[\t\n\r]/g,' '));
  const content=node=>{
@@ -139,7 +245,7 @@ function attributeProbes(pack,source){
    if(match[1]!==undefined)value+=match[1];else if(match[2]!==undefined)value+=decodeText(match[2]);
   }return value;
  };
- const lines=['<sedoprobe:checks xmlns:sedoprobe="'+escape(pack.supplementary_namespace)+'">'],subjects=new Map(),contexts=new WeakMap();let total=lines[0].length;
+ const lines=['<sedoprobe:checks xmlns:sedoprobe="'+escapeAttribute(pack.supplementary_namespace)+'">'],subjects=new Map(),contexts=new WeakMap();let total=lines[0].length;
  for(const node of self.SedoValidationPaths.scan(text)){
   const parent=contexts.get(node.parent),qname=[node.ns,node.name],key=JSON.stringify(qname);
   if(parent?.skip){contexts.set(node,parent);continue}
@@ -187,6 +293,9 @@ function attributeProbes(pack,source){
    for(const profile of localProfiles)rules.push(...(profile.rules.get('[]')||[]));
   }
   rules.push(...fixedRules);
+  if(laxChildren&&globalAttributes.size)for(const {ns,name} of attributes){
+   const rule=globalAttributes.get(JSON.stringify([ns,name]));if(rule)rules.push(rule);
+  }
   contexts.set(node,{path,scopes,lax:laxChildren});
   const seen=new Set();
   for(const rule of rules){
@@ -197,12 +306,11 @@ function attributeProbes(pack,source){
     attribute.value=attribute.value.replace(/[\t\r\n]/g,' ');
     if(whitespace==='collapse')attribute.value=attribute.value.replace(/ +/g,' ').replace(/^ | $/g,'');
    }
-   let namespaces='';for(const name in node.namespaces){if(name==='xml')continue;namespaces+=' xmlns'+(name?':'+name:'')+'="'+escape(node.namespaces[name])+'"'}
-   let prefix='sedoprobe';while(prefix in node.namespaces)prefix+='x';
-   const line='<'+prefix+':'+rule.element+' xmlns:'+prefix+'="'+escape(pack.supplementary_namespace)+'"'+namespaces+' value="'+escape(attribute.value)+'"/>';total+=line.length;
+   const line=probeLine(pack,rule.element,attribute.value,node.namespaces);total+=line.length;
    if(total>32*1024*1024)throw Error('Дополнительная проверка XSD превышает 32 МиБ. Используйте Python-валидатор из ZIP.');
    lines.push(line);subjects.set(lines.length,{node:{line:node.line,ns:node.ns,name:node.name},rule,
-    calendarValue:rule.calendar_fixed?attribute.value:undefined});
+    ...(rule.calendar_compound?{calendarValue:attribute.value,namespaces:node.namespaces}
+      :rule.calendar_fixed?{calendarValue:attribute.value}:{})});
   }
  }
  lines.push('</sedoprobe:checks>');return {xml:lines.join('\n'),subjects};
@@ -220,10 +328,12 @@ self.onmessage=async event=>{
   const locations=self.SedoValidationPaths,index=locations.index(typeof event.data.source==='string'&&event.data.source.length<=core.MAX_BYTES?event.data.source:text);
   if(parsed.stdout.trim()!==pack.root+'|'+(pack.namespace||'')){self.postMessage({type:'result',valid:false,errors:locations.locate([{root:true,line:index?.[0]?.line||1,message:'Неверный корневой элемент или пространство имён. Ожидается {'+(pack.namespace||'')+'}'+pack.root+'.'}],index,pack.fields||[],pack.field_namespaces||[])});return}
   const schemaArgs=['--nonet','--noout','--schema','message.xsd','input.xml'];
-  const rules=[pack.attribute_checks||[],...(pack.attribute_type_checks||[]).map(p=>p.checks),...(pack.attribute_element_checks||[]).map(p=>p.checks)].flat();
+  const rules=[pack.attribute_checks||[],pack.attribute_global_checks||[],...(pack.attribute_type_checks||[]).map(p=>p.checks),...(pack.attribute_element_checks||[]).map(p=>p.checks)].flat();
   const typedFixed=rules.some(rule=>rule.element_value);
   const calendarAttributes=rules.some(rule=>rule.calendar_fixed&&!rule.element_value);
-  let result=await runLint(schemaArgs,files,pack.boolean_fixed_replacements?{booleanAliases:true,typedFixed,calendarAttributes}:{});
+  const compoundValues=rules.some(rule=>rule.calendar_compound);
+  const compoundAttributes=rules.some(rule=>rule.calendar_compound&&!rule.element_value);
+  let result=await runLint(schemaArgs,files,pack.boolean_fixed_replacements?{booleanAliases:true,typedFixed,calendarAttributes,compoundAttributes}:{});
   if(![0,3,4].includes(result.code))throw Error('Не удалось выполнить XSD-проверку. '+result.stderr.slice(0,2000));
   if([3,4].includes(result.code)&&result.booleanAliases){
    // Keep all original lexical restrictions, including the actual xsi:type.
@@ -262,15 +372,24 @@ self.onmessage=async event=>{
      const reason=error.message.replace(/^.*?Element '[^']+', attribute 'value':\s*/, '');
      return {line:node.line,message:"Element '"+element+"'"+(rule.element_value?'':", attribute '"+attribute+"'")+': '+reason};
     });
+    const compounds=compoundValues?await checkCompoundValues(pack,files,probes.subjects,failed):new Map();
     for(const [line,{node,rule,calendarValue:actual}] of probes.subjects){
-     if(!rule.calendar_fixed||failed.has(line))continue;
-     const [kind,fixed]=rule.calendar_fixed,value=calendarValue(kind,actual),expected=calendarValue(kind,fixed);
-     if(value&&expected&&value.every((part,i)=>part===expected[i]))continue;
+     if(!(rule.calendar_fixed||rule.calendar_compound)||failed.has(line))continue;
+     let reason;
+     if(rule.calendar_compound){
+      const outcome=compounds.get(line),{fixed}=rule.calendar_compound;
+      if(outcome==='equal')continue;
+      reason=outcome==='unknown'?`Не удалось точно сравнить значение '${actual}' с fixed '${fixed}'.`
+       :`The actual value '${actual}' does not match the fixed value constraint '${fixed}'.`;
+     }else{
+      const [kind,fixed]=rule.calendar_fixed,value=calendarValue(kind,actual);
+      if(value&&sameCalendarValue(kind,actual,fixed))continue;
+      reason=value?`The actual value '${actual}' does not match the fixed value constraint '${fixed}'.`
+       :`'${actual}' is not a valid value of the atomic type 'xs:${kind}'.`;
+     }
      valid=false;
      if(errors.length===30){diagnosticsTruncated=true;break}
      const element=(node.ns?'{'+node.ns+'}':'')+node.name;
-     const reason=value?`The actual value '${actual}' does not match the fixed value constraint '${fixed}'.`
-      :`'${actual}' is not a valid value of the atomic type 'xs:${kind}'.`;
      const attribute=(rule.attribute[0]?'{'+rule.attribute[0]+'}':'')+rule.attribute[1];
      const message=`Element '${element}'${rule.element_value?'':", attribute '"+attribute+"'"}: ${reason}`;
      diagnosticsTruncated||=message.length>2000;

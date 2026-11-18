@@ -7,14 +7,30 @@ const parent={beforePath:"old",afterPath:"new",comment:""},snapshot=JSON.stringi
 const create=entries=>drafts.create({before,after,savedPairs:[parent],entries:entries||[{...parent,origin:"confirmed",selected:true}],suggest:mapping.suggestDescendants});
 const deletedOnly=drafts.create({before,after,deleted:{before:["old/sub"],after:[]}});
 assert.equal(deletedOnly.summary().dirty,true,"standalone exclusions can be applied without a saved parent");
+assert.equal(deletedOnly.hasEdits(),true,"workbook exclusions change the draft");
 const excludeBlock=mapping.suggestDescendants([parent],before,after,{before:["old/sub"],after:[]});
 assert.deepEqual(excludeBlock.suggestions.map(p=>p.beforePath),["old/a"],"deleting a whole block excludes automatic matches for its descendants");
 const draft=create();assert.equal(draft.rows.length,4);assert.equal(draft.summary().dirty,true,"proposed descendants are not saved yet");
+assert.equal(draft.hasEdits(),false,"automatic suggestions on first open do not count as user edits");
 const unconfirmed=create([{...parent,origin:"workbook",selected:true,decision:"Не проверено"}]);
 assert.deepEqual(unconfirmed.summary().pairs,[parent],"unconfirmed Excel parents must not select their descendants");
 assert.equal(unconfirmed.rows.length,1,"unconfirmed Excel parents propose only themselves");
 unconfirmed.edit(unconfirmed.rows[0].id,parent);assert.equal(unconfirmed.rows.length,4,"explicit browser confirmation can propose descendants");
 draft.selectProposals(false);assert.deepEqual(draft.summary().pairs,[parent]);assert.equal(draft.summary().dirty,false);
+assert.equal(draft.hasEdits(),true,"deselecting proposals is still a draft edit");
+{
+ const untouched=create();
+ const choice=untouched.rows.find(row=>row.origin==="relative").id;
+ untouched.toggle(choice,false);
+ untouched.toggle(choice,true);
+ assert.equal(untouched.hasEdits(),false,"restoring the initial selection leaves no edits");
+ const proposal={beforePath:"old/a",afterPath:"new/a",comment:"",origin:"workbook",selected:false};
+ const draft=drafts.create({before,after,savedPairs:[parent],entries:[parent,proposal]});
+ assert.equal(draft.hasEdits(),false,"an unchecked proposal already present in the preview is untouched");
+ draft.remove(draft.rows[1].id);
+ assert.equal(draft.summary().dirty,false,"removing an unchecked proposal leaves the applied result unchanged");
+ assert.equal(draft.hasEdits(),true,"removing an unchecked proposal changes the draft");
+}
 const parentId=draft.rows.find(r=>r.origin==="confirmed").id;
 {
  const changed=create();

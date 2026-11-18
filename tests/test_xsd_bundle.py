@@ -107,6 +107,93 @@ class XsdBundleTests(unittest.TestCase):
                     if not valid and '6782Z"' in xml:
                         self.assertRegex(result.stderr, r"Element '(request|\{urn:calendar\}calendar)', attribute 'instant': .*does not match the fixed value")
 
+    def test_downloaded_validator_enforces_fixed_calendar_union_and_list(self):
+        from importlib.util import module_from_spec, spec_from_file_location
+        from tests.typed_fixed_fixture import COMPOUND_CASES, compound_attribute_fixture
+        from xsd_bundle import _prepare, _zip
+        for kind, subject in COMPOUND_CASES:
+            row, files, cases = compound_attribute_fixture(kind, subject)
+            directory = self.base/(subject+'-'+kind)
+            with zipfile.ZipFile(io.BytesIO(_zip(row, *_prepare(row, files)))) as archive:
+                archive.extractall(directory)
+            spec = spec_from_file_location('bundled_validator', directory/'validate.py')
+            bundled = module_from_spec(spec)
+            spec.loader.exec_module(bundled)
+            validator = bundled.compile_schema(directory/'message.xsd', directory)
+            for xml, valid in cases:
+                with self.subTest(kind=kind, subject=subject, xml=xml):
+                    self.assertEqual(validator.validate(etree.fromstring(xml.encode())), valid,
+                                     str(validator.error_log))
+                    if kind == 'calendar-facet' and not valid:
+                        self.assertTrue(any('Не удалось точно сравнить' in error.message for error in validator.error_log))
+                    if kind.startswith('patterned-') and not valid and 'note="bad"' not in xml:
+                        reason = 'pattern' if ' 007' in xml else 'does not match the fixed value'
+                        self.assertTrue(any(reason in error.message for error in validator.error_log))
+
+    def test_compound_browser_limits_preserve_native_download(self):
+        from tests.typed_fixed_fixture import compound_attribute_fixture, compound_depth_fixture, pack
+        cases = []
+        for depth in (64, 65):
+            row, sources, xml = compound_depth_fixture(depth)
+            archive = io.BytesIO()
+            with zipfile.ZipFile(archive, 'w') as bundle:
+                for name, content in sources.items():
+                    bundle.writestr(name, content)
+            digest = sha(archive.getvalue())
+            write(self.state/'objects'/digest, archive.getvalue())
+            row.update(status='matched', revision_id=digest, archive_sha256=digest,
+                       dependencies=[[name, sha(content)] for name, content in sources.items()])
+            download = self.bundle(row)
+            directory = self.base/str(depth)
+            with zipfile.ZipFile(download) as bundle:
+                bundle.extractall(directory)
+            result = self.run_validator(directory, xml.encode())
+            self.assertEqual(result.returncode, 0, result.stderr)
+            expected = depth == 64
+            self.assertEqual('validation_download' in row, expected)
+            if not expected:
+                self.assertIn('ZIP', row['validation_error'])
+            cases.append((pack(row, sources), expected))
+        base = pack(*compound_attribute_fixture('union')[:2])
+        rule = base['attribute_checks'][0]
+        # A rule and its union + two leaves consume four nodes.
+        for count in (12500, 12501):
+            cases.append((dict(base, attribute_checks=[rule]*count, attribute_type_checks=[]), count == 12500))
+        for candidate, expected in cases:
+            raw=json.dumps(candidate).encode()
+            self.assertEqual(_browser_compatible(candidate, raw, gzip.compress(raw)), expected)
+        check = """
+          const {checkPack} = require('./web/validation-core.js');
+          for (const [pack, expected] of JSON.parse(require('node:fs').readFileSync(0, 'utf8'))) {
+            let accepted = true;
+            try { checkPack(pack, pack); } catch { accepted = false; }
+            require('node:assert/strict').equal(accepted, expected);
+          }
+        """
+        result = subprocess.run(['node', '-e', check], input=json.dumps(cases), text=True,
+                                capture_output=True, cwd=PROJECT, timeout=20)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_wildcard_uses_fixed_global_attributes_when_it_validates_them(self):
+        from tests.typed_fixed_fixture import wildcard_attribute_fixture
+        from xsd_bundle import _prepare, _zip
+        from xsd_validate import compile_schema
+        from audit_xml_examples import _schema
+        for label, explicit, implicit_only in (('mixed', True, False), ('wildcard', False, False), ('implicit', False, True)):
+            row, files, cases = wildcard_attribute_fixture(explicit, implicit_only=implicit_only)
+            directory = self.base/label
+            with zipfile.ZipFile(io.BytesIO(_zip(row, *_prepare(row, files)))) as archive:
+                archive.extractall(directory)
+            source = self.base/(label+'.zip')
+            with zipfile.ZipFile(source, 'w') as archive:
+                for name, raw in files.items():
+                    archive.writestr(name, raw)
+            for validator in (compile_schema(directory/'message.xsd', directory), _schema(source, row)):
+                for xml, valid in cases:
+                    with self.subTest(kind=label, validator=type(validator).__name__, xml=xml):
+                        self.assertEqual(validator.validate(etree.fromstring(xml.encode())), valid,
+                                         str(validator.error_log))
+
     def test_audit_uses_same_typed_fixed_values_without_changing_originals(self):
         from tests.typed_fixed_fixture import fixture, CASES, xml
         from audit_xml_examples import _schema

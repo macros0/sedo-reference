@@ -70,6 +70,28 @@ class AuditIndividualTablesTests(unittest.TestCase):
         self.assertEqual(count, 1)
         self.assertEqual([finding['kind'] for finding in findings], ['Объявление типа'])
 
+    def test_union_enumeration_uses_its_own_member_and_namespace(self):
+        prefix = '<xs:simpleType name="Mixed"><xs:union memberTypes="xs:QName xs:int"/></xs:simpleType>'
+        def element(value, binding=''):
+            return ('<xs:element name="root" xmlns:t="urn:test"><xs:simpleType><xs:restriction base="t:Mixed">'
+                    f'<xs:enumeration {binding} value="{value}"/>'
+                    '</xs:restriction></xs:simpleType></xs:element>')
+        source = element('p:code', 'xmlns:p="urn:one"')
+        for quote, actual, differs, limited in (
+            (element('p:code', 'xmlns:p="urn:two"'), source, True, False),
+            (element('q:code', 'xmlns:q="urn:one"'), source, False, False),
+            (element('p:code'), source, False, True),
+            (element('+01'), element('1'), False, False),
+        ):
+            with self.subTest(quote=quote):
+                notes = []
+                card = document('Атрибуты элемента root', {'Схема': quote})
+                count, findings = self.check(card, prefix+actual, notes=notes)
+                self.assertEqual((count, bool(findings), bool(notes)), (1, differs, limited))
+                if differs:
+                    self.assertIn('urn:one', findings[0]['xsd'])
+                    self.assertIn('urn:two', findings[0]['spec'])
+
     def test_equivalent_facets_match_in_schema_and_restrictions_table(self):
         cases = [
             ('decimal', 'minInclusive', '1.0', '1.00'),
@@ -237,6 +259,41 @@ class AuditIndividualTablesTests(unittest.TestCase):
         card = document('Атрибуты элемента root', {'Свойства': [['fixed', 'k:value']]})
         self.assertEqual(self.check(card, source, notes=notes), (1, []))
         self.assertTrue(any('QName' in item for item in notes), notes)
+
+    def test_calendar_and_list_constraints_use_typed_equality_in_word_cards(self):
+        calendar = '2026-11-17T00:00:00.1234567890123456781Z'
+        day = '2026-12-01T00:00:00Z'
+        for key in ('fixed', 'default'):
+            for declaration, actual, quoted, different in (
+                ('<xs:restriction base="xs:dateTime"/>', calendar,
+                 '2026-11-16T23:00:00.1234567890123456781000-01:00', False),
+                ('<xs:union memberTypes="xs:dateTime xs:integer"/>', calendar,
+                 '2026-11-16T23:00:00.1234567890123456781000-01:00', False),
+                ('<xs:restriction base="xs:dateTime"/>', calendar, calendar.replace('6781Z', '6782Z'), True),
+                ('<xs:restriction base="xs:dateTime"/>', day, '2026-11-31T00:00:00Z', True),
+                ('<xs:list itemType="xs:int"/>', '1 2', '01   +02', False),
+                ('<xs:list itemType="xs:int"/>', '1 2', '1  3', True),
+            ):
+                with self.subTest(key=key, declaration=declaration, quoted=quoted):
+                    def element(value):
+                        return f'<xs:element name="root" {key}="{value}"><xs:simpleType>{declaration}</xs:simpleType></xs:element>'
+                    rows = {'Схема': element(quoted), 'Свойства': [[key, quoted]]}
+                    checked, issues = self.check(document('Атрибуты элемента root', rows), element(actual))
+                    self.assertEqual(checked, 1)
+                    self.assertEqual(bool(issues), different, issues)
+
+    def test_list_item_with_unproved_union_uses_coverage_note(self):
+        value = ('<xs:element name="root" {} fixed="{}"><xs:simpleType><xs:list>'
+                 '<xs:simpleType><xs:union memberTypes="xs:int xs:QName"/></xs:simpleType>'
+                 '</xs:list></xs:simpleType></xs:element>')
+        for quote, source, limited in (
+            (value.format('', '01 +02'), value.format('', '1 2'), False),
+            (value.format('', 'p:code'), value.format('xmlns:p="urn:test"', 'p:code'), True),
+        ):
+            notes = []
+            card = document('Атрибуты элемента root', {'Схема': quote})
+            self.assertEqual(self.check(card, source, notes=notes), (1, []))
+            self.assertEqual(any('тип элемента списка' in message for message in notes), limited, notes)
 
     def test_union_constraints_compare_the_declared_member_and_expanded_name(self):
         for key in ('fixed', 'default'):
@@ -485,7 +542,8 @@ class AuditIndividualTablesTests(unittest.TestCase):
 
     def test_unsupported_unused_card_is_not_counted_and_next_card_is_checked(self):
         root = '<xs:element name="root" type="xs:string"/>'
-        tags = '<xs:simpleType name="Tags"><xs:list itemType="xs:string"/></xs:simpleType>'
+        tags = ('<xs:simpleType name="Tags"><xs:restriction base="xs:string">'
+                '<xs:assertion test="true()"/></xs:restriction></xs:simpleType>')
         body = document("Атрибуты типа Tags", {"Схема": tags})
         body.extend(document("Атрибуты элемента root", {"Тип": "xs:int", "Схема": root}))
         archive = io.BytesIO()
@@ -501,22 +559,26 @@ class AuditIndividualTablesTests(unittest.TestCase):
         self.assertEqual([finding["kind"] for finding in findings], ["Имя типа"])
         self.assertEqual(len(notes), 1)
         self.assertIn("Tags", notes[0])
-        self.assertIn("list", notes[0])
+        self.assertIn("assertion", notes[0])
 
     def test_expansion_releases_temporary_state_on_success_and_failure(self):
         archive = io.BytesIO()
         with zipfile.ZipFile(archive, "w") as bundle:
             bundle.writestr("main.xsd", f'<xs:schema xmlns:xs="{XS}"><xs:element name="root" type="xs:string"/>'
                             '<xs:simpleType name="Code"><xs:restriction base="xs:string"/></xs:simpleType>'
-                            '<xs:simpleType name="Tags"><xs:list itemType="xs:string"/></xs:simpleType></xs:schema>')
+                            '<xs:simpleType name="Tags"><xs:list itemType="xs:string"/></xs:simpleType>'
+                            '<xs:simpleType name="Unsupported"><xs:restriction base="xs:string">'
+                            '<xs:assertion test="true()"/></xs:restriction></xs:simpleType></xs:schema>')
         with zipfile.ZipFile(archive) as bundle:
             schema = Schema(bundle, "main.xsd", "root")
             schema.field(schema.root)
         fields, declarations, count = schema.fields, schema.field_declarations, schema.expanded_fields
         metadata_counts = [len(mapping) for mapping in (schema.owner, schema.prefixes, schema.context)]
         expanded(schema, schema.symbol[('', 'simpleType', 'Code')])
-        with self.assertRaisesRegex(ValueError, 'list'):
-            expanded(schema, schema.symbol[('', 'simpleType', 'Tags')])
+        tags, _ = expanded(schema, schema.symbol[('', 'simpleType', 'Tags')])
+        self.assertEqual(tags['listItem']['base'], 'xs:string')
+        with self.assertRaisesRegex(ValueError, 'assertion'):
+            expanded(schema, schema.symbol[('', 'simpleType', 'Unsupported')])
         self.assertIs(schema.fields, fields)
         self.assertIs(schema.field_declarations, declarations)
         self.assertEqual(schema.expanded_fields, count)

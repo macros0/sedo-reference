@@ -7,7 +7,32 @@ const field=(path,doc="Описание")=>({path,name:path.split("/").at(-1),ki
 const left={number:"101",environment:"prod",revision_id:"left123456",document_version:"2.28",document_url:"https://example.com/old.docx"};
 const right={number:"10110",environment:"test",revision_id:"right123456",document_version:"3.0",document_download:"documents/new.docx"};
 (async()=>{
- const {facets,bounds,enumWhitespace,union,unionFlags,notation}=require('./fixtures/comparison-xsd.cjs');
+ const {facets,bounds,enumWhitespace,union,unionFlags,notation,listValues}=require('./fixtures/comparison-xsd.cjs');
+ for(const [cases,equivalent,changed] of [[listValues.numeric,1,null],[listValues.order,null,1],
+   [listValues.qname,2,1],[listValues.unionFixed,2,1]]){
+  const before=cases[0];
+  if(equivalent!==null)assert.deepEqual(core.compare(before,cases[equivalent]),[]);
+  if(changed!==null){
+   const after=cases[changed],results=core.compare(before,after);
+   assert.equal(results.length,1);
+   const original=createWorkbook(ExcelJS,{left,right,before,after,results});
+   const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(await original.xlsx.writeBuffer());
+   const changes=JSON.stringify(loaded.getWorksheet('Изменения').getSheetValues());
+   if(cases!==listValues.order){
+    assert.match(changes,/p:one p:two.*urn:A.*p:one p:two.*urn:B/);
+    assert.match(loaded.getWorksheet('Было').getCell('C2').value,/p:one p:two.*urn:A/);
+   }
+  }
+ }
+ {
+  const [before,after]=listValues.qname;
+  const legacy=before.map(({valueListItems,...field})=>field);
+  assert.ok(legacy.some(core.hasUnresolvedListValues));
+  assert.ok(!before.some(core.hasUnresolvedListValues));
+  const workbook=createWorkbook(ExcelJS,{left,right,before:legacy,after,results:core.compare(legacy,after)});
+  const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(await workbook.xlsx.writeBuffer());
+  assert.match(JSON.stringify(loaded.getWorksheet('О выгрузке').getSheetValues()),/Покрытие сравнения списков.*исходному тексту/);
+ }
  for(const [trees,expected] of [[unionFlags.unresolved,true],[union.mixedSameLexeme,true],[union.mixedNumeric.slice(0,2),false]]){
   const [before,after]=trees;
   const workbook=createWorkbook(ExcelJS,{left,right,before,after,results:core.compare(before,after)});
@@ -32,6 +57,16 @@ const right={number:"10110",environment:"test",revision_id:"right123456",documen
   assert.equal(sheet.getCell('C2').value,'Допустимые значения');
   assert.deepEqual(JSON.parse(sheet.getCell('D2').value),[' A ']);
   assert.deepEqual(JSON.parse(sheet.getCell('E2').value),['A']);
+ }
+ {
+  const list={...field('periods'),type:'',facets:[['maxLength','2']],
+   listItem:{base:'xs:dateTime',facets:[['pattern','[0-9]+Z']]}};
+  const choice={...field('options'),type:'',alternatives:[{base:'xs:string'},
+   {listItem:{type:'CodeValue',base:'xs:int',facets:[['minInclusive','5']],values:[['7','Семь']]}}]};
+  const workbook=createWorkbook(ExcelJS,{left,right,before:[list],after:[choice],results:core.compare([list],[choice])});
+  const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(await workbook.xlsx.writeBuffer());
+  assert.match(loaded.getWorksheet('Было').getCell('C2').value,/Тип значения в списке[\s\S]*xs:dateTime[\s\S]*\[0-9\]\+Z/);
+  assert.match(loaded.getWorksheet('Стало').getCell('C2').value,/Тип значения в списке[\s\S]*CodeValue[\s\S]*minInclusive[\s\S]*Семь/);
  }
  for(const [trees,rows] of [[facets.token,1],[facets.dominatedLength,1],[facets.string,2],[facets.effectiveLength,2],[bounds.dominated,1],[bounds.changed,2]]){
   const [before,after]=trees;

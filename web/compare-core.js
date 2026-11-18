@@ -28,6 +28,10 @@ const patternGroups=f=>sorted((f.patternGroups||[]).map(sorted));
 // from that list. Flat facets remain comparable across every tree version.
 const samePatternGroups=(a,b)=>!a.patternGroups||!b.patternGroups||stable(patternGroups(a))===stable(patternGroups(b));
 const showQName=(value,name)=>name?value+" ({"+name[0]+"}"+name[1]+")":value;
+function displayListValue(value,items){
+ const names=(items||[]).flatMap(([, , ,name])=>name?["{"+name[0]+"}"+name[1]]:[]);
+ return names.length?value+" ("+names.join(", ")+")":value;
+}
 const wildcard=f=>f.kind==="any"||f.kind==="anyAttribute";
 const fieldNamespace=f=>wildcard(f)?f.wildcardNamespace||f.flags?.namespace||"##any":f.ns||"";
 function builtinType(field){
@@ -233,9 +237,10 @@ function flagValues(field,other){
   if(["nillable","abstract","typeAbstract","mixed"].includes(key)&&["false","0"].includes(value))return false;
   return !(key==="processContents"&&value==="strict");
  }).map(([key,value])=>{
-  const name=field.flagQNames?.[key];
-  if(!other)return [key,showQName(value,name)];
+  const name=field.flagQNames?.[key],items=field.flagListItems?.[key];
+  if(!other)return [key,displayListValue(showQName(value,name),items)];
   if(["fixed","default"].includes(key)){
+   if(Array.isArray(items)&&Array.isArray(other.flagListItems?.[key]))return [key,listValue(items)];
    if(field.alternatives?.length||other.alternatives?.length){
     const selected=field.unionFlagTypes?.[key],otherSelected=other.unionFlagTypes?.[key];
      return [key,provedSelection(selected,name)&&provedSelection(otherSelected,other.flagQNames?.[key])
@@ -252,12 +257,23 @@ function selectedUnionValue(selection,value,name){
  const family=integers.has(type)?'decimal':strings.has(type)?'string':type;
  return [family,name??enumerationValue(type,normalizeWhitespace(whitespace,value))];
 }
+const listValue=items=>['list',items.map(([type,whitespace,value,name])=>selectedUnionValue([type,whitespace],value,name))];
 const expandedNameType=type=>type==='QName'||type==='NOTATION';
-const provedSelection=(selection,name)=>selection&&(!expandedNameType(selection[0])||name);
-function unionValue(field,value,index){
+const provedSelection=(selection,name)=>selection&&selection[0]!=='list'&&(!expandedNameType(selection[0])||name);
+function compoundEnumValue(field,value,index){
+ const items=field.valueListItems?.[index];
+ if(Array.isArray(items))return listValue(items);
  const selection=field.unionValueTypes?.[index],name=field.valueQNames?.[index];
  return provedSelection(selection,name)?selectedUnionValue(selection,value,name):null;
 }
+function hasUnresolvedListValues(field){
+ return (field.values||[]).some((_,index)=>(field.listItem||field.unionValueTypes?.[index]?.[0]==='list')
+  &&!Array.isArray(field.valueListItems?.[index]))
+  ||['fixed','default'].some(key=>Object.hasOwn(field.flags||{},key)
+   &&(field.listItem||field.unionFlagTypes?.[key]?.[0]==='list')&&!Array.isArray(field.flagListItems?.[key]))
+  ||(field.alternatives||[]).some(hasUnresolvedListValues)||!!field.listItem&&hasUnresolvedListValues(field.listItem);
+}
+const listCoverageNote="Для некоторых списков типы или пространства имён элементов не установлены. Такие значения сопоставлены по исходному тексту.";
 function hasUnresolvedUnionValues(field){
  const members=field.alternatives||[];
  return members.length>0&&((field.values||[]).some((_,index)=>!field.unionValueTypes?.[index])
@@ -277,10 +293,11 @@ function hasUnresolvedNotationValues(field){
 }
 const notationCoverageNote="Для некоторых значений NOTATION пространство имён не установлено. Такие значения сопоставлены по исходному тексту.";
 function enumRows(field,other){
- const union=field.unionValueTypes||other?.unionValueTypes,typedUnion=field.unionValueTypes&&other?.unionValueTypes;
+ const leftProof=field.unionValueTypes||field.valueListItems,rightProof=other?.unionValueTypes||other?.valueListItems;
+ const typed=leftProof&&rightProof,compound=leftProof||rightProof||field.listItem||other?.listItem;
  const knownLexemes=new Set(),knownValues=new Set(),unknownLexemes=new Set();
- if(typedUnion)(other.values||[]).forEach(([value],index)=>{
-  const key=unionValue(other,value,index);
+ if(typed)(other.values||[]).forEach(([value],index)=>{
+  const key=compoundEnumValue(other,value,index);
   if(key){
    knownLexemes.add(value);
    knownValues.add(stable(key));
@@ -288,14 +305,14 @@ function enumRows(field,other){
  });
  const rows=(field.values||[]).map(([value,doc],index)=>{
   const name=field.valueQNames?.[index];
-  if(!other)return [showQName(value,name),doc];
-  if(typedUnion){
-   const key=unionValue(field,value,index);
+  if(!other)return [displayListValue(showQName(value,name),field.valueListItems?.[index]),doc];
+  if(typed){
+   const key=compoundEnumValue(field,value,index);
    // An unknown entry on the other side should not mask a comparison
    // between proved values, even when one has the same spelling.
    if(key&&(!unknownLexemes.has(value)||knownLexemes.has(value)||knownValues.has(stable(key))))return [key,doc];
   }
-  if(union)return [value,doc];
+  if(compound)return [value,doc];
   const rule=field.enumWhiteSpace??whitespaceRule(field)??'preserve';
   return [name&&other.valueQNames?name:enumerationValue(builtinType(field),normalizeWhitespace(rule,value)),doc];
  });
@@ -306,12 +323,13 @@ function enumValues(field,other){
  const values=enumRows(field,other).map(([value])=>value);
  return sorted(other?[...new Map(values.map(value=>[stable(value),value])).values()]:values);
 }
-const alternatives=rows=>(rows||[]).map(r=>({type:typeLabel(r,"type"),base:typeLabel(r,"base"),flags:flagValues(r),facets:sorted(r.facets),...(r.patternGroups?{patternGroups:patternGroups(r)}:{}),values:sorted(enumRows(r)),alternatives:alternatives(r.alternatives)}));
+const alternatives=rows=>(rows||[]).map(r=>({type:typeLabel(r,"type"),base:typeLabel(r,"base"),flags:flagValues(r),facets:sorted(r.facets),...(r.patternGroups?{patternGroups:patternGroups(r)}:{}),values:sorted(enumRows(r)),alternatives:alternatives(r.alternatives),...(r.listItem?{listItem:alternatives([r.listItem])[0]}:{})}));
+const listItems=field=>field.listItem?[field.listItem]:[];
 function sameAlternatives(left=[],right=[]){
  if(left.length!==right.length)return false;
  for(const [index,a] of left.entries()){
   const b=right[index];
-  const equal=sameType(a,b,"type")&&sameType(a,b,"base")&&stable(flagValues(a,b))===stable(flagValues(b,a))&&stable(facetRows(a,b))===stable(facetRows(b,a))&&samePatternGroups(a,b)&&stable(sorted(enumRows(a,b)))===stable(sorted(enumRows(b,a)))&&sameAlternatives(a.alternatives,b.alternatives);
+  const equal=sameType(a,b,"type")&&sameType(a,b,"base")&&stable(flagValues(a,b))===stable(flagValues(b,a))&&stable(facetRows(a,b))===stable(facetRows(b,a))&&samePatternGroups(a,b)&&stable(sorted(enumRows(a,b)))===stable(sorted(enumRows(b,a)))&&sameAlternatives(a.alternatives,b.alternatives)&&sameAlternatives(listItems(a),listItems(b));
   if(!equal)return false;
  }
  return true;
@@ -329,6 +347,7 @@ const properties=[
  ["patternGroups","Шаблоны XSD (ИЛИ внутри группы, И между группами)",patternGroups],
  ["values","Допустимые значения",enumValues],
  ["alternatives","Альтернативы типа (union)",f=>alternatives(f.alternatives)],
+ ["listItem","Тип значения в списке (list)",f=>alternatives(listItems(f))[0]||null],
  ["doc","Описание и условия заполнения",f=>f.doc||""],
  ["valueDescriptions","Описания допустимых значений",f=>sorted(enumRows(f))]
 ];
@@ -417,6 +436,7 @@ function differences(before,after,beforeParent,afterParent,pairing){
  const changes=properties.filter(([key,,get])=>{
   if(key==="type"||key==="base")return !sameType(before,after,key);
   if(key==="alternatives")return !sameAlternatives(before.alternatives,after.alternatives);
+  if(key==="listItem")return !sameAlternatives(listItems(before),listItems(after));
   if(key==="patternGroups")return !samePatternGroups(before,after);
   if(key==="group"&&beforeParent?.contentModel&&afterParent?.contentModel)return stable(groupStructure(before))!==stable(groupStructure(after));
   if(key==="valueDescriptions"){
@@ -471,7 +491,7 @@ function compare(left,right,mappings=[]){
  }
  return results.sort((x,y)=>x.path.localeCompare(y.path)||(x.afterPath||"").localeCompare(y.afterPath||""));
 }
-const api={compare,fieldNamespace,hasUnresolvedUnionValues,unionCoverageNote,hasUnresolvedNotationValues,notationCoverageNote};root.SedoCompare=api;
+const api={compare,fieldNamespace,displayListValue,hasUnresolvedListValues,listCoverageNote,hasUnresolvedUnionValues,unionCoverageNote,hasUnresolvedNotationValues,notationCoverageNote};root.SedoCompare=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);
 

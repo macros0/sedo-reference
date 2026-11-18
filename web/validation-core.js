@@ -72,7 +72,7 @@ function checkPack(pack,expected){
    !Object.hasOwn(pack.files,name)||typeof alternate!=='string'||!/^schemas\/boolean-fixed-\d+\.xsd$/.test(alternate)||!Object.hasOwn(pack.files,alternate)))throw Error('Некорректные схемы для проверки логического fixed.');
  }
  if(pack.attribute_type_profiles_complete!==undefined&&typeof pack.attribute_type_profiles_complete!=='boolean')throw Error('Некорректная версия профилей типов XSD.');
- if([pack.attribute_checks,pack.attribute_type_checks,pack.attribute_wildcard_paths,pack.attribute_element_checks,pack.attribute_wildcards,pack.attribute_known_elements,pack.attribute_any_type_paths].some(value=>value!==undefined)){
+ if([pack.attribute_checks,pack.attribute_type_checks,pack.attribute_wildcard_paths,pack.attribute_element_checks,pack.attribute_global_checks,pack.attribute_wildcards,pack.attribute_known_elements,pack.attribute_any_type_paths].some(value=>value!==undefined)){
   const pair=value=>Array.isArray(value)&&value.length===2&&value.every(x=>typeof x==='string'&&x.length<=8192)&&value[1].length>0;
   const path=(value,relative)=>Array.isArray(value)&&(relative||value.length>0)&&value.length<=256&&value.every(pair);
   const guards=(value,relative)=>{
@@ -88,10 +88,32 @@ function checkPack(pack,expected){
   };
   const calendar=value=>value.calendar_fixed===undefined||Array.isArray(value.calendar_fixed)
    &&value.calendar_fixed.length===2&&['dateTime','time'].includes(value.calendar_fixed[0])&&typeof value.calendar_fixed[1]==='string';
-  const rule=(value,relative)=>value&&path(value.path,relative)&&pair(value.attribute)&&typeof value.element==='string'&&/^value[0-9]+$/.test(value.element)&&typeof value.field==='string'&&value.field.length<=8192&&guards(value,relative)&&calendar(value);
+  function compoundShape(shape,depth=0){
+   if(depth>64||++total>50000)return false;
+   if(typeof shape==='string')return ['native','dateTime','time'].includes(shape);
+   if(!Array.isArray(shape)||(shape.length!==2&&shape.length!==3))return false;
+   const [kind,content,item]=shape;
+   if(kind==='list')return (shape.length===2||typeof item==='string'&&/^item[0-9]+$/.test(item))&&compoundShape(content,depth+1);
+   return shape.length===2&&kind==='union'&&Array.isArray(content)&&content.length>0&&content.every(member=>Array.isArray(member)
+    &&member.length===2&&typeof member[0]==='string'&&/^member[0-9]+$/.test(member[0])&&compoundShape(member[1],depth+1));
+  }
+  function compound(value){
+   const check=value.calendar_compound;
+   return check===undefined||check&&typeof check==='object'&&!Array.isArray(check)&&value.calendar_fixed===undefined
+    &&typeof check.fixed==='string'&&typeof check.comparison==='string'&&/^compound[0-9]+$/.test(check.comparison)
+    &&(check.limited===undefined||typeof check.limited==='boolean')
+    &&check.namespaces&&typeof check.namespaces==='object'&&!Array.isArray(check.namespaces)
+    &&Object.entries(check.namespaces).every(([prefix,uri])=>validNamespacePrefix(prefix)&&typeof uri==='string')
+    &&Array.isArray(check.shape)&&compoundShape(check.shape);
+  }
+  const rule=(value,relative)=>value&&path(value.path,relative)&&pair(value.attribute)&&typeof value.element==='string'&&/^value[0-9]+$/.test(value.element)&&typeof value.field==='string'&&value.field.length<=8192
+   &&(value.element_value===undefined||typeof value.element_value==='boolean')&&guards(value,relative)&&calendar(value)&&compound(value);
   if(!Array.isArray(pack.attribute_checks)||pack.attribute_checks.length>50000||typeof pack.supplementary_namespace!=='string'||!pack.supplementary_namespace||pack.supplementary_namespace.length>8192||typeof pack.supplementary_schema!=='string'||!Object.hasOwn(pack.files,pack.supplementary_schema))throw Error('Некорректные дополнительные проверки XSD.');
   let total=pack.attribute_checks.length;
   if(!pack.attribute_checks.every(value=>rule(value,false)))throw Error('Некорректный путь дополнительной проверки XSD.');
+  const globalAttributes=pack.attribute_global_checks;
+  if(globalAttributes!==undefined&&(!Array.isArray(globalAttributes)||(total+=globalAttributes.length)>50000
+    ||!globalAttributes.every(value=>rule(value,true)&&!value.path.length&&!value.element_value)))throw Error('Некорректная проверка глобального атрибута XSD.');
   const wildcardPaths=(paths,relative=false)=>{
    if(paths===undefined)return true;
    return Array.isArray(paths)&&(total+=paths.length)<=50000&&paths.every(value=>path(value,relative));
@@ -109,6 +131,9 @@ function checkPack(pack,expected){
  }
  return pack;
 }
+const NCNAME_START='A-Z_a-z\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c\u200d\u2070-\u218f\u2c00-\u2fef\u3001-\ud7ff\uf900-\ufdcf\ufdf0-\ufffd\\u{10000}-\\u{effff}';
+const NCNAME=new RegExp('^['+NCNAME_START+']['+NCNAME_START+'.0-9\u00b7\u0300-\u036f\u203f-\u2040-]*$','u');
+function validNamespacePrefix(value){return value===''||NCNAME.test(value)}
 function decode64(text){return Uint8Array.from(atob(text),c=>c.charCodeAt(0))}
 function isWarningDiagnostic(line){
  return /^(?:[^\n]*:\d+:\s*)?(?:namespace|parser|Schemas(?: validity| parser)?) warning\s*:/i.test(line);

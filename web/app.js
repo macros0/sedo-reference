@@ -28,16 +28,48 @@ function appendSchemaOrigin(card,r){
  const origin=r.archive_url?.split("#")[0], service=r.schema_source_url;
  const filename=url=>window.SedoReviewJournal.sourceFilename(url,url);
  const step=()=>line.append(document.createTextNode(" → "));
+ const archiveFile=(path,url,name)=>{
+  if(!url){line.append(document.createTextNode(path));return}
+  const link=node("a","source",path);link.href=url;link.download=name;
+  link.title="Скачать исходный файл XSD";line.append(link);
+ };
  if(r.schema_publication_page){
   line.append(external("Страница СФР ("+new URL(r.schema_publication_page).host+new URL(r.schema_publication_page).pathname+")",r.schema_publication_page));
   step();
  }
  if(r.schema_source_type==="wsdl"){
   if(service){line.append(external("WSDL шлюза СФР",service));step()}
-  const digest=r.dependencies?.find(([name])=>name===file)?.[1];
-  const original=window.SedoReviewJournal.remoteSchemaSource(r,r.schema_path,digest);
-  if(r.schema_original_url||original)line.append(external(file,r.schema_original_url||original.url));
-  else line.append(document.createTextNode(file));
+  if(r.schema_docx_location){
+   line.append(document.createTextNode("Файл из DOCX · "));
+   if(r.schema_docx_url)line.append(external(r.schema_docx_location,r.schema_docx_url));
+   else line.append(document.createTextNode(r.schema_docx_location));
+   step();
+   if(r.schema_docx_path===r.schema_declaration_path){
+    line.append(document.createTextNode("Файл объявления корня · "));
+   }
+   archiveFile(r.schema_docx_path,r.schema_docx_download,r.schema_docx_path.split("/").pop());
+   if(r.schema_docx_path!==r.schema_declaration_path){
+    const declaration=r.schema_declaration_path.split("/").pop();
+    step();line.append(document.createTextNode("Файл объявления корня · "));
+    if(r.schema_declaration_url){line.append(external(declaration,r.schema_declaration_url));step()}
+    archiveFile(r.schema_declaration_path,r.schema_declaration_download,declaration);
+   }
+   step();line.append(document.createTextNode("Точка входа XSD · "));
+   if(r.schema_path===r.schema_declaration_path)line.append(document.createTextNode(r.schema_path));
+   else archiveFile(r.schema_path,r.schema_file_download,r.schema_file_name||file);
+  }else if(r.schema_declaration_path){
+   const declaration=r.schema_declaration_path.split("/").pop();
+   if(r.schema_declaration_url){line.append(external(declaration,r.schema_declaration_url));step()}
+   line.append(document.createTextNode("Файл из DOCX · "));
+   archiveFile(r.schema_declaration_path,r.schema_declaration_download,declaration);
+   step();line.append(document.createTextNode("Точка входа XSD · "));
+   archiveFile(r.schema_path,r.schema_file_download,r.schema_file_name||file);
+  }else{
+   const digest=r.dependencies?.find(([name])=>name===file)?.[1];
+   const original=window.SedoReviewJournal.remoteSchemaSource(r,r.schema_path,digest);
+   if(r.schema_original_url||original)line.append(external(file,r.schema_original_url||original.url));
+   else line.append(document.createTextNode(file));
+  }
  }else{
   if(origin?.startsWith("manual:")){
    line.append(document.createTextNode("Загруженный архив "+filename(origin)));
@@ -52,10 +84,7 @@ function appendSchemaOrigin(card,r){
    }
   }
   step();
-  if(r.schema_file_download){
-   const link=node("a","source",r.schema_path);link.href=r.schema_file_download;link.download=r.schema_file_name||file;
-   link.title="Скачать исходный файл XSD";line.append(link);
-  }else line.append(document.createTextNode(r.schema_path));
+  archiveFile(r.schema_path,r.schema_file_download,r.schema_file_name||file);
   if(r.schema_source_type==="wsdl_bridge"&&service){
    line.append(document.createTextNode(" · Зависимости из "),external("WSDL шлюза СФР ("+new URL(service).hostname+")",service));
   }
@@ -118,8 +147,8 @@ function appendDocumentHistory(container,source){
  const changes=source.document_history||catalog.document_histories?.[source.document_sha256]
   ||revision?.document_history||catalog.document_histories?.[revision?.document_sha256]||[];
  if(changes.length){
-  const history=node('section','document-change-history');
-  history.append(node('h3','','История изменений документа'));
+  const history=node('details','document-change-history');
+  history.append(node('summary','','История изменений документа ('+changes.length+')'));
   const url=source.document_url||source.document_download;
   if(url)history.append(external('Источник истории изменений — DOCX',url));
   for(const change of changes){

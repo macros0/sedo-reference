@@ -9,8 +9,10 @@ from sync import encode,sha,write
 from schema import dependency_set, equivalent_closure
 from edition_groups import SOURCE_KEYS, SCHEMA_SOURCE_KEYS
 from document_metadata import parse_label, root_metadata, root_matches, read_document_history, read_document_display, prefer_schema_location
-from document_metadata import MODULE_FILENAME, snapshot_display
-from wsdl_sources import prefer_wsdl_inline_entries
+from document_metadata import MODULE_FILENAME, schema_location, schema_location_candidates, snapshot_display, wsdl_location_matches
+from wsdl_sources import archived_wsdl_member, explicit_wsdl_entrypoints, prefer_wsdl_inline_entries
+
+INDIVIDUAL_WSDL_MATCH_VERSION = 3
 
 def document_filename(row, *, legacy=False):
     return unquote(row['url'].split('/')[-1] if legacy else urlsplit(row['url']).path.rsplit('/',1)[-1])
@@ -21,6 +23,93 @@ def individual_number(row, *, legacy=False):
         filename = document_filename(row,legacy=legacy)
         match = re.search(r"тип[ _]+сообщения[ _]+(\d+)", filename, re.I)
         return match[1] if match else None
+
+def _individual_candidates(document, archives, root_info):
+    env = document['environment']
+    own = [dict(a, environment=env, url=document['url'] + '#embedded=' + a['container'],
+                archive_name=a['filename'] + ' (из DOCX)') for a in document.get('embedded_archives', [])]
+    return [(a, s) for a in [*archives, *own] if a['environment'] == env
+            for s in a.get('schemas', []) if root_matches(s, *root_info)]
+
+
+def named_wsdl_members(document, archives, *, legacy=False):
+    structure = document.get('structure', [])
+    libraries = [archive for archive in archives if archive.get('source_type') == 'wsdl'
+                 and archive['environment'] == document['environment']]
+    if legacy:
+        root, namespace, declared = root_metadata(structure)
+        candidates = [(archive, schema) for archive in libraries for schema in archive.get('schemas', [])
+                      if root_matches(schema, root, namespace, declared and bool(schema['namespace']))]
+        return [(archive, schema, None) for archive, schema in schema_location_candidates(candidates, structure)]
+    location = schema_location(structure)
+    if not location:
+        return []
+    return [(archive, archived_wsdl_member(archive, source), source) for archive in libraries
+            for source in archive.get('source_files', []) if source['kind'] == 'xsd'
+            and wsdl_location_matches(location, archive, source)]
+
+
+def record_individual_wsdl_matches(entries, read_object, *, legacy_filenames=False,
+                                   version=INDIVIDUAL_WSDL_MATCH_VERSION):
+    """Persist verified entry-point evidence only for DOCX files naming a WSDL member."""
+    archives = [row for row in entries if row.get('source_type') == 'wsdl']
+    probes = {}
+    recorded = False
+    for doc in entries:
+        doc.pop('wsdl_schema_matches', None)
+        if not archives or not individual_number(doc, legacy=legacy_filenames):
+            continue
+        matches = []
+        root_info = root_metadata(doc.get('structure', []))
+        for archive, schema, source in named_wsdl_members(doc, archives, legacy=version < 3):
+            match = dict(archive_url=archive['url'], archive_sha256=archive['sha256'])
+            if schema is not None:
+                key = (archive['url'], archive['sha256'], schema['path'], root_info)
+                if key not in probes:
+                    probes[key] = explicit_wsdl_entrypoints(archive, schema, root_info, read_object, legacy=version < 3)
+            if version < 3:
+                match.update(declaration=schema['path'], entrypoints=probes[key])
+            else:
+                match.update(resource_url=source['url'], resource_sha256=source['sha256'])
+                if source.get('final_url'):
+                    match['resource_final_url'] = source['final_url']
+                if schema is not None:
+                    match.update(document_path=schema['path'], **probes[key])
+            matches.append(match)
+        if matches:
+            doc['wsdl_schema_matches'] = dict(version=version, members=matches)
+            if version >= 3:
+                doc['wsdl_schema_matches']['location'] = schema_location(doc.get('structure', []))
+            recorded = True
+    return recorded
+
+
+def _apply_explicit_wsdl_matches(document, archives, candidates):
+    evidence = document['wsdl_schema_matches']
+    matches = evidence['members'] if isinstance(evidence, dict) else evidence
+    modern = isinstance(evidence, dict) and evidence.get('version', 1) >= 3
+    indexed = {(a['url'], a['sha256']): a for a in archives if a['environment'] == document['environment']}
+    locator = urlsplit(evidence['location'].replace('\\', '/')) if modern else None
+    selected = [(a, s) for a, s in schema_location_candidates(candidates, document.get('structure', []))
+                if a.get('source_type') != 'wsdl' and (not locator or not (locator.scheme or locator.netloc))]
+    declarations, incomplete, locations = {}, [], {}
+    for match in matches:
+        url, digest = match['archive_url'], match['archive_sha256']
+        archive = indexed[url, digest]
+        schemas = {s['path']: s for s in archive['schemas']}
+        member = match.get('document_path') if modern else match['declaration']
+        paths = match.get('entrypoints', [])
+        if not paths:
+            incomplete.append(match)
+        for entry in paths:
+            path, declaration = (entry['path'], entry['declaration']) if modern else (entry, member)
+            selected.append((archive, schemas[path]))
+            declarations[url, digest, path] = schemas[declaration]
+            if modern:
+                locations[url, digest, path] = dict(schema_docx_location=evidence['location'],
+                    schema_docx_path=member, schema_docx_url=match['resource_url'])
+    return selected, declarations, incomplete, locations
+
 
 def derive(snapshot, known_revisions=(), *, preferred_revision_id=None, display_registry=None):
     if snapshot.get("source_type")=="manual":
@@ -56,7 +145,10 @@ def derive(snapshot, known_revisions=(), *, preferred_revision_id=None, display_
         appendices[r['environment'], r['url']] = appendix
         version, date = parse_label(r.get('label', filename))
         matched = {m['number'] for m in r.get('module_matches', [])}
+        named_individual = individual_number(r, legacy=legacy_filenames) if r.get('wsdl_schema_matches') else None
         for declaration in r.get("message_types", []):
+            if declaration['number'] == named_individual:
+                continue
             identity = (r["environment"], declaration["number"])
             if declaration["number"] not in matched:
                 reasons = dict.fromkeys(issue['reason'] for issue in r.get('schema_diagnostics', [])
@@ -78,12 +170,14 @@ def derive(snapshot, known_revisions=(), *, preferred_revision_id=None, display_
         if not number:continue
         fname=document_filename(r,legacy=legacy_filenames);e=r["environment"]
         root, ns, namespace_declared = root_metadata(r.get("structure", []))
-        own=[dict(a,environment=e,url=r["url"]+"#embedded="+a["container"],archive_name=a["filename"]+" (из DOCX)") for a in r.get("embedded_archives",[])]
-        archives=[a for a in rows if a["environment"]==e and a["kind"]=="zip"]+own
-        candidates=[(a,s) for a in archives for s in a.get("schemas",[]) if root_matches(s, root, ns, namespace_declared)]
-        if len(candidates) > 1:
-            # An explicit XSD path in Word takes precedence over WSDL's
-            # automatic choice of entry point for the same declaration.
+        archives=[a for a in rows if a["kind"]=="zip"]
+        candidates=_individual_candidates(r, archives, (root, ns, namespace_declared))
+        declarations, incomplete, locations = {}, [], {}
+        explicit_wsdl = r.get('wsdl_schema_matches')
+        if explicit_wsdl:
+            candidates, declarations, incomplete, locations = _apply_explicit_wsdl_matches(r, archives, candidates)
+        elif len(candidates) > 1:
+            # Older snapshots retain the original path selection and IDs.
             if snapshot.get('format',7) >= 7 or any(s.get("wsdl_entry_members") for _,s in candidates):
                 candidates = prefer_schema_location(candidates,r.get('structure',[]))
             candidates = prefer_wsdl_inline_entries(candidates, root)
@@ -108,11 +202,14 @@ def derive(snapshot, known_revisions=(), *, preferred_revision_id=None, display_
         title=title_record["title"] if title_record is not None else r["label"]
         version,date=parse_label(r["label"])
         d=dict(number=number,environment=e,title=title,document_version=version,label_date=date,document_url=r["url"],document_sha256=r["sha256"],root=root,namespace=ns,namespace_declared=namespace_declared,version_tables=r.get("version_tables",[]),document_history=r.get("document_history",[]),status="review")
-        if len(candidates)==1:
+        modern = isinstance(explicit_wsdl, dict) and explicit_wsdl.get('version', 1) >= 3
+        ambiguous_location = modern and len(explicit_wsdl['members']) > 1
+        if len(candidates)==1 and not incomplete and not ambiguous_location:
             a,s=candidates[0]
             try:
                 deps=dependency_set(a["schemas"],s["path"])
-                root_text=next(x["description"] for x in s["roots"] if x["name"]==root)
+                declaration = declarations.get((a['url'], a['sha256'], s['path']), s)
+                root_text=next((x["description"] for x in declaration["roots"] if x["name"]==root), '')
                 if d["title"]==r["label"] and root_text:
                     d["title"]=re.split(r"\s*Тип сообщения СЭДО",root_text,flags=re.I)[0].rstrip(". ") or r["label"]
                 d["module"]="ВНиМ, ССВ" if "ВНиМ" in fname else "Возмещения" if "Возмещения" in fname else None
@@ -121,7 +218,36 @@ def derive(snapshot, known_revisions=(), *, preferred_revision_id=None, display_
                 if a.get("source_type") in ("wsdl", "wsdl_bridge"):
                     d.update(schema_source_type=a["source_type"], schema_source_url=a["source_url"],
                              schema_sources=a["source_files"])
+                location = locations.get((a['url'], a['sha256'], s['path']))
+                if declaration['path'] != s['path'] or location:
+                    d['schema_declaration_path'] = declaration['path']
+                if location:
+                    d.update(location)
             except (ValueError,KeyError) as ex:issues.append(str(ex))
+        if explicit_wsdl and d['status'] != 'matched':
+            if ambiguous_location or len(candidates) + len(incomplete) > 1:
+                reason = 'Неоднозначные схемы по пути XSD, указанному в DOCX.'
+            elif incomplete:
+                match = incomplete[0]
+                member = match.get('document_path') or match.get('resource_url') or match['declaration']
+                if modern and not match.get('document_path'):
+                    reason = 'Для ресурса ' + member + ' не удалось однозначно установить файл в архиве WSDL.'
+                elif modern and not match['has_root']:
+                    qname = ('{' + ns + '}' if ns else '') + (root or '(не указан)')
+                    reason = 'В цепочке файла ' + member + ' не найден корневой элемент ' + qname + '.'
+                else:
+                    reason = 'Для файла ' + member + ' не найдена полная точка входа в подтверждённом WSDL.'
+            else:
+                reason = 'Не найдена полная XSD по пути, указанному в DOCX.'
+            if modern:
+                d['schema_docx_location'] = explicit_wsdl['location']
+                if len(explicit_wsdl['members']) == 1:
+                    match, = explicit_wsdl['members']
+                    d['schema_docx_url'] = match['resource_url']
+                    if match.get('document_path'):
+                        d['schema_docx_path'] = match['document_path']
+            document_sources.append({k: v for k, v in d.items() if k != 'status'} | dict(schema_reason=reason))
+            continue
         if d["status"]!="matched":issues.append([e,number,"Требуется проверка сопоставления",len(candidates),
             sorted({"{"+s["namespace"]+"}"+root if s["namespace"] else root+" (без пространства имён)" for _,s in candidates})])
         d["revision_id"]=sha(encode([e,number,r["sha256"],d.get("dependency_digest")]))
@@ -129,7 +255,10 @@ def derive(snapshot, known_revisions=(), *, preferred_revision_id=None, display_
             display_registry[d['revision_id'], r['url']] = ('title', title_record)
         catalog.append(d)
     for r in rows:
+        named_individual = individual_number(r, legacy=legacy_filenames) if r.get('wsdl_schema_matches') else None
         for match in r.get("module_matches", []):
+            if match['number'] == named_individual:
+                continue
             version,date=parse_label(r["label"])
             document = (r["environment"], r["url"])
             module_record = next((record for record in registry

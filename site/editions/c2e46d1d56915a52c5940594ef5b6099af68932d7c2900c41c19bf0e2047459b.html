@@ -29,8 +29,10 @@ const $=id=>document.getElementById(id);
 function el(tag,cls,txt){const x=document.createElement(tag);if(cls)x.className=cls;if(txt!==undefined)x.textContent=txt;return x}
 function button(cls,txt,fn){const b=el('button',cls,txt);b.type='button';b.onclick=fn;return b}
 const normalize=s=>s.toLocaleLowerCase('ru').replaceAll('ё','е');
-const alternativeText=rows=>(rows||[]).flatMap(r=>[r.type||'',r.base||'',...(r.values||[]).flat(),...alternativeText(r.alternatives)]);
-const index=fields.map(f=>normalize([f.name,f.path,f.doc,...f.values.flat(),...alternativeText(f.alternatives)].join(' ')));
+const typeChildren=field=>[...(field.alternatives||[]),...(field.listItem?[field.listItem]:[])];
+const typeSearchText=type=>[type.type||'',type.base||'',...(type.values||[]).flat(),
+ ...(type.facets||[]).flat(),...typeChildren(type).flatMap(typeSearchText)];
+const index=fields.map(f=>normalize([f.name,f.path,f.doc,...f.values.flat(),...typeChildren(f).flatMap(typeSearchText)].join(' ')));
 const branches=fields.map((f,i)=>i).filter(i=>i>0&&fields[i].children.length);
 
 const reviewsByPath=new Map();
@@ -110,20 +112,32 @@ function renderFieldReviews(field){
   detail.append(section);
  }
 }
+function typeLabel(field,fallback){return field.type||field.base||(field.listItem?'Список значений':fallback)}
+function renderTypeOption(type,label,container){
+ const box=el('div','value');
+ box.append(el('b','',label+' · '+typeLabel(type,'Составной тип')));
+ const rules=el('ul','rules');
+ for(const [key,value] of valueRules(type))rules.append(el('li','',(facets[key]||key)+': '+value));
+ for(const [value,doc] of type.values||[])rules.append(el('li','',(value===''?'«пустая строка»':value)+(doc?' · '+doc:'')));
+ if(rules.children.length)box.append(rules);
+ renderTypeOptions(type,box);
+ container.append(box);
+}
+function renderTypeOptions(field,container){
+ if(field.listItem)renderTypeOption(field.listItem,'Тип элемента списка',container);
+ for(const [i,option] of (field.alternatives||[]).entries())renderTypeOption(option,'Вариант '+(i+1),container);
+}
 function renderDetail(){const f=fields[current],inChoice=/Выбор \d+, вариант \d+/.test(f.group||'');detail.replaceChildren();const ancestors=[];for(let p=f.parent;p>=0;p=fields[p].parent)ancestors.unshift(p);
  const nav=el('div','breadcrumbs');ancestors.forEach(i=>nav.append(button('crumb',fields[i].name,()=>select(i,true)),document.createTextNode(' / ')));detail.append(nav);
  const kind={attribute:'Атрибут',any:'Расширение для элементов',anyAttribute:'Расширение для атрибутов'}[f.kind]||(f.children.length?'Блок':'Поле');
  const title=el('div','title');title.append(el('h2','',f.name),el('span','pill',kind));detail.append(title);
  if(f.doc)detail.append(el('p','doc',f.doc));const path=el('div','pathbox'),copy=button('btn','Копировать путь',async()=>{try{await navigator.clipboard.writeText(f.path);copy.textContent='Скопировано'}catch{const range=document.createRange();range.selectNodeContents(path.firstChild);const sel=getSelection();sel.removeAllRanges();sel.addRange(range);copy.textContent='Нажмите Ctrl+C'}});path.append(el('code','',f.path),copy);detail.append(path);
- const facts=el('div','facts');for(const [label,val] of [['Тип',f.type||f.base||(f.flags.mixed==='true'?'Смешанный составной тип':f.contentModel?.[0]==='empty'?'Пустой составной тип':f.children.length?'Составной':'По схеме')],['Кратность',f.min+' … '+(f.max==='unbounded'?'∞':f.max)],['В родительском блоке',inChoice?'Вариант выбора':f.min==='0'?'Необязательно':f.parent<0?'Корень':f.group?'Обязательно внутри блока':'Обязательно']]){const a=el('div','fact');a.append(el('span','label',label),el('b','',val));facts.append(a)}detail.append(facts);renderFieldReviews(f);
+ const facts=el('div','facts');for(const [label,val] of [['Тип',typeLabel(f,f.flags.mixed==='true'?'Смешанный составной тип':f.contentModel?.[0]==='empty'?'Пустой составной тип':f.children.length?'Составной':'По схеме')],['Кратность',f.min+' … '+(f.max==='unbounded'?'∞':f.max)],['В родительском блоке',inChoice?'Вариант выбора':f.min==='0'?'Необязательно':f.parent<0?'Корень':f.group?'Обязательно внутри блока':'Обязательно']]){const a=el('div','fact');a.append(el('span','label',label),el('b','',val));facts.append(a)}detail.append(facts);renderFieldReviews(f);
  const req=valueRules(f),base=builtins[f.base.split(':').pop()];
  if(req.length||base||f.group){detail.append(el('h3','','Ограничения ввода'));const ul=el('ul','rules');if(base)ul.append(el('li','',base));if(f.group)ul.append(el('li','',''+f.group+(inChoice?'. Поля с одинаковым номером варианта входят в него вместе. Кратность указана внутри варианта.':'. Кратность группы относится ко всему блоку. При наличии блока его поля заполняются вместе с учётом кратности каждого поля.')));for(const [k,v] of req){const li=el('li','',(facets[k]||k)+': ');li.append(el('code','',v));ul.append(li)}detail.append(ul)}
  const conditions=ancestors.filter(i=>/обязател|необходимо|при указании|при условии/i.test(fields[i].doc));if(conditions.length){detail.append(el('h3','','Условия родительских блоков'));conditions.forEach(i=>detail.append(el('p','quiet',fields[i].name+' · '+fields[i].doc)))}
- if(f.alternatives?.length){
-  detail.append(el('h3','','Допустимые варианты типа (union)'),el('p','quiet','Значение должно соответствовать хотя бы одному варианту. Ограничения разных вариантов не объединяются.'));
-  function showAlternatives(rows,container){for(const [i,option] of rows.entries()){const box=el('div','value');box.append(el('b','','Вариант '+(i+1)+' · '+(option.type||option.base||'Составной тип')));const rules=el('ul','rules');for(const [k,v] of valueRules(option))rules.append(el('li','',(facets[k]||k)+': '+v));for(const [value,doc] of option.values||[])rules.append(el('li','',(value===''?'«пустая строка»':value)+(doc?' · '+doc:'')));box.append(rules);if(option.alternatives)showAlternatives(option.alternatives,box);container.append(box)}}
-  showAlternatives(f.alternatives,detail);
- }
+ if(f.alternatives?.length)detail.append(el('h3','','Допустимые варианты типа (union)'),el('p','quiet','Значение должно соответствовать хотя бы одному варианту. Ограничения разных вариантов не объединяются.'));
+ renderTypeOptions(f,detail);
  if(f.values.length){detail.append(el('h3','','Допустимые значения · '+f.values.length));for(const [v,n] of f.values){const r=el('div','value');r.append(el('code','',v||'«»'),el('span','',n));detail.append(r)}}
  if(f.children.length){
   detail.append(el('h3','','Состав блока'));

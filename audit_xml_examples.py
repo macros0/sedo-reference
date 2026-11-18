@@ -95,9 +95,9 @@ def _schema(path, revision):
             targets[imp]=target
             imp.set("schemaLocation", urls[target])
             pending.append((target,None if imp.tag==X+'import' else effective_namespace))
-        resources[url] = etree.tostring(root)
+        resources[url] = etree.tostring(root, encoding='UTF-8')
     primary = etree.XMLSchema(_parse(resources[urls[entry]], resources, urls[entry]))
-    if any(root.xpath(".//xs:attribute[@ref and @fixed] | xs:attribute[@fixed] | .//xs:element[@fixed]",
+    if any(root.xpath(".//xs:attribute[@fixed] | .//xs:element[@fixed]",
                       namespaces={"xs": X[1:-1]}) for root in roots.values()):
         from xsd_bundle import _prepare
         from xsd_validate import AttributeUseValidator, BooleanFixedValidator

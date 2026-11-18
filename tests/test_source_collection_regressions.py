@@ -30,14 +30,304 @@ def document(title, number='999'):
            '</w:body></w:document>')
     return archive("word/document.xml", xml.encode())
 
-def individual_document(root):
+def individual_document(root, location=None):
     xml = '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body><w:tbl>'
-    for name, value in (('Корневой элемент', root), ('Пространство имен файла xml-схемы', 'urn:main')):
+    rows = [('Корневой элемент', root), ('Пространство имен файла xml-схемы', 'urn:main')]
+    if location is not None:
+        rows.append(('Расположение файла XML-схемы', location))
+    for name, value in rows:
         xml += '<w:tr>' + ''.join('<w:tc><w:p><w:r><w:t>'+text+'</w:t></w:r></w:p></w:tc>' for text in (name, value)) + '</w:tr>'
     return archive('word/document.xml', (xml+'</w:tbl></w:body></w:document>').encode())
 
 
 class SourceCollectionTests(unittest.TestCase):
+    def add_individual(self, number, root, location):
+        page = SITES['test']
+        href = f'/specs_sedo/Тип_сообщения_{number}.docx'
+        self.resources[page] += f'<a href="{href}">Individual {number}</a>'.encode()
+        url = page.replace('/sedo.html', href)
+        self.resources[url] = individual_document(root, location)
+        return url
+
+    def test_update_publishes_an_incomplete_individual_docx_with_diagnostics(self):
+        from auto_update import _run
+        from catalog import export
+        from collector_snapshots import make_manifest
+        from fields import build
+        from wsdl_sources import _archive
+
+        seed, xs = wsdl_fixtures.SEED, wsdl_fixtures.XS
+        base = wsdl_fixtures.BASE.rsplit('/', 1)[0] + '/'
+        schema = f'<xs:schema xmlns:xs="{xs}" xmlns:m="urn:main" targetNamespace="urn:main">'
+        wrapper = ('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>' + schema
+                   + '<xs:include schemaLocation="root.xsd"/></xs:schema></w:types></w:definitions>').encode()
+        incomplete = (schema + '<xs:element name="r" type="m:Code"/></xs:schema>').encode()
+        healthy = (schema + '<xs:element name="other" type="xs:string"/></xs:schema>').encode()
+        package = SITES['test'].replace('/sedo.html', '/specs_sedo/file.zip')
+        self.resources[package] = _archive({'other.xsd': healthy})
+        ready_url = self.add_individual('998', 'other', 'other.xsd')
+        self.collect(1, wsdl_entries=[])
+        index = self.root/'data/catalog.json'
+        export(self.state, index)
+        build(index, self.state, self.root/'data/fields')
+        project = Path(__file__).resolve().parents[1]
+        shutil.copytree(project/'web', self.root/'web')
+        shutil.copy2(project/'viewer-template.html', self.root)
+        original = (self.state/'current.json').read_bytes()
+
+        missing_url = self.add_individual('999', 'r', 'root.xsd')
+        support, objects = wsdl_fixtures.WsdlSourcesTests().collect({seed:wrapper, base+'root.xsd':incomplete})
+        remote = self.root/'feed'
+        store_feed(remote, [make_manifest(support,'2026-11-14T01:30:00+00:00')], objects)
+        import_feed(self.state, lambda name: (remote/name).read_bytes())
+        with patch('sync.get', side_effect=self.resources.__getitem__):
+            _run(self.root)
+
+        published = json.loads((self.root/'site/catalog-data.js').read_text('utf8').removeprefix('window.SEDO_CATALOG=').removesuffix(';'))
+        ready = next(row for row in published['revisions'] if row['document_url'] == ready_url)
+        missing = next(row for row in published['document_sources'] if row['document_url'] == missing_url)
+        self.assertTrue(ready['ready'])
+        self.assertIn('root.xsd', missing['schema_reason'])
+        for doc in (ready, missing):
+            self.assertEqual((self.root/'site'/doc['document_download']).read_bytes(), self.resources[doc['document_url']])
+        report = json.loads((self.root/'update-report.json').read_bytes())
+        self.assertEqual(report['status'], 'ok')
+        diagnosis = next(row for row in report['schema_diagnostics'] if row['source'] == missing_url)
+        self.assertEqual(diagnosis['issues'][0]['reason'], missing['schema_reason'])
+        coverage = json.loads((self.root/'data/schema-coverage.json').read_bytes())
+        self.assertEqual(next(row for row in coverage['missing'] if row['number'] == '999' and row['environment'] == 'test')['reasons'],
+                         [missing['schema_reason']])
+        promoted = (self.state/'current.json').read_bytes()
+        self.assertNotEqual(promoted, original)
+
+        self.resources[package] = _archive({'other.xsd': healthy.replace(b'xs:string', b'm:MissingType')})
+        with patch('sync.get', side_effect=self.resources.__getitem__), self.assertRaises(ValueError):
+            _run(self.root)
+        self.assertEqual((self.state/'current.json').read_bytes(), promoted)
+        self.assertEqual(json.loads((self.root/'update-report.json').read_bytes())['status'], 'failed')
+
+    def test_explicit_wsdl_evidence_does_not_change_other_document_editions(self):
+        from catalog import export
+        from wsdl_sources import _archive
+
+        seed, xs = wsdl_fixtures.SEED, wsdl_fixtures.XS
+        base = wsdl_fixtures.BASE.rsplit('/', 1)[0] + '/'
+        schema = f'<xs:schema xmlns:xs="{xs}" targetNamespace="urn:main">'
+        wrapper = (f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types><xs:schema xmlns:xs="{xs}">'
+                   '<xs:import namespace="urn:main" schemaLocation="root.xsd"/></xs:schema></w:types></w:definitions>').encode()
+        root = (schema + '<xs:element name="r" type="xs:int"/></xs:schema>').encode()
+        other = (schema + '<xs:element name="other" type="xs:string"/></xs:schema>').encode()
+        support, objects = wsdl_fixtures.WsdlSourcesTests().collect({seed:wrapper, base+'root.xsd':root})
+        self.resources[SITES['test'].replace('/sedo.html', '/specs_sedo/file.zip')] = _archive({'a.xsd':other, 'b.xsd':other})
+        self.add_individual('998', 'other', 'b.xsd')
+        self.add_individual('999', 'r', 'root.xsd')
+        for digest, raw in objects.items():
+            write(self.state/'objects'/digest, raw)
+        index = self.root/'catalog.json'
+        def editions():
+            export(self.state, index)
+            return json.loads(index.read_bytes())
+        with patch('catalog.record_individual_wsdl_matches', return_value=False):
+            self.collect(1, wsdl_entries=[support])
+        baseline = editions()
+        before, = [row for row in baseline['revisions'] if row['number'] == '998']
+        self.assertEqual(before['schema_path'], 'a.xsd')
+        self.collect(2, wsdl_entries=[support])
+        recovered = editions()
+        unaffected = [row for row in recovered['revisions'] if row['number'] == '998']
+        self.assertEqual([row['schema_path'] for row in unaffected], ['a.xsd'])
+        after, = unaffected
+        self.assertEqual(after, before)
+        self.assertEqual([event for event in recovered['updates'] if event['revision_id'] == after['revision_id']],
+                         [event for event in baseline['updates'] if event['revision_id'] == before['revision_id']])
+        self.assertEqual(recovered['source_observations'], baseline['source_observations'])
+
+    def test_update_rejects_loss_of_ready_tree_for_same_published_docx(self):
+        from auto_update import _run
+        from catalog import export
+        from collector_snapshots import make_manifest
+        from fields import build
+
+        seed, xs = wsdl_fixtures.SEED, wsdl_fixtures.XS
+        base = wsdl_fixtures.BASE.rsplit('/', 1)[0] + '/'
+        schema = f'<xs:schema xmlns:xs="{xs}" xmlns:m="urn:main" targetNamespace="urn:main">'
+        self.add_individual('998', 'other', 'a.xsd')
+        url = self.add_individual('999', 'r', 'root.xsd')
+        self.resources[SITES['test'].replace('/sedo.html', '/specs_sedo/file.zip')] = archive(
+            'a.xsd', (schema+'<xs:element name="other" type="xs:string"/></xs:schema>').encode())
+        fixture = wsdl_fixtures.WsdlSourcesTests()
+        def version(element):
+            wrapper = ('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>'+schema
+                       +'<xs:include schemaLocation="root.xsd"/></xs:schema>'+schema
+                       +'<xs:element name="r" type="xs:string"/></xs:schema></w:types></w:definitions>').encode()
+            return fixture.collect({seed: wrapper, base+'root.xsd': (schema+element+'</xs:schema>').encode()})
+        healthy, objects = version('<xs:element name="r" type="xs:int"/>')
+        for digest, raw in objects.items():
+            write(self.state/'objects'/digest, raw)
+        self.collect(1, wsdl_entries=[healthy])
+        index = self.root/'data/catalog.json'
+        export(self.state, index)
+        build(index, self.state, self.root/'data/fields')
+        project = Path(__file__).resolve().parents[1]
+        shutil.copytree(project/'web', self.root/'web')
+        shutil.copy2(project/'viewer-template.html', self.root)
+        before = json.loads(index.read_bytes())
+        expected = next(row for row in before['revisions'] if row['document_url'] == url)
+        self.assertEqual({r['number'] for r in before['revisions'] if r['listed_now']}, {'998', '999'})
+        files = [self.state/'current.json', index,
+                 self.root/'data/fields'/(expected['revision_id']+'.json')]
+        original = [sha(path.read_bytes()) for path in files]
+        remote = self.root/'feed'
+        for minute, element, reason in [('30', '<xs:element name="r" type="m:Missing"/>', 'точка входа'),
+                                        ('45', '<xs:element name="formerlyR" type="xs:int"/>', '{urn:main}r')]:
+            broken, objects = version(element)
+            store_feed(remote, [make_manifest(broken,f'2026-11-14T01:{minute}:00+00:00')], objects)
+            import_feed(self.state, lambda name: (remote/name).read_bytes())
+            with patch('sync.get', side_effect=self.resources.__getitem__), self.assertRaises(ValueError):
+                _run(self.root)
+            report = json.loads((self.root/'update-report.json').read_bytes())
+            self.assertEqual(report['status'], 'failed')
+            self.assertIn('999', report['error'])
+            self.assertIn(reason, report['error'])
+            self.assertEqual([sha(path.read_bytes()) for path in files], original)
+
+        self.resources[SITES['test']] = self.resources[SITES['test']].replace(
+            b'<a href="/specs_sedo/'+('Тип_сообщения_999.docx').encode()+b'">Individual 999</a>', b'')
+        with patch('sync.get', side_effect=self.resources.__getitem__):
+            _run(self.root)
+        after = json.loads(index.read_bytes())
+        self.assertEqual({r['number'] for r in after['revisions'] if r['listed_now']}, {'998'})
+        self.assertFalse(next(r for r in after['revisions'] if r['revision_id'] == expected['revision_id'])['listed_now'])
+        self.assertEqual(sha(files[-1].read_bytes()), original[-1])
+
+    def test_history_completes_legacy_partial_receipt_at_original_observation(self):
+        from catalog import derive, export
+        from collector_snapshots import make_manifest, pending_work, replay_archived_inputs
+
+        seed, xs = wsdl_fixtures.SEED, wsdl_fixtures.XS
+        base = wsdl_fixtures.BASE.rsplit('/', 1)[0] + '/'
+        schema = f'<xs:schema xmlns:xs="{xs}" xmlns:m="urn:main" targetNamespace="urn:main">'
+        def wrapper(content):
+            return ('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>'+schema+content
+                    +'</xs:schema></w:types></w:definitions>').encode()
+        fixture = wsdl_fixtures.WsdlSourcesTests()
+        root = (schema+'<xs:element name="r" type="m:Code"/></xs:schema>').encode()
+        other = '<xs:element name="other" type="xs:int"/>'
+        include = '<xs:include schemaLocation="published/root.xsd"/>'
+        active, active_objects = fixture.collect({seed:wrapper(include+other),
+            base+'published/root.xsd': root.replace(b'm:Code', b'xs:string')})
+        historical, historical_objects = fixture.collect({seed:wrapper(include+other+
+            '<xs:simpleType name="Code"><xs:restriction base="xs:int"/></xs:simpleType>'),
+            base+'published/root.xsd': root})
+        unrelated, unrelated_objects = fixture.collect({seed:wrapper(other)})
+        self.resources[SITES['test']] = b'<a href="/specs_sedo/file.zip">Schema</a>'
+        self.add_individual('998', 'other', None)
+        self.add_individual('999', 'r', 'published/root.xsd')
+        for digest, raw in active_objects.items():
+            write(self.state/'objects'/digest, raw)
+        self.collect(1, snapshot_format=6, wsdl_entries=[active])
+        pointer = (self.state/'current.json').read_bytes()
+        remote = self.root/'feed'
+        active_receipt = make_manifest(active, '2026-11-14T02:00:00+00:00')
+        receipt = make_manifest(historical, '2026-11-14T01:30:00+00:00')
+        unrelated_receipt = make_manifest(unrelated, '2026-11-14T01:45:00+00:00')
+        for item, received in ((receipt, historical_objects), (unrelated_receipt, unrelated_objects),
+                               (active_receipt, active_objects)):
+            store_feed(remote, [item], received)
+        import_feed(self.state, lambda name: (remote/name).read_bytes())
+        clean = self.root/'clean-state'
+        shutil.copytree(self.state, clean)
+        clean_record = next(row for row in replay_archived_inputs(clean) if row['content_id'] == receipt['content_id'])
+        clean_snapshot = json.loads((clean/'snapshots'/(clean_record['snapshot']+'.json')).read_bytes())
+        with patch('catalog.record_individual_wsdl_matches', return_value=False):
+            old = {row['content_id']: row for row in replay_archived_inputs(self.state)}
+        old_record = old[receipt['content_id']]
+        self.assertEqual(old_record['status'], 'replayed')
+        self.assertEqual([row['number'] for row in old_record['unmatched_documents']], ['999'])
+        snapshots = self.state/'snapshots'
+        old_path = snapshots/(old_record['snapshot']+'.json')
+        original = old_path.read_bytes()
+        before = derive(json.loads(original))
+        self.assertEqual([row['number'] for row in before['revisions']], ['998'])
+        old_history = json.loads((self.state/'history.json').read_bytes())
+        self.assertEqual(pending_work(self.root), 'history')
+        updated = {row['content_id']: row for row in replay_archived_inputs(self.state)}
+        record = updated[receipt['content_id']]
+        self.assertEqual(record['status'], 'replayed')
+        self.assertEqual(record['observed_at'], receipt['observed_at'])
+        self.assertNotIn('unmatched_documents', record)
+        after = derive(json.loads((snapshots/(record['snapshot']+'.json')).read_bytes()))
+        self.assertEqual(after, derive(clean_snapshot))
+        self.assertEqual({row['number'] for row in after['revisions']}, {'998','999'})
+        self.assertIn(before['revisions'][0], after['revisions'])
+        self.assertEqual(old_path.read_bytes(), original)
+        self.assertEqual(json.loads((self.state/'history.json').read_bytes()), [*old_history, record['snapshot']])
+        self.assertEqual((self.state/'current.json').read_bytes(), pointer)
+        for item in (active_receipt, unrelated_receipt):
+            self.assertEqual(updated[item['content_id']], old[item['content_id']])
+        destination = self.root/'catalog.json'
+        export(self.state, destination)
+        recovered, = [event for event in json.loads(destination.read_bytes())['updates']
+                      if event['snapshot'] == record['snapshot']]
+        self.assertEqual(recovered['observed_at'], receipt['observed_at'])
+        self.assertIsNone(pending_work(self.root))
+        self.assertEqual({row['content_id']: row for row in replay_archived_inputs(self.state)}, updated)
+
+    def test_history_retries_only_eligible_unavailable_explicit_wsdl_receipt(self):
+        from catalog import derive
+        from collector_snapshots import make_manifest, pending_work, replay_archived_inputs
+
+        seed, xs = wsdl_fixtures.SEED, wsdl_fixtures.XS
+        base = wsdl_fixtures.BASE.rsplit('/', 1)[0] + '/'
+        schema = f'<xs:schema xmlns:xs="{xs}" xmlns:m="urn:main" targetNamespace="urn:main">'
+        def wrapper(content):
+            return ('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>' + schema + content
+                    + '</xs:schema></w:types></w:definitions>').encode()
+        root = (schema + '<xs:element name="r" type="m:Code"/></xs:schema>').encode()
+        types = (schema + '<xs:simpleType name="Code"><xs:restriction base="xs:int"/></xs:simpleType></xs:schema>').encode()
+        fixture = wsdl_fixtures.WsdlSourcesTests()
+        include = '<xs:include schemaLocation="root.xsd"/>'
+        current, active_objects = fixture.collect({seed:wrapper(include), base+'root.xsd':root.replace(b'm:Code', b'xs:string')})
+        archival, archival_objects = fixture.collect({seed:wrapper(include + '<xs:include schemaLocation="types.xsd"/>'),
+            base+'root.xsd':root, base+'types.xsd':types}, legacy_wsdl_layout=True)
+        unrelated, unrelated_objects = fixture.collect({seed:wrapper('<xs:element name="other" type="xs:int"/>')})
+        incomplete, incomplete_objects = fixture.collect({seed:wrapper(include), base+'root.xsd':root}, legacy_wsdl_layout=True)
+        self.add_individual('999', 'r', 'root.xsd')
+        for digest, raw in active_objects.items():
+            write(self.state/'objects'/digest, raw)
+        self.collect(1, snapshot_format=6, wsdl_entries=[current])
+        pointer = (self.state/'current.json').read_bytes()
+        snapshot = self.state/'snapshots'/(json.loads(pointer)['snapshot']+'.json')
+        snapshot_raw = snapshot.read_bytes()
+        remote = self.root/'feed'
+        manifests = [make_manifest(library, f'2026-11-14T{time}:00+00:00') for library, time in (
+            (current, '02:00'), (archival, '01:30'), (unrelated, '01:45'), (incomplete, '01:50'))]
+        for index, objects in ((1, archival_objects), (2, unrelated_objects), (3, incomplete_objects), (0, active_objects)):
+            store_feed(remote, [manifests[index]], objects)
+        import_feed(self.state, lambda name: (remote/name).read_bytes())
+        active_id, archive_id, unrelated_id, incomplete_id = [manifest['content_id'] for manifest in manifests]
+        with patch('catalog.record_individual_wsdl_matches', return_value=False):
+            old = {row['content_id']: row for row in replay_archived_inputs(self.state)}
+        self.assertEqual([old[key]['status'] for key in (archive_id, unrelated_id, incomplete_id, active_id)],
+                         ['unavailable', 'unavailable', 'unavailable', 'recorded'])
+        self.assertEqual(pending_work(self.root), 'history')
+        updated = {row['content_id']: row for row in replay_archived_inputs(self.state)}
+        self.assertEqual(updated[archive_id]['status'], 'replayed')
+        for key in (unrelated_id, active_id):
+            self.assertEqual(updated[key], old[key])
+        self.assertEqual(updated[incomplete_id]['status'], 'unavailable')
+        self.assertIn('root.xsd', updated[incomplete_id]['unmatched_documents'][0]['reason'])
+        self.assertEqual(updated[archive_id]['observed_at'], old[archive_id]['observed_at'])
+        saved = json.loads((self.state/'snapshots'/(updated[archive_id]['snapshot']+'.json')).read_bytes())
+        edition, = derive(saved)['revisions']
+        self.assertTrue(edition['schema_path'].endswith('/inline-0.xsd'))
+        self.assertEqual(edition['archive_sha256'], archival['sha256'])
+        self.assertEqual((self.state/'objects'/archival['sha256']).read_bytes(), archival_objects[archival['sha256']])
+        self.assertEqual((self.state/'current.json').read_bytes(), pointer)
+        self.assertEqual(snapshot.read_bytes(), snapshot_raw)
+        self.assertIsNone(pending_work(self.root))
+        self.assertEqual({row['content_id']: row for row in replay_archived_inputs(self.state)}, updated)
+
     def test_individual_uses_only_its_own_embedded_schema_and_preserves_original(self):
         from catalog import derive
         from fields import build

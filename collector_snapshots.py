@@ -89,10 +89,12 @@ def validate_manifest(manifest, read_object):
     # Replay requires the exact old archive and schema metadata.
     # Annotation traversal, root indexing, inline includes and the archive
     # layout changed independently. Try the current behavior first.
+    legacy_source_paths = any(s['kind'] == 'xsd' and 'archive_path' not in s for s in sources)
     def matches(annotations, roots, inline_includes, wsdl_layout):
         replay = collect(row["source_url"], manifest["environment"], resources.__getitem__, sha,
                          legacy_annotations=annotations, legacy_schema_roots=roots,
-                         legacy_inline_includes=inline_includes, legacy_wsdl_layout=wsdl_layout)
+                         legacy_inline_includes=inline_includes, legacy_wsdl_layout=wsdl_layout,
+                         legacy_source_paths=legacy_source_paths)
         for expected, actual in zip(row.get("schemas", []), replay.get("schemas", [])):
             for old, new in zip(expected.get("imports", []), actual.get("imports", [])):
                 if "kind" not in old:
@@ -227,8 +229,8 @@ def pending_work(root):
         if record.get("status") in ("unavailable", "replayed"):
             if context is None:
                 context = replay_context(root / "state")
-            _, proof = replay_candidate(manifest, *context)
-            if record.get("replay_proof") != proof:
+            candidate, proof = replay_candidate(manifest, *context)
+            if record.get("replay_proof") != proof or _wsdl_retry_documents(manifest, candidate, record):
                 return "history"
     return None
 
@@ -313,7 +315,7 @@ def matching_inputs(snapshot, environment):
                 or row.get("source_type") in ("wsdl", "wsdl_bridge")):
             continue
         rows.append({key: value for key, value in row.items()
-                     if key not in ("module_matches", "wsdl_archives", "schema_diagnostics")})
+                     if key not in ("module_matches", "wsdl_archives", "schema_diagnostics", "wsdl_schema_matches")})
     return sorted(rows, key=lambda row: encode(row))
 
 
@@ -340,12 +342,32 @@ def replay_candidate(manifest, active, confirmed, observations):
     return candidate, sha(encode(dict(algorithm=4, inputs=inputs, recorded=recorded)))
 
 
-def unmatched_module_bindings(entries):
+def _wsdl_retry_documents(manifest, candidate, record):
+    from catalog import INDIVIDUAL_WSDL_MATCH_VERSION, individual_number, named_wsdl_members
+    if (candidate is None or record.get('status') not in ('unavailable', 'replayed')
+            or record.get('wsdl_match_version', 0) >= INDIVIDUAL_WSDL_MATCH_VERSION):
+        return set()
+    unmatched = {(row['number'], row.get('document_sha256')) for row in record.get('unmatched_documents', [])}
+    if not unmatched:
+        return set()
+    snapshot = candidate[1]
+    environment = manifest['environment']
+    legacy = snapshot.get('format', 7) < 7
+    return {(row['url'], row['sha256']) for row in snapshot['entries'] if row['environment'] == environment
+            and (individual_number(row, legacy=legacy), row.get('sha256')) in unmatched
+            and named_wsdl_members(row, (manifest['library'],))}
+
+
+def unmatched_module_bindings(entries, *, legacy_filenames=False):
+    from catalog import individual_number
     missing = []
     for doc in entries:
         matches = doc.get("module_matches", [])
+        named_individual = individual_number(doc, legacy=legacy_filenames) if doc.get('wsdl_schema_matches') else None
         for binding in doc.get("module_bindings", []):
             number, root = binding["number"], binding["root"]
+            if number == named_individual:
+                continue
             namespace = binding.get("namespace")
             if any(m["number"] == number and m["root"] == root
                    and (not namespace or m.get("namespace") == namespace) for m in matches):
@@ -376,14 +398,16 @@ def replay_history(base, current, blob):
         records = selected_records(processed).setdefault(env, {})
         previous_record = records.get(identity)
         candidate, proof = replay_candidate(manifest, active, confirmed, observations)
-        if (previous_record and previous_record.get("observed_at") == manifest["observed_at"]
-                and (previous_record.get("status") == "recorded" or previous_record.get("replay_proof") == proof)):
+        same_observation = previous_record and previous_record.get("observed_at") == manifest["observed_at"]
+        same_proof = same_observation and previous_record.get("replay_proof") == proof
+        retry = _wsdl_retry_documents(manifest, candidate, previous_record) if same_proof else set()
+        if same_observation and (previous_record.get("status") == "recorded" or (same_proof and not retry)):
             continue
         row = manifest["library"]
         if candidate and row in candidate[1].get("entries", []):
             records[identity] = dict(status="recorded", snapshot=candidate[0], observed_at=manifest["observed_at"])
             continue
-        from catalog import derive, individual_number
+        from catalog import INDIVIDUAL_WSDL_MATCH_VERSION, derive, individual_number, record_individual_wsdl_matches
         docs = ([r for r in candidate[1].get("entries", [])
                  if r.get("environment") == env and r.get("kind") == "docx" and r.get("sha256")
                  and (r.get("module_bindings") or individual_number(r,legacy=candidate[1].get('format',7)<7))]
@@ -401,34 +425,58 @@ def replay_history(base, current, blob):
             if sha(raw) != document["sha256"]:
                 raise ValueError("Historical DOCX digest mismatch")
         source_key, baseline = candidate
-        historical = copy.deepcopy(baseline)
-        historical["entries"] = [r for r in historical["entries"]
-                                 if not (r.get("environment") == env and
-                                         (r.get("source_type") == "wsdl" or r.get("kind") == "wsdl_status"))]
-        historical["entries"].append(copy.deepcopy(row))
-        for document in historical["entries"]:
-            if document.get("environment") == env and document.get("module_bindings"):
-                for field in ("module_matches", "wsdl_archives", "schema_diagnostics"):
-                    document.pop(field, None)
-        # Rebuild only this contour's module matches. Other contour rows already
-        # contain their confirmed matches and must not be mutated by the replay.
-        selected = [r for r in historical["entries"] if r.get("environment") == env]
+        retry_partial = retry and previous_record['status'] == 'replayed'
+        if retry_partial:
+            prior_digest = previous_record['snapshot']
+            prior = (base / 'snapshots' / (prior_digest + '.json')).read_bytes()
+            if sha(prior) != prior_digest:
+                raise ValueError("Historical replay snapshot digest mismatch")
+            historical = json.loads(prior)
+            source_key = previous_record['document_snapshot']
+            selected = [r for r in historical["entries"] if r.get("environment") == env]
+            inputs = [r for r in selected if r.get('source_type') == 'wsdl'
+                      or (r['url'], r.get('sha256')) in retry]
+            previous_ids = {r['revision_id'] for r in derive(historical)['revisions'] if r['status'] == 'matched'}
+        else:
+            historical = copy.deepcopy(baseline)
+            historical["entries"] = [r for r in historical["entries"]
+                                     if not (r.get("environment") == env and
+                                             (r.get("source_type") == "wsdl" or r.get("kind") == "wsdl_status"))]
+            historical["entries"].append(copy.deepcopy(row))
+            selected = [r for r in historical["entries"] if r.get("environment") == env]
+            # Rebuild this contour's module matches without mutating other contours.
+            for document in selected:
+                if document.get("module_bindings"):
+                    for field in ("module_matches", "wsdl_archives", "schema_diagnostics"):
+                        document.pop(field, None)
+            match_modules(base, selected, [row], blob, legacy_schema_roots=historical.get('format', 7) < 7)
+            inputs = selected
         historical_format = historical.get('format', 7)
-        match_modules(base, selected, [row], blob, legacy_schema_roots=historical_format < 7)
+        checked_wsdl = record_individual_wsdl_matches(inputs, lambda digest: (base / 'objects' / digest).read_bytes(),
+                                                      legacy_filenames=historical_format < 7)
         historical["collector_observation"] = dict(environment=env, content_id=identity,
             observed_at=manifest["observed_at"], document_snapshot=source_key)
         # An intermediate WSDL can omit one volume's root while the remaining
         # editions are usable. Preserve its DOCX and explain the missing tree.
-        revisions = derive(dict(format=historical_format, entries=selected))["revisions"]
+        derived = derive(dict(format=historical_format, entries=selected))
+        revisions = derived['revisions']
+        if retry_partial and not any(r['status'] == 'matched' and r['revision_id'] not in previous_ids for r in revisions):
+            previous_record['wsdl_match_version'] = INDIVIDUAL_WSDL_MATCH_VERSION
+            continue
         unmatched = [dict(number=r["number"], revision_id=r["revision_id"],
                           document_sha256=r["document_sha256"], root=r["root"],
                           reason="В исторической библиотеке не найдена однозначная полная XSD для тома.")
                      for r in revisions if r["status"] != "matched"]
-        unmatched.extend(unmatched_module_bindings(selected))
+        unmatched.extend(dict(number=r['number'], revision_id=None, document_sha256=r['document_sha256'],
+                              root=r['root'], reason=r['schema_reason'])
+                         for r in derived['document_sources'] if 'namespace_declared' in r)
+        unmatched.extend(unmatched_module_bindings(selected, legacy_filenames=historical_format < 7))
         if unmatched and not any(r["status"] == "matched" for r in revisions):
             records[identity] = dict(status="unavailable", observed_at=manifest["observed_at"],
                 document_snapshot=source_key, replay_proof=proof, unmatched_documents=unmatched,
                 reason="Не удалось подтвердить ни одной схемы сообщения на дату наблюдения.")
+            if checked_wsdl:
+                records[identity]['wsdl_match_version'] = INDIVIDUAL_WSDL_MATCH_VERSION
             continue
         if unmatched:
             historical["collector_observation"]["unmatched_documents"] = unmatched
@@ -441,6 +489,8 @@ def replay_history(base, current, blob):
                                  document_snapshot=source_key, replay_proof=proof)
         if unmatched:
             records[identity]["unmatched_documents"] = unmatched
+            if checked_wsdl:
+                records[identity]['wsdl_match_version'] = INDIVIDUAL_WSDL_MATCH_VERSION
     return replayed, processed
 
 

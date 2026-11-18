@@ -43,7 +43,8 @@ class SchemaLocationTests(unittest.TestCase):
         from schema_review import compare_revision
         from tests.test_audit_individual_tables import document
         root = '<xs:element name="root" type="xs:string"/>'
-        tags = '<xs:simpleType name="Tags"><xs:list itemType="xs:string"/></xs:simpleType>'
+        tags = ('<xs:simpleType name="Tags"><xs:restriction base="xs:string">'
+                '<xs:assertion test="true()"/></xs:restriction></xs:simpleType>')
         body = document('Атрибуты типа Tags', {'Схема': tags})
         body.extend(document('Атрибуты элемента root', {'Тип': 'xs:int', 'Схема': root}))
         with tempfile.TemporaryDirectory() as temporary:
@@ -67,7 +68,7 @@ class SchemaLocationTests(unittest.TestCase):
             review = compare_revision(revision, schema.fields, objects)
         self.assertEqual(review['tables'], 1)
         self.assertEqual([finding['kind'] for finding in review['findings']], ['Имя типа'])
-        self.assertTrue(any('Tags' in note and 'list' in note for note in review['notes']))
+        self.assertTrue(any('Tags' in note and 'assertion' in note for note in review['notes']))
 
     def test_imported_base_facet_has_its_exact_bytes_and_preserves_field_link(self):
         import hashlib

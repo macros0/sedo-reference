@@ -218,6 +218,15 @@
   return {suggestions:[...pending.values(),...descendants],conflicts:relative.conflicts.filter(available),excelCount:pending.size,descendantCount:descendants.length};
  }
  const draftSessions=new Map();
+ function sessionHasEdits(session){
+  if(!session)return false;
+  const {draft,form,fromWorkbook}=session;
+  if(draft.hasEdits()||(fromWorkbook&&draft.summary().dirty))return true;
+  if(!form)return false;
+  if(form.id===null)return !!(form.beforePath||form.afterPath||form.comment);
+  const row=draft.rows.find(row=>row.id===form.id);
+  return row?.beforePath!==form.beforePath||row?.afterPath!==form.afterPath||row?.comment!==form.comment;
+ }
  const storageKey=(left,right)=>"sedo-field-mappings:v1:"+[left.revision_id,right.revision_id].sort().map(encodeURIComponent).join(":");
  function mergeDeleted(base,draft,current){
   const result={};
@@ -342,11 +351,15 @@
      return this.save(options,merged.pairs,merged.deleted);
     });
    },
-   async reset(options){return transaction(options,()=>this.clear(options))},
+   async reset(options,discardDrafts){
+    return transaction(options,()=>{
+     const notice=this.clear(options);
+     discardDrafts?.();
+     return notice;
+    });
+   },
    clear(options){
     const key=storageKey(options.left,options.right);
-    draftSessions.delete(JSON.stringify([options.left.revision_id,options.right.revision_id]));
-    draftSessions.delete(JSON.stringify([options.right.revision_id,options.left.revision_id]));
     try{getStorage().removeItem(key);lastStored.set(key,null);failedReads.delete(key);sessionOnly.delete(key);return ""}
     catch{const notice="Соответствия сброшены в текущем сеансе. Хранилище браузера недоступно; после перезапуска может потребоваться повторный сброс.";sessionOnly.set(key,{raw:null,notice});return notice}
    }
@@ -371,43 +384,102 @@
   const input=el("input","mapping-file");input.type="file";input.accept=".xlsx";input.hidden=true;
   const hasSaved=saved.pairs.length||saved.deleted?.before.length||saved.deleted?.after.length;
   const upload=button("swap","Загрузить сопоставления из Excel"),reset=button("swap","Сбросить сопоставления"),add=button("swap mapping-add","Добавить соответствие");reset.disabled=!hasSaved&&!saved.notice;
-  let active=null,activeReport=null,generation=0,resetting=false;
-  const savedReport=()=>{saved=store.load(options);return {pairs:saved.pairs,deleted:saved.deleted,candidates:[],errors:[],warnings:[],ignored:0,duplicates:0,reversed:false}};
-  function showPreview(report,label,resumedSession){
-   const baselineSaved=resumedSession?.saved??store.load(options),baseline=baselineSaved.pairs.map(p=>({...p}));
+  let active=null,savedSuggest=null,operation=null;
+  const canStart=()=>!operation&&options.isCurrent();
+  const owns=session=>options.isCurrent()&&draftSessions.get(draftKey)===session;
+  const transactionOptions=session=>({...options,isCurrent:()=>owns(session)});
+  function setOperation(next){
+   operation=next;
+   upload.disabled=add.disabled=!!next;
+   reset.disabled=!!next||(!hasSaved&&!saved.notice);
+   if(savedSuggest)savedSuggest.disabled=!!next;
+   preview.inert=!!next;
+   notice.inert=!!next&&next!=="apply";
+   active?.setApplying(next==="apply");
+  }
+  function createSession(report,fromWorkbook,baselineSaved=store.load(options)){
+   const baseline=baselineSaved.pairs.map(p=>({...p}));
    const prepared=preparePreview(report,options.before,options.after),entries=[...report.pairs.map(p=>({...p,origin:"confirmed",selected:true})),...prepared.suggestions.map(p=>({...p,selected:p.defaultSelected}))];
-   const draft=resumedSession?.draft??Drafts.create({before:options.before,after:options.after,savedPairs:baseline,savedDeleted:baselineSaved.deleted,entries,deleted:report.deleted,suggest:report.errors.length?()=>({suggestions:[],conflicts:[]}):suggestDescendants});
-   active?.destroy();activeReport=report;
-   const session=resumedSession??{draft,report,label,saved:baselineSaved,form:null};
+   const draft=Drafts.create({before:options.before,after:options.after,savedPairs:baseline,savedDeleted:baselineSaved.deleted,entries,deleted:report.deleted,suggest:suggestDescendants});
+   return {draft,report,fromWorkbook,saved:baselineSaved,form:null};
+  }
+  function showPreview(session){
+   const {report,fromWorkbook,draft,saved:baseline}=session;
+   active?.destroy();
    draftSessions.set(draftKey,session);
-   active=Editor.mount({container:preview,notice,status,options,report,draft,session,manualLabel:label,onCancel:()=>{draftSessions.delete(draftKey);active?.destroy();active=null;activeReport=null;preview.replaceChildren();saved=store.load(options);restoreStatus()},onApply:async pairs=>{
-    if(!options.isCurrent())throw Error("Выбранная пара редакций изменилась. Откройте предпросмотр снова.");
-    await store.apply(options,baseline,pairs,{base:baselineSaved.deleted,draft:report.deleted});draftSessions.delete(draftKey);const result=await onChange();if(result===false)throw Error("Пары сохранены, но обновить результат не удалось. Повторите открытие сравнения.");
+   active=Editor.mount({container:preview,notice,status,options,report,draft,session,manualLabel:fromWorkbook?"Из Excel":"Ранее применено",panelAdd:add,onCancel:()=>{
+    if(operation||!owns(session))return;
+    draftSessions.delete(draftKey);active.destroy();active=null;preview.replaceChildren();saved=store.load(options);restoreStatus();
+   },onApply:async pairs=>{
+    if(operation)return;
+    if(!owns(session))throw Error("Выбранная пара редакций изменилась. Откройте предпросмотр снова.");
+    setOperation("apply");
+    try{
+     await store.apply(transactionOptions(session),baseline.pairs,pairs,{base:baseline.deleted,draft:report.deleted});
+     if(!owns(session))return;
+     draftSessions.delete(draftKey);
+     const result=await onChange();
+     if(result===false)throw Error("Пары сохранены, но обновить результат не удалось. Повторите открытие сравнения.");
+     active.destroy();
+    }finally{setOperation(null)}
    }});
   }
-  upload.onclick=()=>input.click();
+  function showSavedPreview(){
+   saved=store.load(options);
+   const report={pairs:saved.pairs,deleted:saved.deleted,candidates:[],errors:[],warnings:[],ignored:0,duplicates:0,reversed:false};
+   showPreview(createSession(report,false,saved));
+  }
+  upload.onclick=()=>{if(canStart())input.click()};
   reset.onclick=async()=>{
-   if(resetting||!options.isCurrent())return;resetting=true;reset.disabled=upload.disabled=add.disabled=true;if(savedSuggest)savedSuggest.disabled=true;
-   try{await store.reset(options);draftSessions.delete(draftKey);active?.destroy();const result=await onChange();if(result===false)throw Error("Соответствия сброшены, но обновить результат не удалось. Откройте сравнение снова.")}
-   catch(e){status.textContent="Не удалось обновить сравнение. "+e.message}
-   finally{resetting=false;reset.disabled=!hasSaved&&!saved.notice;upload.disabled=add.disabled=false;if(savedSuggest)savedSuggest.disabled=false}
+   if(!canStart())return;
+   const reverseKey=JSON.stringify([options.right.revision_id,options.left.revision_id]);
+   const targets=(reverseKey===draftKey?[draftKey]:[draftKey,reverseKey]).map(key=>{
+    const session=draftSessions.get(key);
+    return {key,session,form:session?.form,revision:session?.draft.revision};
+   });
+   const changed=targets.filter(({session})=>sessionHasEdits(session));
+   if(changed.length){
+    const directions=changed.map(({key})=>key===draftKey?"текущее направление":"обратное направление");
+    if(!globalThis.confirm("Сбросить сохранённые сопоставления и удалить черновики с неприменёнными правками? Будут затронуты: "+directions.join(", ")+"."))
+     return;
+   }
+   const resetOptions={...options,isCurrent:()=>options.isCurrent()&&targets.every(({key,session,form,revision})=>
+    draftSessions.get(key)===session&&session?.form===form&&session?.draft.revision===revision)};
+   setOperation("reset");
+   try{
+    await store.reset(resetOptions,()=>{for(const {key} of targets)draftSessions.delete(key)});
+    if(!owns(undefined))return;
+    active?.destroy();
+    const result=await onChange();
+    if(result===false)throw Error("Соответствия сброшены, но обновить результат не удалось. Откройте сравнение снова.");
+   }catch(e){if(options.isCurrent())status.textContent="Не удалось обновить сравнение. "+e.message}
+   finally{setOperation(null)}
   };
-  add.onclick=()=>{if(options.isCurrent()){if(!active||activeReport.errors.length)showPreview(savedReport(),"Ранее применено");active.openEditor()}};
+  add.onclick=()=>{if(canStart()){if(!active)showSavedPreview();active.openEditor()}};
   controls.append(upload,reset,input,add);panel.append(controls,status,preview);container.append(notice,panel);
-  let savedSuggest=null;
   if(hasSaved){
    try{const available=suggestDescendants(saved.pairs,options.before,options.after,saved.deleted),view=button("swap mapping-suggest",available.suggestions.length||available.conflicts.length?"Предпросмотр вложенных тегов ("+available.suggestions.length+")":"Просмотреть сопоставления");
-   view.onclick=()=>{if(options.isCurrent()){try{if(!active)showPreview(savedReport(),"Ранее применено")}catch(e){status.textContent="Не удалось открыть черновик. "+e.message}}};savedSuggest=view;controls.append(view)}catch(e){status.textContent+=" Не удалось подготовить предложения. "+e.message}
+   view.onclick=()=>{if(canStart()){try{if(!active)showSavedPreview()}catch(e){status.textContent="Не удалось открыть черновик. "+e.message}}};savedSuggest=view;controls.append(view)}catch(e){status.textContent+=" Не удалось подготовить предложения. "+e.message}
   }
   input.onchange=async()=>{
-   const file=input.files?.[0];if(!file)return;const token=++generation;
-   upload.disabled=add.disabled=reset.disabled=true;preview.inert=notice.inert=true;if(savedSuggest)savedSuggest.disabled=true;status.textContent="Читаем Excel…";
-   try{const report=await readFile(file,options);if(report.errors.length)throw Error(report.errors.join(" "));if(token===generation&&options.isCurrent())showPreview(report,"Из Excel")}
-   catch(e){if(token===generation&&options.isCurrent())status.textContent="Не удалось загрузить соответствия. "+e.message}
-   finally{if(token===generation){upload.disabled=add.disabled=false;reset.disabled=!hasSaved&&!saved.notice;preview.inert=notice.inert=false;if(savedSuggest)savedSuggest.disabled=false;input.value=""}}
+   const file=input.files?.[0];input.value="";
+   if(!file||!canStart())return;
+   const session=draftSessions.get(draftKey),previousStatus=status.textContent;
+   setOperation("import");status.textContent="Читаем Excel…";
+   try{
+    const report=await readFile(file,options);
+    if(!owns(session))return;
+    if(report.errors.length)throw Error(report.errors.join(" "));
+    const replacement=createSession(report,true);
+    if(sessionHasEdits(session)&&!globalThis.confirm("Заменить текущий черновик сопоставлений данными из Excel? Неприменённые правки будут потеряны.")){
+     status.textContent=previousStatus;return;
+    }
+    if(owns(session))showPreview(replacement);
+   }catch(e){if(owns(session))status.textContent="Не удалось загрузить соответствия. "+e.message}
+   finally{setOperation(null)}
   };
-  if(retained)showPreview(retained.report,retained.label,retained);
-  return {hasUnapplied:()=>active?.hasUnapplied()??false};
+  if(retained)showPreview(retained);
+  return {hasUnapplied:()=>!!operation||(active?.hasUnapplied()??false)};
  }
  return {preflightArchive,suggestDescendants,parseWorkbook,preparePreview,storageKey,createStore,store,readFile,mount};
 });

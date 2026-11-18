@@ -27,6 +27,22 @@ def body(*paragraphs):
 
 
 class ExampleAuditTests(unittest.TestCase):
+    def test_local_calendar_attributes_use_exact_fixed_in_example_audit(self):
+        from tests.typed_fixed_fixture import attribute_fixture, compound_attribute_fixture
+        fixtures = [attribute_fixture(kind) for kind in ('direct', 'reference', 'required')]
+        fixtures.extend(compound_attribute_fixture(kind) for kind in ('union', 'restricted-member', 'list', 'mixed-list'))
+        for revision, files, cases in fixtures:
+            with zipfile.ZipFile(self.archive, 'w') as archive:
+                for name, source in files.items():
+                    archive.writestr(name, source)
+            original = self.archive.read_bytes()
+            for xml, valid in cases:
+                with self.subTest(xml=xml):
+                    document = body('Тип сообщения 42: запрос', 'Пример', xml)
+                    count, findings, notes = audit(revision, document, self.archive)
+                    self.assertEqual((count, not findings, notes), (1, valid, []))
+            self.assertEqual(self.archive.read_bytes(), original)
+
     def test_exact_wsdl_imports_survive_example_and_fixed_validation(self):
         from schema import dependency_set
         from tests.test_wsdl_sources import WsdlSourcesTests

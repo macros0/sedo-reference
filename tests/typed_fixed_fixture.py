@@ -139,6 +139,181 @@ def attribute_fixture(kind):
     return row, {'main.xsd': source.encode()}, cases
 
 
+def compound_attribute_fixture(kind, subject='attribute'):
+    fixed = '2026-11-17T00:00:00.1234567890123456781Z'
+    alias = '2026-11-16T23:00:00.1234567890123456781000-01:00'
+    other = fixed.replace('6781Z', '6782Z')
+    calendar_union = '<xs:union memberTypes="xs:dateTime xs:integer"/>'
+    pattern = fixed.replace('.', '[.]') + ' [78]|' + alias.replace('.', '[.]') + ' 007'
+    declarations = {
+        'union': calendar_union,
+        'string-first': '<xs:union memberTypes="xs:string xs:dateTime"/>',
+        'restricted-member': '<xs:union memberTypes="OffsetText xs:dateTime"/>',
+        'list': '<xs:list itemType="xs:dateTime"/>',
+        'mixed-list': '<xs:list itemType="Mixed"/>',
+        'mixed-qname-list': '<xs:list itemType="MixedQName"/>',
+        'patterned-list': f'<xs:restriction base="MixedList"><xs:pattern value="{pattern}"/></xs:restriction>',
+        'patterned-union-list': f'<xs:restriction base="ListOrInt"><xs:pattern value="{pattern}"/></xs:restriction>',
+        'calendar-facet': '<xs:union memberTypes="Narrow xs:string"/>',
+        'limited-literal': '<xs:union memberTypes="Narrow xs:string"/>',
+        'nested-namespaces': calendar_union,
+    }
+    options = {
+        'union': [(fixed, True), (alias, True), (other, False), ('42', False)],
+        'string-first': [(fixed, True), (alias, False), (other, False)],
+        'restricted-member': [(fixed, True), (alias, False),
+                              ('2026-11-17T01:00:00.1234567890123456781+01:00', True)],
+        'list': [(fixed+' '+fixed, True), (alias+'   '+alias, True), (alias+' '+other, False), (fixed, False)],
+        'mixed-list': [(fixed+' 7', True), (alias+' 007', True), (alias+' 8', False), (other+' 7', False)],
+        'mixed-qname-list': [(fixed+' k:name', True), (alias+' p:name', True),
+                             (alias+' q:name', False), (alias+' p:other', False)],
+        'patterned-list': [(fixed+' 7', True), (alias+' 007', True), (fixed+' 007', False), (fixed+' 8', False)],
+        'patterned-union-list': [(fixed+' 7', True), (alias+' 007', True), (fixed+' 007', False), (fixed+' 8', False)],
+        'calendar-facet': [(other, True), (other.replace('6782Z', '6782000Z'), False)],
+        'limited-literal': [('constructor:x', True), ('constructor:y', False)],
+        'nested-namespaces': [(fixed, True), (alias, True), (other, False)],
+    }
+    constraint = {'list': fixed+' '+fixed, 'mixed-list': fixed+' 7', 'patterned-list': fixed+' 7',
+                  'mixed-qname-list': fixed+' k:name',
+                  'patterned-union-list': fixed+' 7', 'calendar-facet': other,
+                  'limited-literal': 'constructor:x'}.get(kind, fixed)
+    definition = ('<xs:simpleType name="OffsetText"><xs:restriction base="xs:string">'
+                  '<xs:pattern value=".*-01:00"/></xs:restriction></xs:simpleType>'
+                  '<xs:simpleType name="Mixed">'+calendar_union+'</xs:simpleType>'
+                  '<xs:simpleType name="MixedQName"><xs:union memberTypes="xs:dateTime xs:QName"/></xs:simpleType>'
+                  '<xs:simpleType name="MixedList"><xs:list itemType="Mixed"/></xs:simpleType>'
+                  '<xs:simpleType name="ListOrInt"><xs:union memberTypes="MixedList xs:int"/></xs:simpleType>')
+    if kind in ('calendar-facet', 'limited-literal'):
+        definition += ('<xs:simpleType name="Narrow"><xs:restriction base="xs:dateTime">'
+                       f'<xs:enumeration value="{fixed}"/></xs:restriction></xs:simpleType>')
+    attributes = (f'<xs:attribute name="instant" type="Stamp" fixed="{constraint}"/>'
+                  f'<xs:attribute name="literal" type="xs:string" fixed="{fixed}"/>')
+    if subject == 'simple-content':
+        definition += ('<xs:complexType name="StampContent"><xs:simpleContent><xs:extension base="Stamp">'
+                       '<xs:attribute name="note" type="xs:int"/></xs:extension></xs:simpleContent></xs:complexType>')
+    if subject != 'attribute':
+        element_type = 'StampContent' if subject == 'simple-content' else 'Stamp'
+        request = f'<xs:element name="request" type="{element_type}" fixed="{constraint}"/>'
+    elif kind == 'nested-namespaces':
+        content = ('<xs:sequence><xs:element name="child"><xs:complexType>'+attributes
+                   +'</xs:complexType></xs:element></xs:sequence>')
+        request = f'<xs:element name="request"><xs:complexType>{content}</xs:complexType></xs:element>'
+    else:
+        request = f'<xs:element name="request"><xs:complexType>{attributes}</xs:complexType></xs:element>'
+    source = f'''<xs:schema xmlns:xs="{XS}" xmlns:〇="urn:valid-prefix" xmlns:k="urn:key">
+      {definition}<xs:simpleType name="Stamp">{declarations[kind]}</xs:simpleType>
+      {request}
+    </xs:schema>'''
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    if subject != 'attribute':
+        note = ' note="7"' if subject == 'simple-content' else ''
+        cases = [(f'<request{note}>{value}</request>', valid) for value, valid in options[kind]]
+        cases.append((f'<request{note}/>', True))
+        if subject == 'simple-content':
+            cases.append((f'<request note="bad">{constraint}</request>', False))
+    elif kind == 'nested-namespaces':
+        cases = [(f'<request xmlns:sedoprobe="urn:parent" xmlns:sedoprobex="urn:parent-2">'
+                  f'<child instant="{value}"/></request>', valid) for value, valid in options[kind]]
+    elif kind == 'mixed-qname-list':
+        cases = [(f'<request xmlns:k="urn:key" xmlns:p="urn:key" xmlns:q="urn:other" instant="{value}"/>', valid)
+                 for value, valid in options[kind]]
+    else:
+        cases = [(f'<request instant="{value}"/>', valid) for value, valid in options[kind]]
+    if kind == 'union' and subject == 'attribute':
+        cases.append((f'<request instant="{alias}" literal="{alias}"/>', False))
+    return row, {'main.xsd': source.encode()}, cases
+
+
+COMPOUND_CASES = [(kind, 'attribute')
+                  for kind in ('union', 'string-first', 'restricted-member', 'list', 'mixed-list', 'mixed-qname-list', 'patterned-list',
+                               'patterned-union-list', 'calendar-facet', 'limited-literal', 'nested-namespaces')]
+COMPOUND_CASES += [(kind, subject) for subject in ('element', 'simple-content')
+                   for kind in ('union', 'list', 'patterned-union-list')]
+
+
+def compound_depth_fixture(depth):
+    types = '<xs:simpleType name="t0"><xs:union memberTypes="xs:dateTime xs:int"/></xs:simpleType>'
+    types += ''.join(f'<xs:simpleType name="t{i}"><xs:union memberTypes="t{i-1}"/></xs:simpleType>'
+                     for i in range(1, depth))
+    stamp = '2026-11-17T00:00:00.1234567890123456781Z'
+    source = f'''<xs:schema xmlns:xs="{XS}">{types}
+        <xs:element name="request"><xs:complexType>
+          <xs:attribute name="instant" type="t{depth-1}" fixed="{stamp}"/>
+        </xs:complexType></xs:element>
+    </xs:schema>'''
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    return row, {'main.xsd': source.encode()}, f'<request instant="{stamp}"/>'
+
+
+def wildcard_attribute_fixture(explicit, *, implicit_only=False):
+    fixed = '2026-11-17T00:00:00.1234567890123456781Z'
+    alias = '2026-11-16T23:00:00.1234567890123456781000-01:00'
+    other = fixed.replace('6781Z', '6782Z')
+    direct = ('<xs:element name="direct"><xs:complexType><xs:attribute ref="m:instant"/>'
+              '</xs:complexType></xs:element>') if explicit else ''
+    source = f'''<xs:schema xmlns:xs="{XS}" xmlns:m="urn:wildcard" targetNamespace="urn:wildcard"
+                          elementFormDefault="qualified">
+      <xs:simpleType name="Stamp"><xs:union memberTypes="xs:dateTime xs:integer"/></xs:simpleType>
+      <xs:attribute name="instant" type="m:Stamp" fixed="{fixed}"/>
+      <xs:element name="bare"/>
+      <xs:attributeGroup name="Strict"><xs:anyAttribute namespace="##targetNamespace"/></xs:attributeGroup>
+      <xs:complexType name="StrictType"><xs:attributeGroup ref="m:Strict"/></xs:complexType>
+      <xs:complexType name="SkipType"><xs:anyAttribute namespace="##targetNamespace" processContents="skip"/></xs:complexType>
+      <xs:complexType name="OverrideStrict"><xs:complexContent><xs:extension base="m:SkipType">
+        <xs:attributeGroup ref="m:Strict"/>
+      </xs:extension></xs:complexContent></xs:complexType>
+      <xs:complexType name="OverrideSkip"><xs:complexContent><xs:extension base="m:StrictType">
+        <xs:anyAttribute namespace="##targetNamespace" processContents="skip"/>
+      </xs:extension></xs:complexContent></xs:complexType>
+      <xs:element name="request"><xs:complexType><xs:choice>{direct}
+        <xs:element name="strict"><xs:complexType>
+          <xs:anyAttribute namespace="##targetNamespace" processContents="strict"/>
+        </xs:complexType></xs:element>
+        <xs:element name="lax"><xs:complexType>
+          <xs:anyAttribute namespace="##targetNamespace" processContents="lax"/>
+        </xs:complexType></xs:element>
+        <xs:element name="skip"><xs:complexType>
+          <xs:anyAttribute namespace="##targetNamespace" processContents="skip"/>
+        </xs:complexType></xs:element>
+        <xs:element name="implicit"/>
+        <xs:element name="overrideStrict" type="m:SkipType"/>
+        <xs:element name="overrideSkip" type="m:StrictType"/>
+        <xs:element name="open"><xs:complexType><xs:sequence>
+          <xs:any namespace="##other" processContents="lax"/>
+        </xs:sequence></xs:complexType></xs:element>
+        <xs:element name="local"><xs:complexType>
+          <xs:attribute name="instant" type="xs:string" form="qualified" fixed="literal"/>
+          <xs:anyAttribute namespace="##targetNamespace" processContents="strict"/>
+        </xs:complexType></xs:element>
+      </xs:choice></xs:complexType></xs:element>
+    </xs:schema>'''
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace='urn:wildcard', schema_path='main.xsd')
+    if implicit_only:
+        row['root']='bare'
+        cases = [(f'<m:bare xmlns:m="urn:wildcard" m:instant="{value}"/>', valid)
+                 for value, valid in ((fixed, True), (alias, True), (other, False), ('42', False))]
+        return row, {'main.xsd': source.encode()}, cases
+    cases = []
+    for element in ('strict', 'lax', 'skip', 'implicit', *(['direct'] if explicit else [])):
+        for value, valid in ((fixed, True), (alias, True), (other, False), ('42', False)):
+            cases.append((f'<m:request xmlns:m="urn:wildcard"><m:{element} m:instant="{value}"/></m:request>',
+                          valid or element == 'skip'))
+    for element, valid in (('strict', False), ('lax', True), ('skip', True)):
+        cases.append((f'<m:request xmlns:m="urn:wildcard"><m:{element} m:unknown="42"/></m:request>', valid))
+    cases.append(('<m:request xmlns:m="urn:wildcard"><m:local m:instant="literal"/></m:request>', True))
+    for value, valid in ((alias, True), ('42', False)):
+        for element, declaration in (('overrideStrict', 'OverrideStrict'), ('overrideSkip', 'OverrideSkip')):
+            cases.append((f'<m:request xmlns:m="urn:wildcard" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+                          f'<m:{element} xsi:type="m:{declaration}" m:instant="{value}"/></m:request>',
+                          valid or element == 'overrideSkip'))
+        cases.append((f'<m:request xmlns:m="urn:wildcard" xmlns:u="urn:unknown">'
+                      f'<m:open><u:unknown m:instant="{value}"/></m:open></m:request>', valid))
+    return row, {'main.xsd': source.encode()}, cases
+
+
 def pack(row, files):
     from xsd_bundle import _prepare
     output, _, constraints = _prepare(row, files)
@@ -192,6 +367,11 @@ def notation_packs():
 if __name__ == '__main__':
     attributes = [(kind, attribute_fixture(kind)) for kind in ('direct', 'reference', 'neighbor', 'required')]
     attributes.append(('chameleon', chameleon_attribute_fixture()))
+    attributes.extend((kind if subject == 'attribute' else subject+'-'+kind, compound_attribute_fixture(kind, subject))
+                      for kind, subject in COMPOUND_CASES)
+    attributes.extend((name, wildcard_attribute_fixture(explicit))
+                      for name, explicit in (('wildcard-only', False), ('wildcard-with-explicit', True)))
+    attributes.append(('implicit-wildcard-only', wildcard_attribute_fixture(False, implicit_only=True)))
     payload = dict(pack=pack(*fixture()), cases=[(xml(body), expected) for body, expected in CASES],
                    attributes={kind: dict(pack=pack(row, files), cases=cases)
                                for kind, (row, files, cases) in attributes},

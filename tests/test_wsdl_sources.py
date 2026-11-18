@@ -259,9 +259,11 @@ class WsdlSourcesTests(unittest.TestCase):
   import sys
   import tempfile
   from pathlib import Path
-  from catalog import derive
-  from collector_snapshots import make_manifest, validate_manifest
+  from catalog import derive, export
+  from collector_feed import import_feed, store_feed
+  from collector_snapshots import make_manifest, replay_archived_inputs, validate_manifest
   from module_xsd import match_document
+  from source_provenance import publish_sources
   from wsdl_sources import _archive
   from xsd_bundle import _prepare, _selected, _zip
 
@@ -283,9 +285,54 @@ class WsdlSourcesTests(unittest.TestCase):
   matches, issues = match_document(module, [support], objects.__getitem__)
   self.assertEqual(len(matches), 1, issues)
   self.assertEqual(matches[0]['schema_path'], match['schema_path'])
-  named = dict(document, structure=document['structure'] + [['Расположение файла XML-схемы','root.xsd']])
-  explicit, = derive(dict(format=7, entries=[named, support]))['revisions']
-  self.assertTrue(explicit['schema_path'].endswith('/root.xsd'))
+  fixture = self.collect_individual_wsdl(support, objects, snapshot_format=7)
+  historical_snapshot = fixture.current()
+  historical, = derive(historical_snapshot)['revisions']
+  self.assertTrue(historical['schema_path'].endswith('/root.xsd'))
+  fixture.collect(2, wsdl_entries=[support])
+  fresh_snapshot = fixture.current()
+  fresh = derive(fresh_snapshot)
+  explicit, = fresh['revisions']
+  self.assertEqual(explicit['schema_path'], match['schema_path'])
+  self.assertTrue(explicit['schema_declaration_path'].endswith('/root.xsd'))
+  self.assertNotEqual(historical['revision_id'], explicit['revision_id'])
+  fixture.collect(3, wsdl_entries=[support], snapshot_format=7)
+  self.assertEqual(fixture.current(), historical_snapshot)
+  fixture.collect(4, wsdl_entries=[support], snapshot_format=fresh_snapshot['format'], individual_wsdl=True)
+  self.assertEqual(fixture.current(), fresh_snapshot)
+  current_pointer = (fixture.state/'current.json').read_bytes()
+  past_library, past_objects = self.collect({SEED: wrapper, base+'root.xsd': root,
+                                              base+'types.xsd': types.replace(b'xs:int', b'xs:short')})
+  # This receipt falls between the old format-7 and the new format-8 observations.
+  manifest = make_manifest(past_library, '2026-11-14T01:30:00+00:00')
+  remote = fixture.root/'feed'
+  store_feed(remote, [manifest], past_objects)
+  import_feed(fixture.state, lambda name: (remote/name).read_bytes())
+  record, = replay_archived_inputs(fixture.state)
+  self.assertEqual(record['status'], 'replayed', record)
+  replayed = json.loads((fixture.state/'snapshots'/(record['snapshot']+'.json')).read_bytes())
+  past, = derive(replayed)['revisions']
+  self.assertEqual(replayed['format'], 7)
+  self.assertEqual(past['schema_path'], explicit['schema_path'])
+  self.assertEqual(past['schema_declaration_path'], explicit['schema_declaration_path'])
+  self.assertEqual(past['archive_sha256'], past_library['sha256'])
+  self.assertNotEqual(past['revision_id'], explicit['revision_id'])
+  self.assertEqual((fixture.state/'current.json').read_bytes(), current_pointer)
+  self.assertEqual([r['snapshot'] for r in replay_archived_inputs(fixture.state)], [record['snapshot']])
+
+  index = fixture.root/'catalog.json'
+  export(fixture.state, index)
+  published = json.loads(index.read_bytes())
+  publish_sources(published, fixture.state, fixture.root/'site')
+  displayed = next(row for row in published['revisions'] if row['revision_id'] == explicit['revision_id'])
+  self.assertEqual(displayed['schema_declaration_url'], base+'root.xsd')
+  self.assertEqual((fixture.root/'site'/displayed['schema_declaration_download']).read_bytes(), root)
+  self.assertIn(b'schemaLocation="types.xsd"', (fixture.root/'site'/displayed['schema_file_download']).read_bytes())
+  script = Path(__file__).with_name('test_schema_origin.cjs')
+  index.write_text('window.SEDO_CATALOG='+json.dumps(published)+';', encoding='utf8')
+  result = subprocess.run(['node', str(script), str(index), explicit['revision_id'], 'composition'],
+                          capture_output=True, text=True, timeout=15)
+  self.assertEqual(result.returncode, 0, result.stderr)
 
   other = _archive({'root.xsd': root.replace(b'm:Code', b'xs:string')})
   objects[sha(other)] = other
@@ -296,6 +343,10 @@ class WsdlSourcesTests(unittest.TestCase):
   matches, issues = match_document(module, [support, alternative], objects.__getitem__)
   self.assertEqual(matches, [])
   self.assertIn('Неоднозначные схемы', [issue['reason'] for issue in issues])
+  conflicting = derive(self.collect_individual_wsdl(support, objects, other).current())
+  self.assertEqual(conflicting['revisions'], [])
+  diagnostic = next(doc for doc in conflicting['document_sources'] if 'Тип_сообщения' in doc['document_url'])
+  self.assertIn('Неоднозначные', diagnostic['schema_reason'])
 
   original_archive = objects[support['sha256']]
   old = dict(support, **inspect_file(original_archive, 'zip'))
@@ -303,23 +354,255 @@ class WsdlSourcesTests(unittest.TestCase):
   old_manifest = make_manifest(old, '2026-11-16T00:00:00+00:00')
   self.assertEqual(validate_manifest(old_manifest, objects.__getitem__), old)
   with zipfile.ZipFile(io.BytesIO(original_archive)) as archive:
-   output, records, constraints = _prepare(match, _selected(match, archive))
+   tree = Schema(archive, explicit['schema_path'], 'r'); tree.field(tree.root)
+   self.assertEqual(tree.fields[0]['base'], 'xs:int')
+   output, records, constraints = _prepare(explicit, _selected(explicit, archive))
   with tempfile.TemporaryDirectory() as tmp:
    folder = Path(tmp)
-   with zipfile.ZipFile(io.BytesIO(_zip(match, output, records, constraints))) as package:
+   with zipfile.ZipFile(io.BytesIO(_zip(explicit, output, records, constraints))) as package:
+    manifest = json.loads(package.read('manifest.json'))
+    self.assertEqual(manifest['schema_path'], explicit['schema_path'])
+    self.assertEqual(manifest['schema_declaration_path'], explicit['schema_declaration_path'])
     package.extractall(folder)
    for value, expected in [('1',0), ('bad',1)]:
     (folder/'input.xml').write_text(f'<r xmlns="urn:main">{value}</r>', encoding='utf8')
     result = subprocess.run([sys.executable, 'validate.py', 'input.xml'], cwd=folder,
                             capture_output=True, text=True, encoding='utf8')
     self.assertEqual(result.returncode, expected, result.stdout + result.stderr)
-  pack = dict(format=1, number='999', environment='test', revision_id=match['revision_id'], root='r',
+  pack = dict(format=1, number='999', environment='test', revision_id=explicit['revision_id'], root='r',
               namespace='urn:main', entrypoint='message.xsd', fields=['r'], field_namespaces=[['urn:main']],
               files={name:base64.b64encode(raw).decode('ascii') for name, raw in output.items()
                      if not name.startswith('originals/')})
   script = Path(__file__).with_name('included_root_wasm.cjs')
   result = subprocess.run(['node', str(script)], input=json.dumps([pack]), text=True, capture_output=True, timeout=40)
   self.assertEqual(result.returncode, 0, result.stderr)
+
+ def collect_individual_wsdl(self, support, objects, other=None, *, location='root.xsd', **options):
+  from sync import SITES, write
+  from tests.test_source_collection_regressions import SourceCollectionTests, individual_document
+  fixture = SourceCollectionTests(); fixture.setUp(); self.addCleanup(fixture.doCleanups)
+  page = SITES['test']
+  href = '/specs_sedo/Тип_сообщения_999.docx'
+  fixture.resources[page] += f'<a href="{href}">Individual</a>'.encode()
+  fixture.resources[page.replace('/sedo.html', href)] = individual_document('r', location)
+  if other is not None:
+   fixture.resources[page.replace('/sedo.html', '/specs_sedo/file.zip')] = other
+  for digest, raw in objects.items():
+   write(fixture.state/'objects'/digest, raw)
+  fixture.collect(1, wsdl_entries=[support], **options)
+  return fixture
+
+ def test_named_wsdl_member_does_not_fall_back_to_a_different_qname(self):
+  from catalog import derive
+  base = BASE.rsplit('/', 1)[0] + '/'
+  schema = f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:main">'
+  for kind, namespace, name in [('local', 'urn:main', 'formerlyR'), ('namespace', 'urn:other', 'r')]:
+   with self.subTest(kind=kind):
+    wsdl = (f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>{schema}'
+            f'<xs:import namespace="{namespace}" schemaLocation="root.xsd"/>'
+            '</xs:schema>'+schema+'<xs:element name="r" type="xs:string"/></xs:schema>'
+            '</w:types></w:definitions>').replace('<xs:import namespace="urn:main"', '<xs:include').encode()
+    root = (schema.replace('urn:main', namespace) + f'<xs:element name="{name}" type="xs:int"/></xs:schema>').encode()
+    support, objects = self.collect({SEED: wsdl, base+'root.xsd': root})
+    result = derive(self.collect_individual_wsdl(support, objects).current())
+    self.assertEqual(result['revisions'], [])
+    document, = [doc for doc in result['document_sources'] if 'Тип_сообщения' in doc['document_url']]
+    self.assertIn('{urn:main}r', document['schema_reason'])
+    self.assertEqual(document['schema_docx_location'], 'root.xsd')
+    self.assertTrue(document['schema_docx_path'].endswith('/root.xsd'))
+
+ def test_wsdl_locator_uses_requested_and_final_urls_and_rejects_a_bare_ambiguous_name(self):
+  from catalog import derive
+  from sync import RedirectedBytes
+  base = BASE.rsplit('/', 1)[0] + '/'
+  schema = f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:main">'
+  def wsdl(*parts):
+   return ('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>'
+           + ''.join(schema+part+'</xs:schema>' for part in parts) + '</w:types></w:definitions>').encode()
+  root = (schema + '<xs:element name="r" type="xs:int"/></xs:schema>').encode()
+  other = root.replace(b'xs:int', b'xs:string')
+  with self.subTest('distinct URLs with the same basename'):
+   resources = {
+       SEED: wsdl('<xs:include schemaLocation="published/root.xsd"/>',
+                  '<xs:include schemaLocation="draft/root.xsd"/>'),
+       base+'published/root.xsd': RedirectedBytes(root, base+'released/root.xsd'),
+       base+'draft/root.xsd': other}
+   support, objects = self.collect(resources)
+   for location in ('published/root.xsd', base+'published/root.xsd', base+'released/root.xsd'):
+    with self.subTest(location=location):
+     result = derive(self.collect_individual_wsdl(support, objects, location=location).current())
+     revision, = result['revisions']
+     self.assertEqual(revision['status'], 'matched')
+     self.assertEqual(revision['dependencies'], [('root.xsd', sha(root))])
+     self.assertEqual(revision['schema_docx_location'], location)
+   result = derive(self.collect_individual_wsdl(support, objects).current())
+   self.assertEqual(result['revisions'], [])
+   document, = [doc for doc in result['document_sources'] if 'Тип_сообщения' in doc['document_url']]
+   self.assertIn('Неоднозначные', document['schema_reason'])
+   from collector_snapshots import make_manifest, validate_manifest
+   legacy, objects = self.collect(resources, legacy_source_paths=True)
+   self.assertFalse(any('archive_path' in source for source in legacy['source_files']))
+   manifest = make_manifest(legacy, '2026-11-14T01:00:00+00:00')
+   self.assertEqual(validate_manifest(manifest, objects.__getitem__), legacy)
+   result = derive(self.collect_individual_wsdl(legacy, objects, location='published/root.xsd').current())
+   revision, = result['revisions']
+   self.assertEqual(revision['dependencies'], [('root.xsd', sha(root))])
+  with self.subTest('query schema'):
+   support, objects = self.collect({SEED: wsdl('<xs:include schemaLocation="?xsd=root.xsd"/>',
+                                             '<xs:element name="r" type="xs:string"/>'),
+                                    BASE+'?xsd=root.xsd': root})
+   for location in ('?xsd=root.xsd', BASE+'?xsd=root.xsd'):
+    result = derive(self.collect_individual_wsdl(support, objects, location=location).current())
+    revision, = result['revisions']
+    self.assertEqual(revision['dependencies'], [('root.xsd', sha(root))])
+
+ def test_wsdl_provenance_distinguishes_transitive_declaration_from_docx_and_entry(self):
+  import json
+  import subprocess
+  from pathlib import Path
+  from catalog import export
+  from source_provenance import publish_sources
+  from xsd_bundle import _prepare, _selected, _zip
+  base = BASE.rsplit('/', 1)[0] + '/'
+  schema = f'<xs:schema xmlns:xs="{XS}" xmlns:m="urn:main" targetNamespace="urn:main">'
+  wrapper = ('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>'+schema
+             +'<xs:include schemaLocation="root.xsd"/>'
+             '<xs:simpleType name="Code"><xs:restriction base="xs:int"/></xs:simpleType>'
+             '</xs:schema></w:types></w:definitions>').encode()
+  def include(name):
+   return (schema + f'<xs:include schemaLocation="{name}"/></xs:schema>').encode()
+  leaf = (schema + '<xs:element name="r" type="m:Code"/></xs:schema>').encode()
+  support, objects = self.collect({SEED: wrapper, base+'root.xsd': include('middle.xsd'),
+                                  base+'middle.xsd': include('leaf.xsd'), base+'leaf.xsd': leaf})
+  fixture = self.collect_individual_wsdl(support, objects, snapshot_format=7, individual_wsdl=2)
+  catalog_path = fixture.root/'catalog.json'
+  def published():
+   export(fixture.state, catalog_path)
+   catalog = json.loads(catalog_path.read_bytes())
+   publish_sources(catalog, fixture.state, fixture.root/'site')
+   return catalog
+  legacy_catalog = published()
+  legacy, = legacy_catalog['revisions']
+  self.assertTrue(legacy['schema_declaration_path'].endswith('/leaf.xsd'))
+  original = fixture.current()
+  fixture.collect(2, wsdl_entries=[support], snapshot_format=7, individual_wsdl=2)
+  self.assertEqual(fixture.current(), original)
+  fixture.collect(3, wsdl_entries=[support])
+  catalog = published()
+  result, = catalog['revisions']
+  self.assertEqual(result['revision_id'], legacy['revision_id'])
+  self.assertEqual(result['schema_docx_location'], 'root.xsd')
+  self.assertTrue(result['schema_docx_path'].endswith('/root.xsd'))
+  self.assertTrue(result['schema_declaration_path'].endswith('/leaf.xsd'))
+  self.assertTrue(result['schema_path'].endswith('/inline-0.xsd'))
+  self.assertEqual(result['schema_declaration_url'], base+'leaf.xsd')
+  self.assertEqual(sha((fixture.root/'site'/result['schema_declaration_download']).read_bytes()), sha(leaf))
+  with zipfile.ZipFile(io.BytesIO(objects[support['sha256']])) as source:
+   output, records, constraints = _prepare(result, _selected(result, source))
+  with zipfile.ZipFile(io.BytesIO(_zip(result, output, records, constraints))) as package:
+   manifest = json.loads(package.read('manifest.json'))
+   self.assertEqual(manifest['schema_declaration_path'], result['schema_declaration_path'])
+   self.assertEqual(manifest['schema_docx_location'], 'root.xsd')
+   record, = [item for item in manifest['files'] if item['source_path'] == result['schema_declaration_path']]
+   self.assertEqual(record['original_sha256'], sha(leaf))
+   self.assertEqual(sha(package.read(record['original_path'])), sha(leaf))
+  catalog_path.write_text('window.SEDO_CATALOG='+json.dumps(catalog)+';', encoding='utf8')
+  script = Path(__file__).with_name('test_schema_origin.cjs')
+  checked = subprocess.run(['node', str(script), str(catalog_path), result['revision_id'], 'transitive'],
+                           capture_output=True, text=True, encoding='utf8', timeout=20)
+  self.assertEqual(checked.returncode, 0, checked.stderr)
+
+ def test_individual_keeps_usable_explicit_wsdl_member(self):
+  from catalog import derive
+  base = BASE.rsplit('/', 1)[0] + '/'
+  schema = f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:main">'
+  wrapper = ('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>' + schema
+             + '<xs:include schemaLocation="root.xsd"/></xs:schema></w:types></w:definitions>').encode()
+  root = (schema + '<xs:element name="r" type="xs:int"/></xs:schema>').encode()
+  support, objects = self.collect({SEED: wrapper, base+'root.xsd': root})
+  explicit, = derive(self.collect_individual_wsdl(support, objects).current())['revisions']
+  self.assertEqual(explicit['status'], 'matched')
+  self.assertTrue(explicit['schema_path'].endswith('/root.xsd'))
+  self.assertEqual(explicit['dependencies'], [('root.xsd', sha(root))])
+
+ def test_explicit_wsdl_member_in_chameleon_and_external_compositions(self):
+  import base64
+  import json
+  import subprocess
+  from pathlib import Path
+  from lxml import etree
+  from audit_xml_examples import _schema
+  from catalog import derive
+  from xsd_bundle import _prepare, _selected
+
+  base = BASE.rsplit('/', 1)[0] + '/'
+  schema = f'<xs:schema xmlns:xs="{XS}" xmlns:m="urn:main" targetNamespace="urn:main">'
+  include = '<xs:include schemaLocation="root.xsd"/>'
+  code = '<xs:simpleType name="Code"><xs:restriction base="xs:int"/></xs:simpleType>'
+  unrelated = schema + '<xs:element name="r" type="xs:string"/></xs:schema>'
+  def wsdl(body):
+   return (f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>{body}{unrelated}'
+           '</w:types></w:definitions>').encode()
+  variants = [
+   ('chameleon', 'inline-0.xsd', {SEED:wsdl(schema + include + code + '</xs:schema>'),
+     base+'root.xsd':f'<xs:schema xmlns:xs="{XS}"><xs:element name="r" type="Code"/></xs:schema>'.encode()}),
+   ('nested chameleon', 'inline-0.xsd', {SEED:wsdl(schema + include + '</xs:schema>'),
+     base+'root.xsd':(f'<xs:schema xmlns:xs="{XS}"><xs:include schemaLocation="types.xsd"/>'
+                      '<xs:element name="r" type="Code"/></xs:schema>').encode(),
+     base+'types.xsd':(schema + code + '</xs:schema>').encode()}),
+   ('external composition', 'combined.xsd', {SEED:wsdl(f'<xs:schema xmlns:xs="{XS}"><xs:import namespace="urn:main" '
+      'schemaLocation="combined.xsd"/></xs:schema>'),
+      base+'combined.xsd':(schema + include + '<xs:include schemaLocation="types.xsd"/></xs:schema>').encode(),
+      base+'root.xsd':(schema + '<xs:element name="r" type="m:Code"/></xs:schema>').encode(),
+      base+'types.xsd':(schema + code + '</xs:schema>').encode()})]
+  packs = []
+  for case, entry, resources in variants:
+   with self.subTest(case=case):
+    support, objects = self.collect(resources)
+    result = derive(self.collect_individual_wsdl(support, objects).current())
+    self.assertEqual(len(result['revisions']), 1, result['review'])
+    revision, = result['revisions']
+    self.assertEqual(revision['status'], 'matched')
+    self.assertTrue(revision['schema_path'].endswith('/'+entry))
+    self.assertTrue(revision['schema_declaration_path'].endswith('/root.xsd'))
+    raw = objects[support['sha256']]
+    with zipfile.ZipFile(io.BytesIO(raw)) as archive:
+     tree = Schema(archive, revision['schema_path'], 'r'); tree.field(tree.root)
+     self.assertEqual(tree.owner[tree.root], revision['schema_declaration_path'])
+     self.assertEqual(tree.fields[0]['base'], 'xs:int')
+     output, _, _ = _prepare(revision, _selected(revision, archive))
+    validator = _schema(io.BytesIO(raw), revision)
+    for value, expected in [('1', True), ('bad', False)]:
+     self.assertEqual(validator.validate(etree.fromstring(f'<r xmlns="urn:main">{value}</r>')), expected)
+    packs.append(dict(format=1, number='999', environment='test', revision_id=revision['revision_id'],
+       root='r', namespace='urn:main', entrypoint='message.xsd', fields=['r'], field_namespaces=[['urn:main']],
+       files={name:base64.b64encode(content).decode() for name, content in output.items() if not name.startswith('originals/')}))
+  script = Path(__file__).with_name('included_root_wasm.cjs')
+  result = subprocess.run(['node', str(script)], input=json.dumps(packs), text=True, capture_output=True, timeout=40)
+  self.assertEqual(result.returncode, 0, result.stderr)
+
+ def test_incomplete_explicit_wsdl_member_keeps_docx_when_other_root_matches(self):
+  from catalog import derive
+  base = BASE.rsplit('/', 1)[0] + '/'
+  schema = f'<xs:schema xmlns:xs="{XS}" xmlns:m="urn:main" targetNamespace="urn:main">'
+  wrapper = ('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types>' + schema
+             + '<xs:include schemaLocation="root.xsd"/></xs:schema>' + schema
+             + '<xs:element name="r" type="xs:string"/></xs:schema></w:types></w:definitions>').encode()
+  root = (schema + '<xs:element name="r" type="m:Code"/></xs:schema>').encode()
+  support, objects = self.collect({SEED: wrapper, base+'root.xsd': root})
+  result = derive(self.collect_individual_wsdl(support, objects).current())
+  self.assertEqual(result['revisions'], [])
+  document, = [doc for doc in result['document_sources'] if 'Тип_сообщения' in doc['document_url']]
+  self.assertTrue(document['document_url'].endswith('.docx'))
+  self.assertIn('root.xsd', document['schema_reason'])
+  example = ('<w:documentation>' + schema + '<xs:include schemaLocation="root.xsd"/>'
+             '<xs:include schemaLocation="types.xsd"/></xs:schema></w:documentation>').encode()
+  types = (schema + '<xs:simpleType name="Code"><xs:restriction base="xs:int"/></xs:simpleType></xs:schema>').encode()
+  resources = {SEED: wrapper.replace(b'</w:definitions>', example + b'</w:definitions>'),
+               base+'root.xsd': root, base+'types.xsd': types}
+  archived, archived_objects = self.collect(resources, legacy_annotations=True)
+  result = derive(self.collect_individual_wsdl(archived, archived_objects).current())
+  self.assertEqual(result['revisions'], [], 'WSDL documentation cannot provide a validation entry point')
 
  def test_exact_wsdl_import_uses_fetched_path_for_identical_bytes(self):
   import posixpath
@@ -616,10 +899,10 @@ class WsdlSourcesTests(unittest.TestCase):
 
  def bundle(self,body=None):
   return {SEED:('<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/" xmlns:xs="'+XS+'"><w:types><xs:schema><xs:import namespace="urn:main" schemaLocation="'+BASE+'?xsd=main.xsd"/></xs:schema></w:types></w:definitions>').encode(),BASE+"?xsd=main.xsd":body or ('<xs:schema xmlns:xs="'+XS+'" xmlns:c="urn:common" targetNamespace="urn:main"><xs:import namespace="urn:common" schemaLocation="'+BASE+'?xsd=Common.xsd"/><xs:element name="response" type="c:Code"/></xs:schema>').encode(),BASE+"?xsd=Common.xsd":('<xs:schema xmlns:xs="'+XS+'" targetNamespace="urn:common"><xs:simpleType name="Code"><xs:restriction base="xs:string"><xs:length value="10"/></xs:restriction></xs:simpleType></xs:schema>').encode()}
- def collect(self,resources):
+ def collect(self,resources,**options):
   objects={}
   def blob(data):objects[sha(data)]=data;return sha(data)
-  row=collect(SEED,"test",resources.__getitem__,blob)
+  row=collect(SEED,"test",resources.__getitem__,blob,**options)
   return row,objects
  def test_discovery_keeps_contours_and_prefers_ecp_simple(self):
   entries=[dict(environment="prod",url=SEED),dict(environment="test",url=SEED),dict(environment="test",url="https://docs-test.fss.ru/sedo-gateway/api/soap/SedoGatewaySimple?wsdl"),dict(environment="test",url="https://evil.test/gateway?wsdl")]

@@ -60,6 +60,56 @@ assert.equal(failedRetry.latestDeployment.text,'Последняя успешн�
 assert.equal(failedRetry.url,related.url+'/attempts/2');
 assert.equal(failedRetry.latestDeployment.url,related.url+'/attempts/1');
 assert.equal(safeLink(failedRetry.latestDeployment.url),failedRetry.latestDeployment.url);
+for(const checkState of ['cancelled','failure']){
+ const report=structuredClone(data);
+ report.github.check={state:checkState,url:publicationURL(40)};
+ report.github.versions={count:null,checked_at:null};
+ report.github.publication={state:'not_published'};
+ const deployed={...latest,run_attempt:1};
+ report.github.last_successful_publication=deployed;
+ for(const [attempt,state,label] of [[1,'success','Успешно'],[2,'failure','Ошибка']]){
+  report.github.independent_publication={...deployed,state,run_attempt:attempt};
+  const view=model(report,now),card=view.cards[2];
+  assert.equal(view.cards[1].state,checkState);
+  assert.equal(view.cards[1].url,publicationURL(40));
+  assert.equal(card.state,'not_published');
+  assert.match(card.lines[0],/Публикация по итогам проверки СФР не состоялась/);
+  assert.equal(card.url,null);
+  assert.match(card.independentDeployment.text,new RegExp('Независимая выкладка · '+label));
+  assert.equal(card.independentDeployment.url,deployed.url+'/attempts/'+attempt);
+  assert.equal(card.latestDeployment.text,expectedLast);
+  assert.equal(card.latestDeployment.url,attempt===1?null:deployed.url+'/attempts/1');
+ }
+ delete report.github.independent_publication;
+ report.github.publication=deployed;
+ const legacyPages=model(report,now).cards[2];
+ assert.match(legacyPages.lines[0],/Связь с проверкой СФР не подтверждена/);
+ assert.doesNotMatch(legacyPages.lines.join(' '),/Обновление опубликовано|Независимая выкладка/);
+ assert.equal(legacyPages.url,deployed.url+'/attempts/1');
+ report.github.publication={...deployed,candidate_sha:'a'.repeat(40)};
+ assert.match(model(report,now).cards[2].lines[0],/Обновление опубликовано/);
+}
+{
+ const report=structuredClone(data);
+ report.github.check.state='waiting';
+ report.github.versions={count:null,checked_at:null};
+ report.github.independent_publication={...latest,state:'failure',run_attempt:2};
+ const view=model(report,now);
+ assert.match(view.cards[1].lines[0],/Ожидается обработка новых снимков SourceCraft/);
+ assert.match(view.cards[2].lines[0],/Обновление опубликовано/);
+ assert.match(view.cards[2].independentDeployment.text,/Независимая выкладка · Ошибка/);
+ assert.equal(view.cards[2].independentDeployment.url,latest.url+'/attempts/2');
+}
+for(const state of ['processing','failure']){
+ const report=structuredClone(data);
+ report.sourcecraft.state=state;
+ report.github.check.state='waiting';
+ report.github.versions={count:null,checked_at:null};
+ const view=model(report,now);
+ assert.match(view.cards[1].lines[0],/Ожидается обработка новых снимков SourceCraft/);
+ assert.doesNotMatch(view.cards[1].lines.join(' '),/Новых редакций нет/);
+ assert.match(view.cards[2].lines[0],/Обновление опубликовано/);
+}
 d=structuredClone(data);d.github.check.state='processing';d.github.versions.count=null;assert.match(model(d,now).cards[1].lines[0],/выполняется/);
 d=structuredClone(data);delete d.sourcecraft.contours.test.observed_at;assert.notEqual(model(d,now).tone,'success');
 d=structuredClone(data);d.sourcecraft.state='failure';assert.equal(model(d,now).tone,'failure');
@@ -138,6 +188,16 @@ console.log('Automation status states and safe links passed.');
  await advance(60000);assert.equal(calls,5,'manual refresh leaves one polling timer');
  fail=true;await app.refresh();assert.equal(nodes['automation-status'].dataset.tone,'unknown');assert.match(nodes['automation-summary'].textContent,/недоступен/);assert.equal(nodes['automation-refresh'].disabled,false);
  fail=false;await advance(60000);assert.equal(nodes['automation-status'].dataset.tone,'success','polling recovers after network failure');
+ const saved=current.github;
+ current.github={check:{state:'cancelled',url:publicationURL(40)},publication:{state:'not_published'},
+  independent_publication:{...latest,state:'failure',run_attempt:2},last_successful_publication:{...latest,run_attempt:1}};
+ await app.refresh();
+ const pagesCard=nodes['automation-cards'].children[2],links=pagesCard.children.filter(el=>el.href);
+ assert.deepEqual(links.map(el=>[el.textContent,el.href]),[
+  ['Открыть независимую выкладку',latest.url+'/attempts/2'],
+  ['Открыть последнюю успешную выкладку',latest.url+'/attempts/1']
+ ]);
+ current.github=saved;
  let release;pending=new Promise(resolve=>{release=resolve});
  const before=calls,inFlight=app.refresh();
  visibility('hidden');visibility('visible');await app.refresh();assert.equal(calls,before+1,'visibility changes and manual clicks do not overlap requests');

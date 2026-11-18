@@ -6,7 +6,7 @@ let tail=Promise.resolve(),locksTaken=0;
 const locks={request(name,callback){assert.equal(name,'sedo-field-mappings:v1:new:old');locksTaken++;const pending=tail.then(()=>callback());tail=pending.catch(()=>{});return pending}};
 const opts={left:{revision_id:'old'},right:{revision_id:'new'},before:['old/a','old/b','old/c'].map(path=>({path})),after:['new/a','new/b','new/c'].map(path=>({path})),isCurrent:()=>true};
 function tab(useLocks=true){
- const ctx=vm.createContext({document:{createElement:tag=>new Element(tag)},localStorage:storage,navigator:useLocks?{locks}:{}});
+ const ctx=vm.createContext({document:{createElement:tag=>new Element(tag)},localStorage:storage,navigator:useLocks?{locks}:{},confirm:()=>true});
  for(const name of ['comparison-export.js','mapping-draft.js','mapping-editor.js','comparison-mapping.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../web',name),'utf8'),ctx);
  const api=ctx.SedoMapping,host=new Element('host');let changes=0,ui;
  const find=cls=>walk(host).filter(e=>e.className.split(' ').includes(cls)),mount=()=>{host.replaceChildren();ui=api.mount(host,opts,api.store.load(opts),async()=>{changes++;return true})};
@@ -70,9 +70,40 @@ const pairs=t=>JSON.parse(JSON.stringify(t.api.store.load(opts).pairs));
  a.api.store.save(opts,[{beforePath:'old/a',afterPath:'new/a',comment:'Existing'}]);a.mount();b.mount();a.add('old/b','new/b','Queued apply');
  let release;const key=a.api.storageKey(opts.left,opts.right),held=locks.request(key,()=>new Promise(resolve=>{release=resolve}));await Promise.resolve();const resetChanges=b.changes,applying=a.apply(),resetButton=b.find('mapping-controls')[0].children[1],resetting=resetButton.onclick();
  assert.equal(pairs(a).length,1,'queued reset must not clear storage while an apply lock is held');assert.equal(resetButton.disabled,true,'pending reset blocks duplicate commands');assert.equal(b.changes,resetChanges,'queued reset must not refresh the page before acquiring its lock');release();await held;await Promise.all([applying,resetting]);assert.deepEqual(pairs(a),[],'reset queued after apply must leave mappings cleared');
+ {
+  const current=tab(),oldPair={beforePath:'old/a',afterPath:'new/a',comment:'Saved'};
+  current.api.store.save(opts,[oldPair]);current.mount();current.edit('Ready');
+  current.find('mapping-add-row')[0].onclick();
+  const hold=locks.request(key,()=>new Promise(resolve=>{release=resolve}));await Promise.resolve();
+  const pending=current.apply();
+  // Bypass the browser's inert subtree via direct handler calls.
+  for(const [side,value] of [['before','old/b'],['after','new/b']]){
+   const select=current.find('mapping-tag-choice-'+side)[0];
+   select.value=value;
+   select.onchange();
+  }
+  current.find('mapping-edit-form')[0].onsubmit({preventDefault(){}});
+  b.api.store.save(opts,[{...oldPair,comment:'Other tab'}]);
+  release();await hold;await pending;
+  assert.match(current.find('mapping-draft-errors')[0].textContent,/Конфликт/);
+  assert.equal(current.find('mapping-explicit').length,1,'programmatic submit cannot add a pair during apply');
+  assert.deepEqual(pairs(current).map(p=>p.comment),['Other tab']);
+ }
  // Navigating away while waiting must cancel both queued transaction types.
  a.api.store.save(opts,[{beforePath:'old/a',afterPath:'new/a',comment:'Keep'}]);a.mount();b.mount();a.add('old/b','new/b','Stale draft');const snapshot=pairs(a),changedBefore=b.changes;
  const heldAgain=locks.request(key,()=>new Promise(resolve=>{release=resolve}));await Promise.resolve();const staleApply=a.apply(),staleReset=b.find('mapping-controls')[0].children[1].onclick();opts.isCurrent=()=>false;release();await heldAgain;await Promise.all([staleApply,staleReset]);assert.deepEqual(pairs(a),snapshot,'queued stale apply and reset must not alter saved mappings');assert.equal(b.changes,changedBefore,'queued stale reset must not refresh another comparison');opts.isCurrent=()=>true;
+ {
+  const current=tab();current.mount();current.find('mapping-add')[0].onclick();
+  const comment=current.find('mapping-edit-comment')[0];
+  comment.value='Before confirmation';comment.oninput();
+  const held=locks.request(key,()=>new Promise(resolve=>{release=resolve}));await Promise.resolve();
+  const reset=current.find('mapping-controls')[0].children[1].onclick();
+  comment.value='After confirmation';comment.oninput();
+  release();await held;await reset;
+  assert.deepEqual(pairs(current),snapshot,'reset consent cannot cover a different form snapshot');
+  assert.equal(current.changes,0,'stale consent must not remount the draft');
+  assert.equal(current.find('mapping-edit-comment')[0].value,'After confirmation');
+ }
  const normal={...opts,before:['old','old/note','old/sibling'].map(path=>({path})),after:['new','new/note','new/sibling'].map(path=>({path}))};
  const reverse={...normal,left:normal.right,right:normal.left,before:normal.after,after:normal.before};
  for(const deletionOpts of [normal,reverse]){

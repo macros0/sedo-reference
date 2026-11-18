@@ -62,6 +62,10 @@ test('122 preserves the complete document change history with its exact source',
   const panel = page.locator('.version-panel').filter({has: page.getByRole('heading', {name: 'Тестовый контур'})});
   const source = panel.locator('.edition-source').filter({hasText: 'версия 2.49'});
   const history = source.locator('.document-change-history');
+  const summary = history.locator('summary');
+  await expect(summary).toHaveText('История изменений документа (49)');
+  await expect(history.locator('.document-version-entry').first()).toBeHidden();
+  await summary.click();
   await expect(history.locator('.document-version-entry')).toHaveCount(49);
   await expect(history).toContainText('Версия документа · 2.1');
   await expect(history).toContainText('Дата изменения · 02.12.2021');

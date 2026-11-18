@@ -25,12 +25,13 @@
   const facets=(f.facets||[]).filter(([key])=>key!=="pattern"||!f.patternGroups);
   if(facets.length)parts.push("Ограничения: "+facets.map(v=>v[0]+" = "+json(v[1])).join("; "));
   if(f.patternGroups)parts.push("Шаблоны XSD: "+f.patternGroups.map(group=>"("+group.map(json).join(" ИЛИ ")+")").join(" И "));
-  if(f.values?.length)parts.push("Значения: "+f.values.map((v,i)=>xmlValue(json(v[0]),f.valueQNames?.[i])+(v[1]?" — "+v[1]:"")).join("; "));
+  if(f.values?.length)parts.push("Значения: "+f.values.map((v,i)=>SedoCompare.displayListValue(xmlValue(json(v[0]),f.valueQNames?.[i]),f.valueListItems?.[i])+(v[1]?" — "+v[1]:"")).join("; "));
   if(f.flags&&Object.keys(f.flags).length){
    const labels={abstract:"Абстрактный элемент",typeAbstract:"Абстрактный тип (требуется конкретный xsi:type)"};
-   parts.push("Свойства: "+Object.entries(f.flags).map(([key,value])=>(labels[key]||key)+" = "+xmlValue(value,f.flagQNames?.[key])).join("; "));
+   parts.push("Свойства: "+Object.entries(f.flags).map(([key,value])=>(labels[key]||key)+" = "+SedoCompare.displayListValue(xmlValue(value,f.flagQNames?.[key]),f.flagListItems?.[key])).join("; "));
   }
   if(f.alternatives?.length)parts.push("Варианты union (ИЛИ):\n"+f.alternatives.map((v,i)=>(i+1)+". "+constraints(v)).join("\nИЛИ\n"));
+  if(f.listItem)parts.push("Тип значения в списке (list):\n"+constraints(f.listItem));
   return parts.join("\n");
  }
  function edition(r){return "№ "+r.number+" · "+({prod:"Продуктивный",test:"Тестовый"}[r.environment]||r.environment)+" · "+(r.edition_sources?.length>1?"схема · источников: "+r.edition_sources.length:(r.document_version||"Версия не указана")+(r.label_date?" · "+r.label_date:""))}
@@ -130,6 +131,8 @@
     ?[["Покрытие сравнения union",SedoCompare.unionCoverageNote,""]]:[]),
    ...((before.some(SedoCompare.hasUnresolvedNotationValues)||after.some(SedoCompare.hasUnresolvedNotationValues))
     ?[["Покрытие сравнения NOTATION",SedoCompare.notationCoverageNote,""]]:[]),
+   ...((before.some(SedoCompare.hasUnresolvedListValues)||after.some(SedoCompare.hasUnresolvedListValues))
+    ?[["Покрытие сравнения списков",SedoCompare.listCoverageNote,""]]:[]),
    ["Как сопоставлять","На первом листе выберите или вставьте полный путь из «Стало» в жёлтую ячейку. Пары можно также добавлять и редактировать в браузере: сохраните строку в черновик, затем нажмите «Применить и обновить сравнение». Описание и ограничения подтянутся формулами Excel. Для родительского блока можно подтвердить его строку: при загрузке браузер предложит вложенные теги с одинаковыми относительными путями. Предложения можно проверить и исключить в предпросмотре.",""],
    ["Проверка смысла","Совпадение пути не подтверждает одинаковое назначение. Сверяйте описания, вложенные поля, группы, условия и ограничения. Переименования автоматически не определяются.",""],
    ["Разделение и объединение","При разделении старого поля на несколько новых дублируйте его строку и укажите разные пути. При объединении допускается один новый путь в нескольких строках. Поясните решение в комментарии.",""],

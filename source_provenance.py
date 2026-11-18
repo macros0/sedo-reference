@@ -2,17 +2,49 @@
 import json
 import posixpath
 import zipfile
+from document_metadata import root_metadata, schema_location
 from edition_groups import prepare_observed_sources, SCHEMA_SOURCE_KEYS
+from schema import Schema
 from sync import SITES, catalog_resource, sha, write
 
 
 def original_schema_source(sources, path, digest):
-    return next((source for source in sources if source.get('kind') == 'xsd'
-                 and source.get('sha256') == digest and source.get('archive_path') in (None, path)), None)
+    matches = [source for source in sources if source.get('kind') == 'xsd'
+               and source.get('sha256') == digest]
+    exact = [source for source in matches if source.get('archive_path') == path]
+    if len(exact) == 1:
+        return exact[0]
+    if len(matches) == 1 and not matches[0].get('archive_path'):
+        return matches[0]
+
+
+def restore_legacy_wsdl_location(row, document, archive, files):
+    """Read the old named member and recompute the owner of the confirmed root."""
+    evidence = document.get('wsdl_schema_matches')
+    if not evidence or (isinstance(evidence, dict) and evidence.get('version', 1) >= 3):
+        return
+    location = schema_location(document.get('structure', []))
+    if not location:
+        return
+    matches = [match for match in (evidence['members'] if isinstance(evidence, dict) else evidence)
+               if match['archive_url'] == row['archive_url'] and match['archive_sha256'] == row['archive_sha256']
+               and row['schema_path'] in match['entrypoints'] and match['declaration'] in files]
+    if len(matches) != 1:
+        return
+    member = matches[0]['declaration']
+    root, namespace, declared = root_metadata(document.get('structure', []))
+    try:
+        with zipfile.ZipFile(archive) as bundle:
+            tree = Schema(bundle, row['schema_path'], root)
+    except (ValueError, KeyError):
+        return
+    declaration = tree.owner[tree.root]
+    if declaration in files and (not declared or (tree.context[tree.root][2] or None) == namespace):
+        row.update(schema_docx_location=location, schema_docx_path=member, schema_declaration_path=declaration)
 
 
 def publish_sources(catalog, state, site):
-    publications, snapshots = {}, {}
+    publications, snapshots, documents = {}, {}, {}
     history_file, current_file = state / "history.json", state / "current.json"
     history = json.loads(history_file.read_bytes()) if history_file.exists() else []
     current = json.loads(current_file.read_bytes())["snapshot"] if current_file.exists() else None
@@ -27,6 +59,8 @@ def publish_sources(catalog, state, site):
             # Only recorded official publications establish a page relationship.
             if env not in SITES or not entry.get("sha256"):
                 continue
+            if entry.get('wsdl_schema_matches'):
+                documents[key, env, entry['url'], entry['sha256']] = entry
             if not catalog_resource(url, env):
                 continue
             page = entry.get("source_page") or SITES[env]
@@ -47,6 +81,9 @@ def publish_sources(catalog, state, site):
         row.pop("schema_file_name", None)
         row.pop("schema_files", None)
         row.pop("schema_original_url", None)
+        row.pop("schema_declaration_download", None)
+        row.pop("schema_declaration_url", None)
+        row.pop("schema_docx_download", None)
         if not row.get("schema_path") and not revision and snapshot in snapshots and revisions.get(row.get("revision_id"), {}).get("status") == "matched":
             # Old exports lack per-observation packaging. Recover it from the
             # original inventory, including when an external ZIP moved alone.
@@ -98,9 +135,26 @@ def publish_sources(catalog, state, site):
         row["schema_file_download"] = files[entry]["download"]
         row["schema_file_name"] = posixpath.basename(entry)
         if row.get("schema_source_type") == "wsdl":
-            original = original_schema_source(row.get('schema_sources', []), entry, files[entry]['sha256'])
+            sources = row.get('schema_sources', [])
+            original = original_schema_source(sources, entry, files[entry]['sha256'])
             if original:
                 row['schema_original_url'] = original['url']
+            original_document = documents.get((snapshot, row['environment'], row.get('document_url'),
+                                               row.get('document_sha256')))
+            if original_document and not row.get('schema_docx_location'):
+                restore_legacy_wsdl_location(row, original_document, state / 'objects' / row['archive_sha256'], files)
+            named = row.get('schema_docx_path')
+            if named in files:
+                row['schema_docx_download'] = files[named]['download']
+                original = original_schema_source(sources, named, files[named]['sha256'])
+                if original:
+                    row.setdefault('schema_docx_url', original['url'])
+            declaration = row.get('schema_declaration_path')
+            if declaration:
+                row['schema_declaration_download'] = files[declaration]['download']
+                original = original_schema_source(sources, declaration, files[declaration]['sha256'])
+                if original:
+                    row['schema_declaration_url'] = original['url']
         if not revision:
             row.pop("dependencies", None)
             row.pop("schema_sources", None)

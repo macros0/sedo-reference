@@ -63,6 +63,22 @@ for(const [base,flags,contentModel,expected] of [
  assert.match(content(nodes.get('detail')),/A.* ИЛИ .*B/);
  assert.match(content(nodes.get('detail')),/C.* И .*D/);
 }
+{
+ const {nodes}=app('205','prod',fields=>[{...fields[0],name:'periods',path:'periods',parent:-1,children:[1],
+  type:'',base:'',listItem:{base:'xs:dateTime',facets:[['pattern','[0-9]+Z']]},facets:[['maxLength','2']],values:[]},
+  {...fields[0],name:'options',path:'periods/options',parent:0,children:[],type:'',base:'',values:[],
+  alternatives:[{base:'xs:string'},{listItem:{type:'CodeValue',base:'xs:int',facets:[['minInclusive','5']],values:[['7','Семь']]}}]}]);
+ const content=node=>typeof node==='string'?node:(node.textContent||'')+(node.children||[]).map(content).join(' ');
+ assert.match(content(nodes.get('detail')),/Список значений/);
+ assert.match(content(nodes.get('detail')),/Тип элемента списка.*xs:dateTime.*\[0-9\]/);
+ const query=nodes.get('query');query.value='codevalue';query.oninput();
+ const result=nodes.get('tree').children.find(row=>row.className?.startsWith('result'));
+ assert.equal(result?.children[1].textContent,'periods/options');
+ result.onclick();
+ assert.match(content(nodes.get('detail')),/Тип элемента списка.*CodeValue.*Минимум включительно.*5.*Семь/);
+ query.value='[0-9]+z';query.oninput();
+ assert.equal(nodes.get('tree').children.find(row=>row.className?.startsWith('result'))?.children[1].textContent,'periods');
+}
 for(const number of ['86','10110','611']){
  const {nodes,context,fields}=app(number),scope=nodes.get('scope'),tree=nodes.get('tree');
  const block=fields.find(f=>f.parent===0&&f.children.length),nested=fields.find(f=>f.parent>0&&f.children.length);
