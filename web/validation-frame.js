@@ -17,7 +17,8 @@ function reviewDetails(field){
  details.className='spec-review-details';summary.textContent='Показать замечания ('+matches.length+')';details.append(summary);
  for(const {source,finding} of matches){
   const item=document.createElement('article'),heading=document.createElement('strong'),origin=document.createElement('p'),evidence=document.createElement('dl');
-  heading.textContent=finding.kind;origin.textContent=source.name+(source.version?' · версия '+source.version:'')+(source.date?' · '+source.date:'');
+  const scope=finding.field_link_scope==='parent'?'Замечание к дочернему полю':'Замечание к полю';
+  heading.textContent=scope+' · '+finding.kind;origin.textContent=source.name+(source.version?' · версия '+source.version:'')+(source.date?' · '+source.date:'');
   for(const [label,value] of [['В спецификации',finding.spec],['В XSD',finding.xsd],['Последствие',finding.impact],['Место в спецификации',finding.location],['Место в XSD',finding.xlocation]]){
    if(!value)continue;const term=document.createElement('dt'),description=document.createElement('dd');term.textContent=label;description.textContent=value;evidence.append(term,description);
   }
@@ -33,12 +34,13 @@ function showReview(field){
 function renderReviews(locations){
  clearReviews();const found=(locations||[]).filter(location=>reviewsByField.has(location.field));
  sourceView.setReviews(found);if(!found.length)return;
- const heading=document.createElement('h3');heading.textContent='Поля с замечаниями в спецификации · '+found.length;$('spec-reviews').append(heading);$('spec-reviews').hidden=false;
+ const heading=document.createElement('h3');heading.textContent='Поля и блоки со связанными замечаниями · '+found.length;$('spec-reviews').append(heading);$('spec-reviews').hidden=false;
  for(const location of found){
   const item=document.createElement('article'),path=document.createElement('code'),show=document.createElement('button'),open=document.createElement('button'),details=reviewDetails(location.field);
   item.className='spec-review-card';path.textContent=location.path;show.type=open.type='button';
-  show.textContent='Показать поле в XML';show.onclick=()=>sourceView.showReview(location);
-  open.textContent='Открыть поле в справочнике';open.onclick=()=>parent.postMessage({type:'sedo-validation-field',revision:SEDO_PACK.revision_id,field:location.field},SEDO_PARENT_ORIGIN);
+  const parentOnly=reviewsByField.get(location.field).every(({finding})=>finding.field_link_scope==='parent');
+  show.textContent=parentOnly?'Показать родительский блок в XML':'Показать поле в XML';show.onclick=()=>sourceView.showReview(location);
+  open.textContent=parentOnly?'Открыть родительский блок в справочнике':'Открыть поле в справочнике';open.onclick=()=>parent.postMessage({type:'sedo-validation-field',revision:SEDO_PACK.revision_id,field:location.field},SEDO_PARENT_ORIGIN);
   item.append(path,show,open,details);
   if(location.rangesTruncated){const note=document.createElement('small');note.textContent='Для повторяющегося поля показана часть мест в XML.';item.append(note)}
   $('spec-reviews').append(item);reviewCards.set(location.field,{item,details});
@@ -64,7 +66,8 @@ async function check(){
   core.checkPack(SEDO_PACK,SEDO_PACK);const decoded=core.inspectBytes(bytes);sourceView.setSource(file?decoded:pasted,{preserveEditor:edited!==null});sourceView.setBusy(true);
   worker=new Worker(workerUrl);timer=setTimeout(()=>{if(token!==generation)return;stop();checking(false);status('Проверка остановлена через 30 секунд. Можно повторить или использовать Python-валидатор из ZIP.','invalid')},30000);
   worker.onmessage=event=>{if(token!==generation)return;const result=event.data;stop();checking(false);
-   status(result.valid?'XML соответствует XSD выбранного сообщения и редакции.':result.runtime?'Проверку не удалось завершить.':'XML не соответствует выбранной схеме.',result.valid?'valid':'invalid');
+   const outcome=result.valid?'XML соответствует XSD выбранного сообщения и редакции.':result.runtime?'Проверку не удалось завершить.':'XML не соответствует выбранной схеме.';
+   status(outcome+(result.diagnosticsTruncated?' Показана только часть диагностических сообщений или их текста.':''),result.valid?'valid':'invalid');
    renderReviews(result.reviewLocations||[]);sourceView.setErrors(result.errors||[]);$('validation-results').className='validation-results'+(result.errors?.length?'':' source-only');
    for(const error of core.groupErrors(result.errors||[])){
     const item=document.createElement('li'),message=document.createElement('button');item.className='error-card';message.type='button';message.className='error-message';message.textContent=(error.line?'Строка '+error.line:'Диагностика XML')+' · Нарушений: '+error.diagnostics.length;message.title='Перейти к XML возле ошибки';message.disabled=!sourceView.canShow(error);message.onclick=()=>sourceView.showError(error);item.append(message);
@@ -75,7 +78,7 @@ async function check(){
     }item.append(reasons);
     if(error.ambiguous){const note=document.createElement('p');note.textContent='В этой строке несколько возможных путей'+(error.truncated?' (показаны первые 8)':'')+'. Выберите нужное поле.';item.append(note)}
     for(const location of error.locations||[]){
-     const code=document.createElement('code');code.textContent=location.path;item.append(code);const notes=reviewDetails(location.field);if(notes){item.className='error-card has-spec-review';item.append(notes)}
+     const code=document.createElement('code');code.textContent=location.expandedPath||location.path;item.append(code);const notes=reviewDetails(location.field);if(notes){item.className='error-card has-spec-review';item.append(notes)}
      if(location.ranges?.length){const show=document.createElement('button');show.type='button';show.textContent='Показать тег в XML';show.onclick=()=>sourceView.showError(error,location);item.append(show)}
      const field=location.field;
      if(Number.isInteger(field)&&field>=0&&field<(SEDO_PACK.fields||[]).length){

@@ -30,7 +30,24 @@
           "procClosedOpenNew",
           "receivedConfirmationOtherInsurer"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "socialAssistNum",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "procClosedOpenNew",
+              "receivedConfirmationOtherInsurer"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "socialAssistNum",
@@ -76,7 +93,16 @@
         "sequence",
         "reason",
         "newSocialAssistNum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "reason",
+          "newSocialAssistNum"
+        ]
+      }
     },
     {
       "name": "reason",
@@ -146,7 +172,16 @@
         "sequence",
         "paymentMethod",
         "years"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "paymentMethod",
+          "years"
+        ]
+      }
     },
     {
       "name": "paymentMethod",
@@ -224,7 +259,15 @@
       "contentModel": [
         "sequence",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year"
+        ]
+      }
     },
     {
       "name": "year",

@@ -28,7 +28,15 @@
       "contentModel": [
         "sequence",
         "orgInfo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "orgInfo"
+        ]
+      }
     },
     {
       "name": "orgInfo",
@@ -56,7 +64,16 @@
         "choice",
         "legalEntity",
         "ip"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "legalEntity",
+          "ip"
+        ]
+      }
     },
     {
       "name": "legalEntity",
@@ -102,7 +119,36 @@
           "publicOrganizationDisability",
           "founderFizlicoDocument"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "nameOrg",
+          "inn",
+          "kpp",
+          "ogrn",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "regNum",
+              "regNumSFR"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "0",
+            "max": "1",
+            "children": [
+              "publicOrganizationDisability",
+              "founderFizlicoDocument"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "nameOrg",
@@ -158,7 +204,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "kpp",
@@ -296,7 +348,18 @@
         "inn",
         "kpp",
         "ogrn"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "name",
+          "inn",
+          "kpp",
+          "ogrn"
+        ]
+      }
     },
     {
       "name": "name",
@@ -354,7 +417,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "kpp",
@@ -448,7 +517,22 @@
         "number",
         "certificateDate",
         "soglasie"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "lastName",
+          "firstName",
+          "middleName",
+          "seria",
+          "number",
+          "certificateDate",
+          "soglasie"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -701,7 +785,36 @@
           "sequence",
           "founderDisabilityDocument"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lastName",
+          "firstName",
+          "middleName",
+          "inn",
+          "ogrn",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "regNum",
+              "regNumSFR"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "0",
+            "max": "1",
+            "children": [
+              "founderDisabilityDocument"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "lastName",
@@ -821,7 +934,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "ogrn",
@@ -933,7 +1052,18 @@
         "seria",
         "number",
         "certificateDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "seria",
+          "number",
+          "certificateDate"
+        ]
+      }
     },
     {
       "name": "snils",

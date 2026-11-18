@@ -151,7 +151,78 @@
         "previouslyIssuedCode",
         "intermittentMethodFlag",
         "isProactive"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "all",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "surname",
+          "name",
+          "patronymic",
+          "lnCode",
+          "prevLnCode",
+          "primaryFlag",
+          "duplicateFlag",
+          "lnDate",
+          "idMo",
+          "lpuName",
+          "lpuAddress",
+          "lpuOgrn",
+          "birthday",
+          "gender",
+          "reason1",
+          "reason2",
+          "date1",
+          "date2",
+          "voucherNo",
+          "voucherOgrn",
+          "servData",
+          "pregn12wFlag",
+          "hospitalDt1",
+          "hospitalDt2",
+          "hospitalBreach",
+          "mseDt1",
+          "mseDt2",
+          "mseDt3",
+          "mseInvalidGroup",
+          "mseInvalidLoss",
+          "treatPeriods",
+          "lnResult",
+          "lnState",
+          "innPerson",
+          "employer",
+          "emplFlag",
+          "emplRegNo",
+          "emplParentNo",
+          "emplRegNo2",
+          "approve1",
+          "approve2",
+          "baseAvgSal",
+          "baseAvgDailySal",
+          "insurYy",
+          "insurMm",
+          "notInsurYy",
+          "notInsurMm",
+          "calcCondition1",
+          "calcCondition2",
+          "calcCondition3",
+          "calcCondition4",
+          "form1Dt",
+          "returnDateEmpl",
+          "dt1Ln",
+          "dt2Ln",
+          "emplPayment",
+          "fssPayment",
+          "payment",
+          "correctionReason",
+          "correctionNote",
+          "previouslyIssuedCode",
+          "intermittentMethodFlag",
+          "isProactive"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -701,7 +772,15 @@
       "contentModel": [
         "sequence",
         "servFullData"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "servFullData"
+        ]
+      }
     },
     {
       "name": "servFullData",
@@ -754,7 +833,40 @@
           "servAge",
           "servMm"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "servRelationCode",
+              "servDt1",
+              "servDt2",
+              "treatmentType",
+              "surname",
+              "name",
+              "patronymic",
+              "birthday",
+              "reason1",
+              "snils"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "servAge",
+              "servMm"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "servRelationCode",
@@ -1158,7 +1270,16 @@
         "sequence",
         "hospitalBreachCode",
         "hospitalBreachDt"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "hospitalBreachCode",
+          "hospitalBreachDt"
+        ]
+      }
     },
     {
       "name": "hospitalBreachCode",
@@ -1352,7 +1473,15 @@
       "contentModel": [
         "sequence",
         "treatFullPeriod"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "treatFullPeriod"
+        ]
+      }
     },
     {
       "name": "treatFullPeriod",
@@ -1382,7 +1511,17 @@
         "treatChairman",
         "treatChairmanRole",
         "treatPeriod"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "treatChairman",
+          "treatChairmanRole",
+          "treatPeriod"
+        ]
+      }
     },
     {
       "name": "treatChairman",
@@ -1468,7 +1607,19 @@
         "idDoctor",
         "treatDoctorRole",
         "treatDoctor"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "all",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "treatDt1",
+          "treatDt2",
+          "idDoctor",
+          "treatDoctorRole",
+          "treatDoctor"
+        ]
+      }
     },
     {
       "name": "treatDt1",
@@ -1624,7 +1775,18 @@
         "mseResult",
         "otherStateDt",
         "nextLnCode"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "all",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "returnDateLpu",
+          "mseResult",
+          "otherStateDt",
+          "nextLnCode"
+        ]
+      }
     },
     {
       "name": "returnDateLpu",

@@ -21,6 +21,150 @@ def document():
     return out.getvalue()
 
 class EmbeddedSchemaTests(unittest.TestCase):
+    def test_module_evidence_keeps_known_empty_and_unknown_namespaces_distinct(self):
+        from module_xsd import document_bindings
+        from tests.test_schema_recovery import archive, docx
+        xs = 'http://www.w3.org/2001/XMLSchema'
+        objects, archives = {}, []
+        for namespace in ('urn:other', ''):
+            attr = f' targetNamespace="{namespace}"' if namespace else ''
+            xsd = f'<xs:schema xmlns:xs="{xs}"{attr}><xs:element name="result" type="xs:string"/></xs:schema>'
+            raw = archive({'main.xsd': xsd})
+            objects[sha(raw)] = raw
+            archives.append(dict(kind='zip', environment='prod', url='https://example.test/'+sha(raw),
+                                 sha256=sha(raw), **inspect_file(raw, 'zip')))
+        for example in ('<result/>', f'<xs:schema xmlns:xs="{xs}"><xs:element name="result"/></xs:schema>'):
+            _, doc = docx(['Тип сообщения 777: Результат', example])
+            item = dict(environment='prod', url='doc', module_bindings=document_bindings(doc))
+            self.assertEqual(match_document(item, archives[:1], objects.__getitem__)[0], [])
+            matches, _ = match_document(item, archives, objects.__getitem__)
+            self.assertEqual([m['archive_sha256'] for m in matches], [archives[1]['sha256']])
+        # Old tables and stored bindings without namespace evidence are still usable.
+        item['module_bindings'] = [dict(number='777', root='result', namespace=None)]
+        self.assertEqual(match_document(item, archives[:1], objects.__getitem__)[0][0]['namespace'], 'urn:other')
+        from tests.test_audit_module_tables import make_body, HEADER
+        from xml.etree import ElementTree as ET
+        body = make_body('Тип сообщения 777: Результат', [HEADER, ['result', 'DocumentType', '-', '1', '']],
+                         '<result/>')
+        doc = ET.Element('{'+W+'}document'); doc.append(body)
+        self.assertEqual(document_bindings(doc)[0]['namespace'], '')
+
+    def test_imported_named_qname_and_legacy_snapshot_contract(self):
+        from tests.test_schema_recovery import archive
+        archives, objects = [], {}
+        types = '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:t"><xs:simpleType name="Code"><xs:restriction base="xs:QName"/></xs:simpleType></xs:schema>'
+        for p in ('xs','xsd'):
+            main = (f'<{p}:schema xmlns:{p}="http://www.w3.org/2001/XMLSchema" xmlns:t="urn:t" targetNamespace="urn:m">'
+                    f'<{p}:import namespace="urn:t" schemaLocation="types.xsd"/><{p}:element name="r" type="t:Code" fixed="{p}:int"/></{p}:schema>')
+            raw = archive({'main.xsd':main, 'types.xsd':types})
+            objects[sha(raw)]=raw
+            archives.append(dict(environment='prod',kind='zip',url='https://example/'+p,sha256=sha(raw),**inspect_file(raw,'zip')))
+        doc=dict(environment='prod',url='doc',module_bindings=[dict(number='777',root='r',namespace='urn:m')])
+        self.assertEqual(len(match_document(doc,archives,objects.__getitem__)[0]),1)
+        self.assertEqual(match_document(doc,archives,objects.__getitem__,legacy=True)[0],[])
+
+    def test_prefix_equivalent_archives_replay_with_original_snapshot_format(self):
+        from tests.test_source_collection_regressions import SourceCollectionTests, archive
+        from sync import SITES
+        fixture = SourceCollectionTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        for page in SITES.values():
+            base = page.rsplit('/', 1)[0] + '/specs_sedo/'
+            fixture.resources[page] = (b'<a href="/specs_sedo/file.docx">DOCX</a>'
+                                       b'<a href="/specs_sedo/xs.zip">A</a><a href="/specs_sedo/xsd.zip">B</a>')
+            for p in ('xs', 'xsd'):
+                raw = (f'<{p}:schema xmlns:{p}="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:main">'
+                       f'<{p}:element name="response" type="{p}:string"/></{p}:schema>').encode()
+                fixture.resources[base + p + '.zip'] = archive('main.xsd', raw)
+        for expected_format in (2, 3, 4):
+            options = {} if expected_format == 4 else {'snapshot_format': expected_format}
+            fixture.collect(1, wsdl_entries=[], **options)
+            original = json.loads((fixture.state / 'current.json').read_bytes())['snapshot']
+            snapshot = fixture.current()
+            self.assertEqual(snapshot['format'], expected_format)
+            rows = [row for row in snapshot['entries'] if row['kind'] == 'docx']
+            self.assertEqual(len(rows), 2)
+            for row in rows:
+                if expected_format < 4:
+                    self.assertEqual(row['schema_diagnostics'][0]['reason'], 'Неоднозначные схемы')
+                else:
+                    self.assertEqual(len(row['module_matches']), 1)
+            fixture.collect(2, wsdl_entries=[], snapshot_format=expected_format)
+            replay = json.loads((fixture.state / 'current.json').read_bytes())['snapshot']
+            self.assertEqual(replay, original)
+
+    def test_contract_compares_used_qnames_by_uri_and_string_literals_verbatim(self):
+        from module_xsd import xml_contract
+        def contract(prefix, uri, typ, value):
+            return xml_contract((f'<{prefix}:schema xmlns:{prefix}="http://www.w3.org/2001/XMLSchema" '
+                                 f'xmlns:v="{uri}"><{prefix}:element name="r" type="{prefix}:{typ}" '
+                                 f'fixed="{value}"/></{prefix}:schema>').encode())
+        self.assertEqual(contract('xs', 'urn:unused', 'string', 'ok'), contract('xsd', 'urn:unused2', 'string', 'ok'))
+        self.assertNotEqual(contract('xs', 'urn:a', 'QName', 'v:ok'), contract('xs', 'urn:b', 'QName', 'v:ok'))
+        self.assertNotEqual(contract('xs', 'urn:a', 'string', 'xs:int'), contract('xsd', 'urn:a', 'string', 'xsd:int'))
+        self.assertEqual(contract('xs', 'urn:a', 'QName', 'xs:int'), contract('xsd', 'urn:a', 'QName', 'xsd:int'))
+        def selector(prefix, ns):
+            return xml_contract((f'<s:schema xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:{prefix}="{ns}">'
+                                 f'<s:key name="k"><s:selector xpath=".//{prefix}:row"/>'
+                                 f'<s:field xpath="@{prefix}:id"/></s:key></s:schema>').encode())
+        self.assertEqual(selector('a', 'urn:test'), selector('b', 'urn:test'))
+        self.assertNotEqual(selector('a', 'urn:test'), selector('a', 'urn:other'))
+
+    def test_text_fragments_are_scanned_once_and_preserve_nested_xml(self):
+        from module_xsd import xml_fragments
+        source = '<outer><inner a=">"/><!-- <ignored> --><![CDATA[<text>]]></outer><next/>'
+        stats = {}
+        self.assertEqual(list(xml_fragments(source, stats=stats)),
+                         [source[:source.index('<next/>')], '<next/>'])
+        self.assertLessEqual(stats['characters'], len(source) * 2)
+        unfinished = '<xs:schema>' * 400
+        stats = {}
+        self.assertEqual(list(xml_fragments(unfinished, stats=stats)), [])
+        self.assertLessEqual(stats['characters'], len(unfinished) * 2)
+
+    def test_text_fragment_limits_and_recovery_after_mismatched_tag(self):
+        from module_xsd import xml_fragments
+        self.assertEqual(list(xml_fragments('<broken></other><valid/>')), ['<valid/>'])
+        self.assertEqual(list(xml_fragments('< prose ' + 'x' * 9000 + '<valid/>')), ['<valid/>'])
+        self.assertEqual(list(xml_fragments('<broken text <valid/>')), ['<valid/>'])
+        with self.assertRaisesRegex(ValueError, 'фрагмент'):
+            list(xml_fragments('<item>' + 'x' * 100 + '</item>', max_length=32))
+        with self.assertRaisesRegex(ValueError, 'глубокий'):
+            list(xml_fragments('<item>' * 513))
+
+    def test_inline_schema_identity_ignores_xml_examples_and_unclosed_prose(self):
+        import html
+        schema = '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"></xs:schema>'
+        def packages(prefix):
+            output = io.BytesIO()
+            with zipfile.ZipFile(output, 'w') as archive:
+                archive.writestr('word/document.xml', f'<w:document xmlns:w="{W}"><w:body><w:p><w:r><w:t>{html.escape(prefix + schema)}</w:t></w:r></w:p></w:body></w:document>')
+            result, issues = extract_archives(output.getvalue())
+            self.assertFalse(issues)
+            return result
+        plain = packages('')
+        self.assertEqual(packages('<r>valid</r>'), plain)
+        self.assertEqual(packages('<example> prose '), plain)
+
+    def test_service_documents_keep_their_archived_inline_schema_identities(self):
+        state = ROOT / 'state'
+        current = json.loads((state / 'current.json').read_bytes())['snapshot']
+        entries = json.loads((state / 'snapshots' / (current + '.json')).read_bytes())['entries']
+        checked = 0
+        for row in entries:
+            expected = [item for item in row.get('embedded_archives', [])
+                        if item.get('original_sha256', '').startswith(('74dd3b60', '235809a4'))]
+            if not expected:
+                continue
+            packages, _ = extract_archives((state / 'objects' / row['sha256']).read_bytes())
+            for item in expected:
+                package = next(p for p in packages if p['container'] == item['container'])
+                self.assertEqual(package['original_sha256'], item['original_sha256'])
+                self.assertEqual(sha(package['content']), item['sha256'])
+                checked += 1
+        self.assertEqual(checked, 2)
+
     def test_embedded_inline_and_combined_archives_use_platform_independent_headers(self):
         import html
         schema = '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"></xs:schema>'
@@ -73,7 +217,8 @@ class EmbeddedSchemaTests(unittest.TestCase):
         with zipfile.ZipFile(empty,'w') as z:z.writestr('empty.xsd',b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"/>')
         for env,url in SITES.items():
             base=url.rsplit('/',1)[0]
-            sources[url]=b'<a href="/specs_sedo/source.zip">XSD</a><a href="prab.html">Process</a><a href="https://lk.fss.ru//mchd.html">MCHD</a><a href="/specs_sedo/module.docx">v1.0 (01.11.2026)</a>'
+            companion_host = 'https://lk.fss.ru' if env == 'prod' else base
+            sources[url]=(f'<a href="/specs_sedo/source.zip">XSD</a><a href="prab.html">Process</a><a href="{companion_host}//mchd.html">MCHD</a><a href="/specs_sedo/module.docx">v1.0 (01.11.2026)</a>').encode()
             sources[base+'/specs_sedo/source.zip']=empty.getvalue();sources[base+'/specs_sedo/module.docx']=raw
             sources[base+'/prab.html']=b'<a href="/prab/card.zip">Card</a><a href="https://other.example/prab/foreign.zip">Ignore</a>'
             sources[base+'/prab/card.zip']=empty.getvalue()

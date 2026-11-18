@@ -49,7 +49,31 @@
           "noticeSend"
         ],
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "noticeType",
+          "batchNo",
+          "processNum",
+          "personInfo",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "registerRecieve",
+              "paymentSend",
+              "paymentDone",
+              "paymentCanceling",
+              "noticeSend"
+            ]
+          },
+          "*"
+        ]
+      }
     },
     {
       "name": "noticeType",
@@ -181,7 +205,19 @@
         "patronymic",
         "birthDate",
         "snils"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "secondName",
+          "firstName",
+          "patronymic",
+          "birthDate",
+          "snils"
+        ]
+      }
     },
     {
       "name": "secondName",
@@ -354,7 +390,18 @@
         "infoRecalcFlag",
         "period",
         "addInformation"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "docType",
+          "infoRecalcFlag",
+          "period",
+          "addInformation"
+        ]
+      }
     },
     {
       "name": "docType",
@@ -444,7 +491,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -550,7 +606,34 @@
           "assignedSumm",
           "dutySumm"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "docType",
+              "infoRecalcFlag",
+              "period",
+              "addInformation"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "assignedSumm",
+              "dutySumm"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "docType",
@@ -640,7 +723,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -814,7 +906,34 @@
           "assignedSumm",
           "dutySumm"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "docType",
+              "infoRecalcFlag",
+              "period",
+              "addInformation"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "assignedSumm",
+              "dutySumm"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "docType",
@@ -904,7 +1023,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -1078,7 +1206,34 @@
           "paymentState",
           "*"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "docType",
+              "infoRecalcFlag",
+              "period",
+              "addInformation"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "paymentState",
+              "*"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "docType",
@@ -1168,7 +1323,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -1276,7 +1440,8 @@
       "file": "PaymentStatusNotice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "noticeSend",
@@ -1308,7 +1473,18 @@
         "infoRecalcFlag",
         "period",
         "addInformation"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "docType",
+          "infoRecalcFlag",
+          "period",
+          "addInformation"
+        ]
+      }
     },
     {
       "name": "docType",
@@ -1398,7 +1574,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -1482,7 +1667,8 @@
       "file": "PaymentStatusNotice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "@specVersion",
@@ -1552,7 +1738,8 @@
       "file": "PaymentStatusNotice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     }
   ]
 }

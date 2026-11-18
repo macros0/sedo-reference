@@ -45,7 +45,24 @@
         "senderInfo",
         "signatoryInfo",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "noticeNumber",
+          "noticeDate",
+          "noticeReason",
+          "tof",
+          "registryNum",
+          "insurerInfo",
+          "benefit",
+          "senderInfo",
+          "signatoryInfo",
+          "*"
+        ]
+      }
     },
     {
       "name": "noticeNumber",
@@ -161,7 +178,16 @@
         "sequence",
         "code",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "name"
+        ]
+      }
     },
     {
       "name": "code",
@@ -273,7 +299,16 @@
         "sequence",
         "regNumSFR",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNumSFR",
+          "*"
+        ]
+      }
     },
     {
       "name": "regNumSFR",
@@ -323,7 +358,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit",
@@ -353,7 +389,18 @@
         "insuredInfo",
         "informationRequest",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "benefitInfo",
+          "insuredInfo",
+          "informationRequest",
+          "*"
+        ]
+      }
     },
     {
       "name": "benefitInfo",
@@ -400,7 +447,31 @@
           "benefit88"
         ],
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "proactiveProcessNum",
+          "rowNumber",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "benefit1",
+              "benefit2",
+              "benefit4",
+              "benefit5",
+              "benefit6",
+              "benefit87",
+              "benefit88"
+            ]
+          },
+          "*"
+        ]
+      }
     },
     {
       "name": "proactiveProcessNum",
@@ -484,7 +555,16 @@
         "sequence",
         "lnNumber",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber",
+          "*"
+        ]
+      }
     },
     {
       "name": "lnNumber",
@@ -534,7 +614,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit2",
@@ -560,7 +641,16 @@
         "sequence",
         "lnNumber",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber",
+          "*"
+        ]
+      }
     },
     {
       "name": "lnNumber",
@@ -610,7 +700,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit4",
@@ -638,7 +729,17 @@
         "childSnils",
         "childBirthDate",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "childSnils",
+          "childBirthDate",
+          "*"
+        ]
+      }
     },
     {
       "name": "childSnils",
@@ -708,7 +809,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit5",
@@ -736,7 +838,17 @@
         "childSnils",
         "vacationPeriod",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "childSnils",
+          "vacationPeriod",
+          "*"
+        ]
+      }
     },
     {
       "name": "childSnils",
@@ -794,7 +906,16 @@
         "sequence",
         "begin",
         "end"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
     },
     {
       "name": "begin",
@@ -854,7 +975,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit6",
@@ -880,7 +1002,16 @@
         "sequence",
         "lnNumber",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber",
+          "*"
+        ]
+      }
     },
     {
       "name": "lnNumber",
@@ -930,7 +1061,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit87",
@@ -956,7 +1088,16 @@
         "sequence",
         "dt1",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "dt1",
+          "*"
+        ]
+      }
     },
     {
       "name": "dt1",
@@ -996,7 +1137,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "benefit88",
@@ -1022,7 +1164,16 @@
         "sequence",
         "dt1",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "dt1",
+          "*"
+        ]
+      }
     },
     {
       "name": "dt1",
@@ -1062,7 +1213,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "*",
@@ -1082,7 +1234,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "insuredInfo",
@@ -1112,7 +1265,17 @@
         "snils",
         "fullName",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "*"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -1172,7 +1335,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -1282,7 +1455,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "informationRequest",
@@ -1306,7 +1480,15 @@
       "contentModel": [
         "sequence",
         "item"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "item"
+        ]
+      }
     },
     {
       "name": "item",
@@ -1332,7 +1514,16 @@
         "sequence",
         "requestText",
         "requestFields"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "requestText",
+          "requestFields"
+        ]
+      }
     },
     {
       "name": "requestText",
@@ -1387,7 +1578,15 @@
       "contentModel": [
         "sequence",
         "field"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "field"
+        ]
+      }
     },
     {
       "name": "field",
@@ -1413,7 +1612,16 @@
         "sequence",
         "fieldName",
         "fieldCode"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fieldName",
+          "fieldCode"
+        ]
+      }
     },
     {
       "name": "fieldName",
@@ -1481,7 +1689,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "senderInfo",
@@ -1509,7 +1718,17 @@
         "fullName",
         "role",
         "phone"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "role",
+          "phone"
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -1625,7 +1844,16 @@
         "sequence",
         "fullName",
         "role"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "role"
+        ]
+      }
     },
     {
       "name": "fullName",
@@ -1705,7 +1933,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "@specVersion",
@@ -1801,7 +2030,8 @@
       "file": "Notice.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     }
   ]
 }

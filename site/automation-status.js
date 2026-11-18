@@ -1,7 +1,7 @@
 (function(root){
  'use strict';
  const STALE=36*60*60*1000;
- const labels={success:'Успешно',failure:'Ошибка',processing:'Выполняется',waiting:'Ожидается',not_published:'Не опубликовано',cancelled:'Отменено',unknown:'Нет данных',stale:'Данные устарели'};
+ const labels={success:'Успешно',failure:'Ошибка',processing:'Выполняется',waiting:'Ожидается',not_published:'Не опубликовано',superseded:'Замещено',cancelled:'Отменено',unknown:'Нет данных',stale:'Данные устарели'};
  function date(value){const n=Date.parse(value);return Number.isFinite(n)?new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',dateStyle:'short',timeStyle:'short'}).format(n)+' МСК':'время неизвестно'}
  // Keep these UTC times aligned with SourceCraft .sourcecraft/ci.yaml and
  // .github/workflows/check-sfr.yml. Moscow is UTC+3; visitor time zones do not apply.
@@ -10,9 +10,10 @@
  function sourcecraftCard(sc,now){
   const contours=['prod','test'].map(env=>({env,...(sc.contours?.[env]||{})}));
   let sourceState=sc.state||'unknown';
-  if(sourceState==='success'&&!contours.every(c=>Number.isFinite(Date.parse(c.observed_at))))sourceState='unknown';
-  const sourceAge=now-Date.parse(sc.finished_at);
-  if(sourceState==='success'&&sourceAge>STALE)sourceState='stale';
+  if(sourceState==='success'){
+   const times=[sc.finished_at,...contours.map(c=>c.observed_at)].map(value=>Date.parse(value));
+   sourceState=times.some(value=>!Number.isFinite(value))?'unknown':times.some(value=>now-value>STALE)?'stale':'success';
+  }
   if(sourceState==='processing'&&now-Date.parse(sc.started_at)>30*60*1000)sourceState='stale';
   const changed=c=>c.changed===true?' · XSD изменились':c.changed===false?' · XSD без изменений':c.observed_at?' · первый снимок':'';
   const sourceLines=contours.map(c=>(c.env==='prod'?'Продуктивный':'Тестовый')+': '+(c.observed_at?date(c.observed_at)+changed(c):'не проверен в последнем запуске'));
@@ -36,16 +37,17 @@
   const sourceCard=data.collector_source==='home'?homeCard(check,checkState,versions):sourcecraftCard(sc,now);
   const count=Number.isInteger(versions.count)&&versions.count>=0?versions.count:null;
   const versionsText=check.state==='success'&&count!==null?(count?'Добавлено редакций: '+count:'Новых редакций нет'):check.state==='processing'?'Проверка справочника выполняется':check.state==='waiting'?'Ожидается обработка новых снимков SourceCraft':'Число новых редакций пока неизвестно';
-  const publicationText={success:'Обновление опубликовано',failure:'Публикация завершилась ошибкой',processing:'Публикация выполняется',waiting:'Ожидает публикации',not_published:'Обновление не опубликовано',cancelled:'Публикация отменена',unknown:'Публикация не подтверждена'}[pub.state]||'Публикация не подтверждена';
+  const publicationText={success:'Обновление опубликовано',failure:'Публикация завершилась ошибкой',processing:'Публикация выполняется',waiting:'Ожидает публикации',not_published:'Обновление не опубликовано',superseded:'Pages опубликовал другую версию справочника',cancelled:'Публикация отменена',unknown:'Публикация не подтверждена'}[pub.state]||'Публикация не подтверждена';
   const publicationLines=[publicationText];if(pub.finished_at)publicationLines.push(date(pub.finished_at));
-  if(pub.state!=='success'&&gh.last_successful_publication?.finished_at)publicationLines.push('Предыдущая успешная публикация: '+date(gh.last_successful_publication.finished_at));
+  if(!['success','superseded'].includes(pub.state)&&gh.last_successful_publication?.finished_at)publicationLines.push('Предыдущая успешная публикация: '+date(gh.last_successful_publication.finished_at));
   const states=[sourceCard.state,checkState||'unknown',pub.state||'unknown'];
   let tone=states.includes('failure')||states.includes('not_published')?'failure':
    states.includes('stale')||now-Date.parse(data.generated_at)>STALE?'stale':
    states.some(s=>['processing','waiting'].includes(s))?'processing':
    states.every(s=>s==='success')&&count!==null?'success':'unknown';
   if(!Number.isFinite(Date.parse(data.generated_at)))tone='unknown';
-  const summary={success:'Автообновление · успешно · '+(count?'новых редакций: '+count:'новых редакций нет'),failure:'Автообновление · есть ошибка',stale:'Автообновление · данные статуса устарели',processing:'Автообновление · проверка или публикация ожидается',unknown:'Автообновление · не все этапы подтверждены'}[tone];
+  const superseded=pub.state==='superseded'&&sourceCard.state==='success'&&checkState==='success';
+  const summary={success:'Автообновление · успешно · '+(count?'новых редакций: '+count:'новых редакций нет'),failure:'Автообновление · есть ошибка',stale:'Автообновление · данные статуса устарели',processing:'Автообновление · проверка или публикация ожидается',unknown:superseded?'Автообновление · опубликована другая версия справочника':'Автообновление · не все этапы подтверждены'}[tone];
   return {tone,summary,updated:'Статус получен '+date(data.generated_at)+'. Фактический запуск может задержаться относительно расписания.',cards:[
    sourceCard,
    {title:'Новые редакции · '+(labels[checkState]||labels.unknown),state:checkState,lines:[versionsText,...(versions.checked_at?['Проверено '+date(versions.checked_at)]:[]),'Следующий забор по расписанию: '+nextRun('github',now)],url:check.url,link:'Открыть проверку GitHub'},

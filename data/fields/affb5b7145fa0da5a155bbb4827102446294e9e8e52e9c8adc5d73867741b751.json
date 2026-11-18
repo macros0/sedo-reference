@@ -33,7 +33,20 @@
         "periodInfo",
         "agreementInsuredPerson",
         "eln3days"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insurerInfo",
+          "insuredInfo",
+          "contractsType",
+          "periodInfo",
+          "agreementInsuredPerson",
+          "eln3days"
+        ]
+      }
     },
     {
       "name": "insurerInfo",
@@ -66,7 +79,25 @@
         ],
         "emplINN",
         "emplKPP"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "regNum",
+              "regNumSFR"
+            ]
+          },
+          "emplINN",
+          "emplKPP"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -148,7 +179,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "emplKPP",
@@ -204,7 +241,18 @@
         "fullName",
         "birthDate",
         "gender"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "birthDate",
+          "gender"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -264,7 +312,17 @@
         "firstName",
         "lastName",
         "middleName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
     },
     {
       "name": "firstName",
@@ -428,7 +486,15 @@
       "contentModel": [
         "sequence",
         "contractType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "contractType"
+        ]
+      }
     },
     {
       "name": "contractType",
@@ -482,7 +548,16 @@
         "sequence",
         "twoPrevYears",
         "additionalYears"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "twoPrevYears",
+          "additionalYears"
+        ]
+      }
     },
     {
       "name": "twoPrevYears",
@@ -506,7 +581,15 @@
       "contentModel": [
         "sequence",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year"
+        ]
+      }
     },
     {
       "name": "year",
@@ -560,7 +643,15 @@
       "contentModel": [
         "sequence",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year"
+        ]
+      }
     },
     {
       "name": "year",
@@ -638,7 +729,16 @@
         "choice",
         "employed",
         "fired"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "employed",
+          "fired"
+        ]
+      }
     },
     {
       "name": "employed",
@@ -684,7 +784,15 @@
       "contentModel": [
         "sequence",
         "firstElnStartDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstElnStartDate"
+        ]
+      }
     },
     {
       "name": "firstElnStartDate",

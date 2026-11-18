@@ -31,7 +31,18 @@
         "appealTitle",
         "appealBody",
         "appealFile"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "appealUuid",
+          "appealTitle",
+          "appealBody",
+          "appealFile"
+        ]
+      }
     },
     {
       "name": "appealUuid",
@@ -127,7 +138,16 @@
         "sequence",
         "content",
         "fileName"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "fileName"
+        ]
+      }
     },
     {
       "name": "content",

@@ -29,7 +29,17 @@
         "uuid",
         "revokeChain",
         "reason"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "uuid",
+          "revokeChain",
+          "reason"
+        ]
+      }
     },
     {
       "name": "uuid",

@@ -43,7 +43,24 @@
         "registrRowNums",
         "attachment",
         "file"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "tofCode",
+          "regNum",
+          "regNumSFR",
+          "date",
+          "number",
+          "batchNum",
+          "socialAssistNum",
+          "registrRowNums",
+          "attachment",
+          "file"
+        ]
+      }
     },
     {
       "name": "tofCode",
@@ -231,7 +248,15 @@
       "contentModel": [
         "sequence",
         "rowNumber"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "rowNumber"
+        ]
+      }
     },
     {
       "name": "rowNumber",
@@ -285,7 +310,19 @@
         "mimeType",
         "size",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name"
+        ]
+      }
     },
     {
       "name": "content",
@@ -419,7 +456,19 @@
         "mimeType",
         "size",
         "name"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name"
+        ]
+      }
     },
     {
       "name": "content",

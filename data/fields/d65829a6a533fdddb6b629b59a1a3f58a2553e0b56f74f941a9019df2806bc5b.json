@@ -33,7 +33,19 @@
         "paStatus",
         "revocationDate",
         "protocol"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "uuid",
+          "cancelStatus",
+          "paStatus",
+          "revocationDate",
+          "protocol"
+        ]
+      }
     },
     {
       "name": "uuid",
@@ -159,7 +171,15 @@
       "contentModel": [
         "sequence",
         "message"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "message"
+        ]
+      }
     },
     {
       "name": "message",
@@ -191,7 +211,18 @@
         "level",
         "comment",
         "recommendation"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "mnemonic",
+          "level",
+          "comment",
+          "recommendation"
+        ]
+      }
     },
     {
       "name": "mnemonic",

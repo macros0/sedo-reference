@@ -3,10 +3,18 @@ const {model,date,safeLink}=require('../web/automation-status.js');
 const now=Date.parse('2026-11-13T12:00:00Z');
 const data={format:1,generated_at:'2026-11-13T11:00:00Z',sourcecraft:{state:'success',finished_at:'2026-11-13T07:02:00Z',contours:{prod:{observed_at:'2026-11-13T07:01:00Z',changed:false},test:{observed_at:'2026-11-13T07:02:00Z',changed:false}}},github:{check:{state:'success'},versions:{count:0,checked_at:'2026-11-13T08:00:00Z'},publication:{state:'success',finished_at:'2026-11-13T09:00:00Z'}}};
 assert.equal(model(data,now).tone,'success');
+for(const value of [undefined,'bad']){const missing=structuredClone(data);missing.sourcecraft.finished_at=value;assert.equal(model(missing,now).tone,'unknown','success requires a valid finish time')}
+for(const env of ['prod','test']){const old=structuredClone(data);old.sourcecraft.contours[env].observed_at='2026-10-28T07:00:00Z';assert.equal(model(old,now).tone,'stale','each contour must be recent')}
+
 assert.match(model(data,now).cards[0].lines[0],/10:01.*МСК/);
 assert.match(model(data,now).summary,/новых редакций нет/);
 let d=structuredClone(data);d.github.publication.state='failure';assert.equal(model(d,now).tone,'failure');assert.doesNotMatch(model(d,now).summary,/успешно/);
 d=structuredClone(data);d.github.publication.state='waiting';d.github.versions.count=4;assert.equal(model(d,now).tone,'processing');assert.match(model(d,now).cards[1].lines[0],/4/);
+d=structuredClone(data);d.github.publication.state='superseded';d.github.last_successful_publication={finished_at:'2026-11-13T09:00:00Z'};
+assert.equal(model(d,now).cards[2].state,'superseded');
+assert.match(model(d,now).summary,/опубликована другая версия/);
+assert.match(model(d,now).cards[2].lines[0],/другую версию справочника/);
+assert.doesNotMatch(model(d,now).cards[2].lines.join(' '),/Предыдущая|Ожидает/);
 d=structuredClone(data);d.github.check.state='processing';d.github.versions.count=null;assert.match(model(d,now).cards[1].lines[0],/выполняется/);
 d=structuredClone(data);delete d.sourcecraft.contours.test.observed_at;assert.notEqual(model(d,now).tone,'success');
 d=structuredClone(data);d.sourcecraft.state='failure';assert.equal(model(d,now).tone,'failure');

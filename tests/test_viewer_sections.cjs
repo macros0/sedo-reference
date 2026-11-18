@@ -2,13 +2,47 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const root=path.resolve(__dirname,'..'),viewer=fs.readFileSync(path.join(root,'viewer-template.html'),'utf8');
 const catalog=JSON.parse(fs.readFileSync(path.join(root,'data/catalog.json'),'utf8'));
 class Element{constructor(tag){this.tagName=tag;this.children=[];this.value='';this.textContent='';this.className='';this.style={setProperty(){}}}append(...nodes){this.children.push(...nodes)}replaceChildren(...nodes){this.children=[...nodes]}setAttribute(){}add(node){this.append(node)}querySelector(){return null}}
-function app(number,environment='prod',transform=fields=>fields){
+function app(number,environment='prod',transform=fields=>fields,review_sources=[]){
  const r=catalog.revisions.find(r=>r.number===number&&r.environment===environment),fields=transform(JSON.parse(fs.readFileSync(path.join(root,'data/fields',r.revision_id+'.json'),'utf8')).fields);
- const nodes=new Map(),data={fields,version:'test',date:'test',archive:'test',files:1,sha256:'test'};
+ const nodes=new Map(),data={fields,version:'test',date:'test',archive:'test',files:1,sha256:'test',review_sources};
  const document={createElement:tag=>new Element(tag),createTextNode:text=>({textContent:text}),querySelector:()=>({textContent:JSON.stringify(data)}),getElementById:id=>{if(!nodes.has(id))nodes.set(id,new Element(id));return nodes.get(id)}};
  const context=vm.createContext({document,Option:class extends Element{constructor(label,value){super('option');this.textContent=label;this.value=value}},Set,Map,JSON,console});
  const scripts=[...viewer.matchAll(/<script(?: [^>]*)?>([\s\S]*?)<\/script>/g)].map(m=>m[1]);vm.runInContext(scripts.at(-1),context);
  return {nodes,context,fields};
+}
+for(const minimum of ['00',' 0 ']){
+ const {nodes}=app('205','prod',fields=>[{...fields[0],min:minimum,max:'01',parent:-1,children:[]}]);
+ const facts=nodes.get('detail').children.find(e=>e.className==='facts');
+ assert.equal(facts.children[1].children[1].textContent,'0 … 1');
+ assert.equal(facts.children[2].children[1].textContent,'Необязательно');
+}
+{
+ const {nodes,context}=app('205','prod',fields=>[{...fields[0],parent:-1,children:[1]},
+  {...fields[0],name:'child',path:fields[0].path+'/child',min:'1',max:'1',parent:0,children:[],group:'sequence [01..1]'}]);
+ vm.runInContext('select(1,true)',context);
+ const facts=nodes.get('detail').children.find(e=>e.className==='facts');
+ assert.equal(facts.children[2].children[1].textContent,'Обязательно');
+}
+{
+ const group='sequence [01..1] / Выбор 1, вариант 1 ИЛИ sequence [01..1] / Выбор 1, вариант 2';
+ const {context}=app('205','prod',fields=>[{...fields[0],parent:-1,children:[],group}]);
+ assert.equal(vm.runInContext('fields[0].group',context),'Выбор 1, вариант 1 ИЛИ Выбор 1, вариант 2');
+}
+for(const [number,env,path] of [['32','test','noticeRequest/*'],['32','test','noticeRequest/@*'],['10010','prod','benefitRequest/benefit6/*']]){
+ const {nodes,context,fields}=app(number,env);
+ const index=fields.findIndex(f=>f.path===path);assert.ok(index>=0);
+ vm.runInContext('select('+index+',true)',context);
+ const details=nodes.get('detail').children.find(e=>e.tagName==='details');
+ assert.ok(details.children.some(e=>e.textContent.includes('##any')),path+' accepts any namespace');
+}
+{
+ const field='benefitRequest/benefit6/assignmentParams';
+ const findings=[{kind:'Ошибка порядка',field_paths:[field],field_link_scope:'field'},
+  {kind:'Нет объявления',field_paths:[field],field_link_scope:'parent',xlocation:field+'/insurancePaymentObligation'}];
+ const {nodes,context,fields}=app('10010','prod',f=>f,[{name:'Спецификация',findings}]);
+ vm.runInContext('select('+fields.findIndex(f=>f.path===field)+',true)',context);
+ const sections=nodes.get('detail').children.filter(e=>e.className==='field-reviews');
+ assert.deepEqual(sections.map(e=>e.children[0].textContent),['Замечания к полю · 1','Замечания к дочерним полям · 1']);
 }
 for(const [base,flags,contentModel,expected] of [
  ['xs:anyType',{},undefined,'xs:anyType'],
@@ -18,6 +52,16 @@ for(const [base,flags,contentModel,expected] of [
  const {nodes}=app('205','prod',fields=>[{...fields[0],type:'',base,flags,contentModel,children:[]}]);
  const facts=nodes.get('detail').children.find(e=>e.className==='facts');
  assert.equal(facts.children[0].children[1].textContent,expected);
+}
+{
+ const {nodes}=app('205','prod',fields=>[{...fields[0],children:[],facets:[['pattern','A'],['pattern','B']],patternGroups:[['A','B']],
+  alternatives:[{base:'xs:string',facets:[['pattern','C'],['pattern','D']],patternGroups:[['C'],['D']]}]}]);
+ const content=node=>(node.textContent||'')+(node.children||[]).map(content).join(' ');
+ const abstract=app('205','prod',fields=>[{...fields[0],children:[],flags:{abstract:'true',typeAbstract:'true'}}]);
+ assert.match(content(abstract.nodes.get('detail')),/Абстрактный элемент/);
+ assert.match(content(abstract.nodes.get('detail')),/Абстрактный тип/);
+ assert.match(content(nodes.get('detail')),/A.* ИЛИ .*B/);
+ assert.match(content(nodes.get('detail')),/C.* И .*D/);
 }
 for(const number of ['86','10110','611']){
  const {nodes,context,fields}=app(number),scope=nodes.get('scope'),tree=nodes.get('tree');
@@ -52,3 +96,16 @@ for(const number of ['86','10110','611']){
  const nested=app('10010','test',rows=>{rows.find(f=>f.name==='parentProcessNum').group='sequence [0..1] / Выбор 9, вариант 2';return rows});vm.runInContext('select('+nested.fields.findIndex(f=>f.name==='parentProcessNum')+',true)',nested.context);assert.match(content(nested.nodes.get('detail')),/Вариант выбора/,'optional sequence must preserve nested choice meaning');
 }
 console.log('Viewer sections verified: actual blocks, nested paths, scoped search, navigation, optional sequences and nested choices.');
+{
+ const content=n=>(n.textContent||'')+(n.children||[]).map(content).join(' ');
+ for(const [number,kind,caption] of [['10110','attribute','Атрибут'],['10110','any','Расширение для элементов'],['12110','anyAttribute','Расширение для атрибутов']]){
+  const {nodes,context,fields}=app(number);
+  const index=fields.findIndex(f=>f.kind===kind);assert.ok(index>=0);
+  vm.runInContext('select('+index+')',context);
+  const title=nodes.get('detail').children.find(n=>n.className==='title');
+  assert.equal(title.children[1].textContent,caption);
+ }
+ for(const [number,rule] of [['111',/в любом порядке.*xs:all/],['10110',/порядок.*xs:sequence/i]]){
+  assert.match(content(app(number).nodes.get('detail')),rule);
+ }
+}

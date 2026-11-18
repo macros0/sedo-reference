@@ -27,7 +27,16 @@
         "sequence",
         "snils",
         "protocol"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "protocol"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -83,7 +92,15 @@
       "contentModel": [
         "sequence",
         "item"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "item"
+        ]
+      }
     },
     {
       "name": "item",
@@ -111,7 +128,17 @@
         "mnemonic",
         "message",
         "description"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "mnemonic",
+          "message",
+          "description"
+        ]
+      }
     },
     {
       "name": "mnemonic",

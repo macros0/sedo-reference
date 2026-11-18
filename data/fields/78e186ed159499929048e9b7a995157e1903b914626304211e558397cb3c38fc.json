@@ -27,7 +27,17 @@
         "CommonDataType",
         "SvedSostRaschPhysRequest",
         "SvedSostRaschJurRequest"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "CommonDataType",
+          "SvedSostRaschPhysRequest",
+          "SvedSostRaschJurRequest"
+        ]
+      }
     },
     {
       "name": "CommonDataType",
@@ -57,7 +67,18 @@
         "dateStart",
         "idMessage",
         "id"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "kpsNum",
+          "dateStart",
+          "idMessage",
+          "id"
+        ]
+      }
     },
     {
       "name": "kpsNum",
@@ -204,7 +225,31 @@
         "docTypeCiv",
         "docSeries",
         "docNumber"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "regNum",
+              "regNumSFR"
+            ]
+          },
+          "firstNameCiv",
+          "lastNameCiv",
+          "middleNameCiv",
+          "docDatCiv",
+          "inn",
+          "docTypeCiv",
+          "docSeries",
+          "docNumber"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -381,7 +426,13 @@
       "file": "Application.xsd",
       "flags": {},
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "docTypeCiv",
@@ -488,7 +539,26 @@
         "fullName",
         "inn",
         "kpp"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "regNum",
+              "regNumSFR"
+            ]
+          },
+          "fullName",
+          "inn",
+          "kpp"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -599,7 +669,13 @@
       "file": "Application.xsd",
       "flags": {},
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "kpp",

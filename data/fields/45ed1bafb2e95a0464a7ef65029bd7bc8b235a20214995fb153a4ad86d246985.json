@@ -34,7 +34,24 @@
           "org"
         ],
         "period"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "recipientId",
+              "org"
+            ]
+          },
+          "period"
+        ]
+      }
     },
     {
       "name": "recipientId",
@@ -117,7 +134,53 @@
           "inn",
           "kpp"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "ogrn",
+              "inn",
+              "kpp"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "ogrnip",
+              "inn",
+              "snils"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "snils",
+              "inn",
+              "regnum"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "inn",
+              "kpp"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "ogrn",
@@ -321,7 +384,16 @@
         "sequence",
         "dateFrom",
         "dateTo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "dateFrom",
+          "dateTo"
+        ]
+      }
     },
     {
       "name": "dateFrom",

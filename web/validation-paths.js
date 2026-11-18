@@ -3,9 +3,8 @@
 const entity=text=>text.replace(/&(#x[\da-f]+|#\d+|amp|lt|gt|quot|apos);/gi,(_,key)=>key[0]==='#'?String.fromCodePoint(key[1].toLowerCase()==='x'?parseInt(key.slice(2),16):Number(key.slice(1))):({amp:'&',lt:'<',gt:'>',quot:'"',apos:"'"})[key]);
 // This index is auxiliary. libxml2 has already accepted the XML syntax. It never
 // expands entities, loads resources, or copies text/attribute values into paths.
-function index(source){
- try{
-  const text=source.replace(/\r\n?/g,'\n'),nodes=[],stack=[],base=Object.assign(Object.create(null),{xml:'http://www.w3.org/XML/1998/namespace'});let pos=0,line=1;
+function* scan(source){
+  const text=source.replace(/\r\n?/g,'\n'),stack=[],base=Object.assign(Object.create(null),{xml:'http://www.w3.org/XML/1998/namespace'});let pos=0,line=1;
   const advance=end=>{for(;pos<end;pos++)if(text.charCodeAt(pos)===10)line++};
   while(pos<text.length){
    const at=text.indexOf('<',pos);if(at<0)break;advance(at);const startLine=line;
@@ -13,25 +12,36 @@ function index(source){
    if(text.startsWith('<!--',at)){delimiter='-->';skip=4}
    else if(text.startsWith('<![CDATA[',at)){delimiter=']]>';skip=9}
    else if(text.startsWith('<?',at)){delimiter='?>';skip=2}
-   if(delimiter){const end=text.indexOf(delimiter,at+skip);if(end<0)return null;advance(end+delimiter.length);continue}
-   if(text.startsWith('<!',at))return null;
+   if(delimiter){const end=text.indexOf(delimiter,at+skip);if(end<0)throw Error('Незаконченная XML-конструкция.');advance(end+delimiter.length);continue}
+   if(text.startsWith('<!',at))throw Error('Неподдерживаемая XML-декларация.');
    let end=at+1,quote='';for(;end<text.length;end++){const c=text[end];if(quote){if(c===quote)quote=''}else if(c==='"'||c==="'")quote=c;else if(c==='>')break}
-   if(end===text.length)return null;
+   if(end===text.length)throw Error('Незаконченный XML-тег.');
    const raw=text.slice(at+1,end);
    if(raw[0]==='/'){
-    const node=stack.pop();if(!node||raw.slice(1).trim()!==node.qname)return null;advance(end+1);node.end=line;node.closeStart=at+2;continue;
+    const node=stack.pop();if(!node||raw.slice(1).trim()!==node.qname)throw Error('Несогласованные XML-теги.');advance(end+1);node.end=line;node.closeStart=at+2;continue;
    }
-   const name=raw.match(/^([^\s/>]+)/)?.[1];if(!name)return null;
+   const name=raw.match(/^([^\s/>]+)/)?.[1];if(!name)throw Error('Отсутствует имя XML-тега.');
    const parent=stack.at(-1)||null,ns=Object.create(parent?.namespaces||base);
    for(const a of raw.slice(name.length).matchAll(/([^\s=]+)\s*=\s*(['"])([\s\S]*?)\2/g)){
     if(a[1]==='xmlns')ns['']=entity(a[3]);else if(a[1].startsWith('xmlns:'))ns[a[1].slice(6)]=entity(a[3]);
    }
    const colon=name.indexOf(':'),prefix=colon<0?'':name.slice(0,colon),local=colon<0?name:name.slice(colon+1);
-   const node={qname:name,name:local,ns:ns[prefix]||'',namespaces:ns,parent,line:startLine,end:startLine,nameStart:at+1,nameEnd:at+1+name.length,openEnd:end+1,closeStart:null};nodes.push(node);
-   if(nodes.length>100000||stack.length>=256)return null;
+   const node={qname:name,name:local,ns:ns[prefix]||'',namespaces:ns,parent,line:startLine,end:startLine,nameStart:at+1,nameEnd:at+1+name.length,openEnd:end+1,closeStart:null};
    advance(end+1);node.end=line;if(!/\/\s*$/.test(raw))stack.push(node);
+   yield node;
   }
-  nodes.source=text;return stack.length?null:nodes;
+  if(stack.length)throw Error('Незакрытый XML-тег.');
+}
+// Navigation may omit highlights once its budget is exhausted. Attribute
+// validation uses scan directly and retains only ancestors and actual probes.
+function index(source){
+ try{
+  const text=source.replace(/\r\n?/g,'\n'),nodes=[];
+  for(const node of scan(text)){
+   nodes.push(node);if(nodes.length>100000)return null;
+   let depth=0;for(let parent=node.parent;parent;parent=parent.parent)if(++depth>=256)return null;
+  }
+  nodes.source=text;return nodes;
  }catch{return null}
 }
 function expanded(qname){if(qname.startsWith('{')){const at=qname.lastIndexOf('}');return {name:qname.slice(at+1),ns:qname.slice(1,at)}}return {name:qname,ns:''}}
@@ -73,6 +83,13 @@ function pathMatcher(known,namespaces){
  }
  return matches;
 }
+function sameElementPath(a,b){
+ while(a!==b){
+  if(!a||!b||a.name!==b.name||a.ns!==b.ns)return false;
+  a=a.parent;b=b.parent;
+ }
+ return true;
+}
 function locate(errors,nodes,fields=[],namespaces=[]){
  const known=new Map(fields.map((path,i)=>[path,i]));
  const matches=pathMatcher(known,namespaces);
@@ -86,25 +103,47 @@ function locate(errors,nodes,fields=[],namespaces=[]){
    const wanted=expanded(element),same=n=>element.includes(':')&&!element.startsWith('{')?n.qname===element:n.name===wanted.name&&n.ns===wanted.ns;
    candidates=nodes.filter(n=>n.line<=error.line&&n.end>=error.line&&same(n));
   }
-  const seen=new Set(),byPath=new Map();
+  const groups=[];
   for(const node of candidates){
    const nodePath=route(node);if(nodePath===null)continue;
    const attr=attribute?expanded(attribute):null;
    if(attr&&attribute.includes(':')&&!attribute.startsWith('{')){const parts=attribute.split(':');attr.name=parts.at(-1);attr.ns=node.namespaces[parts[0]]||'\u0000'}
    const path=nodePath+(attr?'/@'+attr.name.split(':').at(-1):'');if(path.length>8192)continue;
-   if(byPath.has(path)){const old=byPath.get(path);old.occurrences++;if(old.ranges.length<24){const extra=sourceRanges(node,attribute,nodes.source);if(extra.length>24-old.ranges.length)old.rangesTruncated=true;old.ranges.push(...extra.slice(0,24-old.ranges.length))}else old.rangesTruncated=true;continue}
-   seen.add(path);
-   if(result.locations.length>=8){result.truncated=true;break}
    let target='';
    if(!error.root){
     if(attr&&known.has(path)&&matches(node)!==null&&namespaces[known.get(path)]?.includes(attr.ns))target=path;
     for(let n=node;!target&&n;n=n.parent){target=matches(n)||''}
    }
 
-   const location={path:'/'+path,field:target?known.get(target):null,parent:!!target&&target!==path,ranges:sourceRanges(node,attribute,nodes.source),occurrences:1,rangesTruncated:false};
-   result.locations.push(location);byPath.set(path,location);
+   const field=target?known.get(target):null;
+   const old=groups.find(g=>g.path===path&&g.attributeNs===attr?.ns&&g.location.field===field&&sameElementPath(g.node,node));
+   const ranges=sourceRanges(node,attribute,nodes.source);
+   if(old){
+    const location=old.location,available=24-location.ranges.length;
+    location.occurrences++;
+    if(ranges.length>available)location.rangesTruncated=true;
+    location.ranges.push(...ranges.slice(0,available));continue;
+   }
+   if(groups.length===8){result.truncated=true;break}
+   const location={path:'/'+path,field,parent:!!target&&target!==path,ranges,occurrences:1,rangesTruncated:false};
+   groups.push({node,path,attributeNs:attr?.ns,location});result.locations.push(location);
   }
-  result.ambiguous=seen.size>1;result.sourceAmbiguous=result.ambiguous||result.locations.some(l=>l.occurrences>1);return result;
+  // Identical local paths can belong to different namespaces. Show their
+  // expanded names in the private frame so the user can tell the options apart.
+  for(const group of groups){
+   if(!groups.some(other=>other!==group&&other.path===group.path))continue;
+   const names=[];let length=attribute?attribute.length+(group.attributeNs?.length||0)+4:0;
+   for(let n=group.node;n;n=n.parent){
+    length+=n.name.length+n.ns.length+3;
+    if(length>8192)break;
+    names.push((n.ns?'{'+n.ns+'}':'')+n.name);
+   }
+   if(length>8192)continue;
+   names.reverse();
+   if(attribute)names.push('@'+(group.attributeNs?'{'+group.attributeNs+'}':'')+group.path.split('/@').at(-1));
+   group.location.expandedPath='/'+names.join('/');
+  }
+  result.ambiguous=groups.length>1;result.sourceAmbiguous=result.ambiguous||result.locations.some(l=>l.occurrences>1);return result;
  });
 }
 function reviewLocations(nodes,fields=[],namespaces=[],reviewFields=[]){
@@ -143,5 +182,5 @@ function reviewLocations(nodes,fields=[],namespaces=[],reviewFields=[]){
  }
  return [...groups.values()];
 }
-const api={index,locate,reviewLocations};scope.SedoValidationPaths=api;if(typeof module==='object'&&module.exports)module.exports=api;
+const api={index,scan,locate,reviewLocations};scope.SedoValidationPaths=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof self==='object'?self:globalThis);

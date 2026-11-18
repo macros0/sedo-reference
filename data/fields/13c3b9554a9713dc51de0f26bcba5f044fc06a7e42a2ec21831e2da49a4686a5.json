@@ -32,7 +32,19 @@
         "childInfo",
         "terminationInfo",
         "senderInfo"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insurerInfo",
+          "insuredInfo",
+          "childInfo",
+          "terminationInfo",
+          "senderInfo"
+        ]
+      }
     },
     {
       "name": "insurerInfo",
@@ -56,7 +68,15 @@
       "contentModel": [
         "sequence",
         "regNumSFR"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNumSFR"
+        ]
+      }
     },
     {
       "name": "regNumSFR",
@@ -110,7 +130,15 @@
       "contentModel": [
         "sequence",
         "snils"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -168,7 +196,17 @@
         "snils",
         "fullName",
         "birthDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "birthDate"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -243,7 +281,41 @@
           "middleName",
           "noMiddleName"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "lastName",
+              "noLastName"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "firstName",
+              "noFirstName"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "middleName",
+              "noMiddleName"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "lastName",
@@ -467,7 +539,21 @@
         "holidDoc",
         "holidNo",
         "holidDt"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "batchNo",
+          "holidType",
+          "holidTypeInfo",
+          "holidDtEx",
+          "holidDoc",
+          "holidNo",
+          "holidDt"
+        ]
+      }
     },
     {
       "name": "batchNo",
@@ -687,7 +773,17 @@
         "author",
         "email",
         "phoneNumber"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "author",
+          "email",
+          "phoneNumber"
+        ]
+      }
     },
     {
       "name": "author",
@@ -732,7 +828,41 @@
           "middleName",
           "noMiddleName"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "lastName",
+              "noLastName"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "firstName",
+              "noFirstName"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "middleName",
+              "noMiddleName"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "lastName",

@@ -34,3 +34,11 @@ const testOnlySuccessor=without('10910','test');assert.equal(isSuperseded('109',
 assert.equal(isSuperseded('109',{...catalog,message_transitions:undefined}),false);
 assert.equal(catalog.message_transitions.pairs.length,24);
 console.log('ECP transitions verified: 24 mappings, split 110, scoped cutoff and sources, contour scope, missing targets, unchanged codes.');
+
+{
+ const documentOnly={message_transitions:catalog.message_transitions,revisions:[{number:'101',environment:'prod'}],document_sources:[{number:'10110',environment:'prod'},{number:'101',environment:'test'}]};
+ assert.equal(replacements('101',documentOnly,'prod')[0]?.current,'10110','DOCX-only successor is an available card');
+ assert.equal(isSuperseded('101',documentOnly,'prod'),true);
+ assert.equal(isSuperseded('101',documentOnly,'test'),false,'no successor in the DOCX-only previous contour');
+ assert.equal(isSuperseded('101',documentOnly),false,'all-contour filter retains the DOCX-only previous type');
+}

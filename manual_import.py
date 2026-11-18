@@ -11,8 +11,9 @@ from unittest.mock import patch
 from urllib.parse import quote
 
 import build_site
-from auto_update import promote as promote_import, update_lock, validate_history
+from auto_update import promote as promote_import, update_lock, validate_history, build_history_baseline
 from catalog import derive, export
+from document_metadata import filename_metadata, root_metadata
 from fields import build
 from sync import MAX_BYTES, encode, inspect_file, record_observation, sha, write
 
@@ -40,6 +41,21 @@ def inspect_upload(content, kind):
         raise ValueError("Не удалось прочитать " + kind.upper() + ": " + str(exc)) from exc
 
 
+def import_structure(info, number):
+    """Select a declared module binding without changing the import provenance."""
+    bindings = info.get('module_bindings', [])
+    if not bindings:
+        return info.get('structure', []), False
+    matches = [row for row in bindings if row['number'] == str(number)]
+    if len(matches) != 1:
+        raise ValueError('Номер сообщения отсутствует или неоднозначен в модульном DOCX')
+    selected = matches[0]
+    structure = [['Корневой элемент', selected['root']]]
+    if selected.get('namespace') is not None:
+        structure.append(['Пространство имен файла XML-схемы', selected['namespace']])
+    return structure, True
+
+
 class ImportPreview:
     def __init__(self, root):
         self.root = Path(root).resolve()
@@ -47,6 +63,7 @@ class ImportPreview:
         self._temp = tempfile.TemporaryDirectory(prefix="sedo-manual-")
         self.directory = Path(self._temp.name)
         self.changed = False
+        self.new_revision = False
         self.revision = None
 
     def close(self):
@@ -61,12 +78,42 @@ class ImportPreview:
                 self.original_fingerprint = fingerprint(self.root)
 
 
-def prepare_import(root, document, filename, metadata, archive=None, archive_filename="schemas.zip"):
+def prepare_import(root, document, filename, metadata, archive=None, archive_filename="schemas.zip", *, correction_fields=None):
     with update_lock(root) as locked_root:
-        return _prepare_import(locked_root, document, filename, metadata, archive, archive_filename)
+        return _prepare_import(locked_root, document, filename, metadata, archive, archive_filename,
+                               set(metadata) if correction_fields is None else set(correction_fields))
 
 
-def _prepare_import(root, document, filename, metadata, archive, archive_filename):
+def _prepare_import(root, document, filename, metadata, archive, archive_filename, correction_fields):
+    previous = json.loads((root / "data/catalog.json").read_bytes())
+    preview = ImportPreview(root)
+    try:
+        for folder in ("state", "data", "web"):
+            shutil.copytree(root / folder, preview.directory / folder)
+        build_history_baseline(preview.directory)
+        shutil.copy2(root / "viewer-template.html", preview.directory / "viewer-template.html")
+        result = stage_import(preview.directory, document, filename, metadata, archive, archive_filename,
+                              correction_fields=correction_fields)
+        preview.revision = result["revision"]
+        preview.new_revision = result["new_revision"]
+        preview.changed = result["changed"]
+        if not preview.changed:
+            export(preview.directory / "state", preview.directory / "data/catalog.json")
+        build(preview.directory / "data/catalog.json", preview.directory / "state", preview.directory / "data/fields")
+        current = json.loads((preview.directory / "data/catalog.json").read_bytes())
+        with patch.object(build_site, "HERE", preview.directory):
+            build_site.main()
+        validate_history(previous, current, preview.directory)
+        return preview
+    except Exception:
+        preview.close()
+        raise
+
+
+def stage_import(root, document, filename, metadata, archive=None, archive_filename="schemas.zip", *, correction_fields=None,
+                 preferred_revision_id=None, reset_fields=(), previous_revision_id=None):
+    """Add one document to an isolated candidate; the caller builds and promotes the batch."""
+    correction_fields = set(metadata) if correction_fields is None else set(correction_fields)
     number = str(metadata.get("number", "")).strip()
     env = metadata.get("environment")
     if not re.fullmatch(r"\d{1,8}", number) or env not in ("prod", "test"):
@@ -74,13 +121,11 @@ def _prepare_import(root, document, filename, metadata, archive, archive_filenam
     filename = re.split(r"[\\/]", filename)[-1]
     if not filename.lower().endswith(".docx"):
         raise ValueError("Выберите исходный DOCX")
-    version = str(metadata.get("version", "")).strip().lstrip("vвVВ")
-    if not version:
-        match = re.search(r"[vв](\d+(?:[._]\d+)+)", filename, re.I)
-        version = match[1].replace("_", ".") if match else ""
+    inferred = filename_metadata(filename)
+    version = str(metadata.get("version", "")).strip().lstrip("vвVВ") or inferred["version"]
     if version and not re.fullmatch(r"\d+(?:\.\d+)*", version):
         raise ValueError("Номер версии должен содержать цифры и точки")
-    date = str(metadata.get("date", "")).strip()
+    date = str(metadata.get("date", inferred["date"])).strip()
     if date:
         try:
             date = datetime.strptime(date, "%Y-%m-%d").strftime("%d.%m.%Y")
@@ -88,6 +133,9 @@ def _prepare_import(root, document, filename, metadata, archive, archive_filenam
             raise ValueError("Укажите корректную дату документа") from exc
     observed_at = datetime.now(timezone.utc).isoformat()
     doc_meta = inspect_upload(document, "docx")
+    structure, module_document = import_structure(doc_meta, number)
+    if module_document:
+        doc_meta = dict(doc_meta, structure=structure)
     doc_hash = sha(document)
     label = f"Тип сообщения {number}" + (" v" + version if version else "") + (" (" + date + ")" if date else "")
     entry = dict(environment=env, url="manual:///" + quote(f"Тип_сообщения_{number}.docx"), label=label, kind="docx", sha256=doc_hash, **doc_meta)
@@ -99,7 +147,9 @@ def _prepare_import(root, document, filename, metadata, archive, archive_filenam
         if not archive_meta.get("schemas"):
             raise ValueError("В ZIP нет XSD-схем")
         entries.append(dict(environment=env, url="manual:///" + quote(re.split(r"[\\/]", archive_filename)[-1]), label="Ручной архив XSD", kind="zip", sha256=sha(archive), **archive_meta))
-    result = derive(dict(entries=entries))
+    previous = json.loads((root / "data/catalog.json").read_bytes())
+    known_revisions = {row["revision_id"] for row in previous["revisions"]}
+    result = derive(dict(entries=entries), known_revisions, preferred_revision_id=preferred_revision_id)
     revision = result["revisions"][0]
     if archive is not None and revision["status"] != "matched":
         raise ValueError("Не удалось однозначно сопоставить DOCX и XSD по корню и пространству имён")
@@ -107,43 +157,55 @@ def _prepare_import(root, document, filename, metadata, archive, archive_filenam
         revision["status"] = "document_only"
     revision.update(document_url=None, document_version=version or None, label_date=date or None, source_type="manual",
                     manual_source=dict(label=str(metadata.get("source") or "Telegram")[:1000], filename=filename, imported_at=observed_at))
-    previous = json.loads((root / "data/catalog.json").read_bytes())
+    if module_document:
+        revision['document_type'] = 'module'
     title = str(metadata.get("title") or "").strip()
     if not title:
-        candidates = [r for r in previous["revisions"] if r["number"] == number and r["environment"] == env]
+        # Manual rows can contain the very override being removed. Only a
+        # confirmed source from this contour may replace the computed default.
+        candidates = [r for r in previous["revisions"] if r["number"] == number and r["environment"] == env
+                      and r.get("source_type") != "manual"]
         current = [r for r in candidates if r.get("listed_now", True)]
         title = next((r["title"] for r in reversed(current or candidates)), "Сообщение " + number)
     revision["title"] = title[:1000]
-    duplicate = next((r for r in previous["revisions"] if r["revision_id"] == revision["revision_id"] or
-                      (archive is None and r["number"] == number and r["environment"] == env and r["document_sha256"] == doc_hash)), None)
-    preview = ImportPreview(root)
-    try:
-        for folder in ("state", "data", "web"):
-            shutil.copytree(root / folder, preview.directory / folder)
-        shutil.copytree(root / "data/fields", preview.directory / "previous-fields")
-        shutil.copy2(root / "viewer-template.html", preview.directory / "viewer-template.html")
-        preview.revision = duplicate or revision
-        preview.changed = duplicate is None
-        if preview.changed:
-            state = preview.directory / "state"
-            write(state / "objects" / doc_hash, document)
-            if archive is not None:
-                write(state / "objects" / sha(archive), archive)
-            snapshot = dict(format=1, source_type="manual", revision=revision)
-            payload = encode(snapshot)
-            digest = sha(payload)
-            write(state / "snapshots" / (digest + ".json"), payload)
-            history = json.loads((state / "history.json").read_bytes())
-            history.append(digest)
-            write(state / "history.json", encode(history))
-            record_observation(state, digest, observed_at)
-        export(preview.directory / "state", preview.directory / "data/catalog.json")
-        build(preview.directory / "data/catalog.json", preview.directory / "state", preview.directory / "data/fields")
-        current = json.loads((preview.directory / "data/catalog.json").read_bytes())
-        with patch.object(build_site, "HERE", preview.directory):
-            build_site.main()
-        validate_history(previous, current, preview.directory)
-        return preview
-    except Exception:
-        preview.close()
-        raise
+    if archive is None:
+        candidates = [r for r in previous["revisions"] if r["number"] == number and r["environment"] == env
+                      and r["document_sha256"] == doc_hash]
+        duplicate = next((r for r in candidates if r["revision_id"] == preferred_revision_id), None)
+        if duplicate is None:
+            if len(candidates) > 1:
+                raise ValueError("Для этого DOCX есть несколько редакций. Добавьте соответствующий ZIP.")
+            duplicate = next(iter(candidates), None)
+    else:
+        duplicate = next((r for r in previous["revisions"] if r["revision_id"] == revision["revision_id"]), None)
+    if duplicate is not None:
+        if duplicate['revision_id'] == previous_revision_id:
+            correction_fields.update(reset_fields)
+        corrected = dict(duplicate)
+        if duplicate.get("source_type") == "manual":
+            for key, field in (("version", "document_version"), ("date", "label_date"), ("title", "title")):
+                if key in correction_fields:
+                    corrected[field] = revision[field]
+            if "source" in correction_fields:
+                corrected["manual_source"] = dict(duplicate["manual_source"], label=revision["manual_source"]["label"])
+        revision = corrected
+    changed = duplicate is None or revision != duplicate
+    if changed:
+        state = root / "state"
+        write(state / "objects" / doc_hash, document)
+        if archive is not None:
+            write(state / "objects" / sha(archive), archive)
+        snapshot = dict(format=1, source_type="manual", revision={k: v for k, v in revision.items() if k != 'display_metadata_applied'})
+        if duplicate is not None:
+            # Corrections are observations of the same edition, including a return to an earlier label.
+            snapshot["revision"] = {k: v for k, v in revision.items() if k not in ("listed_now", "display_metadata_applied")}
+            snapshot["observed_at"] = observed_at
+        payload = encode(snapshot)
+        digest = sha(payload)
+        write(state / "snapshots" / (digest + ".json"), payload)
+        history = json.loads((state / "history.json").read_bytes())
+        history.append(digest)
+        write(state / "history.json", encode(history))
+        record_observation(state, digest, observed_at)
+        export(state, root / "data/catalog.json")
+    return dict(revision=revision, new_revision=duplicate is None, changed=changed)

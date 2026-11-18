@@ -30,7 +30,18 @@
         "snils",
         "UUID",
         "date"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "socialAssistNum",
+          "snils",
+          "UUID",
+          "date"
+        ]
+      }
     },
     {
       "name": "socialAssistNum",

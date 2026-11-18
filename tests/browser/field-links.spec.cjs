@@ -1,5 +1,5 @@
 const {test,expect}=require('@playwright/test');
-const {rowFieldLinks}=require('./catalog-fixtures.cjs');
+const {catalog,rowFieldLinks}=require('./catalog-fixtures.cjs');
 test('notices open exact elements and attributes of their own contour',async({page})=>{
  for(const env of ['prod','test']){
   await page.goto('/site/#remarks=1&number=1010&env='+env);
@@ -22,9 +22,36 @@ test('notices open exact elements and attributes of their own contour',async({pa
  await expect(card.getByRole('heading',{name:'@responseOn',exact:true})).toBeVisible();
  await expect(card).toContainText('xs:string');
  // The same links also work from the per-message review panel.
+ const historicalId='320eee70cfc63f4310acb14bc816cf54f16ac03edaa405592200cdcc291dd7d5';
+ const historical=catalog.revisions.find(r=>r.revision_id===historicalId);
+ const clean={...historical,revision_id:'a'.repeat(64),document_version:'4.0',label_date:'31.12.9999',schema_review:null,review_sources:[]};
+ clean.display_revision_id=clean.revision_id;
+ clean.edition_sources=[{...historical.edition_sources[0],revision_id:clean.revision_id,document_version:clean.document_version,label_date:clean.label_date}];
+ await page.route('**/catalog-data.js*',route=>route.fulfill({contentType:'application/javascript',body:'window.SEDO_CATALOG='+JSON.stringify({...catalog,revisions:[...catalog.revisions,clean]})+';'}));
  await page.goto('/site/#message=1010');
- const prod=page.locator('.version-panel').first().locator('.card').first();
+ await page.reload();
+ await expect(page.locator('.version-panel').first().locator('.card').first().getByRole('button',{name:/Показать замечания/})).toHaveCount(0);
+ const prod=page.locator('.version-panel .card').filter({has:page.locator('a.open[href="#message=1010&env=prod&rev='+historicalId+'"]')});
  await prod.getByRole('button',{name:/Показать замечания/}).click();
  await prod.getByRole('link',{name:/Открыть поле XSD.*rowNumber/}).click();
  await expect(card.getByRole('heading',{name:'rowNumber',exact:true})).toBeVisible();
+});
+
+test('Back and Forward restore the root and its first selected child',async({page})=>{
+ const id='3065ff2469613f57e21eaea824cfd5cb7ee170d1984b8a2f898128da4bdb8109';
+ for(const embedded of [false,true]){
+  await page.goto(embedded?'/site/#message=10110&env=prod&rev='+id:'/site/editions/'+id+'.html');
+  const viewer=embedded?page.frameLocator('#frame'):page;
+  const card=viewer.getByRole('region',{name:'Карточка поля'});
+  await expect(card.getByRole('heading',{name:'benefitResponse',exact:true})).toBeVisible();
+  await viewer.locator('#tree').getByRole('button',{name:'processNum',exact:true}).click();
+  await expect(card.getByRole('heading',{name:'processNum',exact:true})).toBeVisible();
+  await expect(page).toHaveURL(/field=/);
+  await page.goBack();
+  await expect(card.getByRole('heading',{name:'benefitResponse',exact:true})).toBeVisible();
+  await expect(page).not.toHaveURL(/field=/);
+  await page.goForward();
+  await expect(card.getByRole('heading',{name:'processNum',exact:true})).toBeVisible();
+  await expect(page).toHaveURL(/field=/);
+ }
 });

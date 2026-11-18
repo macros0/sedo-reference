@@ -10,6 +10,68 @@ const engine=read('web/vendor/xmllint/xmllint-browser.mjs').split(';(function in
 const workerSource=`const {parentPort}=require('node:worker_threads');self=globalThis;self.postMessage=data=>parentPort.postMessage(data);parentPort.on('message',data=>self.onmessage({data}));self.SEDO_WASM=new Uint8Array(${JSON.stringify([...fs.readFileSync(path.join(root,'web/vendor/xmllint/xmllint.wasm'))])});\n${engine}\n${read('web/validation-core.js')}\n${read('web/validation-paths.js')}\n${read('web/validation-worker.js')}`;
 async function validate(xml,custom=pack,source){const w=new Worker(workerSource,{eval:true});try{return await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('worker timed out')),15000);w.on('message',x=>{clearTimeout(timer);resolve(x)});w.on('error',reject);w.postMessage({bytes:typeof xml==='string'?new TextEncoder().encode(xml):xml,pack:custom,source})})}finally{await w.terminate()}}
 (async()=>{
+ const warningSchema='<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:warning" elementFormDefault="qualified"><xs:element name="request"><xs:complexType><xs:sequence><xs:element name="row" type="xs:int" maxOccurs="unbounded"/><xs:element name="total" type="xs:int"/></xs:sequence></xs:complexType></xs:element></xs:schema>';
+ const warningPack={...pack,namespace:'urn:warning',fields:['request','request/row','request/total'],field_namespaces:[['urn:warning'],['urn:warning'],['urn:warning']],files:{'message.xsd':Buffer.from(warningSchema).toString('base64')}};
+ for(const count of [1,31,1200])for(const [total,valid] of [['1',true],['bad',false]]){
+  const xml='<m:request xmlns:m="urn:warning">\n'+Array(count).fill('<m:row xmlns="relative">1</m:row>').join('\n')+'\n<m:total>'+total+'</m:total></m:request>';
+  const result=await validate(xml,warningPack);
+  assert.equal(result.valid,valid,JSON.stringify(result));
+  assert.equal(result.runtime,undefined);
+  assert.equal(result.errors.length,valid?0:1,'warnings must not occupy the error list');
+  assert.equal(result.diagnosticsTruncated,false,'warnings must not exhaust the diagnostic byte budget');
+  if(!valid)assert.match(result.errors[0].message,/total.*bad/,'the actual datatype violation stays visible');
+ }
+ const typedFixture=require('node:child_process').spawnSync(process.env.SEDO_PYTHON||'python',['tests/typed_fixed_fixture.py'],{cwd:root,encoding:'utf8',env:{...process.env,PYTHONPATH:root}});
+ assert.equal(typedFixture.status,0,typedFixture.stderr);
+ const typed=JSON.parse(typedFixture.stdout);
+ const actual701=JSON.parse(require('node:zlib').gunzipSync(fs.readFileSync(path.join(process.env.SEDO_TEST_SITE||path.join(root,'site'),'schemas/bf8b73ced84609142e11520ec244a8e822c1071f61521ccbbd4bacd3a317be6a.validation.json.gz'))));
+ for(const warning of ['', ' xmlns="relative-name"'])for(const [value,valid] of [['true',true],['1',true],['false',false],['0',false]]){
+  const xml='<m:restrictionResponse xmlns:m="'+actual701.namespace+'"'+warning+'><m:responseOn>00000000-0000-0000-0000-000000000000</m:responseOn><m:notIdentified>'+value+'</m:notIdentified></m:restrictionResponse>';
+  const result=await validate(xml,actual701);assert.equal(result.valid,valid,xml+' '+JSON.stringify(result));
+  const independent=await validate(xml.replace('00000000-0000-0000-0000-000000000000','invalid-guid'),actual701);
+  assert.equal(independent.valid,false);assert.ok(independent.errors.some(error=>/pattern/.test(error.message)),JSON.stringify(independent));
+ }
+ for(const [xml,valid] of typed.cases){
+  const result=await validate(xml,typed.pack);
+  assert.equal(result.valid,valid,xml+' '+JSON.stringify(result));
+  assert.equal(result.runtime,undefined);
+  if(!valid&&(/<utc>|<pattern>1\.0<\/pattern>/.test(xml)))
+   assert.ok(result.errors.some(error=>/pattern/.test(error.message)),JSON.stringify(result));
+  if(!valid&&xml.includes('<instant>'))
+   assert.ok(result.errors.some(error=>/Element 'instant': .*does not match the fixed value constraint/.test(error.message)),JSON.stringify(result));
+  if(!valid&&xml.includes('<decimal>2</decimal>'))
+   assert.ok(result.errors.some(error=>/Element 'decimal': .*does not match the fixed value constraint/.test(error.message)),JSON.stringify(result));
+ }
+ for(const [value,valid] of [['true',true],['1',true],[' 1 ',true],['',true],['false',false],['0',false],['yes',false]]){
+  const xml='<restrictionResponse xmlns="'+actual701.namespace+'"><responseOn>00000000-0000-0000-0000-000000000000</responseOn>\n<notIdentified>'+value+'</notIdentified></restrictionResponse>';
+  const result=await validate(xml,actual701);
+  assert.equal(result.valid,valid,value+' in 701: '+JSON.stringify(result));
+  if(!valid)assert.equal(result.errors[0].line,2);
+ }
+ const namespaceCase=require('./fixtures/namespace-candidates.cjs').namespaceCandidates({...pack,namespace:'urn:r'});
+ for(const xml of namespaceCase.examples){
+  const result=await validate(xml,namespaceCase.pack);
+  assert.equal(result.valid,false);
+  assert.equal(result.errors.length,1);
+  assert.equal(result.errors[0].ambiguous,true,'both namespace contexts must survive the WASM diagnostic');
+  assert.deepEqual(result.errors[0].locations.map(l=>l.field).sort(),[0,2]);
+ }
+ for(const compositor of ['all','sequence']){
+  const schema='<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:element name="request"><xs:complexType><xs:'+compositor+'><xs:element name="a"/><xs:element name="b"/></xs:'+compositor+'></xs:complexType></xs:element></xs:schema>';
+  const orderPack={...pack,files:{'message.xsd':Buffer.from(schema).toString('base64')}};
+  assert.equal((await validate('<request><a/><b/></request>',orderPack)).valid,true);
+  assert.equal((await validate('<request><b/><a/></request>',orderPack)).valid,compositor==='all');
+ }
+ for(const encoding of ['UTF-8','UTF-16LE','UTF-16BE']){
+  const original='<?xml version="1.0" encoding="'+encoding+'"?><request><code>ABC</code></request>';
+  const bom=Buffer.from(encoding==='UTF-8'?[239,187,191]:encoding==='UTF-16LE'?[255,254]:[254,255]);
+  const content=Buffer.from(original,encoding==='UTF-8'?'utf8':'utf16le');
+  if(encoding==='UTF-16BE')content.swap16();
+  for(const count of [0,1,2]){
+   const bytes=Buffer.concat([...Array(count).fill(bom),content]),result=await validate(bytes);
+   assert.equal(result.valid,count<2,encoding+' with '+count+' byte-order marks must preserve the XML document');
+  }
+ }
  const syntax=await validate('<request><code>ABC</request>');
  assert.equal(syntax.errors.length,1,'source excerpt and caret belong to the parser diagnostic');
  assert.match(syntax.errors[0].message,/\^/);
@@ -49,6 +111,15 @@ async function validate(xml,custom=pack,source){const w=new Worker(workerSource,
  for(const [base,value] of [['xs:hexBinary','AABB'],['xs:base64Binary','YWI=']]){const schema='<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:codes"><xs:simpleType name="Code"><xs:restriction base="'+base+'"><xs:length value="3"/></xs:restriction></xs:simpleType></xs:schema>',result=await validate('<request><code>'+value+'</code></request>',{...pack,files:{...pack.files,'schemas/codes.xsd':Buffer.from(schema).toString('base64')}});assert.deepEqual(result.errors.map(e=>explain(e.message)),['Точная длина по XSD — 3; фактическая — 2.'],'length facet can count decoded bytes, not visible characters');}
  for(const [type,value,expected] of [['boolean','yes','Ожидается логическое значение: true, false, 1 или 0.'],['decimal','1,23','Ожидается десятичное число; разделитель дробной части — точка.'],['date','2000-02-31','Ожидается корректная дата XSD, например 2000-01-31.']]){const result=await validate('<request><code>'+value+'</code></request>',{...pack,files:{...pack.files,'message.xsd':Buffer.from(main.replace('type="c:Code"','type="xs:'+type+'"')).toString('base64')}});assert.ok(result.errors.some(e=>explain(e.message)===expected),JSON.stringify(result));}
  const repeatedPack={...pack,files:{...pack.files,'message.xsd':Buffer.from(main.replace('name="code" type="c:Code"','name="code" type="c:Code" maxOccurs="unbounded"')).toString('base64')}};
+ for(const count of [30,31]){
+  const xml='<request>'+('<code>A</code>\n').repeat(count)+'</request>',result=await validate(xml,repeatedPack);
+  assert.equal(result.errors.length,30);assert.equal(result.diagnosticsTruncated,count>30);
+ }
+ const longName='item'+'z'.repeat(3500);
+ const manyBytes={...pack,files:{'message.xsd':Buffer.from('<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:element name="request"><xs:complexType><xs:sequence><xs:element name="'+longName+'" type="xs:int" maxOccurs="unbounded"/></xs:sequence></xs:complexType></xs:element></xs:schema>').toString('base64')}};
+ const clipped=await validate('<request>'+('<'+longName+'>bad</'+longName+'>\n').repeat(25)+'</request>',manyBytes);
+ assert.ok(clipped.errors.length<25,'stderr limit must be exercised before reaching the count limit');
+ assert.equal(clipped.diagnosticsTruncated,true);
  const repeated=await validate('<request>\n<code>AB12</code>\n<code>CD34</code>\n</request>',repeatedPack);assert.equal(core.groupErrors(repeated.errors).length,2,'same structural path on different lines is two instances');assert.ok(core.groupErrors(repeated.errors).every(g=>g.diagnostics.length===2));
  const ambiguousRepeat=await validate('<request><code>AB12</code><code>CD34</code></request>',repeatedPack);assert.equal(core.groupErrors(ambiguousRepeat.errors).length,ambiguousRepeat.errors.length,'ambiguous instances must not be silently merged');
  const unknown=[{line:1,message:'first syntax error'},{line:1,message:'second syntax error'}];assert.equal(core.groupErrors(unknown).length,2,'line alone cannot identify an XML tag');
@@ -71,6 +142,11 @@ async function validate(xml,custom=pack,source){const w=new Worker(workerSource,
   assert.equal(result.valid,false);assert.ok(result.errors.some(e=>e.line===3&&e.locations?.some(l=>l.ranges?.some(range=>normalized.slice(range.start,range.end)==='code'))),'file coordinates must retain the original declaration for '+encoding);
  }
  const cp1251=Buffer.concat([Buffer.from('<?xml version="1.0" encoding="windows-1251"?><request><code>'),Buffer.from([0xc0,0xc1,0xc2]),Buffer.from('</code></request>')]);const cpResult=await validate(cp1251);assert.equal(cpResult.valid,true,JSON.stringify(cpResult));
+ const longDecl=Buffer.concat([Buffer.from('<?xml version="1.0"'+' '.repeat(520)),cp1251.subarray('<?xml version="1.0"'.length)]);
+ assert.ok(core.inspectBytes(longDecl).includes('АБВ'),'decode the full XML declaration for Windows-1251');
+ assert.equal((await validate(longDecl)).valid,true);
+ const brokenUtf8=Buffer.concat([Buffer.from('<?xml version="1.0"'+' '.repeat(520)+'encoding="UTF-8"?><request>'),Buffer.from([0xff]),Buffer.from('</request>')]);
+ assert.throws(()=>core.inspectBytes(brokenUtf8),/байты/);
  const multi={...pack,fields:['request','request/a','request/a/x','request/b','request/b/x'],field_namespaces:[[''],[''],[''],[''],['']],files:{'message.xsd':Buffer.from('<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:complexType name="Block"><xs:sequence><xs:element name="x" type="xs:int"/></xs:sequence></xs:complexType><xs:element name="request"><xs:complexType><xs:sequence><xs:element name="a" type="Block"/><xs:element name="b" type="Block"/></xs:sequence></xs:complexType></xs:element></xs:schema>').toString('base64')}};
  r=await validate('<request><a><x\n>BAD</x></a><b><x>2</x></b></request>',multi);assert.ok(r.errors.some(e=>e.ambiguous&&e.locations.some(l=>l.path==='/request/a/x')),'real multiline errors cannot select only a later valid node');
  const arbitrary={...pack,files:{'message.xsd':Buffer.from('<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"><xs:element name="request" type="xs:string"/></xs:schema>').toString('base64')}};
@@ -78,6 +154,10 @@ async function validate(xml,custom=pack,source){const w=new Worker(workerSource,
  assert.equal((await validate('<request><!-- ordinary <!DOCTYPE marker --><![CDATA[<!ENTITY marker]]></request>',arbitrary)).valid,true,'declaration-like text in comments/CDATA is ordinary content');
  const latin=Buffer.concat([Buffer.from('<?xml version="1.0" encoding="ISO-8859-1"?><request>'),Buffer.from([128]),Buffer.from('</request>')]);assert.ok(core.inspectBytes(latin).includes(''),'ISO-8859-1 C1 byte must not become a Windows1252 character');
  assert.throws(()=>core.inspectBytes(new Uint8Array(10*1024*1024+1)),/10/);
+ const maximum={...pack,files:{'message.xsd':pack.files['message.xsd'],...Object.fromEntries(Array.from({length:255},(_,i)=>['schemas/Part'+i+'.xsd',pack.files['schemas/codes.xsd']]))}};
+ assert.doesNotThrow(()=>core.checkPack(maximum,pack),'256 files fit the browser contract');
+ assert.throws(()=>core.checkPack({...maximum,files:{...maximum.files,'schemas/extra.xsd':pack.files['message.xsd']}},pack),/Неполный/,'257 files must be exported only as a local ZIP');
+ assert.throws(()=>core.checkPack({...pack,files:{...pack.files,'schemas/Part0.XSD':pack.files['schemas/codes.xsd']}},pack),/путь/,'producer normalizes XSD extension before publishing browser paths');
  const bad={...pack,files:{...pack.files,'../escape.xsd':pack.files['message.xsd']}};assert.throws(()=>core.checkPack(bad,pack),/путь/);
  assert.throws(()=>core.checkPack({...pack,revision_id:'b'.repeat(64)},pack),/редакц/);
  const ctx=vm.createContext({window:{},TextEncoder,TextDecoder,Uint8Array,ArrayBuffer,crypto:webcrypto,btoa:s=>Buffer.from(s,'binary').toString('base64'),atob:s=>Buffer.from(s,'base64').toString('binary'),console,URL,Blob,AbortController,DecompressionStream,Response});

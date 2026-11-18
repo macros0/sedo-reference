@@ -43,6 +43,20 @@ class JournalTests(unittest.TestCase):
         self.assertEqual({s["document_url"]: s["listed_now"] for s in sources()},
                          {row["document_url"]: True, other["document_url"]: False})
 
+    def test_current_labels_are_independent_for_two_urls_of_one_revision(self):
+        from edition_groups import group_editions, display_updates
+        a = dict(self.revision("same"), document_sha256="bytes", document_url="/a", label_date="01.01.2026")
+        b = dict(a, document_url="/b")
+        self.add("first", [a, b])
+        self.add("current", [dict(a, document_version="3.1", label_date="02.02.2026"), b])
+        self.export()
+        grouped = group_editions(json.loads((self.state / "catalog.json").read_bytes()), lambda _: [])
+        sources = grouped["revisions"][0]["edition_sources"]
+        self.assertEqual([(s["document_url"], s["document_version"], s["label_date"]) for s in sources],
+                         [("/a", "3.1", "02.02.2026"), ("/b", "3.0", "01.01.2026")])
+        first = display_updates(grouped)[0]["event_sources"]
+        self.assertEqual([s["document_version"] for s in first], ["3.0", "3.0"])
+
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
@@ -63,7 +77,7 @@ class JournalTests(unittest.TestCase):
         write(self.state / "current.json", encode(dict(snapshot=key)))
 
     def export(self):
-        def derive(snapshot):
+        def derive(snapshot, known_revisions=(), **kwargs):
             return dict(revisions=copy.deepcopy(self.revisions[snapshot["key"]]), registry=[], review=[])
         with patch("catalog.derive", side_effect=derive):
             export(self.state, self.state / "catalog.json")
@@ -128,7 +142,7 @@ class JournalTests(unittest.TestCase):
         self.assertEqual(self.export(), events)
         returned = json.loads((self.state / "catalog.json").read_bytes())
         listed = returned['revisions']
-        self.assertEqual(listed, [dict(first, listed_now=True)])
+        self.assertEqual(listed, [dict(first, listed_now=True, display_metadata_applied=True)])
         restored_sources = source_updates(group_editions(returned, lambda rid: []))
         self.assertEqual([event['event_id'] for event in restored_sources], [event['event_id'] for event in added_sources])
         self.assertEqual([s['listed_now'] for s in group_editions(returned, lambda rid: [])['revisions'][0]['edition_sources']], [True, False])

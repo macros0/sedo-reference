@@ -1,28 +1,27 @@
 """Import incoming/prod and incoming/test transactionally; --check validates a PR."""
 import argparse
+import hashlib
 import json
 import re
 import shutil
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
+from unittest.mock import patch
 
-from auto_update import update_lock, validate_history
+import build_site
+from auto_update import update_lock, validate_history, build_history_baseline
 from catalog import dependency_set
-from manual_import import fingerprint, inspect_upload, prepare_import, promote_import
+from schema import equivalent_closure
+from document_metadata import root_metadata, root_matches, prefer_schema_location
+from fields import build
+from manual_import import filename_metadata, fingerprint, inspect_upload, stage_import, promote_import, import_structure
 from sync import MAX_BYTES, encode, sha, write
 
 
 def detect_metadata(filename, environment, override=None):
     match=re.search(r"тип[ _]+сообщения[ _]+(\d+)",filename,re.I) or re.match(r"(\d{1,8})(?=[_ .-]|$)",filename)
-    date_match=re.search(r"(?<![\dvвVВ])(\d{2})[._](\d{2})[._](\d{4}|\d{2})(?!\d)",filename)
-    version_name=filename[:date_match.start()] if date_match else filename
-    version=re.search(r"[vв](\d+(?:[._]\d+)+)",version_name,re.I)
-    date=""
-    if date_match:
-        year=("20" if len(date_match[3])==2 else "")+date_match[3]
-        date=year+"-"+date_match[2]+"-"+date_match[1]
-    data=dict(number=match[1] if match else "",version=version[1].replace("_",".") if version else "",date=date,source="Ручная загрузка из GitHub")
+    data=dict(number=match[1] if match else "", **filename_metadata(filename), source="Ручная загрузка из GitHub")
     if override is not None:
         if not isinstance(override,dict) or set(override)-{"number","version","date","title","source"}:
             raise ValueError("Проверьте поля metadata.json для "+filename)
@@ -36,11 +35,26 @@ def detect_metadata(filename, environment, override=None):
     return data
 
 
-def collect(root):
-    incoming=root/"incoming";documents=[];archives={};manifests={};inputs={}
+def file_digest(path):
+    digest = hashlib.sha256()
+    with path.open("rb") as source:
+        for chunk in iter(lambda: source.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def read_checked(path, expected):
+    content = path.read_bytes()
+    if sha(content) != expected:
+        raise ValueError("incoming изменились. Повторите импорт: " + str(path))
+    return content
+
+
+def inbox_inputs(root):
+    incoming=root/"incoming";inputs={}
     if incoming.is_symlink() or (hasattr(incoming,"is_junction") and incoming.is_junction()):
         raise ValueError("Ссылки в incoming не поддерживаются")
-    if not incoming.exists():return [],{}
+    if not incoming.exists():return {}
     for path in sorted(incoming.rglob("*")):
         if path.is_symlink() or (hasattr(path,"is_junction") and path.is_junction()):
             raise ValueError("Ссылки в incoming не поддерживаются: "+str(path.relative_to(root)))
@@ -51,35 +65,72 @@ def collect(root):
             raise ValueError("Положите файл в incoming/prod или incoming/test: "+str(relative))
         if path.stat().st_size>(1024*1024 if path.name=="metadata.json" else MAX_BYTES):
             raise ValueError("Слишком большой файл: "+str(relative))
-        content=path.read_bytes();inputs[path]=sha(content)
-        if path.suffix.lower()==".docx":documents.append((path,content,relative.parts[0]))
-        elif path.suffix.lower()==".zip":archives.setdefault(path.parent,[]).append((path,content,inspect_upload(content,"zip")))
+        if path.suffix.lower() not in (".docx", ".zip") and path.name != "metadata.json":
+            raise ValueError("Поддерживаются DOCX, ZIP и metadata.json: "+str(relative))
+        inputs[path]=file_digest(path)
+    return inputs
+
+
+def collect(root, ledger=None):
+    incoming=root/"incoming";documents=[];archives={};manifests={}
+    inputs=inbox_inputs(root)
+    for path in inputs:
+        relative=path.relative_to(incoming)
+        if path.suffix.lower()==".docx":documents.append((path,relative.parts[0]))
+        elif path.suffix.lower()==".zip":archives.setdefault(path.parent,[]).append(path)
         elif path.name=="metadata.json":
-            value=json.loads(content.decode("utf-8-sig"))
+            value=json.loads(read_checked(path, inputs[path]).decode("utf-8-sig"))
             if not isinstance(value,dict):raise ValueError("metadata.json должен содержать объект по именам DOCX")
             manifests[path.parent]=value
-        else:raise ValueError("Поддерживаются DOCX, ZIP и metadata.json: "+str(relative))
+    for folder, manifest in manifests.items():
+        names = {path.name for path, _ in documents if path.parent == folder}
+        unknown = set(manifest) - names
+        if unknown:
+            raise ValueError(str(folder.relative_to(root)) + ": неизвестные DOCX в metadata.json: " + ", ".join(sorted(unknown)))
+    catalog_path = root / 'data/catalog.json'
+    known_revisions = {row['revision_id'] for row in json.loads(catalog_path.read_bytes()).get('revisions', [])} if catalog_path.is_file() else set()
+    known_revisions.update(saved['revision_id'] for saved in (ledger or {}).get('files', {}).values() if saved.get('revision_id'))
     tasks=[]
+    archive_info={}
+    archive_folder=None
     for folder in archives:
-        if not any(path.parent==folder for path,_,_ in documents):
+        if not any(path.parent==folder for path,_ in documents):
             raise ValueError(str(folder.relative_to(root))+": положите DOCX рядом с ZIP, чтобы определить сообщение и версию.")
-    for path,content,env in documents:
-        meta=detect_metadata(path.name,env,manifests.get(path.parent,{}).get(path.name))
+    for path,env in documents:
+        override=manifests.get(path.parent,{}).get(path.name)
+        meta=detect_metadata(path.name,env,override)
+        explicit_fields=sorted(set(override or {}) & {"version","date","title","source"})
+        input_signature=sha(encode([inputs[path], [(a.name,inputs[a]) for a in archives.get(path.parent,[])], meta, explicit_fields]))
+        saved=(ledger or {}).get("files",{}).get(path.relative_to(root).as_posix(),{})
+        if saved.get("input_signature")==input_signature and saved.get("explicit_fields",[])==explicit_fields:
+            continue
+        if path.parent != archive_folder:
+            archive_info={}
+            archive_folder=path.parent
         try:
-            structure=dict(inspect_upload(content,"docx").get("structure",[]))
-            root_name=next((v for k,v in structure.items() if "корневой элемент" in k.lower()),None)
-            namespace=next((v for k,v in structure.items() if "пространство имен" in k.lower()),None)
+            structure=dict(import_structure(inspect_upload(read_checked(path, inputs[path]),"docx"),meta['number'])[0])
+            root_name, namespace, namespace_declared = root_metadata(structure.items())
             candidates=[]
-            for archive,body,info in archives.get(path.parent,[]):
+            matches=[]
+            for archive in archives.get(path.parent,[]):
+                if archive not in archive_info:
+                    archive_info[archive]=inspect_upload(read_checked(archive, inputs[archive]),"zip")
+                info=archive_info[archive]
                 for schema in info.get("schemas",[]):
-                    if schema["namespace"]==namespace and any(r["name"]==root_name for r in schema["roots"]):
-                        digest=sha(encode(dependency_set(info["schemas"],schema["path"])))
-                        candidates.append((digest,archive,body))
+                    if root_matches(schema, root_name, namespace, namespace_declared):
+                        matches.append((archive,schema))
+            for archive,schema in prefer_schema_location(matches,structure.items()):
+                closure = dependency_set(archive_info[archive]["schemas"], schema["path"])
+                digest = equivalent_closure(closure, schema["path"])
+                rid = sha(encode([env, meta["number"], inputs[path], sha(encode(closure))]))
+                candidates.append((digest,archive,rid))
             if archives.get(path.parent) and not candidates:raise ValueError("В ZIP рядом с DOCX не найдена подходящая XSD")
             if len({x[0] for x in candidates})>1:raise ValueError("Подходят несколько разных XSD. Разнесите версии по отдельным папкам.")
-            chosen=candidates[0] if candidates else None
-            signature=sha(encode([sha(content),sha(chosen[2]) if chosen else None,meta]))
-            tasks.append(dict(path=path,document=content,metadata=meta,archive=chosen[2] if chosen else None,
+            chosen=next((c for c in candidates if c[2] == saved.get("revision_id")),
+                        next((c for c in candidates if c[2] in known_revisions), candidates[0] if candidates else None))
+            signature=sha(encode([inputs[path],inputs[chosen[1]] if chosen else None,meta]))
+            tasks.append(dict(path=path,metadata=meta,explicit_fields=explicit_fields,archive=chosen[1] if chosen else None,
+                              input_signature=input_signature, preferred_revision_id=chosen[2] if chosen else saved.get("revision_id"),
                               archive_name=chosen[1].name if chosen else "schemas.zip",signature=signature))
         except (ValueError,KeyError) as exc:raise ValueError(str(path.relative_to(root))+": "+str(exc)) from exc
     def order(task):
@@ -94,40 +145,49 @@ def process_inbox(root,check=False):
 
 
 def _process_inbox(root, check):
-    original_fingerprint=fingerprint(root)
-    tasks,inputs=collect(root)
     ledger_path=root/"state/inbox.json"
     ledger=json.loads(ledger_path.read_bytes()) if ledger_path.exists() else dict(format=1,files={})
-    pending=[t for t in tasks if ledger["files"].get(t["path"].relative_to(root).as_posix(),{}).get("signature")!=t["signature"]]
+    tasks,inputs=collect(root, ledger=ledger)
+    # collect filters only inputs confirmed by the current index format. Older
+    # ledgers are revalidated once, then receive the complete input signature.
+    pending=tasks
     report=dict(status="ok",check_only=check,processed=len(pending),new_revisions=0,files=[])
     if not pending:return report
+    original_fingerprint=fingerprint(root)
     previous=json.loads((root/"data/catalog.json").read_bytes())
     with tempfile.TemporaryDirectory(prefix="sedo-inbox-") as tmp:
         stage=Path(tmp)
         for folder in ("state","data","web"):shutil.copytree(root/folder,stage/folder)
         shutil.copy2(root/"viewer-template.html",stage/"viewer-template.html")
-        shutil.copytree(root/"data/fields",stage/"previous-fields")
+        build_history_baseline(stage)
         for task in pending:
             relative=task["path"].relative_to(root).as_posix()
             try:
-                preview=prepare_import(stage,task["document"],task["path"].name,task["metadata"],task["archive"],task["archive_name"])
-                try:
-                    preview.save()
-                    if not preview.changed:
-                        # Duplicate-only batches still need all validated generated pages.
-                        shutil.copytree(preview.directory/"site",stage/"site",dirs_exist_ok=True)
-                    report["new_revisions"]+=int(preview.changed)
-                    rid=preview.revision["revision_id"]
-                    ledger["files"][relative]=dict(signature=task["signature"],revision_id=rid,processed_at=datetime.now(timezone.utc).isoformat())
-                    published=json.loads((preview.directory/"site/catalog-data.js").read_text("utf8").removeprefix("window.SEDO_CATALOG=").removesuffix(";"))
-                    event=next(e for e in published["updates"] if e["revision_id"]==rid)
-                    report["files"].append(dict(path=relative,number=preview.revision["number"],environment=preview.revision["environment"],version=preview.revision["document_version"],revision_id=rid,new_revision=preview.changed,status=preview.revision["status"],comparison=event.get("comparison")))
-                finally:preview.close()
+                old_fields=ledger["files"].get(relative,{}).get("explicit_fields",[])
+                result=stage_import(stage,read_checked(task["path"], inputs[task["path"]]),task["path"].name,task["metadata"],
+                                    read_checked(task["archive"], inputs[task["archive"]]) if task["archive"] else None,task["archive_name"],
+                                    correction_fields=set(task["explicit_fields"]), reset_fields=old_fields,
+                                    previous_revision_id=ledger['files'].get(relative,{}).get('revision_id'),
+                                    preferred_revision_id=task["preferred_revision_id"])
+                revision=result["revision"];rid=revision["revision_id"]
+                report["new_revisions"]+=int(result["new_revision"])
+                ledger["files"][relative]=dict(signature=task["signature"],input_signature=task["input_signature"],explicit_fields=task["explicit_fields"],
+                                               revision_id=rid,processed_at=datetime.now(timezone.utc).isoformat())
+                report["files"].append(dict(path=relative,number=revision["number"],environment=revision["environment"],
+                                            version=revision["document_version"],revision_id=rid,
+                                            new_revision=result["new_revision"],status=revision["status"]))
             except (ValueError,KeyError) as exc:raise ValueError(relative+": "+str(exc)) from exc
+        build(stage/"data/catalog.json",stage/"state",stage/"data/fields")
+        with patch.object(build_site, "HERE", stage):
+            build_site.main()
+        published=json.loads((stage/"site/catalog-data.js").read_text("utf8").removeprefix("window.SEDO_CATALOG=").removesuffix(";"))
+        events={e["revision_id"]:e for e in published["updates"]}
+        for file in report["files"]:
+            file["comparison"]=events[file["revision_id"]].get("comparison")
         write(stage/"state/inbox.json",encode(ledger))
         validate_history(previous,json.loads((stage/"data/catalog.json").read_bytes()),stage)
         if not check:
-            if fingerprint(root)!=original_fingerprint or any(not path.is_file() or sha(path.read_bytes())!=digest for path,digest in inputs.items()):
+            if fingerprint(root)!=original_fingerprint or inbox_inputs(root)!=inputs:
                 raise ValueError("Проект или incoming изменились. Повторите импорт.")
             promote_import(root,stage)
     return report

@@ -1,17 +1,35 @@
 name: Publish reference
+run-name: ${{ inputs.update_run_id && format('Publish reference for check {0} attempt {1} at {2}', inputs.update_run_id, inputs.update_run_attempt, inputs.head_sha) || 'Publish reference' }}
 on:
   push:
     branches: [main]
   workflow_dispatch:
+    inputs:
+      update_run_id:
+        description: Check SFR run requesting publication
+        type: string
+      update_run_attempt:
+        description: Attempt of the Check SFR run
+        type: string
+      head_sha:
+        description: Commit of the checked reference
+        type: string
+      catalog_sha256:
+        description: SHA-256 of the checked public catalog
+        type: string
 permissions:
   contents: read
 concurrency:
   group: reference-main
+  queue: max
   cancel-in-progress: false
 jobs:
   build:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    outputs:
+      candidate_sha: ${{ steps.candidate.outputs.candidate_sha }}
+      catalog_sha256: ${{ steps.candidate.outputs.catalog_sha256 }}
     permissions:
       contents: write
     env:
@@ -37,33 +55,7 @@ jobs:
       - name: Test reference and importer
         run: |
           python -m unittest discover -s tests -q
-          node tests/test_automation_status.cjs
-          node tests/test_compare.cjs
-          node tests/test_update_summaries.cjs
-          node tests/test_journal_dates.cjs
-          node tests/test_transitions.cjs
-          node tests/test_viewer_sections.cjs
-          node tests/test_tree_review_filter.cjs
-          node tests/test_schema_origin.cjs
-          node tests/test_review_journal.cjs
-          node tests/test_review_excel_fields.cjs
-          node tests/test_cross_message_compare.cjs
-          node tests/test_comparison_export.cjs
-          node tests/test_comparison_mapping.cjs
-          node tests/test_mapping_suggestions.cjs
-          node tests/test_mapping_draft.cjs
-          node tests/test_mapping_editor.cjs
-          node tests/test_mapping_apply.cjs
-          node tests/test_mapping_concurrency.cjs
-          node tests/test_edition_groups.cjs
-          node tests/test_browser_validation.cjs
-          node tests/test_attribute_ref_constraints.cjs
-          node tests/test_validation_paths.cjs
-          node tests/test_validation_review_paths.cjs
-          node tests/test_validation_source.cjs
-          node tests/test_validation_review_source.cjs
-          node tests/test_validation_messages.cjs
-          node tests/test_validation_navigation.cjs
+          npm run test:node
       - name: Validate and apply pending Russian collector snapshots
         env:
           SEDO_SFR_POLITE: '1'
@@ -73,12 +65,16 @@ jobs:
         run: python import_inbox.py
       - name: Build the validated reference
         run: |
+          python update_catalog.py --offline
           python verify.py
           python build_site.py
           node tests/test_browser_validation.cjs --all-editions
+          node tests/test_attribute_ref_constraints.cjs --all-editions
           touch site/.nojekyll
       - name: Test generated candidate invariants
-        run: python -m unittest discover -s tests -q
+        run: |
+          python -m unittest discover -s tests -q
+          npm run test:node
       - name: Test built reference in Chromium
         run: npm run test:browser
       - name: Save browser test report
@@ -99,6 +95,16 @@ jobs:
             git push origin HEAD:main
           fi
           # The token push does not start another workflow. Publish this checked artifact below.
+      - name: Record the validated artifact commit
+        id: candidate
+        run: |
+          echo "candidate_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          python - <<'PY'
+          import hashlib, os
+          from pathlib import Path
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+              print('catalog_sha256=' + hashlib.sha256(Path('site/catalog-data.js').read_bytes()).hexdigest(), file=output)
+          PY
       - name: Write incoming report
         if: always()
         run: |
@@ -125,12 +131,51 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.build.outputs.candidate_sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Reject a stale artifact against current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_SHA: ${{ needs.build.outputs.candidate_sha }}
+        run: python publication_guard.py "$CANDIDATE_SHA"
+      - name: Record evidence for the requesting check
+        if: ${{ inputs.update_run_id && inputs.update_run_attempt && inputs.head_sha && inputs.catalog_sha256 }}
+        env:
+          UPDATE_RUN_ID: ${{ inputs.update_run_id }}
+          UPDATE_RUN_ATTEMPT: ${{ inputs.update_run_attempt }}
+          CHECKED_SHA: ${{ inputs.head_sha }}
+          CHECKED_CATALOG_SHA256: ${{ inputs.catalog_sha256 }}
+          CANDIDATE_SHA: ${{ needs.build.outputs.candidate_sha }}
+          CATALOG_SHA256: ${{ needs.build.outputs.catalog_sha256 }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          receipt = {key.lower(): os.environ[key] for key in (
+              'UPDATE_RUN_ID', 'UPDATE_RUN_ATTEMPT', 'CHECKED_SHA', 'CHECKED_CATALOG_SHA256',
+              'CANDIDATE_SHA', 'CATALOG_SHA256')}
+          receipt.update(pages_run_id=os.environ['GITHUB_RUN_ID'], pages_run_attempt=os.environ['GITHUB_RUN_ATTEMPT'])
+          Path('publication-receipt.json').write_text(json.dumps(receipt), encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.update_run_id && inputs.update_run_attempt && inputs.head_sha && inputs.catalog_sha256 }}
+        continue-on-error: true
+        with:
+          name: pages-publication-receipt-${{ github.run_attempt }}
+          path: publication-receipt.json
+          retention-days: 30
       - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
@@ -149,7 +194,7 @@ jobs:
         run: |
           for pause in 0 5 15; do
             sleep "$pause"
-            if gh workflow run automation-status.yml --repo "$GITHUB_REPOSITORY" --ref main -f publication_run_id="$GITHUB_RUN_ID"; then
+            if gh workflow run automation-status.yml --repo "$GITHUB_REPOSITORY" --ref main -f publication_run_id="$GITHUB_RUN_ID" -f publication_run_attempt="$GITHUB_RUN_ATTEMPT"; then
               exit 0
             fi
           done

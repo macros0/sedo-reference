@@ -9,6 +9,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class PublishedIntegrityTests(unittest.TestCase):
+    def test_snapshot_bytes_match_content_address(self):
+        for snapshot in (ROOT / 'state/snapshots').glob('*.json'):
+            with self.subTest(snapshot=snapshot.name):
+                self.assertEqual(hashlib.sha256(snapshot.read_bytes()).hexdigest(), snapshot.stem)
+
     def test_validator_resources_match_manifest_in_checkout(self):
         loader = (ROOT / 'site/validation.js').read_text('utf8')
         assets = json.loads(re.search(r'const ASSETS=(.*?);', loader)[1])

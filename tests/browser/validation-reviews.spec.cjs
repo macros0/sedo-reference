@@ -1,6 +1,27 @@
 const {test,expect}=require('@playwright/test');
 const fs=require('node:fs'),path=require('node:path');
 const catalog=JSON.parse(fs.readFileSync(path.join(__dirname,'../../site/catalog-data.js'),'utf8').replace(/^window.SEDO_CATALOG=/,'').replace(/;\s*$/,''));
+test('parent-linked reviews of 10010 keep their scope in the field card and private XML validator',async({page})=>{
+ const row=catalog.revisions.find(r=>r.revision_id==='ba4b15e3a0d58e3bdafc3ba517cdc516944874e83a42dc6291a4d1101b8774e6');
+ const field='benefitRequest/benefit6/assignmentParams';
+ await page.goto('/site/#'+new URLSearchParams({message:row.number,env:row.environment,rev:row.revision_id,field,validate:'1'}));
+ const card=page.frameLocator('#frame').locator('#detail');
+ await expect(card.getByRole('heading',{name:'Замечания к полю · 1',exact:true})).toBeVisible();
+ const children=card.getByRole('region',{name:'Замечания к дочерним полям',exact:true});
+ await expect(children.getByRole('heading',{name:'Замечания к дочерним полям · 1',exact:true})).toBeVisible();
+ await expect(children).toContainText('insurancePaymentObligation');
+ const validator=page.frameLocator('.validator-frame');
+ await validator.getByText('Или вставьте XML текстом',{exact:true}).click();
+ await validator.locator('#xml-text').fill('<benefitRequest xmlns="'+row.namespace+'"><benefit6><assignmentParams/></benefit6></benefitRequest>');
+ await validator.getByRole('button',{name:'Проверить XML',exact:true}).click();
+ const notes=validator.locator('.spec-review-card').filter({has:page.locator('code').filter({hasText:new RegExp('^/'+field+'$')})});
+ await notes.locator('summary').click();
+ const child=notes.locator('article').filter({hasText:'Отсутствующее объявление'});
+ await expect(child).toContainText('Замечание к дочернему полю');
+ await expect(child).toContainText('insurancePaymentObligation');
+ const direct=notes.locator('article').filter({hasText:'Состав и порядок элементов'});
+ await expect(direct).toContainText('Замечание к полю');
+});
 test('valid and invalid XML expose specification reviews locally in both contours',async({page,context})=>{
  for(const env of ['prod','test']){
   const row=catalog.revisions.find(r=>r.number==='10510'&&r.environment===env);

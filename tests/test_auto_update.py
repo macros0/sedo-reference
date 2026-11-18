@@ -16,6 +16,69 @@ PROJECT = Path(__file__).resolve().parents[1]
 
 
 class OfflineReplayTests(unittest.TestCase):
+    def test_fragment_only_and_multiple_aliases_replay_exact_snapshot(self):
+        from sync import SITES
+        from tests.test_source_collection_regressions import SourceCollectionTests
+        from verify import failure_probe_url
+        for fragments in (('#page=2',), ('#page=2', '#page=3')):
+            with self.subTest(fragments=fragments):
+                fixture = SourceCollectionTests()
+                fixture.setUp()
+                self.addCleanup(fixture.doCleanups)
+                page = SITES['test']
+                href = '/specs_sedo/file.zip'
+                url = page.replace('/sedo.html', href)
+                fixture.resources[page] = ''.join(f'<a href="{href}{frag}">Schema</a>' for frag in fragments).encode()
+                self.assertEqual(fixture.collect(1).count(url), 1)
+                self.assertEqual(failure_probe_url(fixture.current(), [page, url]), url)
+                data = fixture.root / 'data'
+                write(data / 'catalog.json', encode(dict(revisions=[
+                    dict(number='10110', environment=e, revision_id=e, status='document_only', source_type='manual')
+                    for e in SITES])))
+                verify(fixture.state, data)
+
+    def test_mass_loss_of_resources_rejects_candidate_with_unchanged_message_numbers(self):
+        from catalog import export
+        from sync import SITES
+        from tests.test_source_collection_regressions import SourceCollectionTests
+        fixture = SourceCollectionTests()
+        fixture.setUp()
+        self.addCleanup(fixture.doCleanups)
+        root, page = fixture.root, SITES['prod']
+        original = fixture.resources[page]
+        def listing(count):
+            links = []
+            for n in range(count):
+                href = f'/specs_sedo/guide{n}.pdf'
+                fixture.resources[page.replace('/sedo.html', href)] = b'guide'
+                links.extend(f'<a href="{href}#page={p}">Guide</a>' for p in (1, 2))
+            fixture.resources[page] = original + ''.join(links).encode()
+        listing(71)
+        fixture.collect(1)
+        export(fixture.state, root / 'data/catalog.json')
+        write(root / 'data/fields/index.json', b'[]')
+        shutil.copytree(PROJECT / 'web', root / 'web')
+        shutil.copy2(PROJECT / 'viewer-template.html', root)
+        pointer = (fixture.state / 'current.json').read_bytes()
+        with patch('sync.get', side_effect=fixture.resources.__getitem__):
+            listing(53)
+            with self.assertRaisesRegex(ValueError, 'prod.*18'):
+                run(root)
+            self.assertEqual((fixture.state / 'current.json').read_bytes(), pointer)
+            listing(70)
+            run(root)
+        self.assertNotEqual((fixture.state / 'current.json').read_bytes(), pointer)
+
+    def test_mass_disappearance_is_rejected_but_one_removed_publication_is_allowed(self):
+        from auto_update import validate_publications
+        rows = [dict(number=str(i), environment='prod', listed_now=True) for i in range(132)]
+        previous = dict(revisions=rows, registry=rows)
+        for kept in (1, 100):
+            with self.subTest(kept=kept), self.assertRaisesRegex(ValueError, 'prod'):
+                validate_publications(previous, dict(revisions=rows[:kept], registry=rows[:kept]))
+        validate_publications(previous, dict(revisions=rows[:-1], registry=rows[:-1]))
+        validate_publications(dict(revisions=rows, registry=rows[:1]), dict(revisions=rows, registry=[]))
+
     def test_failure_probe_uses_a_replayed_catalog_page_without_standalone_zips(self):
         from sync import SITES
         from verify import failure_probe_url

@@ -1,6 +1,6 @@
 "use strict";
 window.SedoValidator=(()=>{
-const ASSETS=[{"key":"engine","path":"vendor/xmllint/xmllint-browser.mjs","sha":"5f5a2c17be12d398c640f3b494e7ded8cd8c9b0175d2c65e6f197a28b77fd01e"},{"key":"wasm","path":"vendor/xmllint/xmllint.wasm","sha":"4e3cc21a67e8dd40ccb59822e4193fd1923b4cda08b40fe8ff8973de5eed9515"},{"key":"source","path":"validation-source.js","sha":"8dd55adf9c99549cd15c2b8b0a6eb635eee0a25bcab51ab297702df00590fb55"},{"key":"messages","path":"validation-messages.js","sha":"2f6948e64c1d06d39adee43f3572c44ca986676f935784869d090c8eed6af54a"},{"key":"core","path":"validation-core.js","sha":"e18f271bc87214a3500c4d8e4cb87b3cfcd8cf7f5c2ba90bfc1c60b545420a60"},{"key":"paths","path":"validation-paths.js","sha":"6aac10e5cc32740a71d0a0850747d74162b5a193eee0dc1fe29c295e4d7a8262"},{"key":"worker","path":"validation-worker.js","sha":"3d1081ebee3ceee1db682e5ad76c880b7153d78deb4851121f6b98997f9f82ca"},{"key":"frame","path":"validation-frame.js","sha":"6c976719de462fafd160f5e6d7b68d1064eee11a544981d3f1cb8df6e6cc67c0"}];
+const ASSETS=[{"key":"engine","path":"vendor/xmllint/xmllint-browser.mjs","sha":"5f5a2c17be12d398c640f3b494e7ded8cd8c9b0175d2c65e6f197a28b77fd01e"},{"key":"wasm","path":"vendor/xmllint/xmllint.wasm","sha":"4e3cc21a67e8dd40ccb59822e4193fd1923b4cda08b40fe8ff8973de5eed9515"},{"key":"source","path":"validation-source.js","sha":"8dd55adf9c99549cd15c2b8b0a6eb635eee0a25bcab51ab297702df00590fb55"},{"key":"messages","path":"validation-messages.js","sha":"2f6948e64c1d06d39adee43f3572c44ca986676f935784869d090c8eed6af54a"},{"key":"core","path":"validation-core.js","sha":"2fd886a0582c77e879cf4a7c90af7df6b9de57981239418f0736ecbe51153bb4"},{"key":"paths","path":"validation-paths.js","sha":"1fc1bea10a893296963de6288e8dda1be90e86eccf5da4592466d0f01e683908"},{"key":"worker","path":"validation-worker.js","sha":"111e80588e823f562976c6f6add462fd25e595334e84e3170477413960a33015"},{"key":"frame","path":"validation-frame.js","sha":"9d4ceba7fb998059a6a02d6d6c81589d4d018bed3ff76ae00e08f5c12a91a6c7"}];
 let serial=0,active=null;
 const encoder=new TextEncoder(),hex=bytes=>Array.from(new Uint8Array(bytes),x=>x.toString(16).padStart(2,'0')).join('');
 const digest=async bytes=>hex(await crypto.subtle.digest('SHA-256',bytes));
@@ -31,10 +31,29 @@ function dispose(){serial++;if(active){active.abort.abort();active.panel.remove(
 async function mount(row,container,onField){
  dispose();const token=serial,abort=new AbortController(),panel=document.createElement('section');panel.className='local-validator';panel.setAttribute('aria-label','Локальная проверка XML');
  const heading=document.createElement('h2');heading.textContent='Локальная проверка XML · '+row.number;
- const info=document.createElement('p');info.textContent=(row.environment==='prod'?'Продуктивный':'Тестовый')+' · документ '+(row.document_version||'без версии')+' · '+(row.label_date||'без даты')+' · редакция '+row.revision_id.slice(0,8);
+ const info=document.createElement('p'),grouped=row.edition_sources?.length>1;
+ const edition=(row.document_version||'без версии')+' · '+(row.label_date||'без даты');
+ info.textContent=(row.environment==='prod'?'Продуктивный':'Тестовый')+(grouped?' · общая схема':' · документ '+edition)+' · редакция '+row.revision_id.slice(0,8);
+ panel.append(heading,info);
+ if(grouped){
+  if(row.display_revision_id&&row.display_revision_id!==row.revision_id){
+   const selected=document.createElement('p');selected.textContent='Выбранный документ '+edition;panel.append(selected);
+  }
+  const details=document.createElement('details'),summary=document.createElement('summary'),list=document.createElement('ul');
+  summary.textContent='Источники схемы · '+row.edition_sources.length;
+  for(const source of row.edition_sources){
+   const item=document.createElement('li'),url=source.document_download||source.document_url;
+   const label=document.createElement(url?'a':'span');label.textContent='Версия '+(source.document_version||'не указана')+' · '+(source.label_date||'без даты');
+   if(url){label.href=url;if(source.document_download)label.download=source.document_filename||'';else{label.target='_blank';label.rel='noopener'}}
+   item.append(label);if(source.module)item.append(document.createTextNode(' · '+source.module));list.append(item);
+  }
+  const revision=document.createElement('p'),id=document.createElement('code');id.textContent=row.revision_id;
+  revision.append(document.createTextNode('ID редакции '),id);
+  details.append(summary,revision,list);panel.append(details);
+ }
  const close=document.createElement('button');close.type='button';close.textContent='Закрыть валидатор';close.onclick=dispose;
  const status=document.createElement('p');status.setAttribute('role','status');status.textContent='Подготавливаем программу и XSD. Файл пока не выбирается и никуда не передаётся.';
- panel.append(heading,info,close,status);container.append(panel);active={abort,panel,row,onField};
+ panel.append(close,status);container.append(panel);active={abort,panel,row,onField};
  try{
   if(!window.isSecureContext||!crypto?.subtle||typeof DecompressionStream!=='function'||typeof WebAssembly!=='object')throw Error('Нужен современный браузер с WebAssembly и DecompressionStream, открытый по HTTPS или localhost. Можно использовать Python-валидатор из ZIP.');
   if(!/^[a-f0-9]{64}$/.test(row.revision_id)||row.validation_download!=='schemas/'+row.revision_id+'.validation.json.gz'||!/^[a-f0-9]{64}$/.test(row.validation_sha256||''))throw Error('Для этой редакции нет комплекта браузерной проверки.');

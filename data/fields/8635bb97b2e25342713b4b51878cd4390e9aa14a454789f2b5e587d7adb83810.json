@@ -34,7 +34,20 @@
         "fired",
         "agreementInsuredPerson",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insurerInfo",
+          "insuredInfo",
+          "periodInfo",
+          "fired",
+          "agreementInsuredPerson",
+          "*"
+        ]
+      }
     },
     {
       "name": "insurerInfo",
@@ -58,7 +71,15 @@
       "contentModel": [
         "sequence",
         "regNumSFR"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNumSFR"
+        ]
+      }
     },
     {
       "name": "regNumSFR",
@@ -114,7 +135,16 @@
         "sequence",
         "snils",
         "birthDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "birthDate"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -190,7 +220,16 @@
         "sequence",
         "twoPrevYears",
         "additionalYears"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "twoPrevYears",
+          "additionalYears"
+        ]
+      }
     },
     {
       "name": "twoPrevYears",
@@ -214,7 +253,15 @@
       "contentModel": [
         "sequence",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year"
+        ]
+      }
     },
     {
       "name": "year",
@@ -268,7 +315,15 @@
       "contentModel": [
         "sequence",
         "year"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year"
+        ]
+      }
     },
     {
       "name": "year",
@@ -325,7 +380,15 @@
       "contentModel": [
         "sequence",
         "firstElnStartDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstElnStartDate"
+        ]
+      }
     },
     {
       "name": "firstElnStartDate",
@@ -387,11 +450,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:proactive:salary:request:v3.0",
+      "ns": "",
       "file": "InsuredPersonSalaryRequest.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "@specVersion",

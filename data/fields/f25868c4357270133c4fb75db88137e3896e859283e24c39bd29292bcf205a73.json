@@ -33,7 +33,19 @@
         "date",
         "insurer",
         "statusDocument"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "responseOn",
+          "idMessage",
+          "date",
+          "insurer",
+          "statusDocument"
+        ]
+      }
     },
     {
       "name": "responseOn",
@@ -131,7 +143,16 @@
         "choice",
         "insurerName",
         "FIO"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "insurerName",
+          "FIO"
+        ]
+      }
     },
     {
       "name": "insurerName",
@@ -209,7 +230,19 @@
         "count",
         "status",
         "reason"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "idDocumentsGroup",
+          "typeDocument",
+          "count",
+          "status",
+          "reason"
+        ]
+      }
     },
     {
       "name": "idDocumentsGroup",
@@ -339,7 +372,16 @@
         "sequence",
         "codeError",
         "description"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "codeError",
+          "description"
+        ]
+      }
     },
     {
       "name": "codeError",

@@ -40,7 +40,22 @@
         "mobilDaysAmount",
         "salaryInfo",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "elnInfo",
+          "insurerInfo",
+          "insuredInfo",
+          "insuredWorksSeveralInsurers",
+          "paymentMethod",
+          "mobilDaysAmount",
+          "salaryInfo",
+          "*"
+        ]
+      }
     },
     {
       "name": "elnInfo",
@@ -66,7 +81,16 @@
         "sequence",
         "lnNumber",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber",
+          "*"
+        ]
+      }
     },
     {
       "name": "lnNumber",
@@ -112,11 +136,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
+      "ns": "",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "insurerInfo",
@@ -142,7 +167,16 @@
         "sequence",
         "regNumSFR",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNumSFR",
+          "*"
+        ]
+      }
     },
     {
       "name": "regNumSFR",
@@ -188,11 +222,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
+      "ns": "",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "insuredInfo",
@@ -222,7 +257,18 @@
         "fullName",
         "birthDate",
         "*"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "birthDate",
+          "*"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -297,7 +343,41 @@
           "middleName",
           "noMiddleName"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "lastName",
+              "noLastName"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "firstName",
+              "noFirstName"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "middleName",
+              "noMiddleName"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "lastName",
@@ -501,11 +581,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
+      "ns": "",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "insuredWorksSeveralInsurers",
@@ -633,7 +714,15 @@
       "contentModel": [
         "sequence",
         "yearSum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "yearSum"
+        ]
+      }
     },
     {
       "name": "yearSum",
@@ -663,7 +752,17 @@
         "year",
         "salaryByCurrentInsurer",
         "salaryByAllInsurers"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year",
+          "salaryByCurrentInsurer",
+          "salaryByAllInsurers"
+        ]
+      }
     },
     {
       "name": "year",
@@ -724,7 +823,17 @@
         "sumOPS",
         "sumGPH",
         "sumOPS-GPH"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "sumOPS",
+          "sumGPH",
+          "sumOPS-GPH"
+        ]
+      }
     },
     {
       "name": "sumOPS",
@@ -842,7 +951,17 @@
         "sumOPS",
         "sumGPH",
         "sumOPS-GPH"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "sumOPS",
+          "sumGPH",
+          "sumOPS-GPH"
+        ]
+      }
     },
     {
       "name": "sumOPS",
@@ -948,11 +1067,12 @@
       "facets": [],
       "values": [],
       "children": [],
-      "ns": "urn:ru:ecp:integration:proactive:salary:proactive:v3.0",
+      "ns": "",
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     },
     {
       "name": "@specVersion",
@@ -1022,7 +1142,8 @@
       "file": "InsuredPersonSalaryProactive.xsd",
       "flags": {
         "processContents": "skip"
-      }
+      },
+      "wildcardNamespace": "##any"
     }
   ]
 }

@@ -27,7 +27,16 @@
         "choice",
         "recipientList",
         "orgListType"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "recipientList",
+          "orgListType"
+        ]
+      }
     },
     {
       "name": "recipientList",
@@ -53,7 +62,15 @@
       "contentModel": [
         "sequence",
         "regNum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNum"
+        ]
+      }
     },
     {
       "name": "regNum",
@@ -105,7 +122,15 @@
       "contentModel": [
         "sequence",
         "org"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "org"
+        ]
+      }
     },
     {
       "name": "org",
@@ -156,7 +181,53 @@
           "inn",
           "regnum"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "inn",
+              "kpp"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "ogrn",
+              "inn",
+              "kpp"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "ogrnip",
+              "inn",
+              "snils"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "snils",
+              "inn",
+              "regnum"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "inn",

@@ -8,12 +8,14 @@ if(catalog.checked_at){
  const dateText=new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',dateStyle:'short',timeStyle:'short'}).format(new Date(catalog.checked_at));
  document.querySelector('header small').textContent='Каталог проверен '+dateText+' МСК';
 }
-const messages=new Map();
-for(const r of [...catalog.revisions,...catalog.registry]){
+const messages=new Map(),documentSourceRows=new Set(catalog.document_sources||[]);
+for(const r of [...catalog.revisions,...catalog.registry,...documentSourceRows]){
  if(r.revision_id&&r.display_revision_id&&r.display_revision_id!==r.revision_id)continue;
- if(!messages.has(r.number))messages.set(r.number,{number:r.number,titles:new Set(),modules:new Set(),rows:[],revisions:[]});
+ if(!messages.has(r.number))messages.set(r.number,{number:r.number,titles:new Set(),modules:new Set(),rows:[],revisions:[],documents:[]});
  const m=messages.get(r.number);m.titles.add(r.title);if(r.module)m.modules.add(r.module);
- if(r.revision_id)m.revisions.push(r);else m.rows.push(r);
+ if(r.revision_id)m.revisions.push(r);
+ else if(documentSourceRows.has(r))m.documents.push(r);
+ else m.rows.push(r);
 }
 const route=(number,env,rev,field)=>new URLSearchParams(Object.fromEntries(Object.entries({message:number,env,rev,field}).filter(([,v])=>v))).toString();
 const go=(number,env,rev,field)=>{location.hash=route(number,env,rev,field)};
@@ -24,7 +26,7 @@ function appendSchemaOrigin(card,r){
  if(!r.schema_path)return;
  const file=r.schema_path.split("/").pop(), line=node("p","meta schema-origin","Первоисточник XSD · ");
  const origin=r.archive_url?.split("#")[0], service=r.schema_source_url;
- const filename=url=>decodeURIComponent(new URL(url).pathname.split("/").pop());
+ const filename=url=>window.SedoReviewJournal.sourceFilename(url,url);
  const step=()=>line.append(document.createTextNode(" → "));
  if(r.schema_publication_page){
   line.append(external("Страница СФР ("+new URL(r.schema_publication_page).host+new URL(r.schema_publication_page).pathname+")",r.schema_publication_page));
@@ -34,7 +36,7 @@ function appendSchemaOrigin(card,r){
   if(service){line.append(external("WSDL шлюза СФР",service));step()}
   const digest=r.dependencies?.find(([name])=>name===file)?.[1];
   const original=r.schema_sources?.find(s=>digest&&s.kind==="xsd"&&s.sha256===digest);
-  if(original)line.append(external(file,original.url));
+  if(r.schema_original_url||original)line.append(external(file,r.schema_original_url||original.url));
   else line.append(document.createTextNode(file));
  }else{
   if(origin?.startsWith("manual:")){
@@ -102,29 +104,102 @@ function appendSchemaReview(container,r){
  };
 }
 function schemaExportControl(r){
- if(r.schema_download){const a=node("a","source schema-download","Скачать XSD (ZIP)");a.href=r.schema_download+(r.schema_bundle_sha256?"?v="+r.schema_bundle_sha256.slice(0,16):"");a.download=r.schema_filename;a.title="XSD сообщения и зависимости для локальной валидации XML";return a}
+ if(r.schema_download){const a=node("a","source schema-download","Скачать XSD (ZIP)");a.href=r.schema_download+(r.schema_bundle_sha256?"?v="+r.schema_bundle_sha256.slice(0,16):"");a.download=r.schema_filename;a.title="XSD сообщения и зависимости для локальной валидации XML";if(r.validation_error){const box=node("span");box.append(a,node("span","meta validation-unavailable",r.validation_error));return box}return a}
  return r.schema_export_error?node("span","meta schema-export-unavailable",r.schema_export_error):null;
 }
-function documentName(r){return r.document_url?decodeURIComponent(new URL(r.document_url).pathname.split("/").pop()):(r.manual_source?.label||r.document_filename||"Файл владельца")}
+function documentName(r){
+ return window.SedoReviewJournal.documentName(r);
+}
 function editionSources(r){return r.edition_sources||[r]}
+function catalogRows(m,env){return [...m.rows,...m.revisions,...m.documents].filter(r=>!env||r.environment===env)}
+function appendDocumentHistory(container,source){
+ container.append(node('p','meta','Дата из подписи ссылки · '+date(source.label_date)));
+ const revision=catalog.revisions.find(row=>row.revision_id===source.revision_id);
+ const changes=source.document_history||catalog.document_histories?.[source.document_sha256]
+  ||revision?.document_history||catalog.document_histories?.[revision?.document_sha256]||[];
+ if(changes.length){
+  const history=node('section','document-change-history');
+  history.append(node('h3','','История изменений документа'));
+  const url=source.document_url||source.document_download;
+  if(url)history.append(external('Источник истории изменений — DOCX',url));
+  for(const change of changes){
+   const entry=node('div','document-version-entry');
+   entry.append(node('p','meta','Версия документа · '+change.version),node('p','meta','Дата изменения · '+change.date),node('p','',change.description));
+   history.append(entry);
+  }
+  container.append(history);
+ }
+ const tables=source.version_tables||revision?.version_tables||[];
+ if(!tables.length)return;
+ const history=node('section','document-version-history');
+ history.append(node('h3','','История версий из DOCX'));
+ const url=source.document_url||source.document_download;
+ if(url)history.append(external('Источник таблицы версий — DOCX',url));
+ for(const table of tables){
+  const [headers,...rows]=table;
+  if(!headers)continue;
+  for(const row of rows){
+   const entry=node('div','document-version-entry');
+   for(const [index,value] of row.entries())entry.append(node('p','meta',(headers[index]||'Столбец '+(index+1))+' · '+value));
+   const versionIndex=headers.findIndex(label=>/верси[ия].*спецификац/i.test(label));
+   const publicationIndex=headers.findIndex(label=>/дат[аы].*публикац/i.test(label));
+   const publication=row[publicationIndex];
+   if(versionIndex>=0&&row[versionIndex]===source.document_version&&publication&&source.label_date&&date(publication)!==date(source.label_date))
+    entry.append(node('p','meta version-date-warning','Дата из подписи ссылки не совпадает с датой публикации спецификации в таблице DOCX.'));
+   history.append(entry);
+  }
+ }
+ container.append(history);
+}
 function appendEditionSources(container,r){
  const list=node("div","edition-sources");
  for(const source of editionSources(r)){
   const item=node("div","edition-source");
-  item.append(node("p","meta","Формат описан в спецификации · версия "+(source.document_version||"не указана")+" · "+date(source.label_date)));
+  item.append(node("p","meta","Формат описан в спецификации · версия "+(source.document_version||"не указана")));
+  appendDocumentHistory(item,source);
+  if(source.module)item.append(node("p","meta",source.module));
   item.append(source.document_url?external(documentName(source),source.document_url):node("p","meta",documentName(source)));
+  if(!source.document_url&&source.manual_source?.label&&source.manual_source.label!==documentName(source))
+   item.append(node("p","meta","Источник загрузки · "+source.manual_source.label));
   if(source.document_download)item.append(node("br"),documentDownload(source));
   if(source.listed_now===false)item.append(node("p","meta","Источник сохранён в истории"));
   const revision=catalog.revisions.find(row=>row.revision_id===source.revision_id)||r;
-  appendSchemaOrigin(item,revision);
+  appendSchemaOrigin(item,source);
   appendSchemaReview(item,revision);
   list.append(item);
  }
  container.append(list);return list;
 }
+function appendRegistrySources(panel,rows){
+ const descriptions=new Map();
+ for(const row of rows){
+  const key=JSON.stringify([row.module,row.description||row.title,row.source_type,row.source_type==='module'?[row.document_version,row.label_date]:null,row.listed_now!==false]);
+  if(!descriptions.has(key))descriptions.set(key,[]);
+  descriptions.get(key).push(row);
+ }
+ for(const records of descriptions.values()){
+  const r=records[0],entry=node('section','registry-source');
+  entry.append(node('p','meta',r.module),node('p','',r.description||r.title));
+  if(r.source_type==='module')entry.append(node('p','meta','Отдельная спецификация модуля · версия '+(r.document_version||'не указана')+' · '+date(r.label_date)));
+  if(r.listed_now===false)entry.append(node('p','meta','Описание сохранено в истории'));
+  const sources=new Set();
+  for(const source of records){
+   const url=source.source||source.document_url;
+   const key=JSON.stringify([url,source.document_download]);if(sources.has(key))continue;sources.add(key);
+   if(source.document_download)entry.append(documentDownload(source),document.createTextNode(' · '));
+   if(url)entry.append(external(source.source_type==='module'?'Спецификация модуля СФР ↗':'Открыть официальный перечень ↗',url));
+  }
+  panel.append(entry);
+ }
+}
 function revisionOrigin(r){return r.document_url?external("Спецификация СФР ↗",r.document_url):node("span","source","Ручная загрузка · "+(r.manual_source?.label||"Файл владельца"))}
 function date(s){return s?s.replace(/\.(\d{2})$/,".20$1"):"Дата не указана"}
-function title(m,env){return m.revisions.find(r=>!env||r.environment===env)?.title||m.rows.find(r=>!env||r.environment===env)?.title||[...m.titles][0]}
+function title(m,env){
+ const revisions=m.revisions.filter(r=>!env||r.environment===env).sort(newestEditionFirst),rows=[...m.rows,...m.documents].filter(r=>!env||r.environment===env);
+ const current=revisions.find(r=>r.listed_now!==false);
+ const activeSources=current?.edition_sources?.length>1?current.edition_sources.filter(s=>s.listed_now!==false&&s.title).sort(newestEditionFirst):[];
+ return activeSources[0]?.title||current?.title||rows.find(r=>r.listed_now!==false)?.title||revisions[0]?.title||rows[0]?.title||[...m.titles][0];
+}
 function label(r){return editionSources(r).length>1?envNames[r.environment]+" · схема · источников: "+editionSources(r).length:envNames[r.environment]+" · документ "+(r.document_version||"без версии")+" · "+date(r.label_date)+(r.source_type==="manual"?" · Ручная загрузка":"")}
 function replacementNotice(m,env,compact=false){
  const options=window.SedoTransitions?.replacements(m.number,catalog,env)||[];if(!options.length)return null;
@@ -149,9 +224,9 @@ function replacementNotice(m,env,compact=false){
 function renderMessages(){
  const terms=normalize($("message-query").value.trim()).split(/\s+/).filter(Boolean),env=$("catalog-env").value;
  const candidates=[...messages.values()].filter(m=>{
-  const rows=[...m.rows,...m.revisions].filter(r=>!env||r.environment===env);
+  const rows=catalogRows(m,env);
   if(!rows.length)return false;
-  const text=normalize([m.number,...rows.flatMap(r=>[r.title,r.module,r.description])].join(" "));
+  const text=normalize([m.number,...rows.flatMap(r=>[r.title,r.module,r.description,...editionSources(r).flatMap(s=>[s.title,s.module,(s.document_url||s.document_filename||s.manual_source?.filename)?documentName(s):""])])].join(" "));
   return terms.every(t=>text.includes(t));
  });
  const onlyCurrent=$('catalog-current-only').checked;
@@ -161,10 +236,12 @@ function renderMessages(){
   const card=node("article","card message-card");card.dataset.number=m.number;
   const a=anchor("",route(m.number,env),"message-main");
   a.append(node("span","number",m.number),node("strong","",title(m,env)));
-  if(m.modules.size)a.append(node("span","meta",[...m.modules].join(" · ")));
+  const modules=[...new Set(catalogRows(m,env).flatMap(r=>[r.module,...editionSources(r).map(s=>s.module)]).filter(Boolean))];
+  if(modules.length)a.append(node("span","meta",modules.join(" · ")));
   const badges=node("div","badges");
-  for(const e of ["prod","test"])if([...m.rows,...m.revisions].some(r=>r.environment===e))badges.append(node("span","badge "+e,envNames[e]));
-  a.append(badges,node("span","meta",m.revisions.some(r=>r.ready)?"Дерево тегов · "+m.revisions.filter(r=>r.ready).length+" редакции":"Документация"));
+  for(const e of ["prod","test"])if(catalogRows(m,e).length)badges.append(node("span","badge "+e,envNames[e]));
+  const readyCount=m.revisions.filter(r=>r.ready&&(!env||r.environment===env)).length;
+  a.append(badges,node("span","meta",readyCount?"Редакций с деревом · "+readyCount:"Документация"));
   card.append(a);const replacement=replacementNotice(m,env,true);if(replacement)card.append(replacement);$("messages").append(card)
  }
  if(!matches.length)$("messages").append(node("p","empty",onlyCurrent&&candidates.length?"Совпадений нет. Снимите флажок «Только актуальные», чтобы показать прежние типы сообщений.":"Совпадений нет. Попробуйте часть номера или названия."));
@@ -179,7 +256,13 @@ function renderVersions(m,env){
  const grid=node("div","versions-grid");section.append(grid);
  for(const e of ["prod","test"]){
   const panel=node("div","version-panel");panel.append(node("h2","",envNames[e]+" контур"));grid.append(panel);
-  const revisions=m.revisions.filter(r=>r.environment===e).sort((a,b)=>date(b.label_date).split(".").reverse().join("").localeCompare(date(a.label_date).split(".").reverse().join("")));
+  const revisions=m.revisions.filter(r=>r.environment===e).sort(newestEditionFirst);
+  const sourceKey=row=>JSON.stringify([row.document_sha256,row.document_url||row.source,row.listed_now!==false]);
+  const represented=new Set(revisions.flatMap(r=>editionSources(r).map(sourceKey)));
+  const documents=m.documents.filter(r=>r.environment===e&&!represented.has(sourceKey(r)));
+  const documented=new Set(documents.map(sourceKey));
+  const rows=m.rows.filter(r=>r.environment===e&&!documented.has(sourceKey(r)));
+  appendRegistrySources(panel,rows);
   if(revisions.length){
    for(const r of revisions){
     const card=node("div","card");card.append(node("strong","",editionSources(r).length>1?"Редакция схемы · источников: "+editionSources(r).length:"Версия документа "+(r.document_version||"не указана")));
@@ -192,17 +275,12 @@ function renderVersions(m,env){
     panel.append(card)
    }
   }else{
-   const rows=m.rows.filter(r=>r.environment===e);
-   panel.append(node("p","",rows.length?"Доступно описание в перечне сообщений. Дерево схемы пока не сопоставлено.":"В собранных источниках этого контура сообщение не найдено."));
-   for(const r of rows){
-    panel.append(node("p","meta",r.module),node("p","",r.description||r.title));
-    if(r.source_type==="module"){
-     panel.append(node("p","meta","Отдельная спецификация модуля · версия "+(r.document_version||"не указана")+" · "+date(r.label_date)));
-     if(!r.listed_now)panel.append(node("p","meta","Спецификация сохранена в истории"));
-     if(r.document_download)panel.append(documentDownload(r),document.createTextNode(" · "));
-    }
-    panel.append(external(r.source_type==="module"?"Спецификация модуля СФР ↗":"Открыть официальный перечень ↗",r.source));
-   }
+   if(rows.length||!documents.length)panel.append(node("p","",rows.length?"Доступно описание в перечне сообщений. Дерево схемы пока не сопоставлено.":"В собранных источниках этого контура сообщение не найдено."));
+  }
+  for(const source of documents){
+   const card=node("div","card document-source");
+   card.append(node("strong","","Спецификация без дерева XSD"),node("p","",source.schema_reason));
+   appendEditionSources(card,source);panel.append(card);
   }
  }
 }
@@ -230,14 +308,14 @@ function renderRoute(){
  }
  if(p.has("import")){$("import-help").hidden=false;document.title="Ручная загрузка · СЭДО";return}
  if(p.has("updates")){$("updates").hidden=false;$("crumbs").append(node("span","","/"),node("span","","Журнал обновлений"));document.title="Журнал обновлений · СЭДО";renderUpdates(p);return}
- if(!number){$("catalog").hidden=false;renderMessages();return}
+ if(!number){document.title="Справочник СЭДО";$("catalog").hidden=false;renderMessages();return}
  const m=messages.get(number);
- if(!m){$("error").hidden=false;$("error").replaceChildren(node("h1","","Сообщение не найдено"),node("p","","Выберите сообщение из каталога."));return}
+ if(!m){document.title="Сообщение не найдено · СЭДО";$("error").hidden=false;$("error").replaceChildren(node("h1","","Сообщение не найдено"),node("p","","Выберите сообщение из каталога."));return}
  $("crumbs").append(node("span","","/"),anchor(number,route(number,env)));
  if(p.has("compare")){$("comparison").hidden=false;$("crumbs").append(node("span","","/"),node("span","","Сравнение"));document.title="Сравнение СЭДО "+number;renderComparison(m,p);return}
- if(!rev){$("versions").hidden=false;renderVersions(m,env);return}
+ if(!rev){document.title="Сообщение "+number+" · СЭДО";$("versions").hidden=false;renderVersions(m,env);return}
  const r=catalog.revisions.find(r=>r.number===number&&r.revision_id===rev&&r.environment===env);
- if(!r||!r.ready){$("error").hidden=false;$("error").replaceChildren(node("h1","","Редакция недоступна"),anchor("Посмотреть доступные редакции",route(number,env)));return}
+ if(!r||!r.ready){document.title="Редакция недоступна · СЭДО";$("error").hidden=false;$("error").replaceChildren(node("h1","","Редакция недоступна"),anchor("Посмотреть доступные редакции",route(number,env)));return}
  $("viewer").hidden=false;$("crumbs").append(node("span","","/"),node("span","",label(r)));
  const warning=$("viewer-replacement");if(warning){warning.replaceChildren();const replacement=replacementNotice(m,env);if(replacement)warning.append(replacement);appendRelatedComparisons(warning,m,env)}
  $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
@@ -253,7 +331,7 @@ function renderRoute(){
  let sourceBox=$("viewer-sources");if(!sourceBox){sourceBox=node("div","viewer-sources");sourceBox.id="viewer-sources";$("frame").before(sourceBox)}
  sourceBox.replaceChildren();sourceBox.hidden=false;
   if(grouped){sourceBox.append(node("h2","","Источники этой схемы"));appendEditionSources(sourceBox,r)}
-  else{appendSchemaOrigin(sourceBox,r);appendSchemaReview(sourceBox,r)}
+  else{appendDocumentHistory(sourceBox,r);appendSchemaOrigin(sourceBox,r);appendSchemaReview(sourceBox,r)}
  document.getElementById("compare-from-viewer")?.remove();
  const pair=comparisonDefaults(m),other=m.revisions.find(x=>x.ready&&x.revision_id!==(r.display_revision_id||rev));
  if(other){const link=anchor("Сравнить с другой редакцией",comparisonRoute(number,rev,pair.right===(r.display_revision_id||rev)?other.revision_id:pair.right),"source");link.id="compare-from-viewer";$("doc-source").after(link)}
@@ -269,10 +347,11 @@ function renderRoute(){
 }
 window.addEventListener("message",e=>{
  const p=new URLSearchParams(location.hash.slice(1));
- if(e.source!==$("frame").contentWindow||e.data?.type!=="sedo-field"||e.data.revision!==p.get("rev")||typeof e.data.path!=="string")return;
- p.set("field",e.data.path);history.replaceState(null,"","#"+p);
+ if(e.source!==$("frame").contentWindow||e.data?.type!=="sedo-field"||e.data.revision!==p.get("rev")||(e.data.path!==null&&typeof e.data.path!=="string"))return;
+ if(e.data.path===null)p.delete("field");else p.set("field",e.data.path);
+ history.replaceState(null,"","#"+p);
  // Keep parent routing in sync without reloading the embedded field viewer.
- $("frame").setAttribute("data-field",e.data.path);
+ if(e.data.path===null)$("frame").removeAttribute("data-field");else $("frame").setAttribute("data-field",e.data.path);
 });
 $("message-query").oninput=renderMessages;$("catalog-env").onchange=renderMessages;$("catalog-current-only").checked=true;$("catalog-current-only").onchange=renderMessages;
 window.addEventListener("hashchange",renderRoute);

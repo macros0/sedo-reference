@@ -32,7 +32,17 @@
         "primarySttmnt",
         "recalcSttmnt",
         "correctSttmnt"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "primarySttmnt",
+          "recalcSttmnt",
+          "correctSttmnt"
+        ]
+      }
     },
     {
       "name": "primarySttmnt",
@@ -71,7 +81,28 @@
           "workerListDisability"
         ],
         "note"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "conformRules",
+          "orgInfo",
+          "paymentInfo",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "workerList",
+              "workerListOPK",
+              "workerListDisability"
+            ]
+          },
+          "note"
+        ]
+      }
     },
     {
       "name": "conformRules",
@@ -119,7 +150,16 @@
         "choice",
         "legalEntity",
         "ip"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "legalEntity",
+          "ip"
+        ]
+      }
     },
     {
       "name": "legalEntity",
@@ -165,7 +205,36 @@
           "publicOrganizationDisability",
           "founderFizlicoDocument"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "nameOrg",
+          "inn",
+          "kpp",
+          "ogrn",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "regNum",
+              "regNumSFR"
+            ]
+          },
+          {
+            "kind": "choice",
+            "min": "0",
+            "max": "1",
+            "children": [
+              "publicOrganizationDisability",
+              "founderFizlicoDocument"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "nameOrg",
@@ -221,7 +290,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "kpp",
@@ -359,7 +434,18 @@
         "inn",
         "kpp",
         "ogrn"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "name",
+          "inn",
+          "kpp",
+          "ogrn"
+        ]
+      }
     },
     {
       "name": "name",
@@ -417,7 +503,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "kpp",
@@ -511,7 +603,22 @@
         "number",
         "certificateDate",
         "soglasie"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "lastName",
+          "firstName",
+          "middleName",
+          "seria",
+          "number",
+          "certificateDate",
+          "soglasie"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -764,7 +871,36 @@
           "sequence",
           "founderDisabilityDocument"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lastName",
+          "firstName",
+          "middleName",
+          "inn",
+          "ogrn",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "regNum",
+              "regNumSFR"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "0",
+            "max": "1",
+            "children": [
+              "founderDisabilityDocument"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "lastName",
@@ -884,7 +1020,13 @@
       "flags": {},
       "typeNs": "http://www.fss.ru/integration/types/organization/v01",
       "typeFile": "Organization.xsd",
-      "baseNs": "http://www.w3.org/2001/XMLSchema"
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "\\d{10}",
+          "\\d{12}"
+        ]
+      ]
     },
     {
       "name": "ogrn",
@@ -996,7 +1138,18 @@
         "seria",
         "number",
         "certificateDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "seria",
+          "number",
+          "certificateDate"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -1130,7 +1283,16 @@
         "choice",
         "bankInfo",
         "cardMir"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "bankInfo",
+          "cardMir"
+        ]
+      }
     },
     {
       "name": "bankInfo",
@@ -1162,7 +1324,18 @@
         "bik",
         "corAccNum",
         "accountNum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "bankName",
+          "bik",
+          "corAccNum",
+          "accountNum"
+        ]
+      }
     },
     {
       "name": "bankName",
@@ -1314,7 +1487,15 @@
       "contentModel": [
         "sequence",
         "worker"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "worker"
+        ]
+      }
     },
     {
       "name": "worker",
@@ -1364,7 +1545,27 @@
         "orderNum",
         "contractDate",
         "beganWorking"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "rowNum",
+          "lastName",
+          "firstName",
+          "middleName",
+          "birthDate",
+          "gender",
+          "snils",
+          "insurenceSum",
+          "regionRate",
+          "orderDate",
+          "orderNum",
+          "contractDate",
+          "beganWorking"
+        ]
+      }
     },
     {
       "name": "rowNum",
@@ -1786,7 +1987,15 @@
       "contentModel": [
         "sequence",
         "worker"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "worker"
+        ]
+      }
     },
     {
       "name": "worker",
@@ -1853,7 +2062,47 @@
           "confirmation",
           "movingMoreThan50km"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "rowNum",
+              "lastName",
+              "firstName",
+              "middleName",
+              "birthDate",
+              "gender",
+              "snils",
+              "insurenceSum",
+              "regionRate",
+              "orderDate",
+              "orderNum",
+              "contractDate",
+              "beganWorking"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "SZNname",
+              "SZNbegin",
+              "SZNend",
+              "profession",
+              "confirmation",
+              "movingMoreThan50km"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "rowNum",
@@ -2413,7 +2662,15 @@
       "contentModel": [
         "sequence",
         "worker"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "worker"
+        ]
+      }
     },
     {
       "name": "worker",
@@ -2470,7 +2727,42 @@
           "sequence",
           "certificateOfDisability"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "rowNum",
+              "lastName",
+              "firstName",
+              "middleName",
+              "birthDate",
+              "gender",
+              "snils",
+              "insurenceSum",
+              "regionRate",
+              "orderDate",
+              "orderNum",
+              "contractDate",
+              "beganWorking"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "certificateOfDisability"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "rowNum",
@@ -2896,7 +3188,17 @@
         "seria",
         "number",
         "certificateDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "seria",
+          "number",
+          "certificateDate"
+        ]
+      }
     },
     {
       "name": "seria",
@@ -3031,7 +3333,26 @@
           "workerListDisability"
         ],
         "note"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "sttmntNumber",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "workerList",
+              "workerListOPK",
+              "workerListDisability"
+            ]
+          },
+          "note"
+        ]
+      }
     },
     {
       "name": "sttmntNumber",
@@ -3075,7 +3396,15 @@
       "contentModel": [
         "sequence",
         "worker"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "worker"
+        ]
+      }
     },
     {
       "name": "worker",
@@ -3125,7 +3454,27 @@
         "orderNum",
         "contractDate",
         "beganWorking"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "rowNum",
+          "lastName",
+          "firstName",
+          "middleName",
+          "birthDate",
+          "gender",
+          "snils",
+          "insurenceSum",
+          "regionRate",
+          "orderDate",
+          "orderNum",
+          "contractDate",
+          "beganWorking"
+        ]
+      }
     },
     {
       "name": "rowNum",
@@ -3547,7 +3896,15 @@
       "contentModel": [
         "sequence",
         "worker"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "worker"
+        ]
+      }
     },
     {
       "name": "worker",
@@ -3614,7 +3971,47 @@
           "confirmation",
           "movingMoreThan50km"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "rowNum",
+              "lastName",
+              "firstName",
+              "middleName",
+              "birthDate",
+              "gender",
+              "snils",
+              "insurenceSum",
+              "regionRate",
+              "orderDate",
+              "orderNum",
+              "contractDate",
+              "beganWorking"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "SZNname",
+              "SZNbegin",
+              "SZNend",
+              "profession",
+              "confirmation",
+              "movingMoreThan50km"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "rowNum",
@@ -4174,7 +4571,15 @@
       "contentModel": [
         "sequence",
         "worker"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "worker"
+        ]
+      }
     },
     {
       "name": "worker",
@@ -4231,7 +4636,42 @@
           "sequence",
           "certificateOfDisability"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "rowNum",
+              "lastName",
+              "firstName",
+              "middleName",
+              "birthDate",
+              "gender",
+              "snils",
+              "insurenceSum",
+              "regionRate",
+              "orderDate",
+              "orderNum",
+              "contractDate",
+              "beganWorking"
+            ]
+          },
+          {
+            "kind": "sequence",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "certificateOfDisability"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "rowNum",
@@ -4657,7 +5097,17 @@
         "seria",
         "number",
         "certificateDate"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "seria",
+          "number",
+          "certificateDate"
+        ]
+      }
     },
     {
       "name": "seria",
@@ -4785,7 +5235,17 @@
         "sttmntNumber",
         "paymentInfo",
         "note"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "sttmntNumber",
+          "paymentInfo",
+          "note"
+        ]
+      }
     },
     {
       "name": "sttmntNumber",
@@ -4833,7 +5293,16 @@
         "choice",
         "bankInfo",
         "cardMir"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "choice",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "bankInfo",
+          "cardMir"
+        ]
+      }
     },
     {
       "name": "bankInfo",
@@ -4865,7 +5334,18 @@
         "bik",
         "corAccNum",
         "accountNum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "bankName",
+          "bik",
+          "corAccNum",
+          "accountNum"
+        ]
+      }
     },
     {
       "name": "bankName",

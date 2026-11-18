@@ -40,7 +40,23 @@
         "number",
         "attachment",
         "signature"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "dateStart",
+          "id",
+          "idMessage",
+          "regNum",
+          "regNumSFR",
+          "date",
+          "number",
+          "attachment",
+          "signature"
+        ]
+      }
     },
     {
       "name": "dateStart",
@@ -242,7 +258,22 @@
         "signatureEmpl",
         "signatureFund",
         "application"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name",
+          "signatureEmpl",
+          "signatureFund",
+          "application"
+        ]
+      }
     },
     {
       "name": "content",
@@ -436,7 +467,22 @@
         "name",
         "signatureEmpl",
         "signatureFund"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "description",
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name",
+          "signatureEmpl",
+          "signatureFund"
+        ]
+      }
     },
     {
       "name": "description",

@@ -32,7 +32,15 @@
       "contentModel": [
         "sequence",
         "row"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "row"
+        ]
+      }
     },
     {
       "name": "row",
@@ -104,7 +112,39 @@
         "holidDt",
         "holidDtEx",
         "holidDocNum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "notificationID",
+          "batchNo",
+          "docDt1",
+          "SNILS",
+          "surname",
+          "name",
+          "patronimic",
+          "employer",
+          "emplRegNo",
+          "regNumSFR",
+          "emplParentNo",
+          "emplKPP",
+          "emplINN",
+          "birthday",
+          "SNILSChild",
+          "patronimicChild",
+          "nameChild",
+          "surnameChild",
+          "birthdayChild",
+          "holidType",
+          "holidTypeInfo",
+          "holidNo",
+          "holidDt",
+          "holidDtEx",
+          "holidDocNum"
+        ]
+      }
     },
     {
       "name": "notificationID",
@@ -645,6 +685,28 @@
           "flags": {},
           "baseNs": "http://www.w3.org/2001/XMLSchema"
         }
+      ],
+      "unionValueTypes": [
+        [
+          "integer",
+          "collapse"
+        ],
+        [
+          "integer",
+          "collapse"
+        ],
+        [
+          "integer",
+          "collapse"
+        ],
+        [
+          "integer",
+          "collapse"
+        ],
+        [
+          "integer",
+          "collapse"
+        ]
       ]
     },
     {

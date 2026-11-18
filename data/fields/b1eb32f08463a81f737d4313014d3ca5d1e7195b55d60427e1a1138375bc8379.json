@@ -36,7 +36,32 @@
           ],
           "errorList"
         ]
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "status",
+          {
+            "kind": "choice",
+            "min": "0",
+            "max": "1",
+            "children": [
+              {
+                "kind": "sequence",
+                "min": "1",
+                "max": "1",
+                "children": [
+                  "insuredInfo",
+                  "periodInfo"
+                ]
+              },
+              "errorList"
+            ]
+          }
+        ]
+      }
     },
     {
       "name": "status",
@@ -92,7 +117,15 @@
       "contentModel": [
         "sequence",
         "snils"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils"
+        ]
+      }
     },
     {
       "name": "snils",
@@ -148,7 +181,16 @@
         "sequence",
         "twoPrevYears",
         "additionalYears"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "twoPrevYears",
+          "additionalYears"
+        ]
+      }
     },
     {
       "name": "twoPrevYears",
@@ -172,7 +214,15 @@
       "contentModel": [
         "sequence",
         "yearSum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "yearSum"
+        ]
+      }
     },
     {
       "name": "yearSum",
@@ -206,7 +256,19 @@
         "amountForAllInsurersGph",
         "amountForCurrentInsurer",
         "amountForCurrentInsurerGph"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year",
+          "amountForAllInsurers",
+          "amountForAllInsurersGph",
+          "amountForCurrentInsurer",
+          "amountForCurrentInsurerGph"
+        ]
+      }
     },
     {
       "name": "year",
@@ -380,7 +442,15 @@
       "contentModel": [
         "sequence",
         "yearSum"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "yearSum"
+        ]
+      }
     },
     {
       "name": "yearSum",
@@ -414,7 +484,19 @@
         "amountForAllInsurersGph",
         "amountForCurrentInsurer",
         "amountForCurrentInsurerGph"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "year",
+          "amountForAllInsurers",
+          "amountForAllInsurersGph",
+          "amountForCurrentInsurer",
+          "amountForCurrentInsurerGph"
+        ]
+      }
     },
     {
       "name": "year",
@@ -588,7 +670,15 @@
       "contentModel": [
         "sequence",
         "error"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "error"
+        ]
+      }
     },
     {
       "name": "error",
@@ -618,7 +708,17 @@
         "code",
         "message",
         "details"
-      ]
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "details"
+        ]
+      }
     },
     {
       "name": "code",

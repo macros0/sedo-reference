@@ -31,17 +31,18 @@ class PoliteFetch:
         self.max_requests = max_requests
         self.lock = threading.Lock()
 
-    def __call__(self, url, *args, **kwargs):
+    def __call__(self, url, *args, wsdl_seed=None, **kwargs):
         with self.lock:
-            return self._request(url)
+            return self._request(url, wsdl_seed)
 
-    def _request(self, url):
+    def _request(self, url, wsdl_seed):
         self.start_request()
         self.http_requests = 0
         print("FETCH " + url, flush=True)
         token = _active_fetch.set(self)
         try:
-            raw = self.fetch(url, timeout=REQUEST_POLICY["request_timeout_seconds"], attempts=1)
+            context = {"wsdl_seed": wsdl_seed} if wsdl_seed is not None else {}
+            raw = self.fetch(url, timeout=REQUEST_POLICY["request_timeout_seconds"], attempts=1, **context)
             print("OK " + str(len(raw)) + " bytes " + url, flush=True)
             return raw
         except Exception as error:

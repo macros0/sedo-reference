@@ -11,7 +11,46 @@ from collector_feed import import_feed, store_feed
 from tests import test_collector_feed as feed_tests
 
 
+def generation_value(base, folder):
+    return base / folder / ('index.html' if folder == 'site' else 'value')
+
+
+def mark_sites(root, stage):
+    for base in (root, stage):
+        (base/'site/catalog-data.js').write_text('window.SEDO_CATALOG={"revisions":[]};')
+        (base/'site/.nojekyll').touch()
+
+
 class ReviewRegressions(unittest.TestCase):
+    def test_promotion_cleanup_interruption_never_rolls_back_committed_generation(self):
+        for remaining in (('state', 'data', 'site'), ('data', 'site'), ('site',), ()):
+            with self.subTest(remaining=remaining), tempfile.TemporaryDirectory() as tmp:
+                root, stage = Path(tmp) / 'root', Path(tmp) / 'stage'
+                for base in (root, stage):
+                    for folder in ('state', 'data', 'site'):
+                        (base / folder).mkdir(parents=True)
+                        generation_value(base, folder).write_bytes(base.name.encode())
+                mark_sites(root, stage)
+                recovery = root / '.update-recovery'
+                rmtree = auto_update.shutil.rmtree
+                unlink = Path.unlink
+                def interrupt_cleanup(path, *args, **kwargs):
+                    if Path(path) == recovery/'previous/state/value':
+                        unlink(recovery / 'committed', missing_ok=True)
+                        unlink(recovery / 'preparing', missing_ok=True)
+                        for folder in ('state', 'data', 'site'):
+                            if folder not in remaining:
+                                rmtree(recovery / 'previous' / folder)
+                        raise SystemExit('interrupted cleanup')
+                    return unlink(path, *args, **kwargs)
+                with patch.object(Path, 'unlink', interrupt_cleanup):
+                    with self.assertRaises(SystemExit):
+                        auto_update.promote(root, stage)
+                auto_update.recover_promotion(root)
+                auto_update.recover_promotion(root)
+                for folder in ('state', 'data', 'site'):
+                    self.assertEqual(generation_value(root, folder).read_bytes(), b'stage')
+
     def test_shrinking_feed_keeps_confirmed_index(self):
         a, objects = feed_tests.FeedTests().capture()
         b, other_objects = feed_tests.FeedTests().capture(True)
@@ -58,7 +97,8 @@ class ReviewRegressions(unittest.TestCase):
                 for base, text in [(root, 'old'), (stage, 'new')]:
                     for folder in ['state', 'data', 'site']:
                         (base / folder).mkdir(parents=True)
-                        (base / folder / 'value').write_text(text)
+                        generation_value(base, folder).write_text(text)
+                mark_sites(root, stage)
                 replace = Path.replace
                 calls = 0
                 def interrupt(source, target):
@@ -72,10 +112,10 @@ class ReviewRegressions(unittest.TestCase):
                         auto_update.promote(root, stage)
                 auto_update.recover_promotion(root)
                 for folder in ['state', 'data', 'site']:
-                    self.assertEqual('old', (root / folder / 'value').read_text())
+                    self.assertEqual('old', generation_value(root, folder).read_text())
                 auto_update.promote(root, stage)
                 for folder in ['state', 'data', 'site']:
-                    self.assertEqual('new', (root / folder / 'value').read_text())
+                    self.assertEqual('new', generation_value(root, folder).read_text())
                 self.assertFalse((root / '.update-recovery').exists())
 
     def test_manual_import_recovers_complete_generation_after_interruption(self):
@@ -84,12 +124,13 @@ class ReviewRegressions(unittest.TestCase):
             root, stage = Path(temp) / "root", Path(temp) / "stage"
             files = ["state/objects/blob", "state/snapshots/snapshot", "state/history.json",
                      "state/observations.json", "state/inbox.json", "data/catalog.json",
-                     "data/fields/index.json", "site/catalog-data.js"]
+                     "data/fields/index.json", "site/index.html"]
             for directory in (root, stage):
                 for name in files:
                     path = directory / name
                     path.parent.mkdir(parents=True, exist_ok=True)
                     path.write_text(directory.name)
+            mark_sites(root, stage)
             replace = Path.replace
             def interrupt(source, target):
                 if target in (root / "data/catalog.json", root / "site"):
@@ -114,7 +155,8 @@ class ReviewRegressions(unittest.TestCase):
             for base in [root, stage]:
                 for folder in ['state', 'data', 'site']:
                     (base / folder).mkdir(parents=True)
-                    (base / folder / 'value').write_text(base.name)
+                    generation_value(base, folder).write_text(base.name)
+            mark_sites(root, stage)
             write_bytes = Path.write_bytes
             def disk_full(path, content):
                 if path.name == 'journal.tmp':
@@ -126,4 +168,4 @@ class ReviewRegressions(unittest.TestCase):
                     auto_update.promote(root, stage)
             auto_update.recover_promotion(root)
             for folder in ['state', 'data', 'site']:
-                self.assertEqual('root', (root / folder / 'value').read_text())
+                self.assertEqual('root', generation_value(root, folder).read_text())

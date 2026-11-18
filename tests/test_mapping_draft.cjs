@@ -5,6 +5,10 @@ assert.equal(typeof drafts?.create,"function","browser edits need an independent
 const f=path=>({path,doc:"Поле "+path}),before=["old","old/a","old/sub","old/sub/value"].map(f),after=["new","new/a","new/sub","new/sub/value","other","other/a","other/sub","other/sub/value","target"].map(f);
 const parent={beforePath:"old",afterPath:"new",comment:""},snapshot=JSON.stringify({before,after,parent});
 const create=entries=>drafts.create({before,after,savedPairs:[parent],entries:entries||[{...parent,origin:"confirmed",selected:true}],suggest:mapping.suggestDescendants});
+const deletedOnly=drafts.create({before,after,deleted:{before:["old/sub"],after:[]}});
+assert.equal(deletedOnly.summary().dirty,true,"standalone exclusions can be applied without a saved parent");
+const excludeBlock=mapping.suggestDescendants([parent],before,after,{before:["old/sub"],after:[]});
+assert.deepEqual(excludeBlock.suggestions.map(p=>p.beforePath),["old/a"],"deleting a whole block excludes automatic matches for its descendants");
 const draft=create();assert.equal(draft.rows.length,4);assert.equal(draft.summary().dirty,true,"proposed descendants are not saved yet");
 const unconfirmed=create([{...parent,origin:"workbook",selected:true,decision:"Не проверено"}]);
 assert.deepEqual(unconfirmed.summary().pairs,[parent],"unconfirmed Excel parents must not select their descendants");
@@ -12,6 +16,15 @@ assert.equal(unconfirmed.rows.length,1,"unconfirmed Excel parents propose only t
 unconfirmed.edit(unconfirmed.rows[0].id,parent);assert.equal(unconfirmed.rows.length,4,"explicit browser confirmation can propose descendants");
 draft.selectProposals(false);assert.deepEqual(draft.summary().pairs,[parent]);assert.equal(draft.summary().dirty,false);
 const parentId=draft.rows.find(r=>r.origin==="confirmed").id;
+{
+ const changed=create();
+ changed.edit(changed.rows[0].id,{...parent,comment:"Согласовано"});
+ const extra={beforePath:"old/a",afterPath:"target",comment:"Вручную"};
+ changed.add(extra);
+ changed.selectProposals(false);
+ assert.deepEqual(changed.summary().pairs,[{...parent,comment:"Согласовано"},extra],"bulk removal preserves edited and new explicit browser pairs");
+ assert.ok(changed.rows.some(row=>row.origin==="relative"&&!row.selected));
+}
 draft.edit(parentId,{beforePath:"old",afterPath:"other",comment:"Исправлено"});
 assert.ok(draft.rows.filter(r=>r.origin==="relative").every(r=>r.afterPath.startsWith("other/")));assert.equal(draft.summary().dirty,true);
 const manual=draft.add({beforePath:"old/a",afterPath:"target",comment:"Проверено"});assert.ok(!draft.rows.some(r=>r.origin==="relative"&&r.beforePath==="old/a"));

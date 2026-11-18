@@ -20,15 +20,45 @@ const shell=node('root');for(const id of ['catalog','versions','viewer','compari
 const revision=(id,environment)=>({revision_id:id,display_revision_id:id,number:'14',environment,title:'Найдены ошибки',ready:true,status:'matched',listed_now:true,document_version:'3.1',label_date:'12.12.2024',document_url:'https://example.test/service.docx',document_download:'documents/service.docx',document_filename:'service.docx',schema_download:'schemas/'+id+'.zip',schema_filename:'sedo-'+id+'-xsd.zip',validation_download:'schemas/'+id+'.validation.json.gz',validation_sha256:'2'.repeat(64)});
 const p=revision('prod-first','prod'),t=revision('test-first','test');
 for(const r of [p,t])r.edition_sources=['3.1','5.5','2.22'].map((v,i)=>({...r,document_version:v,document_url:'https://example.test/source-'+i+'.docx',document_download:'documents/source-'+i+'.docx'}));
+p.edition_sources[1].module='Реестр страхователей';p.edition_sources[1].document_url='https://example.test/Пр_5_РУСТ.docx';
 const alias={...p,revision_id:'prod-old-link',document_version:'5.5',schema_download:'schemas/prod-old-link.zip',schema_filename:'sedo-prod-old-link-xsd.zip',schema_bundle_sha256:'1'.repeat(64),viewer_sha256:'a'.repeat(64)},testAlias={...t,revision_id:'test-old-link',schema_download:'schemas/test-old-link.zip',schema_filename:'sedo-test-old-link-xsd.zip'},catalog={registry:[],revisions:[p,t,alias,testAlias],updates:[{revision_id:p.revision_id,previous_revision_id:null,initial_import:true},{revision_id:t.revision_id,previous_revision_id:null,initial_import:true}]};
 catalog.message_transitions=JSON.parse(fs.readFileSync(path.join(root,'data/message-transitions.json'),'utf8'));
 for(const [number,envs] of [['101',['prod','test']],['10110',['prod','test']],['86',['prod']],['105',['prod']],['10510',['test']],['125',['prod']]])for(const environment of envs)catalog.registry.push({number,environment,title:'Тестовое сообщение '+number,module:'Модуль',source:'https://example.test/types'});
 catalog.schema_updates=catalog.updates;catalog.updates=[...catalog.updates,{revision_id:alias.revision_id,previous_revision_id:p.revision_id},{revision_id:testAlias.revision_id,previous_revision_id:t.revision_id}];
+catalog.document_sources=[{number:'86',environment:'prod',title:'Спецификация модуля',module:'Модуль',document_url:'https://example.test/older.docx',document_version:'2.0',label_date:'23.06.2023',document_sha256:'d'.repeat(64),document_download:'documents/older.docx',document_filename:'older.docx',listed_now:true,schema_reason:'Полный комплект XSD отсутствует.'}];
+catalog.revisions.push({...revision('current-86','prod'),number:'86',document_version:'2.7'});
+const nowUnmatched={...catalog.document_sources[0],number:'125',document_url:'https://example.test/%CF%F0_100%.docx'};
+catalog.document_sources.push(nowUnmatched);
+catalog.revisions.push({...revision('historical-125','prod'),...nowUnmatched,listed_now:false});
 const location={hash:'#message=14',href:'https://example.test/index.html#message=14'};let mappingIdentity,validatedRevision,validatorNavigate,validatorDisposals=0;
 const ctx=vm.createContext({console,Map,Set,URL,URLSearchParams,Intl,Date,Promise,location,history:{replaceState:(_a,_b,value)=>{location.hash=value}},Option:class extends Element{constructor(text,value){super('option','',text);this.value=value}},window:{SEDO_CATALOG:catalog,addEventListener(){},SedoValidator:{mount:(r,host,onField)=>{validatedRevision=r.revision_id;validatorNavigate=onField},dispose:()=>validatorDisposals++}},document:{createElement:tag=>node(tag),createTextNode:text=>node('text','',text),getElementById:id=>ids.get(id)||null,querySelector:()=>node('small'),head:node('head')},SedoCompare:{compare:()=>[]},SedoMapping:{store:{load:options=>{mappingIdentity=options.left.revision_id;return{pairs:[]}}},mount(){}},SedoComparisonExport:{}});
-for(const name of ['message-transitions.js','compare.js','journal.js','app.js'])vm.runInContext(fs.readFileSync(path.join(root,'web',name),'utf8'),ctx);
+for(const name of ['message-transitions.js','compare.js','journal.js','review-journal.js','app.js'])vm.runInContext(fs.readFileSync(path.join(root,'web',name),'utf8'),ctx);
 // Drive actual catalog controls: default, query, contour, toggle, legacy deep link.
 const visibleNumbers=()=>ids.get('messages').children.filter(e=>e.className.includes('message-card')).map(e=>e.dataset.number);
+ids.get('message-query').value='%CF%F0';ctx.renderMessages();
+assert.deepEqual(visibleNumbers(),['125'],'a non-UTF-8 filename remains searchable without breaking the catalogue');
+ids.get('message-query').value='14';
+for(const [env,expected] of [['prod',1],['test',1],['',2]]){
+ ids.get('catalog-env').value=env;ctx.renderMessages();
+ const card=ids.get('messages').children.find(e=>e.dataset.number==='14');
+ assert.ok(card.textContent.includes('Редакций с деревом · '+expected),'edition count for '+(env||'all contours')+': '+card.textContent);
+}
+for(const query of ['Реестр страхователей','РУСТ']){
+ ids.get('message-query').value=query;ids.get('catalog-env').value='prod';ctx.renderMessages();
+ assert.deepEqual(visibleNumbers(),['14']);assert.match(ids.get('messages').textContent,/Реестр страхователей/);
+ ids.get('catalog-env').value='test';ctx.renderMessages();assert.deepEqual(visibleNumbers(),[]);
+}
+location.hash='#message=86&env=prod';ctx.renderRoute();
+const documents=walk(ids.get('versions')).filter(n=>n.href==='documents/older.docx');
+assert.equal(documents.length,1);assert.equal(documents[0].download,'older.docx');
+assert.match(ids.get('versions').textContent,/Полный комплект XSD отсутствует/);
+assert.ok(walk(ids.get('versions')).some(n=>n.href?.includes('current-86')));
+location.hash='#message=125&env=prod';ctx.renderRoute();
+const sourceCard=ids.get('versions').querySelector('.document-source');
+assert.ok(sourceCard,'a historical matched edition must not hide the current document without a schema');
+assert.match(sourceCard.textContent,/Полный комплект XSD отсутствует/);
+assert.ok(walk(ids.get('versions')).some(n=>n.href?.includes('historical-125')));
+location.hash='#message=14';ids.get('message-query').value='';ids.get('catalog-env').value='';ctx.renderRoute();
 assert.equal(ids.get('catalog-current-only').checked,true,'current-only filter must start enabled');ctx.renderMessages();assert.ok(!visibleNumbers().includes('101'));assert.ok(visibleNumbers().includes('10110'));assert.ok(visibleNumbers().includes('86'));assert.ok(visibleNumbers().includes('125'));assert.ok(visibleNumbers().includes('105'),'test-only successor cannot hide old production type in all-contour view');assert.match(ids.get('count').textContent,/Скрыто заменённых/);
 ids.get('message-query').value='101';ids.get('message-query').oninput();assert.deepEqual(visibleNumbers(),['10110']);ids.get('catalog-current-only').checked=false;ids.get('catalog-current-only').onchange();assert.deepEqual(visibleNumbers(),['101','10110']);
 ids.get('catalog-current-only').checked=true;ids.get('catalog-current-only').onchange();assert.deepEqual(visibleNumbers(),['10110']);ids.get('message-query').value='';ids.get('catalog-env').value='prod';ids.get('catalog-env').onchange();assert.ok(visibleNumbers().includes('105'));assert.ok(!visibleNumbers().includes('101'));ids.get('catalog-env').value='test';ids.get('catalog-env').onchange();assert.ok(visibleNumbers().includes('10110'));assert.ok(!visibleNumbers().includes('101'));
@@ -46,7 +76,26 @@ assert.equal(typeof validatorNavigate,'function','validator needs a safe referen
 location.hash='#message=14&env=test&rev='+testAlias.revision_id;ctx.renderRoute();assert.equal(ids.get('xsd-from-viewer').href,'schemas/test-old-link.zip','changing edition replaces prior download');assert.equal(new URLSearchParams(ids.get('compare-from-viewer').href.slice(1)).get('right'),p.revision_id,'legacy test edition must compare with a distinct schema group');
 ctx.renderUpdates(new URLSearchParams({updates:'1',q:'5.5'}));assert.equal(walk(ids.get('updates')).filter(e=>e.className==='update-card').length,2,'journal search includes versions of every source');
 ctx.loadComparisonData=async()=>[];
+{
+ const first=p.edition_sources.map(s=>({...s})),newName='Новое имя только продуктивного документа';
+ p.edition_sources=first.map((s,i)=>({...s,listed_now:i===1,title:i===1?newName:s.title}));
+ ids.get('message-query').value=newName;ids.get('catalog-env').value='prod';ctx.renderMessages();
+ assert.deepEqual(visibleNumbers(),['14'],'index all titles of the selected schema group');
+ assert.ok(ids.get('messages').children[0].textContent.includes(newName),'use its current source for the card');
+ ids.get('catalog-env').value='test';ctx.renderMessages();assert.deepEqual(visibleNumbers(),[]);
+ p.edition_sources=first;ids.get('message-query').value='';ids.get('catalog-env').value='';
+}
 (async()=>{location.hash='#message=14&compare=1&left='+alias.revision_id+'&right='+t.revision_id;await ctx.renderComparison(m,new URLSearchParams(location.hash.slice(1)));assert.equal(mappingIdentity,alias.revision_id);assert.equal(walk(ids.get('comparison')).filter(e=>e.className==='edition-source').length,6);
+ for(const [side,left,right,other] of [[1,alias,t,p],[0,p,testAlias,t]]){
+  for(const change of [other,side===1?right:left]){
+   const params=new URLSearchParams(location.hash.replace(/^#/,''));if(change===other){params.set('left',left.revision_id);params.set('right',right.revision_id)}
+   location.hash='#'+params;await ctx.renderComparison(m,params);
+   const selects=walk(ids.get('comparison')).filter(e=>e.tagName==='select');
+   selects[side].value=change.revision_id;selects[side].onchange();
+   const changed=new URLSearchParams(location.hash.replace(/^#/,''));assert.equal(changed.get(side===1?'left':'right'),(side===1?left:right).revision_id,'changing only one selector retains the opposite historical revision');
+  }
+ }
+ location.hash='#message=14&compare=1&left='+alias.revision_id+'&right='+t.revision_id;await ctx.renderComparison(m,new URLSearchParams(location.hash.slice(1)));
  const newSource={...p.edition_sources[0],document_version:'9.9',document_url:'https://example.test/new-9.9.docx',document_download:'documents/new.docx'};
  catalog.schema_updates.forEach(event=>{event.event_sources=[...catalog.revisions.find(r=>r.revision_id===event.revision_id).edition_sources]});
  p.edition_sources.push(newSource);

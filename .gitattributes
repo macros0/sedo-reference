@@ -24,3 +24,6 @@
 /web/vendor/xmllint/COPYING -whitespace
 /site/vendor/xmllint/xmllint-browser.mjs -whitespace
 /site/vendor/xmllint/COPYING -whitespace
+
+# Snapshot hashes address exact bytes on every checkout platform.
+/state/snapshots/*.json -text

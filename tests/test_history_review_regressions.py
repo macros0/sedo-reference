@@ -12,6 +12,16 @@ from verify import verify
 
 
 class OfflineIntegrityTests(unittest.TestCase):
+    def test_both_workflows_check_supplementary_candidate_schemas_before_promotion(self):
+        root=Path(__file__).resolve().parents[1]
+        for name,builder in [('pages.yml','python build_site.py'),('check-sfr.yml','python auto_update.py')]:
+            workflow=(root/'.github/workflows'/name).read_text('utf8')
+            command='node tests/test_attribute_ref_constraints.cjs --all-editions'
+            with self.subTest(workflow=name):
+                self.assertIn(command,workflow)
+                self.assertLess(workflow.index(builder),workflow.index(command))
+                self.assertLess(workflow.index(command),workflow.index('git push'))
+
     def test_replay_uses_captured_libraries_without_published_wsdl_links(self):
         import os
         from tests.test_collector_feed import FeedTests
@@ -125,7 +135,7 @@ class ManualTitleTests(unittest.TestCase):
             buffer = io.BytesIO()
             with zipfile.ZipFile(buffer, 'w') as document:
                 document.writestr('word/document.xml', '<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body/></w:document>')
-            with patch('manual_import.build'), patch('manual_import.build_site.main'), patch('manual_import.validate_history'):
+            with patch('manual_import.build'), patch('manual_import.build_history_baseline'), patch('manual_import.build_site.main'), patch('manual_import.validate_history'):
                 preview = prepare_import(root, buffer.getvalue(), 'new.docx', dict(number='32210', environment='test'))
             try:
                 self.assertEqual(preview.revision['title'], 'Current test title')

@@ -18,6 +18,19 @@ class EditionGroupsTests(unittest.TestCase):
                   dict(name="code", path="fault/code", parent=0, children=[], facets=[["length", "10"]], typeFile="Common.xsd")]
         return dict(revisions=[row, second], updates=[]), {"first": fields, "second": copy.deepcopy(fields)}
 
+    def test_swapped_dependency_locations_remain_distinct_editions(self):
+        catalog, fields = self.fixture()
+        catalog['revisions'][0]['dependencies'] = [['root.xsd', 'root'], ['a/types.xsd', 'one'], ['b/types.xsd', 'two']]
+        catalog['revisions'][1]['dependencies'] = [['root.xsd', 'root'], ['a/types.xsd', 'two'], ['b/types.xsd', 'one']]
+        self.assertEqual(len(visible_editions(group_editions(catalog, fields.__getitem__))), 2)
+
+    def test_entry_filename_is_only_packaging_metadata(self):
+        catalog, fields = self.fixture()
+        for row, name in zip(catalog['revisions'], ['old.xsd', 'new.xsd']):
+            row['schema_path'] = 'folder/' + name
+            row['dependencies'] = [[name, 'same']]
+        self.assertEqual(len(visible_editions(group_editions(catalog, fields.__getitem__))), 1)
+
     def test_identical_schema_has_one_representative_with_all_document_sources(self):
         catalog, fields = self.fixture()
         previous = copy.deepcopy(catalog)
@@ -64,6 +77,19 @@ class EditionGroupsTests(unittest.TestCase):
         self.assertTrue(representative["listed_now"])
         self.assertEqual([s["listed_now"] for s in representative["edition_sources"]], [False, True])
 
+    def test_group_publishes_current_title_without_rewriting_historical_titles(self):
+        catalog, fields = self.fixture()
+        first, second = catalog["revisions"]
+        first.update(title="Первоначальный заголовок", listed_now=False)
+        second.update(title="Новый заголовок", label_date="16.11.2026")
+        group = group_editions(catalog, fields.__getitem__)
+        representative, alias = group["revisions"]
+        self.assertEqual(representative["display_revision_id"], first["revision_id"])
+        self.assertEqual(representative["title"], first["title"])
+        self.assertEqual(alias["title"], second["title"])
+        self.assertEqual([(s["title"], s["listed_now"]) for s in representative["edition_sources"]],
+                         [(first["title"], False), (second["title"], True)])
+
     def test_journal_groups_events_and_follows_previous_ids_without_self_comparison(self):
         catalog, fields = self.fixture()
         third = dict(catalog["revisions"][0], revision_id="third", dependencies=[["Fault.xsd", "xsd3"]])
@@ -82,10 +108,33 @@ class EditionGroupsTests(unittest.TestCase):
         self.assertEqual(grouped["updates"][2]["comparison"]["left"], "second")
         self.assertEqual(catalog["updates"][:2], original[:2])
 
+    def test_additional_sources_and_new_schemas_preserve_representatives(self):
+        catalog, fields = self.fixture()
+        original = catalog["revisions"][0]
+        for index in range(2, 4):
+            rid = "extra-" + str(index)
+            catalog["revisions"].append(dict(original, revision_id=rid,
+                document_sha256=rid, document_url="https://example.test/" + rid + ".docx"))
+            fields[rid] = copy.deepcopy(fields["first"])
+        catalog["revisions"].append(dict(original, revision_id="new-schema",
+            dependencies=[["Fault.xsd", "new-content"]]))
+        fields["new-schema"] = copy.deepcopy(fields["first"])
+        grouped = group_editions(catalog, fields.__getitem__)
+        visible = visible_editions(grouped)
+        self.assertEqual([row["revision_id"] for row in visible], ["first", "new-schema"])
+        self.assertEqual(len(visible[0]["edition_sources"]), 4)
+        self.assertEqual(len(grouped["revisions"]), 5)
+
     def test_real_message_14_is_one_edition_per_contour_with_three_sources(self):
         root = Path(__file__).resolve().parents[1]
         catalog = json.loads((root / "data/catalog.json").read_bytes())
-        catalog["revisions"] = [dict(r, ready=True) for r in catalog["revisions"] if r["number"] == "14"]
+        catalog["revisions"] = [dict(r, ready=True) for r in catalog["revisions"] if r["revision_id"] in {
+            "c609735e71013bead408bab1727fda5c67aaf82c41305d5c4bfb3227dcc2ffcc",
+            "2ba54c5b3a6267ae0b9b3840351e8db3af695ecfe8e1fe7d923f8d737d996f52",
+            "ca171570170bd8ec700521228ed868c46c61190e23ee68a885c0e2023ba3ba81",
+            "88fc9955e7fd81897e3add92f535565322b1ab061608b94c0b229e21a3d5627d",
+            "e190f8c786ef641eac047ce14118f8394ab1d4ddec4d12a1669d94d296693080",
+            "d071619c8286d5e2d2bd3f4d427b5dfcaf48888168a0b6d927aa81ca65bb0ffd"}]
         result = group_editions(catalog, lambda rid: json.loads((root / "data/fields" / (rid + ".json")).read_bytes())["fields"])
         visible = visible_editions(result)
         self.assertEqual(len(visible), 2)

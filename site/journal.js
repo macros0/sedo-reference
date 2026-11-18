@@ -41,7 +41,7 @@ function renderUpdates(params){
  for(const [value,text] of [["all","За всё время"],["week","За неделю (7 дней)"],["month","За месяц (30 дней)"],["custom","Выбранный период"]])period.add(new Option(text,value));period.value=["week","month","custom"].includes(params.get("period"))?params.get("period"):"all";periodLabel.append(period);
  const bounds=node("div","journal-bounds"),fromLabel=node("label","","С"),from=node("input"),toLabel=node("label","","По");from.type="date";from.id="updates-from";from.value=params.get("from")||"";fromLabel.append(from);const to=node("input");to.type="date";to.id="updates-to";to.value=params.get("to")||"";toLabel.append(to);bounds.append(fromLabel,toLabel);periodRow.append(periodLabel,bounds);
  const rangeHint=node("p","meta"),rangeError=node("p","journal-range-error");rangeError.id="updates-date-error";rangeError.setAttribute("role","alert");section.append(periodRow,rangeHint,rangeError);
- const changesLabel=node("label","journal-toggle"),onlyChanges=node("input");onlyChanges.type="checkbox";onlyChanges.id="updates-only-changes";onlyChanges.checked=params.get("changed")==="1";changesLabel.append(onlyChanges,document.createTextNode("Только с изменениями XML"));
+ const changesLabel=node("label","journal-toggle"),onlyChanges=node("input");onlyChanges.type="checkbox";onlyChanges.id="updates-only-changes";onlyChanges.checked=params.get("changed")==="1";changesLabel.title="Показывает записи с рассчитанными изменениями XML.";changesLabel.append(onlyChanges,document.createTextNode("Только с изменениями XML"));
  const actions=node("div","journal-actions"),reset=node("button","swap","Сбросить фильтры");reset.type="button";reset.id="updates-reset";actions.append(changesLabel,reset);section.append(actions);
  const count=node("p","meta");count.id="updates-count";count.setAttribute("role","status");const list=node("div","journal-list");section.append(count,list);
  function draw(){
@@ -51,7 +51,7 @@ function renderUpdates(params){
   if(range.error){count.textContent="Проверьте выбранный период";list.replaceChildren();return}
   const terms=normalize(query.value).split(/\s+/).filter(Boolean);
   const exactNumber=/^\d+$/.test(query.value.trim())&&messages.has(query.value.trim())?query.value.trim():null;
-  const visible=entries.filter(({event,r})=>journalDateMatches(event.observed_at,range)&&(!onlyChanges.checked||(event.comparison?.status==="ready"&&["added","removed","changed"].some(key=>event.comparison.counts[key]>0)))&&(!exactNumber||r.number===exactNumber)&&(!env.value||r.environment===env.value)&&terms.every(t=>normalize([r.number,r.title,event.event_type==="source_added"?"Добавлен источник":"",...journalEventSources(event,r).flatMap(s=>[s.document_version,s.label_date,documentName(s)]),envNames[r.environment],observationDate(event.observed_at)].join(" ")).includes(t)));
+  const visible=entries.filter(({event,r})=>journalDateMatches(event.observed_at,range)&&(!onlyChanges.checked||(event.comparison?.status==="ready"&&["added","removed","changed"].some(key=>event.comparison.counts[key]>0)))&&(!exactNumber||r.number===exactNumber)&&(!env.value||r.environment===env.value)&&terms.every(t=>normalize([r.number,r.title,event.event_type==="source_added"?"Добавлен источник":"",...journalEventSources(event,r).flatMap(s=>[s.title,s.document_version,s.label_date,documentName(s),s.manual_source?.label]),envNames[r.environment],observationDate(event.observed_at)].join(" ")).includes(t)));
   count.textContent="Событий в журнале · "+visible.length;list.replaceChildren();let day=null;
   for(const {event,r} of visible){
    const nextDay=observationDate(event.observed_at,true);
@@ -59,12 +59,13 @@ function renderUpdates(params){
    const addedSource=event.event_type==="source_added",sources=journalEventSources(event,r);
    const card=node("article","update-card");card.dataset.revision=r.revision_id;card.dataset.eventType=addedSource?"source_added":"schema";card.dataset.event=event.event_id||r.revision_id;
    const badges=node("div","badges");badges.append(node("span","badge "+r.environment,envNames[r.environment]),node("span","badge"+(addedSource?" source-added":""),addedSource?"Добавлен источник":event.initial_import?"Первичное наполнение":event.previous_revision_id?"Новая редакция":"Первое появление"));card.append(badges);
-   const heading=node("h3");heading.append(anchor(r.number+" · "+(addedSource?"Источник существующей редакции":sources.length>1?"Редакция схемы · источников: "+sources.length:"Версия документа "+(sources[0]?.document_version||"не указана")),route(r.number,r.environment,r.ready?r.revision_id:undefined)));card.append(heading,node("p","",r.title));
+   const heading=node("h3");heading.append(anchor(r.number+" · "+(addedSource?"Источник существующей редакции":sources.length>1?"Редакция схемы · источников: "+sources.length:"Версия документа "+(sources[0]?.document_version||"не указана")),route(r.number,r.environment,r.ready?r.revision_id:undefined)));card.append(heading);
+   for(const title of new Set(sources.map(source=>source.title||r.title)))card.append(node("p","",title));
    appendEditionSources(card,{...r,edition_sources:sources});
    const time=node("time","meta",event.observed_at?"Обнаружено: "+observationDate(event.observed_at):observationDate(null));if(event.observed_at)time.dateTime=event.observed_at;card.append(time,node("p","meta","Редакция "+r.revision_id.slice(0,8)));
    if(addedSource){
-    card.append(node("p","meta","XML-схема не изменилась. Добавлен новый документ-источник."));
-    const links=node("div","journal-links");links.append(anchor("Открыть существующую редакцию",route(r.number,r.environment,r.revision_id)));card.append(links);list.append(card);continue;
+    card.append(node("p","meta",r.ready?"XML-схема не изменилась. Добавлен новый документ-источник.":"Добавлен источник документа. Дерево XSD для этой редакции недоступно."));
+    const links=node("div","journal-links");links.append(anchor(r.ready?"Открыть существующую редакцию":"Открыть карточку сообщения",route(r.number,r.environment,r.ready?r.revision_id:undefined)));card.append(links);list.append(card);continue;
    }
    if(r.source_type==="manual")card.append(node("p","meta","Ручная загрузка · "+(r.manual_source?.label||"Файл владельца")));
    else if(r.manual_source)card.append(node("p","meta","Впервые загружено вручную · "+r.manual_source.label));
@@ -76,6 +77,7 @@ function renderUpdates(params){
     const counts=node("div","compare-counts journal-counts");
     for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])counts.append(node("span",key,text+" · "+summary.counts[key]));
     card.append(counts);
+    if(summary.limitedUnion)card.append(node("p","meta",SedoCompare.unionCoverageNote));
    }else card.append(node("p","meta",r.status==="document_only"?"DOCX сохранён. Схема XSD не загружена.":summary?.status==="no_baseline"?"Первая сохранённая редакция: подходящей редакции для сравнения пока нет.":"Подсчёт изменений недоступен: нет готового дерева для сравнения."));
    const links=node("div","journal-links");if(r.ready)links.append(anchor("Открыть дерево",route(r.number,r.environment,r.revision_id)));
    if(summary?.status==="ready")links.append(anchor("Открыть сравнение",comparisonRoute(r.number,summary.left,summary.right)));

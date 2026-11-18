@@ -1,12 +1,27 @@
 """Group exact schema editions for display without rewriting source history."""
 import copy
 import json
+import posixpath
 import re
 
 from sync import sha
 
 SOURCE_KEYS = ("revision_id", "number", "environment", "title", "document_version", "label_date", "document_url", "document_sha256",
-               "document_download", "document_filename", "source_type", "manual_source", "module", "listed_now")
+               "document_download", "document_filename", "source_type", "manual_source", "module", "listed_now", "document_history", "display_metadata_applied")
+SCHEMA_SOURCE_KEYS = ("archive_url", "archive_sha256", "archive_name", "schema_path", "schema_source_type",
+                      "schema_source_url", "schema_sources", "dependencies")
+PUBLIC_SOURCE_KEYS = SOURCE_KEYS + tuple(k for k in SCHEMA_SOURCE_KEYS if k not in ("dependencies", "schema_sources")) + (
+    "schema_publication_page", "schema_file_download", "schema_file_name", "schema_original_url")
+
+
+def prepare_observed_sources(catalog):
+    """Apply snapshot evidence only to the public copy of each original observation."""
+    details = catalog.pop("observation_presentations", {})
+    for source in [*(e["source"] for e in catalog.get("source_observations", []) if "source" in e),
+                   *catalog.get("update_sources", {}).values()]:
+        item = details.get(source.get("revision_id"), {}).get(source.get("document_url") or "")
+        if item is not None:
+            source.update(item, display_metadata_applied=True)
 
 
 def _tree(value):
@@ -19,7 +34,7 @@ def _tree(value):
 
 
 def _source_record(observed, current_rows):
-    source = {key: copy.deepcopy(observed[key]) for key in SOURCE_KEYS if key in observed}
+    source = {key: copy.deepcopy(observed[key]) for key in PUBLIC_SOURCE_KEYS if key in observed}
     identity = (source.get("document_sha256"), source.get("document_url"))
     source["listed_now"] = any((item.get("document_sha256"), item.get("document_url")) == identity
                                for row in current_rows
@@ -35,13 +50,21 @@ def _source_record(observed, current_rows):
 
 def group_editions(catalog, load_fields):
     result = copy.deepcopy(catalog)
+    prepare_observed_sources(result)
     groups = {}
     for row in result["revisions"]:
         rid = row["revision_id"]
         key = ("unmatched", rid)
         if row.get("ready") and row.get("dependencies"):
+            from schema import equivalent_closure
+            fields = load_fields(rid)
+            # Retain each byte digest at its resolved position in the graph.
+            # A common outer folder and the entry's filename are packaging only.
+            prefix = posixpath.commonpath([posixpath.dirname(path) or '.' for path, _ in row['dependencies']])
+            dependencies = [(posixpath.relpath(path, prefix or '.'), digest) for path, digest in row['dependencies']]
+            entry = row.get('schema_path') or next((f.get('file') for f in fields if f.get('parent') == -1), '') or ''
             identity = [row["environment"], row["number"], row.get("root"), row.get("namespace"),
-                        sorted({digest for path, digest in row["dependencies"]}), _tree(load_fields(rid))]
+                        equivalent_closure(dependencies, entry), _tree(fields)]
             key = sha(json.dumps(identity, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf8"))
         groups.setdefault(key, []).append(row)
     observed_sources = {}
@@ -54,7 +77,13 @@ def group_editions(catalog, load_fields):
         sources = {}
         observed = [source for row in members for source in observed_sources.get(row["revision_id"], [])]
         current_sources = {(row.get("document_sha256"), row.get("document_url")): row
-                           for row in members if row.get("listed_now", True)}
+                           for row in members if row.get("listed_now", True) or row.get("source_type") == "manual"}
+        for row in members:
+            for source in row.get("listed_sources", []):
+                # Older catalogs store only a hash and URL here. Their display
+                # metadata still comes from the recorded observation.
+                if "revision_id" in source:
+                    current_sources[(source.get("document_sha256"), source.get("document_url"))] = source
         for row in [*observed, *members]:
             identity = (row.get("document_sha256"), row.get("document_url"))
             # Labels on the card describe the current publication. Event labels
@@ -96,7 +125,7 @@ def _source_history(catalog):
         seen.add((rid, identity))
         current = next((s for s in row.get("edition_sources", [row])
                         if (s.get("document_sha256"), s.get("document_url")) == identity), None)
-        source = {k: copy.deepcopy(observed[k]) for k in SOURCE_KEYS if k in observed}
+        source = {k: copy.deepcopy(observed[k]) for k in PUBLIC_SOURCE_KEYS if k in observed}
         if saved is not None:
             # Download bytes are addressed by digest; labels stay those seen at
             # this event, even when the current row uses a later URL/version.
