@@ -362,6 +362,9 @@ def extract_archives(document):
                         info=zipfile.ZipInfo(name,(1980,1,1,0,0,0));info.create_system=3
                         archive.writestr(info,data)
                 packages.append(dict(container=path,filename=filename,original_sha256=key,content=output.getvalue()))
+            except ImportError:
+                # A missing archive reader is an environment error.
+                raise
             except Exception as exc:issues.append(dict(container=path,reason=str(exc)))
     # Some modules publish the full XSD as paragraphs rather than OLE objects.
     with zipfile.ZipFile(io.BytesIO(document)) as doc:

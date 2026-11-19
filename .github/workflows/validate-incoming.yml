@@ -80,10 +80,7 @@ jobs:
         with:
           node-version: "22"
       - name: Preview incoming without saving or publishing
-        run: |
-          python -m tests.run_python_tests --jobs 2
-          npm run test:node
-          python import_inbox.py --check
+        run: python import_inbox.py --check
       - name: Write validation report
         if: always()
         run: |

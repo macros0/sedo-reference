@@ -8,6 +8,17 @@ from unittest.mock import patch
 
 
 class PublicationGuardTests(unittest.TestCase):
+    def test_build_precedes_full_suites_and_generated_site_stays_out_of_commits(self):
+        workflows = Path(__file__).resolve().parents[1] / '.github/workflows'
+        for filename, build in [('pages.yml', 'python build_site.py'), ('check-sfr.yml', 'python auto_update.py')]:
+            content = (workflows / filename).read_text('utf8')
+            before, after = content.split(build, 1)
+            with self.subTest(workflow=filename):
+                for suite in ('npm run test:node', 'python -m unittest discover', 'python -m tests.run_python_tests'):
+                    self.assertNotIn(suite, before)
+                self.assertIn('npm run test:node', after)
+                self.assertIn('git add -- state data\n', after)
+
     def test_queued_updates_are_retained_and_checkout_current_main(self):
         root = Path(__file__).resolve().parents[1]
         for workflow in ('pages.yml', 'check-sfr.yml'):
@@ -57,7 +68,11 @@ class PublicationGuardTests(unittest.TestCase):
             self.assertLess(daily.index(gate), daily.index(gated))
         pr = (root / 'validate-incoming.yml').read_text('utf8')
         self.assertEqual(pr.count('timeout-minutes: 120'), 2)
-        self.assertEqual(pr.count(gate), 2)
+        preview = pr.split('  validate:', 1)[1]
+        self.assertIn('python import_inbox.py --check', preview)
+        self.assertNotIn('npm run test:node', preview)
+        self.assertNotIn(gate, preview)
+        self.assertEqual(pr.count(gate), 1)
 
     def test_deploy_job_uses_build_output_and_rechecks_main_on_every_attempt(self):
         workflow = (Path(__file__).resolve().parents[1] / '.github/workflows/pages.yml').read_text('utf8')

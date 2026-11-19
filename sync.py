@@ -531,6 +531,8 @@ def _sync(base, report, *, wsdl_entries=None, snapshot_format=None, individual_w
                     if packages:
                         del package
                     del b, packages
+                except ImportError:
+                    raise
                 except Exception as e:
                     for alias in task_groups[download_key(r)]:
                         alias["error"]=str(e)

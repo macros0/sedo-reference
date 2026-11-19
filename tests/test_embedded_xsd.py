@@ -21,6 +21,12 @@ def document():
     return out.getvalue()
 
 class EmbeddedSchemaTests(unittest.TestCase):
+    def test_missing_7z_reader_is_an_environment_error(self):
+        from unittest.mock import patch
+        with patch.dict("sys.modules", {"py7zr": None}):
+            with self.assertRaisesRegex(ImportError, "py7zr"):
+                extract_archives(document())
+
     def test_module_evidence_keeps_known_empty_and_unknown_namespaces_distinct(self):
         from module_xsd import document_bindings
         from tests.test_schema_recovery import archive, docx

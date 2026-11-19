@@ -19,6 +19,7 @@ inbox-report.json
 .update.lock
 .sync.lock
 .sourcecraft-import/
+/site/
 node_modules/
 playwright-report/
 test-results/
