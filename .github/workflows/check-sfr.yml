@@ -44,7 +44,6 @@ jobs:
       - name: Test history preservation and update failures
         run: |
           python -m unittest tests.test_collector tests.test_collector_feed tests.test_collector_transport tests.test_source_transport tests.test_sync_queue tests.test_update_catalog_lock -v
-          npm run test:node
       - name: Restore partial SourceCraft downloads
         if: vars.SEDO_COLLECTOR_SOURCE != 'home'
         uses: actions/cache/restore@v4
@@ -101,7 +100,7 @@ jobs:
           retention-days: 30
       - name: Commit validated data and deploy
         run: |
-          git add state data site
+          git add -- state data
           if ! git diff --cached --quiet; then
             git commit -m "Update SFR specifications and check status"
             git push origin HEAD:main

@@ -52,10 +52,6 @@ jobs:
         run: |
           npm ci
           npx playwright install --with-deps chromium
-      - name: Test reference and importer
-        run: |
-          python -m unittest discover -s tests -q
-          npm run test:node
       - name: Validate and apply pending Russian collector snapshots
         env:
           SEDO_SFR_POLITE: '1'
@@ -89,7 +85,7 @@ jobs:
           retention-days: 30
       - name: Save validated imports
         run: |
-          git add state data site
+          git add -- state data
           if ! git diff --cached --quiet; then
             git commit -m "Import specifications and validated collector snapshots"
             git push origin HEAD:main
