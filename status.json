@@ -1,28 +1,28 @@
 {
   "format": 1,
-  "generated_at": "2026-11-18T21:50:17.742297+00:00",
+  "generated_at": "2026-11-19T08:40:06.527305+00:00",
   "collector_source": "sourcecraft",
   "sourcecraft": {
     "state": "success",
-    "started_at": "2026-11-18T04:01:23.667603+00:00",
-    "finished_at": "2026-11-18T04:03:02.038252+00:00",
+    "started_at": "2026-11-19T04:01:11.624048+00:00",
+    "finished_at": "2026-11-19T04:02:49.649752+00:00",
     "contours": {
       "prod": {
         "content_id": "9b194ccd99775c37a0f925ce0436a44101040de33820daac069b945e54f38e68",
         "source_count": 9,
-        "observed_at": "2026-11-18T04:02:10.854328+00:00",
+        "observed_at": "2026-11-19T04:01:58.818790+00:00",
         "changed": false
       },
       "test": {
         "content_id": "42e44b408e7edf8f9540e3758d727bd4944a1ddd5dfa1fbdd14d75f00f0cddc3",
         "source_count": 9,
-        "observed_at": "2026-11-18T04:03:01.972698+00:00",
+        "observed_at": "2026-11-19T04:02:49.596822+00:00",
         "changed": false
       }
     },
-    "run_id": "10",
+    "run_id": "11",
     "url": "https://sourcecraft.dev/alexey-sagitov/sedo-xsd-collector",
-    "last_success_at": "2026-11-18T04:03:02.038252+00:00"
+    "last_success_at": "2026-11-19T04:02:49.649752+00:00"
   },
   "github": {
     "check": {
@@ -41,12 +41,12 @@
       "state": "not_published"
     },
     "independent_publication": {
-      "state": "success",
-      "run_id": 44386628856,
-      "url": "https://github.com/macros0/sedo-reference/actions/runs/44386628856",
+      "state": "processing",
+      "run_id": 44489493880,
+      "url": "https://github.com/macros0/sedo-reference/actions/runs/44489493880",
       "run_attempt": 1,
-      "started_at": "2026-11-18T20:01:42Z",
-      "finished_at": "2026-11-18T21:49:39Z"
+      "started_at": "2026-11-19T08:39:43Z",
+      "finished_at": null
     },
     "last_successful_publication": {
       "state": "success",
