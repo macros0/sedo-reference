@@ -3,16 +3,20 @@
   "manifests": {
     "prod": {
       "9b194ccd99775c37a0f925ce0436a44101040de33820daac069b945e54f38e68": {
-        "status": "recorded",
-        "snapshot": "17a426c2b1f2e5946a86c013a6326cf60380e4184639bbfcd22f6776102eb0d3",
-        "observed_at": "2026-11-13T01:12:10.363902+00:00"
+        "status": "unavailable",
+        "observed_at": "2026-11-13T14:05:22.974370+00:00",
+        "replay_proof": "04c514976f992e0d3d8cb4bebaac139501cbaaae55913cdf0dea520aee06eb04",
+        "reason": "Недостаточно подтверждённых данных, чтобы однозначно установить DOCX на момент наблюдения WSDL.",
+        "current_snapshot": "4f24ac4a27f8ac603669d4966e6c44f9eb2f7ca9af1a6c4bf4bff451487852b0"
       }
     },
     "test": {
       "42e44b408e7edf8f9540e3758d727bd4944a1ddd5dfa1fbdd14d75f00f0cddc3": {
-        "status": "recorded",
-        "snapshot": "6cd7fde9cdb0257a019be194741f071393802081c1398fb35ae8c8f5ec94d3e0",
-        "observed_at": "2026-11-13T01:12:13.703626+00:00"
+        "status": "unavailable",
+        "observed_at": "2026-11-13T14:06:14.185195+00:00",
+        "replay_proof": "04c514976f992e0d3d8cb4bebaac139501cbaaae55913cdf0dea520aee06eb04",
+        "reason": "Недостаточно подтверждённых данных, чтобы однозначно установить DOCX на момент наблюдения WSDL.",
+        "current_snapshot": "4f24ac4a27f8ac603669d4966e6c44f9eb2f7ca9af1a6c4bf4bff451487852b0"
       }
     }
   }
