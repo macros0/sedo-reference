@@ -21,11 +21,7 @@
       "number": "1",
       "title": "Подписка абонентов операторов",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -33,11 +29,7 @@
       "number": "2",
       "title": "Снятие с подписки абонентов операторов",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -45,11 +37,7 @@
       "number": "6",
       "title": "Подтверждение прочтения сообщения",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -57,11 +45,7 @@
       "number": "9",
       "title": "Результат подписки/снятия с подписки абонентов операторов",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -69,11 +53,7 @@
       "number": "11",
       "title": "Результат подтверждения прочтения сообщения",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -81,11 +61,7 @@
       "number": "27",
       "title": "Запрос перечня документов, обрабатываемых СЭДО",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -93,11 +69,7 @@
       "number": "28",
       "title": "Перечень документов, обрабатываемых СЭДО",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -105,11 +77,7 @@
       "number": "90",
       "title": "Запрос регистрационного номера страхователя по ИНН/КПП/ОГРН",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -117,11 +85,7 @@
       "number": "91",
       "title": "Ответ на запрос регистрационного номера страхователя по ИНН/КПП/ОГРН",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -137,11 +101,7 @@
       "number": "330",
       "title": "Запрос исторических сообщений за дату абонентом",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -149,11 +109,7 @@
       "number": "331",
       "title": "Запрос исторических сообщений за дату оператором",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -161,11 +117,7 @@
       "number": "332",
       "title": "Ответ на запрос исторических данных",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -181,11 +133,7 @@
       "number": "1000",
       "title": "Ответ страхователя на обращение СФР",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -193,11 +141,7 @@
       "number": "1001",
       "title": "Обращение СФР к страхователю",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -205,11 +149,7 @@
       "number": "1002",
       "title": "Уведомление о подтверждении получения Фондом сообщения от Страхователя",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -217,11 +157,7 @@
       "number": "1",
       "title": "Подписка абонентов операторов",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -229,11 +165,7 @@
       "number": "2",
       "title": "Снятие с подписки абонентов операторов",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -241,11 +173,7 @@
       "number": "6",
       "title": "Подтверждение прочтения сообщения",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -253,11 +181,7 @@
       "number": "9",
       "title": "Результат подписки/снятия с подписки абонентов операторов",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -265,11 +189,7 @@
       "number": "11",
       "title": "Результат подтверждения прочтения сообщения",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -277,11 +197,7 @@
       "number": "27",
       "title": "Запрос перечня документов, обрабатываемых СЭДО",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -289,11 +205,7 @@
       "number": "28",
       "title": "Перечень документов, обрабатываемых СЭДО",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -301,11 +213,7 @@
       "number": "90",
       "title": "Запрос регистрационного номера страхователя по ИНН/КПП/ОГРН",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -313,11 +221,7 @@
       "number": "91",
       "title": "Ответ на запрос регистрационного номера страхователя по ИНН/КПП/ОГРН",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -333,11 +237,7 @@
       "number": "330",
       "title": "Запрос исторических сообщений за дату абонентом",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -345,11 +245,7 @@
       "number": "331",
       "title": "Запрос исторических сообщений за дату оператором",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -357,11 +253,7 @@
       "number": "332",
       "title": "Ответ на запрос исторических данных",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -377,11 +269,7 @@
       "number": "1000",
       "title": "Ответ страхователя на обращение СФР",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -389,11 +277,7 @@
       "number": "1001",
       "title": "Обращение СФР к страхователю",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     },
     {
@@ -401,11 +285,7 @@
       "number": "1002",
       "title": "Уведомление о подтверждении получения Фондом сообщения от Страхователя",
       "reasons": [
-        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в inline-1.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd",
-        "Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd",
-        "Неоднозначные схемы"
+        "Не найден импорт ../type/Organization.xsd в SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в inline-1.xsd; Не найден импорт ../type/Organization.xsd в package-0/SedoArm_ЕЦП.xsd; Не найден импорт ../type/Organization.xsd в package-1/inline-1.xsd; Неоднозначные схемы"
       ]
     }
   ]

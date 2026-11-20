@@ -7,7 +7,8 @@
         "observed_at": "2026-11-13T14:05:22.974370+00:00",
         "replay_proof": "04c514976f992e0d3d8cb4bebaac139501cbaaae55913cdf0dea520aee06eb04",
         "reason": "Недостаточно подтверждённых данных, чтобы однозначно установить DOCX на момент наблюдения WSDL.",
-        "current_snapshot": "4f24ac4a27f8ac603669d4966e6c44f9eb2f7ca9af1a6c4bf4bff451487852b0"
+        "module_decision_version": 2,
+        "current_snapshot": "838fb876d7244c5d58ee96dcb8912174f8c25a4429592685d6310479b37e28fc"
       }
     },
     "test": {
@@ -16,7 +17,8 @@
         "observed_at": "2026-11-13T14:06:14.185195+00:00",
         "replay_proof": "04c514976f992e0d3d8cb4bebaac139501cbaaae55913cdf0dea520aee06eb04",
         "reason": "Недостаточно подтверждённых данных, чтобы однозначно установить DOCX на момент наблюдения WSDL.",
-        "current_snapshot": "4f24ac4a27f8ac603669d4966e6c44f9eb2f7ca9af1a6c4bf4bff451487852b0"
+        "module_decision_version": 2,
+        "current_snapshot": "838fb876d7244c5d58ee96dcb8912174f8c25a4429592685d6310479b37e28fc"
       }
     }
   }
