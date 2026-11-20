@@ -3,9 +3,45 @@ const {createHash}=require('node:crypto');
 const fs=require('node:fs'),path=require('node:path');
 const {createServer}=require('node:http'),{once}=require('node:events');
 const {gzipSync}=require('node:zlib');
-const {catalog}=require('./catalog-fixtures.cjs');
+const {catalog,pythonFixture}=require('./catalog-fixtures.cjs');
 const {namespaceCandidates}=require('../fixtures/namespace-candidates.cjs');
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
+
+test('a ready module schema keeps the diagnostic for its unresolved declaration',async({page})=>{
+ const built=pythonFixture([
+  'import contextlib,io,json,shutil',
+  'from pathlib import Path',
+  'from unittest.mock import patch',
+  'import build_site',
+  'from catalog import export',
+  'from fields import build',
+  'from tests.test_module_messages import collect_declaration_fixture',
+  'from tests.test_source_collection_regressions import SourceCollectionTests',
+  'f = SourceCollectionTests()',
+  'f.setUp()',
+  'try:',
+  '    with contextlib.redirect_stdout(io.StringIO()):',
+  "        collect_declaration_fixture(f, 'ambiguous')",
+  "        shutil.copytree(Path('web'), f.root / 'web')",
+  "        shutil.copy2('viewer-template.html', f.root)",
+  "        index = f.root / 'data/catalog.json'",
+  '        export(f.state, index)',
+  "        build(index, f.state, f.root / 'data/fields')",
+  "        with patch.object(build_site, 'HERE', f.root):",
+  '            build_site.main()',
+  "    print((f.root / 'site/catalog-data.js').read_text('utf8').removeprefix('window.SEDO_CATALOG=').removesuffix(';'))",
+  'finally:',
+  '    f.doCleanups()'
+ ].join('\n'));
+ await page.route('**/catalog-data.js*',route=>route.fulfill({contentType:'application/javascript',
+  body:'window.SEDO_CATALOG='+JSON.stringify(built)+';'}));
+ await page.goto('/site/#message=42&env=test');
+ const schema=page.locator('.version-panel .card').filter({hasText:'Неоднозначные схемы'});
+ await expect(schema).toHaveCount(1);
+ await expect(schema.getByRole('link',{name:'Открыть дерево'})).toBeVisible();
+ await expect(schema.getByRole('link',{name:'Проверить XML локально'})).toBeVisible();
+ await expect(schema.locator('.schema-diagnostic')).toHaveText('r (пространство имён не указано) — Неоднозначные схемы');
+});
 
 test('7810 production shows label date and version history from its DOCX',async({page})=>{
  await page.goto('/site/#message=7810&env=prod');
@@ -187,9 +223,12 @@ test('document-only module sources retain the DOCX beside a ready edition',async
   await page.goto('/site/#message='+number+'&env=prod');
   const panel=page.locator('.version-panel').filter({has:page.getByRole('heading',{name:'Продуктивный контур'})});
   const source=panel.locator('.document-source').filter({hasText:'23.06.2023'});
+  await expect(source).toHaveCount(1);
   await expect(source).toContainText('версия 2.0');
   const document=catalog.document_sources.find(r=>r.number===number&&r.document_sha256===digest);
   await expect(source).toContainText(document.schema_reason);
+  await expect(source.locator('.schema-diagnostic')).toHaveCount(2);
+  await expect(source.locator('.schema-diagnostic').filter({hasText:'Архивное наблюдение'})).toHaveCount(1);
   const officialName=decodeURIComponent(new URL(document.document_url).pathname.split('/').pop());
   await expect(source.getByRole('link',{name:officialName})).toHaveAttribute('href',document.document_url);
   await expect(source.getByRole('link',{name:'Скачать DOCX'})).toHaveAttribute('href','documents/'+digest+'.docx');
@@ -198,6 +237,33 @@ test('document-only module sources retain the DOCX beside a ready edition',async
   expect(sha(bytes)).toBe(digest);
   await expect(panel.locator('.card').filter({hasText:'Версия документа 2.7'}).getByRole('link',{name:'Открыть дерево'})).toBeVisible();
  }
+});
+
+test('partial module revocations show each QName beside the ready tree',async({page})=>{
+ const row=catalog.revisions.find(r=>r.number==='10110'&&r.environment==='prod'&&r.ready&&r.listed_now);
+ const source=(row.edition_sources||[row]).find(r=>r.listed_now!==false);
+ const qnames=['urn:external:a','urn:external:b'];
+ const document_sources=qnames.map((namespace,index)=>({
+  title:source.title,document_sha256:source.document_sha256,document_url:source.document_url,
+  document_download:source.document_download,document_filename:source.document_filename,listed_now:true,
+  number:row.number,environment:row.environment,root:'r',namespace,
+  schema_reason:'Неоднозначные схемы '+(index+1),
+  schema_diagnostic:{code:'module_binding_revoked',root:'r',namespace,
+   snapshot:sha('active snapshot'),resolved_schema_graph:sha(namespace)}
+ }));
+ await page.route('**/catalog-data.js*',route=>route.fulfill({contentType:'application/javascript',
+  body:'window.SEDO_CATALOG='+JSON.stringify({...catalog,document_sources})+';'}));
+ await page.goto('/site/#'+new URLSearchParams({message:row.number,env:row.environment}));
+ const panel=page.locator('.version-panel').filter({has:page.getByRole('heading',{name:'Продуктивный контур'})});
+ const ready=panel.locator('.card').filter({has:page.getByRole('link',{name:'Открыть дерево',exact:true})})
+  .filter({has:page.locator('.schema-diagnostic')});
+ await expect(ready.locator('.schema-diagnostic')).toHaveCount(2);
+ for(const [index,namespace] of qnames.entries()){
+  const issue=ready.locator('.schema-diagnostic').filter({hasText:'{'+namespace+'}r'});
+  await expect(issue).toContainText('Неоднозначные схемы '+(index+1));
+ }
+ await expect(ready.getByRole('link',{name:'Скачать XSD (ZIP)',exact:true})).toBeVisible();
+ await expect(ready.getByRole('link',{name:'Проверить XML локально',exact:true})).toBeVisible();
 });
 
 test('grouped validator identifies all source documents and preserves a specific revision',async({page})=>{

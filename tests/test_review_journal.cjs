@@ -6,6 +6,65 @@ const revision={number:'6',environment:'prod',document_version:'3.1',label_date:
 (async()=>{
  const catalog={revisions:[revision,{...revision,revision_id:'alias'},{...revision,revision_id:'test',environment:'test'},{...revision,revision_id:'changed',dependency_digest:'new'},{...revision,revision_id:'empty',number:'60',schema_review:{findings:[]}}]};
  const rows=journal.collect(catalog);
+ const graphA={...revision,resolved_schema_graph:'a'.repeat(64)};
+ const graphB={...graphA,revision_id:'different-graph',resolved_schema_graph:'b'.repeat(64)};
+ const graphRows=journal.collect({revisions:[graphA,graphB,{...graphA,revision_id:'repeat'}]});
+ assert.deepEqual(graphRows.map(row=>row.revision.revision_id),[graphA.revision_id,graphB.revision_id]);
+ const oldUrl='https://lk.sfr.gov.ru/archive/spec.docx',download='documents/doc.docx';
+ const oldArchive='https://lk.sfr.gov.ru/archive/xsd-original.zip';
+ const oldSource={document_url:oldUrl,document_sha256:'doc',revision_id:'repeat',
+  schema_path:revision.schema_path,archive_sha256:'original-zip',archive_url:oldArchive};
+ const foreignSource={...oldSource,document_url:'https://lk.sfr.gov.ru/foreign.docx',revision_id:graphB.revision_id};
+ const newBytes={...graphA,revision_id:'replacement',document_url:oldUrl,document_sha256:'replacement'};
+ const moved=journal.collect({revisions:[
+  {...graphA,document_download:download},
+  {...graphA,revision_id:'repeat',document_download:download,edition_sources:[oldSource,foreignSource]},
+  {...graphB,document_download:download},
+  newBytes
+ ]});
+ const oldKey=journal.specificationKey(oldSource);
+ assert.ok(journal.sourceOptions(moved).specifications.some(source=>source.value===oldKey));
+ const [selectedOld,...duplicates]=journal.filter(moved,'','',oldKey);
+ assert.deepEqual(duplicates,[]);
+ assert.equal(selectedOld.revision.document_url,oldUrl);
+ assert.equal(selectedOld.revision.document_download,download);
+ assert.equal(journal.filter(moved,'','',foreignSource.document_url).length,0);
+ assert.equal(journal.filter(moved,'','',oldUrl).length,2);
+ assert.equal(journal.filter(moved,'','',journal.specificationKey(graphA)).length,2);
+ const historic=journal.createWorkbook(ExcelJS,[selectedOld],{specification:oldKey,baseURL:'https://example.com/site/'});
+ const historicSheet=historic.getWorksheet('Замечания');
+ assert.equal(historicSheet.getCell('D2').value.hyperlink,'https://example.com/site/'+download);
+ assert.ok(historicSheet.getRow(2).values.some(value=>value?.hyperlink===oldUrl));
+ assert.ok(historicSheet.getRow(2).values.some(value=>value?.hyperlink===oldArchive));
+ const oldXsd=JSON.stringify([oldArchive,revision.schema_path]);
+ assert.equal(journal.filter(moved,'','',oldKey,oldXsd).length,1);
+ const sameGraphSources=['old','new'].map(tag=>({
+  ...graphA,snapshot:tag,document_url:tag==='old'?oldUrl:graphA.document_url,
+  schema_source_type:'wsdl',schema_source_url:'https://ecp.sfr.gov.ru/'+tag+'?wsdl',
+  schema_files:[{path:'main.xsd',download:'sources/main.xsd',sha256:'m'.repeat(64),
+   official_url:'https://ecp.sfr.gov.ru/'+tag+'?xsd=main.xsd'}]
+ }));
+ const [oldPublication,newPublication]=sameGraphSources;
+ const siteFinding={...issue,xsd_source:{...newPublication.schema_files[0],url:newPublication.schema_files[0].official_url}};
+ const observed=journal.collect({revisions:[{...newPublication,schema_review:{findings:[siteFinding]},
+  schema_source_observations:sameGraphSources}]});
+ const oldObservedKey=journal.specificationKey(oldPublication),newObservedKey=journal.specificationKey(newPublication);
+ const oldV1Key=JSON.stringify([[oldPublication.schema_source_url,'main.xsd'],'m'.repeat(64)]);
+ const newV1Key=JSON.stringify([[newPublication.schema_source_url,'main.xsd'],'m'.repeat(64)]);
+ assert.equal(journal.filter(observed,'','',oldObservedKey,newV1Key).length,0);
+ assert.equal(journal.filter(observed,'','',newObservedKey,oldV1Key).length,0);
+ const [oldPublicationRow]=journal.filter(observed,'','',oldObservedKey,oldV1Key);
+ assert.ok(oldPublicationRow);
+ assert.equal(journal.schemaSources(oldPublicationRow.revision,siteFinding).official.url,oldPublication.schema_files[0].official_url);
+ assert.equal(journal.filter(observed,'','',newObservedKey,newV1Key).length,1);
+ const incomplete={...oldPublication,schema_files:oldPublication.schema_files.map(({official_url,...file})=>file)};
+ const incompleteRows=journal.collect({revisions:[{...newPublication,schema_review:{findings:[siteFinding]},
+  schema_source_observations:[newPublication,incomplete]}]});
+ const [incompleteRow]=journal.filter(incompleteRows,'','',oldObservedKey,oldV1Key);
+ const incompleteChain=journal.schemaSources(incompleteRow.revision,siteFinding);
+ assert.equal(incompleteChain.file.url,'sources/main.xsd');
+ assert.equal(incompleteChain.official,null);
+ assert.equal(journal.filter(incompleteRows,'','',oldObservedKey,journal.xsdKey(oldPublication,siteFinding)).length,0);
  const malformed={...revision,number:'99',document_url:'https://lk.sfr.gov.ru/%CF%F0_100%.docx',archive_url:'https://lk.sfr.gov.ru/100%.zip',schema_review:{findings:[issue,{...issue,location:'Таблица 3'}]}};
  const mixed=journal.collect({revisions:[revision,malformed]});
  assert.equal(journal.filter(mixed,'6').length,1);
@@ -72,6 +131,49 @@ const revision={number:'6',environment:'prod',document_version:'3.1',label_date:
  const wsdlImport={...imported,schema_source_type:'wsdl_bridge',schema_source_url:bridged.schema_source_url,schema_sources:[{kind:'xsd',sha256:'common',url:'https://ecp.sfr.gov.ru/service?xsd=Common.xsd'}]};
  const importedRemote=journal.schemaSources(wsdlImport,{xlocation:'types/Common.xsd · value'});
  assert.equal(importedRemote.publication.url,bridged.schema_source_url);assert.equal(importedRemote.file.url,'sources/common.xsd');assert.equal(importedRemote.official.url,wsdlImport.schema_sources[0].url);
+ const wsdlRevision={
+  ...wsdlImport,archive_url:bridged.archive_url,
+  schema_docx_location:'Таблица 2',schema_docx_url:'https://ecp.sfr.gov.ru/service?xsd=main.xsd',
+  schema_declaration_path:'declaration.xsd',schema_declaration_download:'sources/declaration.xsd',
+  schema_sources:[{kind:'xsd',sha256:entry.sha256,url:'https://ecp.sfr.gov.ru/service?xsd=main.xsd'}],
+ };
+ const wsdlRows=[
+  {revision:wsdlRevision,finding:{...companion.finding,location:'Одно XSD'}},
+  {revision:wsdlRevision,finding:{...multi.finding,location:'Два XSD',xsd_sources:[{...dependency,url:'https://ecp.sfr.gov.ru/service?xsd=Common.xsd'}]}},
+ ];
+ for(const ordered of [wsdlRows,[...wsdlRows].reverse()]){
+  const selected=journal.filter([...ordered,{...ordered[0],revision:{...wsdlRevision,environment:'test'}}],'6','prod');
+  assert.equal(selected.length,2);
+  const workbook=journal.createWorkbook(ExcelJS,selected,{number:'6',env:'prod',baseURL});
+  const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(await workbook.xlsx.writeBuffer());
+  const sheet=loaded.getWorksheet('Замечания'),headers=sheet.getRow(1).values;
+  const start=headers.indexOf('Файл XSD 2');
+  assert.ok(start>0);
+  assert.deepEqual(headers.slice(start),[
+   'Файл XSD 2','Официальная публикация XSD 2','Архив, документ или WSDL с XSD 2',
+   'Расположение схемы 2 в документе','Зависимости WSDL 2',
+   'Ссылка на XSD в DOCX','Файл объявления корня','Точка входа XSD',
+  ]);
+  assert.equal(sheet.rowCount,3);
+  assert.equal(loaded.getWorksheet('О журнале').getCell('B3').value,2);
+  for(const [index,row] of ordered.entries()){
+   const rowNumber=index+2;
+   assert.equal(sheet.getCell(rowNumber,headers.indexOf('Место в спецификации')).value,row.finding.location);
+   const cells=Array.from({length:8},(_,offset)=>sheet.getCell(rowNumber,start+offset).value||null);
+   const additional=row.finding.xsd_sources?[
+    {text:'types/Common.xsd',hyperlink:baseURL+'sources/common.xsd'},
+    {text:'Официальная публикация XSD',hyperlink:'https://ecp.sfr.gov.ru/service?xsd=Common.xsd'},
+    {text:'Документ spec.docx',hyperlink:'https://lk.sfr.gov.ru/spec.docx'},
+    'Вложенная XSD',
+    {text:bridged.schema_source_url,hyperlink:bridged.schema_source_url},
+   ]:Array(5).fill(null);
+   assert.deepEqual(cells,[...additional,
+    {text:'Таблица 2',hyperlink:'https://ecp.sfr.gov.ru/service?xsd=main.xsd'},
+    {text:'declaration.xsd',hyperlink:baseURL+'sources/declaration.xsd'},
+    {text:'main.xsd',hyperlink:baseURL+'sources/main.xsd'},
+   ]);
+  }
+ }
  const copies=['v1','v2'].map(version=>({kind:'xsd',archive_path:`schemas/${version}/Common.xsd`,sha256:'c'.repeat(64),url:`https://ecp.sfr.gov.ru/sedo/${version}/Common.xsd`}));
  const files=copies.map(copy=>({path:copy.archive_path,download:`sources/${copy.sha256}.xsd`,sha256:copy.sha256}));
  const duplicate={...direct,schema_files:[entry,...files],schema_sources:copies};

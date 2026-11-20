@@ -7,14 +7,27 @@ import re
 import struct
 import zipfile
 from array import array
+from bisect import bisect_right
+from functools import cache
 from xml.etree import ElementTree as ET
-from schema import Schema, X, dependency_set
+from schema import Schema, X, resolved_dependencies
 from document_metadata import normalized_heading
 
 W="{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 MAX_FILE=16*1024*1024
 MAX_TOTAL=64*1024*1024
 MAX_FILES=2048
+PUBLISHED_QUOTATIONS = 1
+UNVERSIONED_QUOTATIONS = 2
+FORMAT8_QUOTATIONS = 3
+FORMAT9_QUOTATIONS = 4
+FORMAT10_QUOTATIONS = 5
+CURRENT_QUOTATIONS = 6
+FORMAT9_SNAPSHOT = 9
+FORMAT10_SNAPSHOT = 10
+QUOTATION_SNAPSHOT_FORMAT = 11
+DECLARATION_SNAPSHOT_FORMAT = 12
+MODULE_MATCH_VERSION = QUOTATION_SNAPSHOT_FORMAT
 # XML 1.0 NameStartChar and NameChar, excluding the QName separator.
 NCNAME_START = (r"A-Z_a-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u0370-\u037D"
                 r"\u037F-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF"
@@ -30,7 +43,14 @@ def text(node):return " ".join("".join(t.text or "" for t in node.iter(W+"t")).s
 def word_text(node):
     return "".join((n.text or "") if n.tag==W+"t" else "\n" if n.tag==W+"br" else "\t" if n.tag==W+"tab" else "" for n in node.iter())
 
-def xml_fragments(source, *, max_length=MAX_FILE, stats=None, accept_root=None):
+def xml_fragments(source, *, max_length=MAX_FILE, stats=None, accept_root=None, tag_limit=None, on_limit=None):
+    for start, end in _fragment_spans(source, max_length=max_length, stats=stats,
+                                      accept_root=accept_root, tag_limit=tag_limit, on_limit=on_limit):
+        yield source[start:end]
+
+
+def _fragment_spans(source, *, max_length, stats=None, accept_root=None, tag_limit=None,
+                    on_limit=None, published=False):
     """Read non-overlapping XML fragments without rescanning incomplete suffixes."""
     position = 0
     start = None
@@ -40,17 +60,31 @@ def xml_fragments(source, *, max_length=MAX_FILE, stats=None, accept_root=None):
     completed = array("Q")
     def recovered():
         for index in range(0, len(completed), 2):
-            yield source[completed[index]:completed[index + 1]]
+            yield completed[index], completed[index + 1]
+    def oversized(offset):
+        if published:
+            raise ValueError("Слишком большой XML-фрагмент")
+        reason = f"Слишком большой XML-фрагмент с позиции {offset + 1} (лимит {max_length} символов)"
+        if on_limit is None:
+            raise ValueError(reason)
+        on_limit(reason)
+    def reset_candidate():
+        nonlocal start
+        del completed[:]
+        stack.clear()
+        start = None
     while position < len(source):
         opening = source.find("<", position)
         if opening < 0:
             if stats is not None:
                 stats["characters"] = stats.get("characters", 0) + len(source) - position
             if start is not None and len(source) - start > max_length:
-                raise ValueError("Слишком большой XML-фрагмент")
+                oversized(start)
             break
         if start is not None and opening - start > max_length:
-            raise ValueError("Слишком большой XML-фрагмент")
+            oversized(start)
+            yield from recovered()
+            reset_candidate()
         terminator = next((end for prefix, end in (("<!--", "-->"), ("<![CDATA[", "]]>"), ("<?", "?>"))
                            if source.startswith(prefix, opening)), None)
         if terminator:
@@ -65,6 +99,13 @@ def xml_fragments(source, *, max_length=MAX_FILE, stats=None, accept_root=None):
                 if quote:
                     if character == quote:
                         quote = None
+                    elif character == '<':
+                        # A literal < cannot occur inside an XML attribute.
+                        if tag_limit is None:
+                            abandoned = True
+                            break
+                        if stats is not None:
+                            stats['retry'] = True
                 elif character in ('"', "'"):
                     quote = character
                 elif character == ">":
@@ -74,86 +115,115 @@ def xml_fragments(source, *, max_length=MAX_FILE, stats=None, accept_root=None):
                     abandoned = True
                     break
                 end += 1
-                if end - opening > 8192:
+                if tag_limit is not None and end - opening > tag_limit:
                     abandoned = True
+                    if stats is not None:
+                        stats['retry'] = True
                     break
             if abandoned:
                 if stats is not None:
                     stats["characters"] = stats.get("characters", 0) + end - position
                 position = end
                 yield from recovered()
-                del completed[:]
-                stack.clear()
-                start = None
+                reset_candidate()
                 continue
         if stats is not None:
             stats["characters"] = stats.get("characters", 0) + end - position
-        if start is not None and end - start > max_length:
-            raise ValueError("Слишком большой XML-фрагмент")
-        token = source[opening:end]
         position = end
-        if terminator or not token.endswith(">"):
+        candidate_too_large = start is not None and end - start > max_length
+        if candidate_too_large:
+            oversized(start)
+            yield from recovered()
+            reset_candidate()
+        if terminator or source[end - 1] != '>':
             continue
-        name = FRAGMENT_TAG.match(token)
+        name = FRAGMENT_TAG.match(source, opening, end)
         if not name:
             continue
-        tail = token[name.end():]
+        if not published and end - opening > max_length:
+            if not candidate_too_large and not name[1] and (accept_root is None or accept_root(name[2])):
+                oversized(opening)
+            continue
+        tail = source[name.end():end]
         valid_tail = re.fullmatch(r"\s*>", tail) if name[1] else FRAGMENT_ATTRIBUTES.fullmatch(tail)
         if not valid_tail:
             yield from recovered()
-            del completed[:]
-            stack.clear()
-            start = None
+            reset_candidate()
             continue
         if not stack and accept_root is not None and not accept_root(name[2]):
             continue
         if name[1]:
             if not stack or stack[-1][0] != name[2]:
                 yield from recovered()
-                del completed[:]
-                stack.clear()
-                start = None
+                reset_candidate()
                 continue
             fragment_start = stack.pop()[1]
         else:
             fragment_start = opening
             if not stack:
                 start = opening
-            if not token.rstrip().endswith("/>"):
+            if not tail.endswith("/>"):
                 if len(stack) >= 512:
                     raise ValueError("Слишком глубокий XML-фрагмент")
                 stack.append((name[2], opening))
-        if name[1] or token.rstrip().endswith("/>"):
+        if name[1] or tail.endswith("/>"):
             while completed and completed[-2] >= fragment_start:
                 del completed[-2:]
             if stack:
                 completed.extend((fragment_start, end))
         if not stack and start is not None:
-            yield source[start:end]
+            yield start, end
             del completed[:]
             start = None
     yield from recovered()
 
-def document_bindings(doc, *, legacy=False, changes=None):
+def document_bindings(doc, *, legacy=False, changes=None, quotation_rules=CURRENT_QUOTATIONS):
     bindings=[];active=None
     def finish():
         if not active:return
-        examples=[];inline_roots=[]
         source="\n".join(active["paragraphs"])
-        for fragment in xml_fragments(source):
-            try:
-                element=ET.fromstring(fragment);namespace,_,name=element.tag[1:].partition("}") if element.tag.startswith("{") else (None if legacy else "","",element.tag)
-                if namespace=="http://www.w3.org/2001/XMLSchema":
-                    if name=="schema":inline_roots.extend((e.get("name"),element.get("targetNamespace", None if legacy else "")) for e in element.findall("{http://www.w3.org/2001/XMLSchema}element"))
+        # Extraction reports oversized quotations with their document offsets.
+        # Bindings can still be inferred from the rest of the section.
+        def infer(spans):
+            examples, inline_roots = [], []
+            for start, end in spans:
+                try:
+                    element = ET.fromstring(source[start:end])
+                except ET.ParseError:
                     continue
-                if (name,namespace) not in examples:examples.append((name,namespace))
-            except ET.ParseError:continue
-        candidate=active.get("schema") or active.get("document_root") or (inline_roots[0] if len(set(inline_roots))==1 else None) or (examples[0] if len(examples)==1 else None) or active.get("table")
-        if candidate and candidate[1] is None and not legacy:
-            evidence = {ns for name, ns in [*inline_roots, *examples] if name == candidate[0]}
-            if len(evidence) == 1:
-                candidate = (candidate[0], evidence.pop())
-                if changes is not None:changes.add('module_namespace')
+                namespace, _, name = element.tag[1:].partition("}") if element.tag.startswith("{") else (None if legacy else "", "", element.tag)
+                if namespace == X[1:-1]:
+                    if name == "schema":
+                        inline_roots.extend((e.get("name"), element.get("targetNamespace", None if legacy else ""))
+                                            for e in element.findall(X+"element"))
+                    continue
+                if (name, namespace) not in examples:
+                    examples.append((name, namespace))
+            candidate = (active.get("schema") or active.get("document_root")
+                         or (inline_roots[0] if len(set(inline_roots)) == 1 else None)
+                         or (examples[0] if len(examples) == 1 else None) or active.get("table"))
+            if candidate and candidate[1] is None and not legacy:
+                evidence = {ns for name, ns in [*inline_roots, *examples] if name == candidate[0]}
+                if len(evidence) == 1:
+                    return (candidate[0], evidence.pop()), True
+            return candidate, False
+
+        def published_spans():
+            return _fragment_spans(source, max_length=MAX_FILE, tag_limit=8192, published=True)
+
+        if quotation_rules == PUBLISHED_QUOTATIONS:
+            candidate, inferred_namespace = infer(published_spans())
+        else:
+            candidate, inferred_namespace = infer(_fragment_spans(source, max_length=MAX_FILE, on_limit=lambda _reason: None))
+            if quotation_rules >= FORMAT8_QUOTATIONS and changes is not None:
+                try:
+                    previous = infer(published_spans())
+                except ValueError:
+                    previous = None
+                if previous != (candidate, inferred_namespace):
+                    changes.add('module_quotations')
+        if inferred_namespace and changes is not None:
+            changes.add('module_namespace')
         if candidate and re.fullmatch(NCNAME,candidate[0]):
             ns = candidate[1]
             if ns == '' and changes is not None:changes.add('module_namespace')
@@ -186,7 +256,8 @@ def document_bindings(doc, *, legacy=False, changes=None):
     finish()
     return bindings
 
-def xml_contract(data, *, tree=None, document=None, legacy=False):
+def xml_contract(data, *, tree=None, document=None, legacy=False,
+                 quotation_rules=CURRENT_QUOTATIONS, changes=None):
     """Compare full XSD syntax including namespace forms and QName bindings."""
     contexts={};parents={};stack=[];pending={};root=None
     for event,item in ET.iterparse(io.BytesIO(data),events=("start-ns","start","end")):
@@ -205,34 +276,145 @@ def xml_contract(data, *, tree=None, document=None, legacy=False):
         scope = contexts[node]
         return (scope.get(prefix, ('unbound', prefix) if prefix else ''), name)
     named = {(root.get('targetNamespace', ''), node.get('name')):node for node in root.findall(X+'simpleType')}
+    complex_types = {(root.get('targetNamespace', ''), node.get('name')):node for node in root.findall(X+'complexType')}
     if tree is not None:
         named.update({(ns, name):node for (ns, kind, name),node in tree.symbol.items() if kind == 'simpleType'})
-    def scalar_type(node):
+        complex_types.update({(ns, name):node for (ns, kind, name),node in tree.symbol.items() if kind == 'complexType'})
+    def identity(ref, node):
+        if tree is not None and node in tree.owner:
+            return tree.qname_namespace(ref, node), ref.rsplit(':', 1)[-1]
+        namespace, name = expanded(ref.strip(), node)
+        if tree is not None and not namespace and not root.get('targetNamespace'):
+            namespace = document[2]
+        return namespace, name
+    def literal_type(node, rules):
         if node.tag == X+'enumeration':
             node = parents[node]
+        if rules == PUBLISHED_QUOTATIONS:
+            seen = set()
+            while node is not None and node not in seen:
+                seen.add(node)
+                ref = node.get('type') or node.get('base')
+                if ref:
+                    ns, name = identity(ref, node)
+                    if ns == X[1:-1]:
+                        return name, False
+                    node = named.get((ns, name))
+                else:
+                    restriction = node.find(X+'restriction')
+                    node = restriction if restriction is not None else node.find(X+'simpleType')
+            return None, False
         seen = set()
+        is_list = False
+        simple_content = rules >= FORMAT8_QUOTATIONS
+        child_types = (X+'restriction', X+'simpleType', X+'list')
+        if simple_content:
+            child_types += (X+'complexType', X+'simpleContent', X+'extension')
         while node is not None and node not in seen:
             seen.add(node)
-            ref = node.get('type') or node.get('base')
+            if node.tag == X+'list':
+                if is_list:return None, False
+                is_list = True
+            reference = node.get('ref')
+            if tree is not None and reference and node.tag in (X+'attribute', X+'element'):
+                ns, name = identity(reference.strip(), node)
+                node = tree.symbol.get((ns, node.tag[len(X):], name))
+                continue
+            if simple_content and node.tag == X+'restriction' and (local_type := node.find(X+'simpleType')) is not None:
+                node = local_type
+                continue
+            ref = node.get('type') or node.get('base') or node.get('itemType')
             if ref:
-                if tree is not None and node in tree.owner:
-                    identity = tree.qname_namespace(ref, node), ref.rsplit(':', 1)[-1]
-                else:
-                    identity = expanded(ref.strip(), node)
-                    if tree is not None and not identity[0] and not root.get('targetNamespace'):
-                        identity = (document[2], identity[1])
-                if identity[0] == X[1:-1]:return identity[1]
-                node = named.get(identity)
+                ns, name = identity(ref.strip(), node)
+                if ns == X[1:-1]:return name, is_list
+                node = named.get((ns, name))
+                if node is None and simple_content:
+                    node = complex_types.get((ns, name))
             else:
-                restriction = node.find(X+'restriction')
-                node = restriction if restriction is not None else node.find(X+'simpleType')
-        return None
-    def literal(value, node):
-        typ = scalar_type(node)
-        if typ in ('QName', 'NOTATION') and re.fullmatch(QNAME, value.strip()):
-            return expanded(value.strip(), node)
-        if typ is not None:
+                node = next((child for child in node if child.tag in child_types), None)
+        return None, False
+    typing_tree, typing_document = tree, document
+    mapped_nodes = None
+
+    @cache
+    def typed_selection(value, node):
+        nonlocal typing_tree, typing_document, mapped_nodes
+        if mapped_nodes is None:
+            if typing_tree is None:
+                # Standalone contracts have no archive context. Only resolve a
+                # fully local type; unresolved imports keep the lexical value.
+                root_name = next((item.get('name') for item in root.findall(X+'element') if item.get('name')), None)
+                if root_name is None:
+                    return None
+                stream = io.BytesIO()
+                with zipfile.ZipFile(stream, 'w') as archive:
+                    archive.writestr('quote.xsd', data)
+                with zipfile.ZipFile(stream) as archive:
+                    typing_tree = Schema(archive, 'quote.xsd', root_name)
+                    typing_document = typing_tree.files['quote.xsd']
+            mapped_nodes = dict(zip(root.iter(), typing_document[0].iter(), strict=True))
+        owner = mapped_nodes[node]
+        declaration = mapped_nodes[parents[node]] if node.tag == X+'enumeration' else owner
+        member = typing_tree.scalar_member(typing_tree.scalar_source(declaration))
+        if member is None:
+            return None
+        proved = typing_tree._typed_value(owner, value, member=member, detailed=True)
+        if not proved:
+            return None
+        kind, whitespace, *details = proved
+        name = typing_tree._value_qname(owner, value) if kind in ('QName', 'NOTATION') else None
+        return kind, whitespace, name, details[0] if details else None
+
+    def typed_atom(kind, whitespace, value, name):
+        if name is not None:
+            return 'expanded', kind, tuple(name)
+        if whitespace != 'preserve':
+            value = re.sub(r'[\t\r\n]', ' ', value)
+            if whitespace == 'collapse':
+                value = re.sub(r' +', ' ', value).strip(' ')
+        if kind == 'boolean':
+            value = value in ('true', '1')
+        return 'atomic', kind, value
+
+    def typed_literal(value, node, rules):
+        selection = typed_selection(value, node)
+        if selection is None:
+            return None
+        kind, whitespace, name, items = selection
+        if rules == FORMAT9_QUOTATIONS:
+            if name is not None:
+                return tuple(name)
+            if items and any(item[3] is not None for item in items):
+                return ('list', [tuple(name) if name is not None else (kind, lexical)
+                                 for kind, _, lexical, name in items])
+            return None
+        if kind == 'list':
+            return ('list', [typed_atom(*item) for item in items]) if items is not None else None
+        return typed_atom(kind, whitespace, value, name)
+
+    has_union = (root.find('.//'+X+'union') is not None if tree is None else
+                 any(source.find('.//'+X+'union') is not None for source, _, _ in tree.documents.values()))
+
+    def literal(value, node, rules):
+        typ, sequence = literal_type(node, rules)
+        if typ in ('QName', 'NOTATION'):
+            if sequence:
+                tokens = re.findall(r'[^ \t\r\n]+', value)
+                if all(re.fullmatch(QNAME, token) for token in tokens):
+                    names = [expanded(token, node) for token in tokens]
+                    if all(isinstance(namespace, str) for namespace, _ in names):
+                        return ('list', names)
+            elif re.fullmatch(QNAME, value.strip()):
+                return expanded(value.strip(), node)
+        if typ is not None and not sequence:
             return value
+        if rules >= FORMAT9_QUOTATIONS and has_union:
+            try:
+                proved = typed_literal(value, node, rules)
+            except (ValueError, KeyError, RecursionError):
+                proved = None
+            if proved is not None:
+                return proved
         # Imported types, unions and lists can contain QName values. Retain
         # their lexical spelling and the bindings of potentially significant words.
         words = [word for word in value.split() if re.fullmatch(QNAME, word)]
@@ -250,7 +432,17 @@ def xml_contract(data, *, tree=None, document=None, legacy=False):
             if key in qnames:
                 value=[expanded(token, node) for token in value.split()]
             elif not legacy and (key in ('default', 'fixed') or key == 'value' and node.tag == X+'enumeration'):
-                value=literal(value, node)
+                normalized = literal(value, node, quotation_rules)
+                if quotation_rules >= FORMAT8_QUOTATIONS and changes is not None:
+                    format8 = literal(value, node, FORMAT8_QUOTATIONS)
+                    if format8 != literal(value, node, PUBLISHED_QUOTATIONS):
+                        changes.add('module_quotations')
+                    format9 = literal(value, node, FORMAT9_QUOTATIONS) if quotation_rules >= FORMAT9_QUOTATIONS else format8
+                    if format9 != format8:
+                        changes.add('module_typed_values')
+                    if normalized != format9:
+                        changes.add('module_typed_contract')
+                value = normalized
             elif not legacy and key=="xpath" and node.tag in (X+'selector', X+'field'):
                 value=xpath(value, node)
             attrs.append((key,value))
@@ -331,7 +523,7 @@ def unpack_schemas(filename,content,budget=None):
     if sum(map(len,files.values()))>MAX_TOTAL:raise ValueError("Слишком много XSD")
     return files
 
-def extract_archives(document):
+def extract_archives(document, *, quotation_rules=CURRENT_QUOTATIONS, changes=None):
     import olefile
     packages=[];issues=[];seen=set();seen_packages=set();budget=[MAX_TOTAL]
     with zipfile.ZipFile(io.BytesIO(document)) as doc:
@@ -373,14 +565,68 @@ def extract_archives(document):
         body=ET.fromstring(doc.read("word/document.xml"))
         source="\n".join(word_text(p) for p in body.iter(W+"p"))
     # The old ordinal is part of public source IDs. Allocate its original slots
-    # first, even for a malformed quotation; append newly recognized spellings.
+    # first, even for a malformed quotation; append newly recognized fragments.
     legacy = {"xs:schema", "xsd:schema"}
-    def schema_fragments():
-        yield from xml_fragments(source, accept_root=legacy.__contains__)
-        yield from xml_fragments(source, accept_root=lambda q: q.rsplit(":", 1)[-1] == "schema" and q not in legacy)
-    for index,fragment in enumerate(schema_fragments(),1):
+    def is_schema(name):
+        return name.rsplit(":", 1)[-1] == "schema"
+
+    def legacy_scan(**options):
+        yield from _fragment_spans(source, accept_root=legacy.__contains__, max_length=MAX_FILE, **options)
+        yield from _fragment_spans(source, accept_root=lambda name: is_schema(name) and name not in legacy,
+                                   max_length=MAX_FILE, **options)
+
+    errors = set()
+    def record_limit(reason):
+        if reason not in errors:
+            errors.add(reason)
+            issues.append(dict(container='word/document.xml', reason=reason))
+
+    if quotation_rules == PUBLISHED_QUOTATIONS:
+        fragments = enumerate(legacy_scan(tag_limit=8192, published=True), 1)
+    elif quotation_rules == UNVERSIONED_QUOTATIONS:
+        # Preserve the temporary two-pass behavior for exact replay of
+        # snapshots collected before quotation rules were versioned.
+        def unversioned():
+            stats, recognized = {}, set()
+            for start, end in legacy_scan(tag_limit=8192, on_limit=record_limit, stats=stats):
+                recognized.add(source[start:end])
+                yield start, end
+            if stats.get('retry'):
+                for start, end in legacy_scan(on_limit=record_limit):
+                    if source[start:end] not in recognized:
+                        yield start, end
+        fragments = enumerate(unversioned(), 1)
+    else:
+        slots = []
         try:
-            payload=fragment.encode("utf8")
+            slots.extend(legacy_scan(tag_limit=8192, published=True))
+        except ValueError:
+            if changes is not None:
+                changes.add('module_quotations')
+        top_level = []
+        for start, end in _fragment_spans(source, max_length=MAX_FILE, accept_root=is_schema, on_limit=record_limit):
+            try:
+                if ET.fromstring(source[start:end]).tag == X + "schema":
+                    top_level.append((start, end))
+            except ET.ParseError:
+                pass
+        starts = [start for start, _ in top_level]
+        slot_spans = set(slots)
+        fragments = []
+        for index, (start, end) in enumerate(slots, 1):
+            containing = bisect_right(starts, start) - 1
+            if containing >= 0:
+                outer_start, outer_end = top_level[containing]
+                if outer_start < start and end <= outer_end:
+                    continue
+            fragments.append((index, (start, end)))
+        new = (span for span in top_level if span not in slot_spans)
+        fragments.extend(enumerate(new, len(slots) + 1))
+        if changes is not None and (errors or slots != [span for _, span in fragments]):
+            changes.add('module_quotations')
+    for index,(start,end) in fragments:
+        try:
+            payload=source[start:end].encode("utf8")
             if ET.fromstring(payload).tag != X + "schema":
                 continue
             key=digest(payload)
@@ -406,7 +652,8 @@ def extract_archives(document):
         packages.append(dict(container="word/document.xml#combined",filename="Схемы одного DOCX.zip",original_sha256=digest(document),content=output.getvalue()))
     return packages,issues
 
-def match_document(document,entries,read_object,*,legacy=False,changes=None):
+def match_document(document,entries,read_object,*,legacy=False,changes=None,
+                   quotation_rules=CURRENT_QUOTATIONS, diagnostic_namespaces=False, decisions=None, attempts=None):
     from wsdl_sources import prefer_wsdl_inline_entries
     matches=[];issues=[]
     bindings=document.get("module_bindings",[])
@@ -427,8 +674,17 @@ def match_document(document,entries,read_object,*,legacy=False,changes=None):
     native=[a for a in bridged if "#schema-" not in a.get("document_container","")]
     inline=[a for a in bridged if "#schema-" in a.get("document_container","")]
     for binding in bindings:
-        if binding['number'] in conflicts:continue
+        if binding['number'] in conflicts:
+            if decisions is not None:
+                reason = next(i['reason'] for i in issues if i['number'] == binding['number'])
+                decisions.append(dict(number=binding['number'], root=binding['root'], namespace=binding.get('namespace'), reason=reason))
+            continue
+        declaration = dict(number=binding['number'], root=binding['root'])
+        if diagnostic_namespaces:
+            declaration['namespace'] = binding.get('namespace')
         candidates=[]
+        resolved_graphs = {}
+        contract_changes = set() if changes is not None else None
         for archives in (own,external,native,inline):
             for archive in archives:
                 for schema in archive.get("schemas",[]):
@@ -438,15 +694,39 @@ def match_document(document,entries,read_object,*,legacy=False,changes=None):
                     if known and binding["namespace"]!=(schema["namespace"] or ""):continue
                     if not any(r["name"]==binding["root"] for r in schema["roots"]):continue
                     try:
-                        dependencies=dependency_set(archive["schemas"],schema["path"])
+                        dependencies, graph = resolved_dependencies(archive["schemas"], schema["path"])
                         with zipfile.ZipFile(io.BytesIO(read_object(archive["sha256"]))) as source:
                             tree=Schema(source,schema["path"],binding["root"]);tree.field(tree.root)
-                            def contract_for(path):
-                                return xml_contract(source.read(path), tree=tree, document=tree.files[path], legacy=legacy)
-                            contracts=[(posixpath.relpath(path,posixpath.dirname(schema["path"])),contract_for(path)) for path in tree.files if path!=schema["path"]]
-                            contract=(contract_for(schema["path"]),sorted(contracts))
+                            def contract_for(path, document):
+                                return xml_contract(source.read(path), tree=tree, document=document,
+                                                    legacy=legacy, quotation_rules=quotation_rules,
+                                                    changes=contract_changes)
+                            main = schema['path']
+                            if quotation_rules >= CURRENT_QUOTATIONS:
+                                # A chameleon member may resolve its types and
+                                # value constraints differently in each namespace.
+                                contexts = {(path, ns): contract_for(path, document)
+                                            for (path, ns), document in tree.documents.items()}
+                                contract = sorted(('.', ns, value) if path == main else
+                                                  (posixpath.relpath(path, posixpath.dirname(main)), ns, value)
+                                                  for (path, ns), value in contexts.items())
+                            if quotation_rules <= FORMAT10_QUOTATIONS or changes is not None:
+                                previous = {path: (contexts[path, document[2]] if quotation_rules >= CURRENT_QUOTATIONS
+                                                   else contract_for(path, document)) for path, document in tree.files.items()}
+                                previous_contract = (previous[main], sorted(
+                                    (posixpath.relpath(path, posixpath.dirname(main)), value)
+                                    for path, value in previous.items() if path != main))
+                                if quotation_rules <= FORMAT10_QUOTATIONS:
+                                    contract = previous_contract
                         if len({f["path"] for f in tree.fields})!=len(tree.fields):raise ValueError("Повторные XML-пути в дереве")
                         signature=digest(json.dumps(contract,ensure_ascii=False,sort_keys=True).encode("utf8"))
+                        previous_signature = (digest(json.dumps(previous_contract, ensure_ascii=False, sort_keys=True).encode('utf8'))
+                                              if changes is not None and quotation_rules >= CURRENT_QUOTATIONS else signature)
+                        # Per-member contracts already compare the normalized
+                        # schema bytes. Add their resolved positions and
+                        # namespaces without comparing original lexical forms twice.
+                        topology = tuple((origin[:2], index, kind, location, target[:2])
+                                         for origin, index, kind, location, target in graph[1])
                         item=dict(binding,namespace=schema["namespace"],archive_sha256=archive["sha256"],archive_url=archive["url"],
                                   archive_name=archive.get("archive_name",archive["url"].rsplit("/",1)[-1]),schema_path=schema["path"],dependencies=dependencies,
                                   dependency_digest=digest(json.dumps(dependencies,ensure_ascii=False,indent=2).encode("utf8")))
@@ -454,17 +734,43 @@ def match_document(document,entries,read_object,*,legacy=False,changes=None):
                             item["schema_source_type"]=archive["source_type"]
                             item["schema_source_url"]=archive["source_url"]
                             item["schema_sources"]=archive["source_files"]
-                        candidates.append((archive,schema,signature,item))
-                    except Exception as exc:issues.append(dict(number=binding["number"],root=binding["root"],reason=str(exc)))
+                        if decisions is not None:
+                            resolved_graphs[archive["sha256"], schema["path"]] = digest(
+                                json.dumps(graph, ensure_ascii=False, indent=2).encode("utf8"))
+                        candidates.append((archive,schema,signature,item,topology,previous_signature))
+                    except Exception as exc:
+                        issues.append(dict(declaration, reason=str(exc)))
+                        if attempts is not None:
+                            attempts.append(dict(declaration, namespace=binding.get('namespace'), reason=str(exc),
+                                                 archive_sha256=archive['sha256'], schema_path=schema['path']))
             if candidates:break
         candidates=prefer_wsdl_inline_entries(candidates,binding["root"])
         unique={}
-        for _,_,signature,item in candidates:unique.setdefault(signature,item)
-        if changes is not None and len({item['dependency_digest'] for _,_,_,item in candidates}) > 1:
-            changes.add('module_contract')
+        for _, _, signature, item, topology, _ in candidates:
+            key = (signature, topology) if quotation_rules >= FORMAT9_QUOTATIONS else signature
+            unique.setdefault(key, item)
+        if changes is not None:
+            if len({item['dependency_digest'] for _, _, _, item, _, _ in candidates}) > 1:
+                changes.add('module_contract')
+                changes.update(contract_changes)
+            previous_keys = {(signature, topology) for _, _, _, _, topology, signature in candidates}
+            if quotation_rules >= CURRENT_QUOTATIONS and (len(previous_keys) == 1) != (len(unique) == 1):
+                changes.add('module_document_context')
+            if (quotation_rules >= FORMAT9_QUOTATIONS and len(unique) > 1
+                    and len({signature for _, _, _, _, _, signature in candidates}) == 1):
+                changes.add('module_resolved_graph')
         if len(unique)==1:
             item=next(iter(unique.values()))
             identity=lambda m:(m['number'],m['root'],m['namespace'],m['schema_path'],m['dependency_digest'])
+            if decisions is not None:
+                decisions.append(dict(number=binding['number'], root=binding['root'], namespace=binding.get('namespace'),
+                                      effective_namespace=item['namespace'], archive_sha256=item['archive_sha256'],
+                                      resolved_schema_graph=resolved_graphs[item['archive_sha256'], item['schema_path']],
+                                      schema_path=item['schema_path']))
             if not any(identity(m)==identity(item) for m in matches):matches.append(item)
-        else:issues.append(dict(number=binding["number"],root=binding["root"],reason="Не найдена полная схема" if not unique else "Неоднозначные схемы"))
+        else:
+            reason = "Не найдена полная схема" if not unique else "Неоднозначные схемы"
+            issues.append(dict(declaration, reason=reason))
+            if decisions is not None:
+                decisions.append(dict(number=binding['number'], root=binding['root'], namespace=binding.get('namespace'), reason=reason))
     return matches,issues

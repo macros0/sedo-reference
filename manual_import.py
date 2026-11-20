@@ -12,8 +12,9 @@ from urllib.parse import quote
 
 import build_site
 from auto_update import promote as promote_import, update_lock, validate_history, build_history_baseline
-from catalog import derive, export
-from document_metadata import filename_metadata, root_metadata
+from catalog import derive, export, graph_digest, known_catalog_revisions
+from document_metadata import filename_metadata, root_metadata, root_matches
+from schema import resolved_dependencies
 from fields import build
 from sync import MAX_BYTES, encode, inspect_file, record_observation, sha, write
 
@@ -41,12 +42,25 @@ def inspect_upload(content, kind):
         raise ValueError("Не удалось прочитать " + kind.upper() + ": " + str(exc)) from exc
 
 
-def import_structure(info, number):
+def import_structure(info, number, schemas=None):
     """Select a declared module binding without changing the import provenance."""
     bindings = info.get('module_bindings', [])
     if not bindings:
         return info.get('structure', []), False
     matches = [row for row in bindings if row['number'] == str(number)]
+    if len(matches) > 1 and schemas is not None:
+        owners = set()
+        for binding in matches:
+            choices = {(schema['namespace'] or '', binding['root'], graph_digest(
+                resolved_dependencies(members, schema['path'])[1]))
+                for members in schemas for schema in members
+                if root_matches(schema, binding['root'], binding.get('namespace') or None, binding.get('namespace') is not None)}
+            if len(choices) != 1:
+                raise ValueError('Неоднозначное сопоставление деклараций модульного DOCX и XSD')
+            owners.update(choices)
+        if len(owners) == 1:
+            namespace, root, _ = owners.pop()
+            matches = [dict(root=root, namespace=namespace)]
     if len(matches) != 1:
         raise ValueError('Номер сообщения отсутствует или неоднозначен в модульном DOCX')
     selected = matches[0]
@@ -133,7 +147,8 @@ def stage_import(root, document, filename, metadata, archive=None, archive_filen
             raise ValueError("Укажите корректную дату документа") from exc
     observed_at = datetime.now(timezone.utc).isoformat()
     doc_meta = inspect_upload(document, "docx")
-    structure, module_document = import_structure(doc_meta, number)
+    archive_meta = inspect_upload(archive, "zip") if archive is not None else None
+    structure, module_document = import_structure(doc_meta, number, [archive_meta.get("schemas", [])] if archive_meta else None)
     if module_document:
         doc_meta = dict(doc_meta, structure=structure)
     doc_hash = sha(document)
@@ -143,12 +158,11 @@ def stage_import(root, document, filename, metadata, archive=None, archive_filen
     if archive is not None:
         if not str(archive_filename).lower().endswith(".zip"):
             raise ValueError("Схемы нужно загрузить в ZIP со всеми импортируемыми XSD")
-        archive_meta = inspect_upload(archive, "zip")
         if not archive_meta.get("schemas"):
             raise ValueError("В ZIP нет XSD-схем")
         entries.append(dict(environment=env, url="manual:///" + quote(re.split(r"[\\/]", archive_filename)[-1]), label="Ручной архив XSD", kind="zip", sha256=sha(archive), **archive_meta))
     previous = json.loads((root / "data/catalog.json").read_bytes())
-    known_revisions = {row["revision_id"] for row in previous["revisions"]}
+    known_revisions = known_catalog_revisions([*previous['revisions'], *previous.get('revoked_revisions', [])], root / 'state')
     result = derive(dict(entries=entries), known_revisions, preferred_revision_id=preferred_revision_id)
     revision = result["revisions"][0]
     if archive is not None and revision["status"] != "matched":

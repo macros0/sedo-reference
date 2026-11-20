@@ -94,9 +94,16 @@ class SourceCollectionTests(unittest.TestCase):
         self.assertEqual(report['status'], 'ok')
         diagnosis = next(row for row in report['schema_diagnostics'] if row['source'] == missing_url)
         self.assertEqual(diagnosis['issues'][0]['reason'], missing['schema_reason'])
+        module_url = SITES['test'].replace('/sedo.html', '/specs_sedo/file.docx')
+        module_diagnosis = next(row for row in report['schema_diagnostics'] if row['source'] == module_url)
+        [module_issue] = module_diagnosis['issues']
+        self.assertEqual((module_issue['number'], module_issue['root'], module_issue['declared_namespace']),
+                         ('999', 'response', 'urn:main'))
+        self.assertEqual((module_issue['code'], module_issue['reason']),
+                         ('module_binding_unmatched', 'Не найдена полная схема'))
         coverage = json.loads((self.root/'data/schema-coverage.json').read_bytes())
         self.assertEqual(next(row for row in coverage['missing'] if row['number'] == '999' and row['environment'] == 'test')['reasons'],
-                         [missing['schema_reason']])
+                         [module_issue['reason'], missing['schema_reason']])
         promoted = (self.state/'current.json').read_bytes()
         self.assertNotEqual(promoted, original)
 

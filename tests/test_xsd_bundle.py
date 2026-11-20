@@ -125,10 +125,293 @@ class XsdBundleTests(unittest.TestCase):
                     self.assertEqual(validator.validate(etree.fromstring(xml.encode())), valid,
                                      str(validator.error_log))
                     if kind == 'calendar-facet' and not valid:
-                        self.assertTrue(any('Не удалось точно сравнить' in error.message for error in validator.error_log))
+                        self.assertTrue(any('does not match the fixed value' in error.message for error in validator.error_log))
                     if kind.startswith('patterned-') and not valid and 'note="bad"' not in xml:
                         reason = 'pattern' if ' 007' in xml else 'does not match the fixed value'
                         self.assertTrue(any(reason in error.message for error in validator.error_log))
+
+    def test_downloaded_validator_compares_items_across_fixed_union_list_branches(self):
+        from tests.typed_fixed_fixture import cross_branch_lists_fixture
+        from xsd_bundle import _prepare, _zip
+        row, files, cases = cross_branch_lists_fixture()
+        original = etree.XMLSchema(etree.fromstring(files['main.xsd']))
+        with zipfile.ZipFile(io.BytesIO(_zip(row, *_prepare(row, files)))) as archive:
+            archive.extractall(self.base)
+        for xml, valid, native in cases:
+            with self.subTest(xml=xml):
+                self.assertEqual(original.validate(etree.fromstring(xml.encode())), native)
+                result = self.run_validator(self.base, xml.encode())
+                self.assertEqual(result.returncode, 0 if valid else 1, result.stderr)
+                if not valid:
+                    self.assertIn('does not match the fixed value', result.stderr)
+
+    def test_downloaded_validator_compares_fixed_duration_without_rounding(self):
+        from tests.typed_fixed_fixture import duration_fixture
+        from xsd_bundle import _prepare, _zip
+        row, files, cases = duration_fixture()
+        with zipfile.ZipFile(io.BytesIO(_zip(row, *_prepare(row, files)))) as archive:
+            archive.extractall(self.base)
+        for xml, valid in cases:
+            with self.subTest(xml=xml):
+                result = self.run_validator(self.base, xml.encode())
+                self.assertEqual(result.returncode, 0 if valid else 1, result.stderr)
+                if not valid and '6782S' in xml:
+                    self.assertIn('does not match the fixed value', result.stderr)
+
+    def test_downloaded_validator_accepts_legacy_compound_list_probes(self):
+        # Frozen format-1 output from 40de4d9 has a third, list-wide item probe.
+        fixture = json.loads((PROJECT/'tests/fixtures/typed-fixed-format-1.json').read_text(encoding='utf-8'))
+        pack = fixture['pack']
+        for name, content in pack['files'].items():
+            target = self.base/name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(base64.b64decode(content))
+        (self.base/'manifest.json').write_text(json.dumps(pack), encoding='utf-8')
+        (self.base/'validate.py').write_bytes((PROJECT/'xsd_validate.py').read_bytes())
+        for xml, valid in fixture['cases']:
+            with self.subTest(xml=xml):
+                result = self.run_validator(self.base, xml.encode())
+                self.assertEqual(result.returncode, 0 if valid else 1, result.stderr)
+
+    def test_legacy_id_union_requires_profiles_in_imported_schema(self):
+        from xsd_validate import compile_schema
+        legacy = json.loads((PROJECT/'tests/fixtures/document-id-format-1.json').read_text('utf8'))
+        for name, content in legacy['files'].items():
+            target=self.base/name
+            target.parent.mkdir(parents=True,exist_ok=True)
+            target.write_bytes(base64.b64decode(content))
+        (self.base/'manifest.json').write_text(json.dumps(legacy),'utf8')
+        with self.assertRaisesRegex(ValueError,'отсутствуют профили ID'):
+            compile_schema(self.base/'message.xsd',self.base)
+
+    def test_restricted_calendar_and_local_content_publish_both_validators(self):
+        from xsd_validate import _calendar_order
+        self.assertIsNone(_calendar_order('duration', 'P1M', 'P30D'))
+        self.assertEqual(_calendar_order('duration', 'P1M', 'P32D'), -1)
+        self.assertEqual(_calendar_order('duration', '-P1M', '-P32D'), 1)
+        from audit_xml_examples import _schema
+        from tests.typed_fixed_fixture import (calendar_facets_fixture, calendar_without_fixed_fixture,
+                                               direct_calendar_bounds_fixture, local_simple_content_fixture,
+                                               union_instance_type_fixture)
+        fixtures = [(fixture.__name__, fixture())
+                    for fixture in (calendar_facets_fixture, local_simple_content_fixture,
+                                    direct_calendar_bounds_fixture, union_instance_type_fixture)]
+        fixtures.extend((kind+'-'+context, calendar_without_fixed_fixture(kind, context))
+                        for kind in ('duration', 'dateTime') for context in ('direct', 'inline'))
+        fixtures.extend((kind+'-max-inclusive', calendar_without_fixed_fixture(kind, inclusive_max=True))
+                        for kind in ('duration', 'dateTime'))
+        fixtures.append(('duration-default', calendar_without_fixed_fixture('duration', default=True)))
+        for name, (row, files, cases) in fixtures:
+            with self.subTest(fixture=name):
+                data = io.BytesIO()
+                with zipfile.ZipFile(data, 'w') as archive:
+                    for source_path, content in files.items():
+                        archive.writestr(source_path, content)
+                digest = sha(data.getvalue())
+                write(self.state/'objects'/digest, data.getvalue())
+                row.update(status='matched', revision_id=digest, archive_sha256=digest,
+                           dependencies=[[name, sha(content)] for name, content in files.items()])
+                download = self.bundle(row)
+                self.assertTrue(row['validation_download'])
+                directory = self.base / name
+                with zipfile.ZipFile(download) as copied:
+                    manifest = json.loads(copied.read('manifest.json'))
+                    for record in manifest['files']:
+                        self.assertEqual(copied.read(record['original_path']), files[record['source_path']])
+                        self.assertEqual(record['original_sha256'], sha(files[record['source_path']]))
+                        self.assertEqual(record['local_sha256'], sha(copied.read(record['local_path'])))
+                    copied.extractall(directory)
+                audit = _schema(self.state/'objects'/digest, row)
+                native = (etree.XMLSchema(etree.fromstring(files['main.xsd']))
+                          if name == 'union_instance_type_fixture' else None)
+                for xml, valid in cases:
+                    with self.subTest(xml=xml):
+                        result = self.run_validator(directory, xml.encode())
+                        self.assertEqual(result.returncode, 0 if valid else 1, result.stderr)
+                        node = etree.fromstring(xml.encode())
+                        self.assertEqual(audit.validate(node), valid, str(audit.error_log))
+                        if native is not None and 'xsi:type="Word' in xml:
+                            self.assertEqual(native.validate(node), valid, str(native.error_log))
+
+    def test_effective_values_and_calendar_projection_through_zip_and_docx_audit(self):
+        from audit_xml_examples import W, audit
+        from tests.typed_fixed_fixture import effective_value_and_projection_fixtures
+
+        for name, (row, files, cases) in effective_value_and_projection_fixtures():
+            with self.subTest(fixture=name):
+                data = io.BytesIO()
+                with zipfile.ZipFile(data, 'w') as source:
+                    for path, content in files.items():
+                        source.writestr(path, content)
+                raw = data.getvalue()
+                digest = sha(raw)
+                archive_path = self.state/'objects'/digest
+                write(archive_path, raw)
+                row.update(status='matched', revision_id=digest, archive_sha256=digest,
+                           dependencies=[[path, sha(content)] for path, content in files.items()])
+                download = self.bundle(row)
+                self.assertTrue(row['validation_download'])
+                directory = self.base/name
+                with zipfile.ZipFile(download) as package:
+                    manifest = json.loads(package.read('manifest.json'))
+                    for record in manifest['files']:
+                        self.assertEqual(package.read(record['original_path']), files[record['source_path']])
+                        self.assertEqual(record['original_sha256'], sha(files[record['source_path']]))
+                    package.extractall(directory)
+                for document, valid in cases:
+                    with self.subTest(xml=document):
+                        result = self.run_validator(directory, document.encode())
+                        self.assertEqual(result.returncode, 0 if valid else 1, result.stderr)
+                        body = etree.Element(W+'body')
+                        for text in ('Пример XML-документа', document):
+                            paragraph = etree.SubElement(body, W+'p')
+                            etree.SubElement(etree.SubElement(paragraph, W+'r'), W+'t').text = text
+                        checked, findings, notes = audit(row, body, archive_path)
+                        self.assertEqual(checked, 1, notes)
+                        self.assertEqual(bool(findings), not valid, findings)
+                        if findings:
+                            expected_path = '/request/@d' if ' d="' in document else '/request'
+                            if '<other/>' in document:
+                                expected_path = '/request/other'
+                            elif name.startswith('unreachable-derived'):
+                                expected_path = '/request/@type'
+                            self.assertEqual({item['location'].split(' — ')[-1] for item in findings}, {expected_path})
+                self.assertEqual(archive_path.read_bytes(), raw)
+
+    def test_validation_scopes_through_zip_and_docx_audit(self):
+        from audit_xml_examples import W, audit
+        from tests.typed_fixed_fixture import validation_scope_fixtures
+
+        for name, (row, files, cases, unavailable) in validation_scope_fixtures():
+            with self.subTest(fixture=name):
+                data = io.BytesIO()
+                with zipfile.ZipFile(data, 'w') as source:
+                    for path, content in files.items():
+                        source.writestr(path, content)
+                raw = data.getvalue()
+                digest = sha(raw)
+                archive_path = self.state/'objects'/digest
+                write(archive_path, raw)
+                row.update(status='matched', revision_id=digest, archive_sha256=digest,
+                           dependencies=[[path, sha(content)] for path, content in files.items()])
+                navigation = {digest: ['request', 'request/marker']} if name.startswith('substitution-fixed-') else None
+                publish_bundles(dict(revisions=[row]), self.state, self.site, navigation=navigation)
+                if navigation:
+                    import gzip
+                    from schema import Schema
+                    pack = json.loads(gzip.decompress((self.site/row['validation_download']).read_bytes()))
+                    self.assertEqual(pack['field_namespaces'], [[''], ['']])
+                    with zipfile.ZipFile(archive_path) as package:
+                        display = Schema(package, row['schema_path'], row['root'])
+                        with self.assertRaisesRegex(ValueError, 'Требуется проверка'):
+                            display.field(display.root)
+                if unavailable:
+                    self.assertEqual(row['schema_export_status'], 'unavailable')
+                    self.assertIn(unavailable, row['schema_export_error'])
+                    if name.startswith('identity-lax-'):
+                        self.assertTrue(row['schema_export_error'].endswith('/xs:attribute'), row['schema_export_error'])
+                    self.assertNotIn('schema_download', row)
+                    self.assertNotIn('validation_download', row)
+                else:
+                    self.assertEqual(row['schema_export_status'], 'ready', row.get('schema_export_error'))
+                    self.assertIn('validation_download', row)
+                    directory = self.base/name
+                    with zipfile.ZipFile(self.site/row['schema_download']) as package:
+                        package.extractall(directory)
+                for document, location, reason in cases:
+                    with self.subTest(xml=document):
+                        body = etree.Element(W+'body')
+                        for text in ('Пример XML-документа', document):
+                            paragraph = etree.SubElement(body, W+'p')
+                            etree.SubElement(etree.SubElement(paragraph, W+'r'), W+'t').text = text
+                        checked, findings, notes = audit(row, body, archive_path)
+                        if unavailable:
+                            self.assertEqual((checked, findings), (0, []))
+                            self.assertTrue(any(unavailable in note for note in notes), notes)
+                            continue
+                        result = self.run_validator(directory, document.encode())
+                        self.assertEqual(result.returncode, int(location is not None), result.stderr)
+                        self.assertEqual(checked, 1, notes)
+                        self.assertEqual({item['location'].split(' — ')[-1] for item in findings},
+                                         {location} if location else set(), findings)
+                        if reason:
+                            self.assertIn(reason, result.stderr)
+                            self.assertIn('Строка '+str(3 if '/repeat/' in location else
+                                1 if location == '/request' or location.startswith('/request/@') else 2)+',',
+                                result.stderr)
+
+    def test_ordered_calendar_facet_in_uncovered_context_is_unavailable(self):
+        from tests.typed_fixed_fixture import calendar_without_fixed_fixture
+
+        for context in ('ref', 'group', 'named-owner', 'element', 'identity-key', 'identity-union',
+                        'derived-substitution'):
+            with self.subTest(context=context):
+                row, files, _ = calendar_without_fixed_fixture('duration', context)
+                raw = files['main.xsd']
+                native = etree.XMLSchema(etree.fromstring(raw))
+                if context == 'identity-union':
+                    duplicate = b'<request peer="PT0.87500000000000001S"><item id="PT0.87500000000000001S"/></request>'
+                    self.assertFalse(native.validate(etree.fromstring(duplicate)))
+                data = io.BytesIO()
+                with zipfile.ZipFile(data, 'w') as archive:
+                    archive.writestr('main.xsd', raw)
+                digest = sha(data.getvalue())
+                write(self.state/'objects'/digest, data.getvalue())
+                row.update(status='matched', revision_id=digest, archive_sha256=digest,
+                           dependencies=[['main.xsd', sha(raw)]])
+                publish_bundles(dict(revisions=[row]), self.state, self.site)
+                self.assertEqual(row['schema_export_status'], 'unavailable')
+                self.assertIn('minExclusive', row['schema_export_error'])
+                self.assertNotIn('schema_download', row)
+                self.assertNotIn('validation_download', row)
+
+    def test_calendar_projection_keeps_invalid_value_constraints_unavailable(self):
+        from tests.typed_fixed_fixture import (direct_calendar_bounds_fixture,
+                                               effective_value_and_projection_fixtures)
+
+        row, files, _ = direct_calendar_bounds_fixture()
+        raw = files['main.xsd']
+        variants = {
+            'unrelated invalid fixed': raw.replace(b'</xs:complexType>',
+                b'<xs:attribute name="bad" type="xs:int" fixed="no"/></xs:complexType>'),
+            'fixed equal to exclusive bound': raw.replace(b'fixed="PT0.87500000000000002S"',
+                                                           b'fixed="PT0.87500000000000001S"'),
+            'default equal to exclusive bound': raw.replace(b'fixed="PT0.87500000000000002S"',
+                                                             b'default="PT0.87500000000000001S"'),
+        }
+        projected = dict(effective_value_and_projection_fixtures())
+        union = projected['projected-union'][1]['main.xsd']
+        sequence = projected['projected-list'][1]['main.xsd']
+        variants.update({
+            'union fixed equal to exclusive bound': union.replace(b'fixed="PT0.87500000000000002S"',
+                                                                   b'fixed="PT0.87500000000000001S"'),
+            'list default has an out-of-range item': sequence.replace(b'02S PT0.87500000000000002S',
+                                                                     b'02S PT0.87500000000000001S'),
+            'list default fails length': sequence.replace(b'02S PT0.87500000000000002S', b'02S'),
+            'union fixed and unrelated error': union.replace(b'</xs:schema>',
+                b'<xs:element name="other" type="xs:int" fixed="no"/></xs:schema>'),
+            'rounded inherited bound is looser': (union.replace(b'<xs:minExclusive value="PT0.87500000000000001S"/>',
+                                                                 b'<xs:minInclusive value="PT0.87500000000000004S"/>')
+                .replace(b'<xs:simpleType name="Choice">', b'<xs:simpleType name="Narrow"><xs:restriction base="Bound">'
+                         b'<xs:minInclusive value="PT0.87500000000000001S"/></xs:restriction></xs:simpleType>'
+                         b'<xs:simpleType name="Choice">')
+                .replace(b'memberTypes="Bound ', b'memberTypes="Narrow ')
+                .replace(b'fixed="PT0.87500000000000002S"', b'fixed="PT0.87500000000000005S"')),
+        })
+        for name, content in variants.items():
+            with self.subTest(name=name):
+                data = io.BytesIO()
+                with zipfile.ZipFile(data, 'w') as archive:
+                    archive.writestr('main.xsd', content)
+                digest = sha(data.getvalue())
+                write(self.state/'objects'/digest, data.getvalue())
+                candidate = row | dict(status='matched', revision_id=digest, archive_sha256=digest,
+                                       dependencies=[['main.xsd', sha(content)]])
+                publish_bundles(dict(revisions=[candidate]), self.state, self.site)
+                self.assertEqual(candidate['schema_export_status'], 'unavailable')
+                self.assertTrue(candidate.get('schema_export_error'))
+                self.assertNotIn('schema_download', candidate)
+                self.assertNotIn('validation_download', candidate)
 
     def test_compound_browser_limits_preserve_native_download(self):
         from tests.typed_fixed_fixture import compound_attribute_fixture, compound_depth_fixture, pack
@@ -159,6 +442,20 @@ class XsdBundleTests(unittest.TestCase):
         # A rule and its union + two leaves consume four nodes.
         for count in (12500, 12501):
             cases.append((dict(base, attribute_checks=[rule]*count, attribute_type_checks=[]), count == 12500))
+        plain = dict(base)
+        for key in ('attribute_checks','attribute_type_checks','supplementary_schema','supplementary_namespace'):
+            plain.pop(key,None)
+        cases.extend([(dict(plain,id_types=[]),False),(dict(plain,document_ids_complete='true'),False)])
+        blank = dict(base, attribute_checks=[],attribute_type_checks=[])
+        profile = dict(type=['','Choice'],shape=True)
+        for count in (50000,50001):
+            cases.append((dict(blank,id_types=[profile]*count),count==50000))
+        for malformed in ([['member0','ID']],[],[['unknown',True]]):
+            cases.append((dict(blank,id_types=[dict(profile,shape=malformed)]),False))
+        deep=True
+        for _ in range(65):
+            deep=[['member0',deep]]
+        cases.append((dict(blank,id_types=[dict(profile,shape=deep)]),False))
         for candidate, expected in cases:
             raw=json.dumps(candidate).encode()
             self.assertEqual(_browser_compatible(candidate, raw, gzip.compress(raw)), expected)

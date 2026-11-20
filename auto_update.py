@@ -7,8 +7,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 import build_site
-from catalog import export
-from collector_snapshots import collector_source
+from catalog import (derive, document_identity, export, individual_documents, named_binding_rows,
+                     preserves_wsdl_binding, schema_qname, update_predecessors)
+from collector_snapshots import (applicable_bindings, collector_source, confirmed_binding_index,
+                                 replay_context)
 from fields import build
 from edition_groups import display_updates, group_editions, source_updates
 from state_lock import catalog_lock_root, file_lock
@@ -16,13 +18,14 @@ from sync import encode, resource_url, sync, write
 
 
 def validate_publications(previous, current):
+    revoked = {row['revision_id'] for row in current.get('revoked_revisions', [])}
     for env in ('prod', 'test'):
         for category in ('revisions', 'registry'):
-            def listed(catalog):
+            def listed(catalog, ignored=()):
                 return {row['number'] for row in catalog.get(category, [])
                         if row['environment'] == env and row.get('listed_now', True)
-                        and row.get('source_type') != 'manual'}
-            old, new = listed(previous), listed(current)
+                        and row.get('source_type') != 'manual' and row.get('revision_id') not in ignored}
+            old, new = listed(previous, revoked if category == 'revisions' else ()), listed(current)
             removed = old - new
             # A single retirement is normal. Losing over 20% of a contour's
             # publications requires investigation before promoting the snapshot.
@@ -32,33 +35,63 @@ def validate_publications(previous, current):
                                  + ', '.join(sorted(removed)[:10]))
 
 
-def validate_published_trees(previous, current, inventory):
+def validate_published_trees(previous, current, *, state, candidate_state):
     """Keep a ready tree for an unchanged DOCX matched to the confirmed WSDL."""
-    def document(row):
-        return (row['environment'], row['number'], row['document_url'], row['document_sha256'])
-
-    def ready(catalog):
-        for row in catalog['revisions']:
-            if row['status'] == 'matched' and row.get('listed_now', True) and row.get('source_type') != 'manual':
-                for source in row.get('listed_sources') or [row]:
-                    yield row | source
-
-    publications = {(row['environment'], row['url'], row['sha256']) for row in inventory['entries']
+    if previous == current:
+        return
+    publications = {(row['environment'], row['url'], row['sha256']) for row in current['entries']
                     if row['kind'] == 'docx' and row.get('sha256')}
-    failures = {document(row): row for row in current.get('document_sources', [])
-                if row.get('listed_now', True)}
-    old_rows = list(ready(previous))
-    previous_wsdl = {document(row) for row in old_rows if row.get('schema_source_type') == 'wsdl'}
+    documents = list(individual_documents(current))
+    old_resolutions, resolutions = {}, {}
+    old_rows = [row for row in derive(previous, resolutions=old_resolutions)['revisions']
+                if row['status'] == 'matched']
+    derived = derive(current, resolutions=resolutions)
+    failures = {(document_identity(row), row['document_url']): row for row in derived.get('document_sources', [])}
+    new_rows = {}
+    for row in derived['revisions']:
+        if row['status'] == 'matched':
+            key = document_identity(row), row['document_url']
+            replacement = resolutions.get(key, row)
+            new_rows.setdefault(key, []).append(replacement)
+
+    identities = {identity for identity, _ in documents}
+    active, confirmed, observations = replay_context(state)
+    _, candidate_snapshots, _ = replay_context(candidate_state)
+    # New historical replays use the confirmed DOCX timeline. Their proof
+    # applies to this installation without treating the new pointer as prior.
+    confirmed.update({key: snapshot for key, snapshot in candidate_snapshots.items()
+                      if 'collector_observation' in snapshot})
+    bindings = applicable_bindings(confirmed_binding_index(active, confirmed, observations), identities)
+    prior = {document_identity(row) for row in old_rows}
+    # The last confirmed live binding takes precedence when the active
+    # inventory itself proves the named member.
+    bindings.update({document_identity(row): row for row in named_binding_rows(previous, old_resolutions)})
     errors = []
-    for identity in sorted({document(row) for row in old_rows} - {document(row) for row in ready(current)}):
-        environment, number, url, digest = identity
-        failure = failures.get(identity, {})
-        direct_wsdl = identity in previous_wsdl or failure.get('schema_docx_location')
-        if direct_wsdl and (environment, url, digest) in publications:
+    for identity, document in documents:
+        binding = bindings.get(identity)
+        url = document['url']
+        replacements = new_rows.get((identity, url), [])
+        if binding and (identity in prior or replacements) and not any(
+                preserves_wsdl_binding(binding, row) for row in replacements):
+            locator = binding['schema_docx_location']
+            failure = failures.get((identity, url), {})
+            reason = failure.get('schema_reason') or f'Утрачена подтверждённая привязка DOCX к XSD: {locator}.'
+            errors.append(f'{identity[0]}/{identity[1]} {url} — {reason}')
+
+    # Keep the former missing-tree guard for WSDL rows without a named proof.
+    for row in old_rows:
+        identity = document_identity(row)
+        environment, number, digest = identity
+        url = row['document_url']
+        if (environment, url, digest) not in publications or (identity, url) in new_rows:
+            continue
+        failure = failures.get((identity, url), {})
+        if row.get('schema_source_type') == 'wsdl' or failure.get('schema_docx_location'):
             reason = failure.get('schema_reason', 'Полная XSD больше не сопоставлена.')
             errors.append(f'{environment}/{number} {url} — {reason}')
     if errors:
-        raise ValueError('Опубликованные документы потеряли готовое дерево XSD: ' + '; '.join(errors))
+        raise ValueError('Опубликованные документы потеряли готовое дерево XSD: '
+                         + '; '.join(sorted(set(errors))))
 
 
 def validate_inventory(previous, current):
@@ -80,38 +113,164 @@ def active_inventory(state):
     return json.loads((state / 'snapshots' / (key + '.json')).read_bytes())
 
 
-def validate_saved_history(previous, current, archived_ids=()):
+def archived_restoration(state, rejection, owners):
+    """Recover a legacy rejection's immutable source from its own snapshot and objects."""
+    from catalog import archived_graph_reader
+    from document_metadata import read_document_display
+    from edition_groups import SOURCE_KEYS
+    from sync import sha
+
+    snapshot, rid = rejection['snapshot'], rejection['revision_id']
+    raw = (state / 'snapshots' / (snapshot + '.json')).read_bytes()
+    if sha(raw) != snapshot:
+        raise ValueError('Изменился исходный снимок восстановления')
+    stored = json.loads(raw)
+    owner = owners.get(rid, {})
+    rows = derive(stored, owners, archive_graph=archived_graph_reader(state))['revisions']
+    matches = [r for r in rows if r['revision_id'] == rid and
+               all(r.get(k) == rejection.get(k) for k in ('environment', 'number', 'document_url', 'document_sha256'))]
+    if len(matches) != 1:
+        raise ValueError('Исходный снимок не подтверждает восстановленную привязку')
+    row = matches[0]
+    if (not row.get('resolved_schema_graph') or row['resolved_schema_graph'] != owner.get('resolved_schema_graph')
+            or schema_qname(row) != schema_qname(owner)):
+        raise ValueError('Изменился владелец восстановленной привязки')
+    document = (state / 'objects' / row['document_sha256']).read_bytes()
+    if sha(document) != row['document_sha256']:
+        raise ValueError('Изменился исходный DOCX восстановленной привязки')
+    source = {k: row[k] for k in SOURCE_KEYS if k in row and k not in ('listed_now', 'document_download', 'document_filename')}
+    original = next((doc for doc in stored['entries'] if doc.get('sha256') == row['document_sha256']
+                     and doc.get('url') == row['document_url'] and doc['environment'] == row['environment']), {})
+    if 'document_history' not in original:
+        source['document_history'] = read_document_display(document, legacy=True)['document_history']
+    if stored.get('format', 1) == 1 and row.get('source_type') == 'module':
+        membership = next((r for r in derive(stored)['registry'] if (r['environment'], r['number']) ==
+                           (row['environment'], row['number'])), None)
+        if membership:
+            source['module'] = membership['module']
+    stamps = json.loads((state / 'observations.json').read_bytes())['snapshots']
+    history = json.loads((state / 'history.json').read_bytes())
+    return dict(snapshot=snapshot, revision_id=rid, observed_at=stamps.get(snapshot),
+                initial_import=history[0] == snapshot, source=source)
+
+
+def validate_saved_history(previous, current, archived_ids=(), *, state=None):
     """Retain confirmed editions/events, allowing explicitly archived failed reviews."""
     archived = set(archived_ids)
-    old_ids = {r["revision_id"] for r in previous.get("revisions", [])} - archived
+    rejected = {(row['snapshot'], row['revision_id'], row['document_url'])
+                for row in current.get('rejected_binding_observations', [])}
+    def rejected_observation(row):
+        return (row['snapshot'], row['revision_id'], row['source'].get('document_url')) in rejected
+
+    old_events = {e["revision_id"]: e for e in previous.get("updates", [])}
+    event_sources = previous.get('update_sources', {})
+    events = {e["revision_id"]: e for e in current.get("updates", [])}
+    superseded = archived | {rid for rid, event in old_events.items()
+                            if (event['snapshot'], rid, event_sources.get(rid, {}).get('document_url')) in rejected
+                            and events.get(rid, {}).get('snapshot') != event['snapshot']}
+    owners = {r['revision_id']: r for r in [*current.get('revoked_revisions', ()), *current.get('revisions', ())]}
+    restored = {}
+    replaced_observations = set()
+    for rejection in previous.get('rejected_binding_observations', ()):
+        rid, snapshot = rejection['revision_id'], rejection['snapshot']
+        address = snapshot, rid, rejection.get('document_url')
+        if address in rejected:
+            continue
+        evidence = rejection.get('source_observation')
+        owner = owners.get(rid, {})
+        source_keys = ('environment', 'number', 'document_url', 'document_sha256')
+        incomplete = evidence is None or not rejection.get('resolved_schema_graph') or 'namespace' not in rejection
+        if incomplete:
+            if state is None:
+                raise ValueError('Для восстановления требуются архивные доказательства наблюдения')
+            evidence = archived_restoration(state, rejection, owners)
+        if (not evidence or (evidence['snapshot'], evidence['revision_id']) != (snapshot, rid)
+                or evidence['observed_at'] != rejection['observed_at']
+                or any(evidence['source'].get(k) != rejection.get(k) for k in source_keys)
+                or (rejection.get('resolved_schema_graph') and owner.get('resolved_schema_graph') != rejection['resolved_schema_graph'])
+                or ('namespace' in rejection and schema_qname(owner) != schema_qname(rejection))):
+            raise ValueError('Не подтверждены исходные данные восстановленной привязки')
+        # An earlier accepted observation may already represent this same source.
+        old_observation = next((r for r in previous.get('source_observations', ()) if r['revision_id'] == rid
+                                and all(r['source'].get(k) == rejection.get(k) for k in source_keys)), None)
+        now = next((r for r in current.get('source_observations', ()) if r['revision_id'] == rid
+                    and all(r['source'].get(k) == rejection.get(k) for k in source_keys)), None)
+        if now == old_observation and now is not None:
+            continue
+        if now != evidence:
+            raise ValueError('Изменилось исходное наблюдение восстановленной привязки')
+        restored[address] = evidence
+        if old_observation:
+            replaced_observations.add((old_observation['snapshot'], rid, rejection['document_url']))
+        if events.get(rid, {}).get('snapshot') == snapshot:
+            event = events[rid]
+            if (any(event.get(k) != evidence[k] for k in ('revision_id', 'snapshot', 'observed_at', 'initial_import'))
+                    or current['update_sources'].get(rid) != evidence['source']):
+                raise ValueError('Изменилось событие восстановленной привязки')
+            superseded.add(rid)
+    old_ids = {r["revision_id"] for r in previous.get("revisions", [])} - superseded
     new_ids = {r["revision_id"] for r in current.get("revisions", [])}
     if not old_ids <= new_ids:
         raise ValueError("Обновление потеряло сохраненные редакции")
-    events = {e["revision_id"]: e for e in current.get("updates", [])}
+    new_rows = {row['revision_id']: row for row in current.get('revisions', [])}
+    for row in [*previous.get('revisions', []), *previous.get('revoked_revisions', [])]:
+        rid = row['revision_id']
+        graph = row.get('resolved_schema_graph')
+        if rid in owners and (graph or row.get('status') == 'matched'):
+            if graph and owners[rid].get('resolved_schema_graph') != graph:
+                raise ValueError("Изменился граф XSD существующей редакции " + rid)
+            if 'namespace' in row and schema_qname(owners[rid]) != schema_qname(row):
+                raise ValueError("Изменился QName корня существующей редакции " + rid)
+            if 'namespace' not in row and row.get('root') != owners[rid].get('root'):
+                raise ValueError("Изменился корень существующей редакции " + rid)
     if len(events) != len(current.get("updates", [])) or set(events) != new_ids:
         raise ValueError("Журнал не соответствует сохранённым редакциям")
-    old_events = {e["revision_id"]: e for e in previous.get("updates", [])}
+    predecessors = update_predecessors(current.get('updates', []), new_rows.values())
+    if any(event.get('previous_revision_id') != predecessors[rid] for rid, event in events.items()):
+        raise ValueError("Некорректная ссылка сравнения в журнале сохранённых наблюдений")
+    retained = old_events.keys() - superseded
+    if [rid for rid in old_events if rid in retained] != [rid for rid in events if rid in retained]:
+        raise ValueError("Изменился порядок ранее сохранённых событий журнала")
+    old_raw = previous.get('original_update_events', {})
+    raw = current.get('original_update_events', {})
+    archived_events = {row['revision_id']: row['update_event'] for row in current.get('rejected_binding_observations', [])
+                       if 'update_event' in row}
+    for prior in previous.get('rejected_binding_observations', ()):
+        if 'update_event' in prior:
+            rid = prior['revision_id']
+            if raw.get(rid, archived_events.get(rid, events.get(rid))) != prior['update_event']:
+                raise ValueError('Изменилось исходное событие журнала')
     for rid, event in old_events.items():
         if rid in archived:
             continue
-        expected = dict(event)
-        before = expected["previous_revision_id"]
-        visited = set()
-        while before in archived and before not in visited:
-            visited.add(before)
-            before = old_events.get(before, {}).get("previous_revision_id")
-        expected["previous_revision_id"] = before
-        if events.get(rid) != expected:
+        if rid not in superseded and events.get(rid) != dict(event, previous_revision_id=predecessors[rid]):
             raise ValueError("Изменилось ранее сохранённое событие журнала")
+        original = raw.get(rid, archived_events.get(rid, events.get(rid)))
+        # Pre-upgrade catalogs with rejections stored only the effective link.
+        if (rid in old_raw or not previous.get('rejected_binding_observations')) and (
+                event.get('previous_revision_id') not in archived and original != old_raw.get(rid, event)):
+            raise ValueError("Изменилось исходное событие журнала")
     def enriched(old, new):
         # Word history is restored from the original bytes without changing the
         # evidence already recorded by earlier catalog formats.
         return old == {k: v for k, v in new.items() if k != "document_history" or k in old}
     for rid, source in previous.get("update_sources", {}).items():
-        if rid not in archived and not enriched(source, current.get("update_sources", {}).get(rid, {})):
+        rejected_source = (old_events[rid]['snapshot'], rid, source.get('document_url')) in rejected
+        if rid not in superseded and not rejected_source and not enriched(source, current.get("update_sources", {}).get(rid, {})):
             raise ValueError("Изменился ранее сохранённый источник события журнала")
     observations = [row for row in current.get("source_observations", []) if row["revision_id"] not in archived]
-    old_observations = [row for row in previous.get("source_observations", []) if row["revision_id"] not in archived]
+    old_observations = [row for row in previous.get("source_observations", [])
+                        if row["revision_id"] not in archived and not rejected_observation(row)]
+    if restored:
+        def address(row):
+            return row['snapshot'], row['revision_id'], row['source'].get('document_url')
+        old_observations = [r for r in old_observations if address(r) not in replaced_observations]
+        observations = [r for r in observations if address(r) not in restored]
+    if rejected:
+        def identity(row):
+            return row['snapshot'], row['revision_id'], row['source'].get('document_url')
+        old_sources = {identity(row) for row in old_observations}
+        observations = [row for row in observations if identity(row) in old_sources]
     for old, new in zip(old_observations, observations):
         if ({k: v for k, v in old.items() if k != "source"} != {k: v for k, v in new.items() if k != "source"}
                 or not enriched(old["source"], new["source"])):
@@ -122,17 +281,9 @@ def validate_saved_history(previous, current, archived_ids=()):
 
 def validate_history(previous, current, directory):
     validate_publications(previous, current)
-    validate_saved_history(previous, current)
+    validate_saved_history(previous, current, state=directory / "state")
     old_ids = {r["revision_id"] for r in previous["revisions"]}
     new_ids = {r["revision_id"] for r in current["revisions"]}
-    events = {e["revision_id"]: e for e in current["updates"]}
-    revisions={r["revision_id"]:r for r in current["revisions"]}
-    for rid,event in events.items():
-        before=event["previous_revision_id"]
-        if before:
-            a,b=revisions.get(before),revisions[rid]
-            if not a or before==rid or (a["number"],a["environment"])!=(b["number"],b["environment"]):
-                raise ValueError("Некорректная ссылка сравнения в журнале")
     if current["review"]:
         raise ValueError("Новые схемы требуют проверки сопоставления")
     status = json.loads((directory / "data/fields/index.json").read_bytes())
@@ -152,7 +303,7 @@ def validate_history(previous, current, directory):
                 raise ValueError("Повреждена связь полей " + rid)
         if not (directory / "site/editions" / (rid + ".html")).is_file():
             raise ValueError("Не создана страница " + rid)
-    for rid in old_ids:
+    for rid in old_ids & new_ids:
         old_field = directory / "previous-fields" / (rid + ".json")
         new_field = directory / "data/fields" / (rid + ".json")
         old_revision=next(r for r in previous["revisions"] if r["revision_id"]==rid)
@@ -160,8 +311,10 @@ def validate_history(previous, current, directory):
             continue
         if old_field.read_bytes() != new_field.read_bytes():
             raise ValueError("Изменилось дерево существующей редакции " + rid)
+    revoked = {r['revision_id'] for r in current.get('revoked_revisions', [])}
     for env in ("prod", "test"):
-        old_current = [r for r in previous["revisions"] if r["environment"] == env and r.get("listed_now", True)]
+        old_current = [r for r in previous["revisions"] if r["environment"] == env and r.get("listed_now", True)
+                       and r['revision_id'] not in revoked]
         new_current = [r for r in current["revisions"] if r["environment"] == env and r.get("listed_now", True)]
         # A disappearing document is retained in history; an empty contour needs investigation.
         if old_current and not new_current:
@@ -274,8 +427,8 @@ def run(root):
         _run(locked_root)
 
 
-def edition_changes(previous, current, fields_directory):
-    """Use the browser journal's grouping while preserving legacy source rows."""
+def edition_changes(previous, current, fields_directory, *, journal):
+    """Use the site's chronology for new editions and report newly imported sources."""
     statuses = json.loads((fields_directory / "index.json").read_bytes())
     ready = {row["revision_id"] for row in statuses if row["status"] == "ready"}
     fields = {}
@@ -287,10 +440,14 @@ def edition_changes(previous, current, fields_directory):
         return group_editions(dict(catalog, revisions=[dict(row, ready=row["revision_id"] in ready)
                                                        for row in catalog["revisions"]]), load)
     old, new = grouped(previous), grouped(current)
+    old['updates'] = build_site.summarize_journal(old, fields_directory)
     old_schemas = {event["revision_id"] for event in display_updates(old)}
     old_sources = {event["event_id"] for event in source_updates(old)}
-    return ([event for event in display_updates(new) if event["revision_id"] not in old_schemas],
-            [event for event in source_updates(new) if event["event_id"] not in old_sources])
+    displayed = dict(new, updates=journal)
+    schemas = [{key: value for key, value in event.items() if key != "comparison"}
+               for event in display_updates(displayed) if event["revision_id"] not in old_schemas]
+    sources = [event for event in source_updates(displayed) if event["event_id"] not in old_sources]
+    return schemas, sources
 
 
 def _run(root, *, history_only=False):
@@ -314,10 +471,11 @@ def _run(root, *, history_only=False):
                 detail = json.loads(failure.read_bytes()).get("errors", []) if failure.exists() else []
                 raise ValueError(f"{exc}; source errors: {detail}") from exc
             snapshot = active_inventory(stage / "state")
-            validate_inventory(active_inventory(root / "state"), snapshot)
+            prior_snapshot = active_inventory(root / "state")
+            validate_inventory(prior_snapshot, snapshot)
             export(stage / "state", stage / "data/catalog.json")
             current = json.loads((stage / "data/catalog.json").read_bytes())
-            validate_published_trees(previous, current, snapshot)
+            validate_published_trees(prior_snapshot, snapshot, state=root / "state", candidate_state=stage / "state")
             validate_publications(previous, current)
             if not history_only:
                 current["checked_at"] = json.loads((stage / "state/last-run.json").read_bytes())["observed_at"]
@@ -326,25 +484,48 @@ def _run(root, *, history_only=False):
             write(stage / "data/catalog.json", encode(current))
             build(stage / "data/catalog.json", stage / "state", stage / "data/fields")
             with patch.object(build_site, "HERE", stage):
-                build_site.main()
+                journal = build_site.main()
             validate_history(previous, current, stage)
             old_ids = {r["revision_id"] for r in previous["revisions"]}
             added = [dict(number=r["number"], environment=r["environment"], version=r["document_version"], revision_id=r["revision_id"])
                      for r in current["revisions"] if r["revision_id"] not in old_ids]
-            schema_events, source_events = edition_changes(previous, current, stage / "data/fields")
+            schema_events, source_events = edition_changes(previous, current, stage / "data/fields", journal=journal)
             known = {(r["environment"], r["number"]) for r in previous["registry"]+previous["revisions"]}
             new_messages = sorted({(r["environment"], r["number"]) for r in current["registry"]+current["revisions"]}-known)
             if not history_only:
                 collector_replay=json.loads((stage/"state/last-run.json").read_bytes()).get("collector_replay", [])
-            diagnostics = {(r['environment'], r['url']): list(r['schema_diagnostics'])
-                           for r in snapshot['entries'] if r.get('schema_diagnostics')}
+            diagnostics = {}
+            for document in snapshot['entries']:
+                # Single-declaration historical formats retain candidate errors
+                # beside a successful match. Only unresolved declarations belong in the report.
+                matches = {(m['number'], m['root']) for m in document.get('module_matches', ())}
+                bindings = document.get('module_bindings', ())
+                single = {b['number'] for b in bindings if sum(c['number'] == b['number'] for c in bindings) == 1}
+                issues = [i for i in document.get('schema_diagnostics', ()) if i.get('number') not in single
+                          or (i.get('number'), i.get('root')) not in matches]
+                if issues:
+                    diagnostics[document['environment'], document['url']] = issues
             document_failures = {}
             for r in current.get('document_sources', []):
-                if not r.get('listed_now', True) or 'namespace_declared' not in r:
+                outcome = r.get('schema_diagnostic')
+                if not r.get('listed_now', True) or (not outcome and 'namespace_declared' not in r):
                     continue
                 env, number = r['environment'], r['number']
                 issue = dict(number=number, root=r['root'], reason=r['schema_reason'])
                 source_issues = diagnostics.setdefault((env, r['document_url']), [])
+                if outcome:
+                    issue.update(outcome)
+                    # The catalog gives the effective result for this active
+                    # declaration. Raw inventory diagnostics can now be stale.
+                    same_document = next((doc for doc in snapshot['entries'] if doc['environment'] == env
+                        and doc['url'] == r['document_url'] and doc.get('sha256') == r['document_sha256']), {})
+                    same_root = {decl.get('namespace') for decl in same_document.get('module_bindings', ())
+                                 if (decl['number'], decl.get('root')) == (number, r['root'])}
+                    source_issues[:] = [other for other in source_issues
+                        if (other.get('number'), other.get('root')) != (number, r['root'])
+                        or ('code' in other and other.get('resolved_schema_graph') != outcome.get('resolved_schema_graph'))
+                        or (other.get('namespace') != outcome['declared_namespace'] if 'namespace' in other
+                            else len(same_root) != 1)]
                 if issue not in source_issues:
                     source_issues.append(issue)
                 document_failures.setdefault((env, number), []).append(r)
@@ -372,6 +553,8 @@ def _run(root, *, history_only=False):
                           new_schema_revisions=schema_events, new_source_events=source_events,
                           new_messages=[dict(environment=e, number=n) for e,n in new_messages],
                           total_revisions=len(current["revisions"]))
+            if current.get('revoked_revisions'):
+                result['revoked_revisions'] = current['revoked_revisions']
             write(report, encode(result))
             print(json.dumps(result, ensure_ascii=False))
     except Exception as exc:

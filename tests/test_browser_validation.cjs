@@ -9,7 +9,48 @@ const pack={format:1,number:'42',environment:'prod',revision_id:'a'.repeat(64),r
 const engine=read('web/vendor/xmllint/xmllint-browser.mjs').split(';(function initWorker()')[0];
 const workerSource=`const {parentPort}=require('node:worker_threads');self=globalThis;self.postMessage=data=>parentPort.postMessage(data);parentPort.on('message',data=>self.onmessage({data}));self.SEDO_WASM=new Uint8Array(${JSON.stringify([...fs.readFileSync(path.join(root,'web/vendor/xmllint/xmllint.wasm'))])});\n${engine}\n${read('web/validation-core.js')}\n${read('web/validation-paths.js')}\n${read('web/validation-worker.js')}`;
 async function validate(xml,custom=pack,source){const w=new Worker(workerSource,{eval:true});try{return await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('worker timed out')),15000);w.on('message',x=>{clearTimeout(timer);resolve(x)});w.on('error',reject);w.postMessage({bytes:typeof xml==='string'?new TextEncoder().encode(xml):xml,pack:custom,source})})}finally{await w.terminate()}}
+async function validationScopes(prefix){
+ const fixture=require('node:child_process').spawnSync(process.env.SEDO_PYTHON||'python',
+  ['-B','tests/typed_fixed_fixture.py','--validation-scopes',prefix],{cwd:root,encoding:'utf8',env:{...process.env,PYTHONPATH:root}});
+ assert.equal(fixture.status,0,fixture.stderr);
+ for(const [name,{pack,cases}] of Object.entries(JSON.parse(fixture.stdout))){
+  const alternatives=[pack];
+  if(name.startsWith('contextual-')){
+   const legacy={...pack};
+   delete legacy.document_value_probes;
+   alternatives.push(legacy);
+  }
+  for(const version of alternatives)for(const [xml,location,reason] of cases){
+   const result=await validate(xml,version);
+   assert.equal(result.runtime,undefined,name+' '+JSON.stringify(result));
+   assert.equal(result.valid,!location,xml+' '+JSON.stringify(result));
+   if(location){
+    const expectedLine=location.includes('/repeat/')?3:location==='/request'||location.startsWith('/request/@')?1:2;
+    assert.ok(result.errors.some(error=>error.message.includes(reason)&&error.line===expectedLine
+     &&error.locations.some(candidate=>candidate.path===location)),
+     name+' '+JSON.stringify(result));
+   }
+  }
+ }
+}
 (async()=>{
+ const scoped=process.argv.find(arg=>arg.startsWith('--validation-scopes'));
+ if(scoped){await validationScopes(scoped.split('=')[1]||'');return}
+ const oldId=require('./fixtures/document-id-format-1.json');
+ const legacyIdResult=await validate('<request><record><value>x</value></record></request>',oldId);
+ assert.equal(legacyIdResult.runtime,true,JSON.stringify(legacyIdResult));
+ assert.match(legacyIdResult.errors[0].message,/отсутствуют профили ID/);
+ const annotatedSchema=[
+  '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:m="urn:metadata">',
+  `<xs:element name="request" m:note="use type='xs:ID' here" m:base="xs:ID" type="xs:string"/>`,
+  '</xs:schema>',
+ ].join('\r\n');
+ const annotatedPack={...pack,files:{'message.xsd':Buffer.from(annotatedSchema).toString('base64')}};
+ const annotated=await validate('<request>text</request>',annotatedPack);
+ assert.equal(annotated.runtime,undefined,JSON.stringify(annotated));
+ assert.equal(annotated.valid,true,JSON.stringify(annotated));
+ if(process.argv.includes('--legacy-id'))return;
+ await validationScopes('');
  const warningSchema='<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:warning" elementFormDefault="qualified"><xs:element name="request"><xs:complexType><xs:sequence><xs:element name="row" type="xs:int" maxOccurs="unbounded"/><xs:element name="total" type="xs:int"/></xs:sequence></xs:complexType></xs:element></xs:schema>';
  const warningPack={...pack,namespace:'urn:warning',fields:['request','request/row','request/total'],field_namespaces:[['urn:warning'],['urn:warning'],['urn:warning']],files:{'message.xsd':Buffer.from(warningSchema).toString('base64')}};
  for(const count of [1,31,1200])for(const [total,valid] of [['1',true],['bad',false]]){
@@ -24,6 +65,17 @@ async function validate(xml,custom=pack,source){const w=new Worker(workerSource,
  const typedFixture=require('node:child_process').spawnSync(process.env.SEDO_PYTHON||'python',['tests/typed_fixed_fixture.py'],{cwd:root,encoding:'utf8',env:{...process.env,PYTHONPATH:root}});
  assert.equal(typedFixture.status,0,typedFixture.stderr);
  const typed=JSON.parse(typedFixture.stdout);
+ const crossBranchPack=typed.attributes['cross-branch-lists'].pack;
+ core.checkPack(crossBranchPack,crossBranchPack);
+ const durationPack=typed.attributes.duration.pack;
+ core.checkPack(durationPack,durationPack);
+ const legacy=require('./fixtures/typed-fixed-format-1.json');
+ core.checkPack(legacy.pack,legacy.pack);
+ for(const [xml,valid] of legacy.cases){
+  const result=await validate(xml,legacy.pack);
+  assert.equal(result.runtime,undefined,JSON.stringify(result));
+  assert.equal(result.valid,valid,xml+' '+JSON.stringify(result));
+ }
  const actual701=JSON.parse(require('node:zlib').gunzipSync(fs.readFileSync(path.join(process.env.SEDO_TEST_SITE||path.join(root,'site'),'schemas/bf8b73ced84609142e11520ec244a8e822c1071f61521ccbbd4bacd3a317be6a.validation.json.gz'))));
  for(const warning of ['', ' xmlns="relative-name"'])for(const [value,valid] of [['true',true],['1',true],['false',false],['0',false]]){
   const xml='<m:restrictionResponse xmlns:m="'+actual701.namespace+'"'+warning+'><m:responseOn>00000000-0000-0000-0000-000000000000</m:responseOn><m:notIdentified>'+value+'</m:notIdentified></m:restrictionResponse>';
@@ -75,8 +127,12 @@ async function validate(xml,custom=pack,source){const w=new Worker(workerSource,
    const result=await validate(xml,pack);
    assert.equal(result.runtime,undefined,JSON.stringify(result));
    assert.equal(result.valid,valid,xml+' '+JSON.stringify(result));
-  if(!valid&&kind==='calendar-facet')assert.ok(result.errors.some(error=>
-   error.message.includes('Не удалось точно сравнить')),JSON.stringify(result));
+  if(!valid&&kind.endsWith('-without-fixed'))assert.ok(result.errors.some(error=>
+   error.message.includes("attribute 'peer'")&&error.message.includes('точное календарное ограничение')),JSON.stringify(result));
+  else if(!valid&&kind==='calendar-facet')assert.ok(result.errors.some(error=>
+   error.message.includes('does not match the fixed value')),JSON.stringify(result));
+  else if(!valid&&(kind==='cross-branch-lists'||kind==='duration'&&xml.includes('6782S')))assert.ok(result.errors.some(error=>
+   error.message.includes('does not match the fixed value')),JSON.stringify(result));
   else if(!valid&&kind.includes('patterned-')&&!xml.includes('note="bad"')){
    const reason=xml.includes(' 007')?'pattern':'does not match the fixed value';
    assert.ok(result.errors.some(error=>error.message.includes(reason)),JSON.stringify(result));

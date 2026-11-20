@@ -3,6 +3,7 @@ import copy
 import json
 import posixpath
 import re
+from observation_time import observed_datetime
 
 from sync import sha
 
@@ -65,8 +66,10 @@ def group_editions(catalog, load_fields):
             prefix = posixpath.commonpath([posixpath.dirname(path) or '.' for path, _ in row['dependencies']])
             dependencies = [(posixpath.relpath(path, prefix or '.'), digest) for path, digest in row['dependencies']]
             entry = row.get('schema_path') or next((f.get('file') for f in fields if f.get('parent') == -1), '') or ''
+            graph = row.get('resolved_schema_graph')
+            authority = ('resolved', graph) if graph else ('legacy', equivalent_closure(dependencies, entry))
             identity = [row["environment"], row["number"], row.get("root"), row.get("namespace"),
-                        equivalent_closure(dependencies, entry), _tree(fields)]
+                        authority, _tree(fields)]
             key = sha(json.dumps(identity, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf8"))
         groups.setdefault(key, []).append(row)
     observed_sources = {}
@@ -111,20 +114,43 @@ def _event_batch(event):
             ("observation", event["observed_at"]) if event.get("observed_at") else ("unknown",))
 
 
-def _source_history(catalog):
+def _journal_anchors(catalog, canonical):
+    return {canonical[event["revision_id"]]: event | event.get("chronological_observation", {})
+            for event in catalog.get("updates", [])
+            if event.get("chronological_first")}
+
+
+def _source_history(catalog, canonical, initial_batches):
     revisions = {r["revision_id"]: r for r in catalog["revisions"]}
-    seen = set()
-    for event in catalog.get("source_observations", catalog.get("updates", [])):
+    observations = catalog.get("source_observations", catalog.get("updates", []))
+    if catalog.get('earlier_source_observations'):
+        observations = [*observations, *catalog['earlier_source_observations']]
+    if initial_batches:
+        recovered = [dict(revision_id=rid, snapshot=earlier['snapshot'], observed_at=earlier['observed_at'], source=source)
+                     for rid, earlier in catalog.get('earlier_revision_observations', {}).items()
+                     for source in earlier['sources']]
+        # Deduplicate source appearances after visiting the verified initial batch.
+        observations = sorted([*recovered, *observations],
+                              key=lambda e: _event_batch(e) != initial_batches.get(canonical[e["revision_id"]]))
+    first = {}
+    def rank(event, rid):
+        stamp = observed_datetime(event.get('observed_at'))
+        return (stamp is None, stamp, _event_batch(event) != initial_batches.get(rid),
+                event.get('snapshot') or '', event['revision_id'])
+
+    for event in observations:
+        rid = canonical[event['revision_id']]
         row = revisions[event["revision_id"]]
-        rid = row.get("display_revision_id", row["revision_id"])
         saved = event.get("source", catalog.get("update_sources", {}).get(event["revision_id"]))
         observed = saved if saved is not None else row
         if not observed.get("document_sha256"):
             continue
-        identity = (observed["document_sha256"], observed.get("document_url"))
-        if (rid, identity) in seen:
-            continue
-        seen.add((rid, identity))
+        key = (rid, (observed['document_sha256'], observed.get('document_url')))
+        order = rank(event, rid)
+        if key not in first or order < first[key][0]:
+            first[key] = (order, event, row, saved, observed)
+
+    for (rid, identity), (_, event, row, saved, observed) in first.items():
         current = next((s for s in row.get("edition_sources", [row])
                         if (s.get("document_sha256"), s.get("document_url")) == identity), None)
         source = {k: copy.deepcopy(observed[k]) for k in PUBLIC_SOURCE_KEYS if k in observed}
@@ -140,8 +166,10 @@ def _source_history(catalog):
 def display_updates(catalog):
     canonical = {r["revision_id"]: r.get("display_revision_id", r["revision_id"]) for r in catalog["revisions"]}
     events = {event["revision_id"]: event for event in catalog.get("updates", [])}
-    first_batches, initial_sources = {}, {}
-    for event, rid, source in _source_history(catalog):
+    anchors = _journal_anchors(catalog, canonical)
+    first_batches = {rid: _event_batch(event) for rid, event in anchors.items()}
+    initial_sources = {}
+    for event, rid, source in _source_history(catalog, canonical, first_batches):
         batch = _event_batch(event)
         first_batches.setdefault(rid, batch)
         if first_batches[rid] == batch:
@@ -152,14 +180,21 @@ def display_updates(catalog):
         if rid in seen:
             continue
         seen.add(rid)
-        previous = event.get("previous_revision_id")
-        visited = set()
-        while previous and canonical[previous] == rid:
-            if previous in visited:
-                raise ValueError("Cycle in source edition history")
-            visited.add(previous)
-            previous = events[previous].get("previous_revision_id")
+        event = anchors.get(rid, event)
+        if "chronological_previous_revision_id" in event:
+            previous = event["chronological_previous_revision_id"]
+        else:
+            previous = event.get("previous_revision_id")
+            visited = set()
+            while previous and canonical[previous] == rid:
+                if previous in visited:
+                    raise ValueError("Cycle in source edition history")
+                visited.add(previous)
+                previous = events[previous].get("previous_revision_id")
         displayed = dict(event, revision_id=rid, previous_revision_id=canonical[previous] if previous else None)
+        displayed.pop("chronological_first", None)
+        displayed.pop("chronological_previous_revision_id", None)
+        displayed.pop("chronological_observation", None)
         if rid in initial_sources:
             displayed["event_sources"] = initial_sources[rid]
         if event.get("comparison"):
@@ -173,11 +208,12 @@ def display_updates(catalog):
 def source_updates(catalog):
     """First appearances of additional documents for an already known schema.
 
-    Original update order is the append-only snapshot order. Document dates are
-    deliberately not used to infer when a source was first found.
+    Initial batches come from confirmed observations when the site has a journal projection.
     """
-    first_batch, result = {}, []
-    for event, rid, source in _source_history(catalog):
+    canonical = {r["revision_id"]: r.get("display_revision_id", r["revision_id"]) for r in catalog["revisions"]}
+    first_batch = {rid: _event_batch(event) for rid, event in _journal_anchors(catalog, canonical).items()}
+    result = []
+    for event, rid, source in _source_history(catalog, canonical, first_batch):
         batch = _event_batch(event)
         first_batch.setdefault(rid, batch)
         if batch == first_batch[rid]:

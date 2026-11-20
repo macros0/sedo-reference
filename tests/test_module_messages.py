@@ -23,6 +23,45 @@ def entry(env='prod',number='611'):
     content=docx(paragraph(f'Тип сообщения {number}: Решение по проверке'))
     return dict(environment=env,kind='docx',url='https://example.test/Спецификация v2_7_Пр_12_Доходная часть (09.06.2026).docx',label='Спецификация v2.7 (09.06.2026)',sha256=sha(content),**inspect_file(content,'docx')),content
 
+
+def collect_declaration_fixture(fixture, mode):
+    from html import escape
+    from tests.test_wsdl_sources import SEED, XS
+    from sync import SITES
+    from wsdl_sources import collect
+
+    title = paragraph('Тип сообщения 42: Example')
+    table = '<w:tbl><w:tr>' + ''.join('<w:tc>' + paragraph(escape(v)) + '</w:tc>' for v in
+                                     ('Схема', '<xs:element name="r"/>')) + '</w:tr></w:tbl>'
+    own = f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:own"><xs:element name="r" type="xs:string"/></xs:schema>'
+    external = (f'<xs:schema xmlns:xs="{XS}" xmlns:d="urn:dep" targetNamespace="urn:external">'
+                '<xs:import namespace="urn:dep" schemaLocation="dep.xsd"/>'
+                '<xs:element name="r" type="d:custom"/></xs:schema>')
+    dep = (f'<xs:schema xmlns:xs="{XS}" targetNamespace="urn:dep">'
+           '<xs:simpleType name="custom"><xs:restriction base="xs:int"/></xs:simpleType></xs:schema>')
+    definitions = (f'<w:definitions xmlns:w="http://schemas.xmlsoap.org/wsdl/"><w:types><xs:schema xmlns:xs="{XS}">'
+                   '<xs:import namespace="urn:dep" schemaLocation="dep.xsd"/></xs:schema></w:types></w:definitions>')
+    page = SITES['test']
+    url = page.replace('/sedo.html', '/specs_sedo/module.docx')
+    fixture.resources[page] += b'<a href="/specs_sedo/module.docx">Module</a>'
+    schemas = [own, external]
+    if mode == 'ambiguous':
+        schemas = [own, own.replace('urn:own', 'urn:other'), own.replace('urn:own', 'urn:external')]
+    fixture.resources[url] = docx(''.join(paragraph(escape(x)) for x in schemas) + title + table + title +
+                                  paragraph(escape('<r xmlns="urn:external"/>')))
+    def blob(content):
+        digest = sha(content)
+        write(fixture.state / 'objects' / digest, content)
+        return digest
+    libraries = []
+    if mode in ('same', 'foreign'):
+        seed = SEED if mode == 'same' else SEED.replace('ecp-test.', 'ecp.')
+        libraries.append(collect(seed, 'test' if mode == 'same' else 'prod',
+            {seed: definitions.encode(), seed.rsplit('/', 1)[0] + '/dep.xsd': dep.encode()}.__getitem__, blob))
+    fixture.collect(1, wsdl_entries=libraries)
+    return url
+
+
 class ModuleMessageTests(unittest.TestCase):
     def test_conflicting_roots_are_reviewed_in_both_section_orders(self):
         from module_xsd import match_document
@@ -46,6 +85,50 @@ class ModuleMessageTests(unittest.TestCase):
                 self.assertIn('{urn:test}report', str(issues))
                 results.append(issues)
         self.assertEqual(results[0], results[1])
+
+    def test_declaration_results_survive_bridge_and_archive_proofs(self):
+        from catalog import archived_graph_reader
+        from collector_snapshots import ArchivedModuleProofs, unmatched_module_bindings
+        from tests.test_source_collection_regressions import SourceCollectionTests
+        from verify import verify_snapshot_replay
+
+        for mode in ('same', 'missing', 'foreign', 'ambiguous'):
+            with self.subTest(mode=mode):
+                fixture = SourceCollectionTests()
+                fixture.setUp()
+                self.addCleanup(fixture.doCleanups)
+                url = collect_declaration_fixture(fixture, mode)
+
+                def blob(content):
+                    digest = sha(content)
+                    write(fixture.state / 'objects' / digest, content)
+                    return digest
+
+                snapshot = fixture.current()
+                self.assertEqual(snapshot['format'], 12)
+                document = next(row for row in snapshot['entries'] if row['url'] == url)
+                proofs = ArchivedModuleProofs(fixture.state, blob, archived_graph_reader(fixture.state))
+                decisions = {d['namespace']: d for d in document['module_decisions']}
+                self.assertEqual(set(decisions), {None, 'urn:external'})
+                for ns, decision in decisions.items():
+                    owners, reason = proofs.decision(snapshot, document, ('42', 'r', ns))
+                    if 'reason' in decision:
+                        self.assertEqual((owners, reason), (set(), decision['reason']))
+                    else:
+                        self.assertEqual({item[1] for item in owners}, {decision['effective_namespace']})
+                failures = unmatched_module_bindings([document])
+                if mode == 'same':
+                    self.assertEqual(failures, [])
+                    self.assertEqual([m.get('schema_source_type') for m in document['module_matches']], [None, 'wsdl_bridge'])
+                    key = json.loads((fixture.state / 'current.json').read_bytes())['snapshot']
+                    verify_snapshot_replay(fixture.state, snapshot, key)
+                else:
+                    self.assertEqual(len(failures), 1)
+                    self.assertEqual(failures[0]['namespace'], None if mode == 'ambiguous' else 'urn:external')
+                    if mode == 'ambiguous':
+                        self.assertEqual(failures[0]['reason'], 'Неоднозначные схемы')
+                        self.assertEqual([r['schema_reason'] for r in derive(snapshot)['document_sources'] if
+                                          r['document_url'] == url], [failures[0]['reason']])
 
     def test_export_refuses_colliding_revision_with_different_schema_root(self):
         match = dict(number='999', root='result', namespace='urn:test', dependency_digest='same', schema_path='main.xsd', archive_sha256='archive', archive_url='schemas.zip')

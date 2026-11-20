@@ -30,6 +30,8 @@ jobs:
     outputs:
       candidate_sha: ${{ steps.candidate.outputs.candidate_sha }}
       catalog_sha256: ${{ steps.candidate.outputs.catalog_sha256 }}
+      artifact_name: ${{ steps.candidate.outputs.artifact_name }}
+      artifact_id: ${{ steps.pages-artifact.outputs.artifact_id }}
     permissions:
       contents: write
     env:
@@ -42,6 +44,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Resume a validated import saved by this run
+        id: resume-imports
+        run: |
+          git fetch --no-tags origin refs/heads/main
+          saved=$(python publication_guard.py --resume-build "$GITHUB_SHA" "$(git rev-parse FETCH_HEAD)" "$GITHUB_RUN_ID")
+          if [ -n "$saved" ]; then
+            git checkout --detach "$saved"
+          fi
+          echo "sha=$saved" >> "$GITHUB_OUTPUT"
       - name: Install schema extraction dependencies
         run: python -m pip install -r requirements.txt
       - uses: actions/setup-node@v4
@@ -53,11 +64,13 @@ jobs:
           npm ci
           npx playwright install --with-deps chromium
       - name: Validate and apply pending Russian collector snapshots
+        if: ${{ steps.resume-imports.outputs.sha == '' }}
         env:
           SEDO_SFR_POLITE: '1'
           SEDO_COLLECTOR_SOURCE: ${{ vars.SEDO_COLLECTOR_SOURCE || 'sourcecraft' }}
         run: python collector_snapshots.py
       - name: Import incoming specifications
+        if: ${{ steps.resume-imports.outputs.sha == '' }}
         run: python import_inbox.py
       - name: Build the validated reference
         run: |
@@ -77,24 +90,46 @@ jobs:
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: browser-test-report
+          name: browser-test-report-${{ github.run_attempt }}
           path: |
             playwright-report/
             test-results/
           if-no-files-found: ignore
           retention-days: 30
       - name: Save validated imports
+        id: saved-imports
+        env:
+          RESUMED_SHA: ${{ steps.resume-imports.outputs.sha }}
         run: |
+          base=$(git rev-parse HEAD)
           git add -- state data
-          if ! git diff --cached --quiet; then
-            git commit -m "Import specifications and validated collector snapshots"
-            git push origin HEAD:main
+          if [ -n "$RESUMED_SHA" ]; then
+            test "$base" = "$RESUMED_SHA"
+            git diff --cached --quiet
+          elif ! git diff --cached --quiet; then
+            git commit -m "Import specifications and validated collector snapshots" -m "SEDO-Pages-Run: $GITHUB_RUN_ID"
           fi
+          candidate=$(git rev-parse HEAD)
+          git fetch --no-tags origin refs/heads/main
+          current=$(git rev-parse FETCH_HEAD)
+          selected=$(python publication_guard.py --build-candidate "$base" "$candidate" "$current")
+          if [ "$selected" != "$current" ]; then
+            if ! git push origin HEAD:main; then
+              git fetch --no-tags origin refs/heads/main
+              current=$(git rev-parse FETCH_HEAD)
+              selected=$(python publication_guard.py --build-candidate "$base" "$candidate" "$current")
+              test "$selected" = "$current"
+            fi
+          fi
+          echo "candidate_sha=$selected" >> "$GITHUB_OUTPUT"
           # The token push does not start another workflow. Publish this checked artifact below.
       - name: Record the validated artifact commit
         id: candidate
+        env:
+          CANDIDATE_SHA: ${{ steps.saved-imports.outputs.candidate_sha }}
         run: |
-          echo "candidate_sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "candidate_sha=$CANDIDATE_SHA" >> "$GITHUB_OUTPUT"
+          echo "artifact_name=github-pages-${GITHUB_RUN_ATTEMPT}" >> "$GITHUB_OUTPUT"
           python - <<'PY'
           import hashlib, os
           from pathlib import Path
@@ -115,14 +150,17 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: incoming-import-report
+          name: incoming-import-report-${{ github.run_attempt }}
           path: inbox-report.json
           if-no-files-found: ignore
           retention-days: 30
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
+        id: pages-artifact
         with:
           path: site
+          name: ${{ steps.candidate.outputs.artifact_name }}
+          retention-days: 30
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -141,11 +179,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Reject a stale artifact against current main
-        env:
-          GH_TOKEN: ${{ github.token }}
-          CANDIDATE_SHA: ${{ needs.build.outputs.candidate_sha }}
-        run: python publication_guard.py "$CANDIDATE_SHA"
       - name: Record evidence for the requesting check
         if: ${{ inputs.update_run_id && inputs.update_run_attempt && inputs.head_sha && inputs.catalog_sha256 }}
         env:
@@ -155,13 +188,15 @@ jobs:
           CHECKED_CATALOG_SHA256: ${{ inputs.catalog_sha256 }}
           CANDIDATE_SHA: ${{ needs.build.outputs.candidate_sha }}
           CATALOG_SHA256: ${{ needs.build.outputs.catalog_sha256 }}
+          ARTIFACT_NAME: ${{ needs.build.outputs.artifact_name }}
+          ARTIFACT_ID: ${{ needs.build.outputs.artifact_id }}
         run: |
           python - <<'PY'
           import json, os
           from pathlib import Path
           receipt = {key.lower(): os.environ[key] for key in (
               'UPDATE_RUN_ID', 'UPDATE_RUN_ATTEMPT', 'CHECKED_SHA', 'CHECKED_CATALOG_SHA256',
-              'CANDIDATE_SHA', 'CATALOG_SHA256')}
+              'CANDIDATE_SHA', 'CATALOG_SHA256', 'ARTIFACT_NAME', 'ARTIFACT_ID')}
           receipt.update(pages_run_id=os.environ['GITHUB_RUN_ID'], pages_run_attempt=os.environ['GITHUB_RUN_ATTEMPT'])
           Path('publication-receipt.json').write_text(json.dumps(receipt), encoding='utf-8')
           PY
@@ -172,9 +207,16 @@ jobs:
           name: pages-publication-receipt-${{ github.run_attempt }}
           path: publication-receipt.json
           retention-days: 30
+      - name: Reject a stale artifact against current main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE_SHA: ${{ needs.build.outputs.candidate_sha }}
+        run: python publication_guard.py "$CANDIDATE_SHA"
       - name: Deploy GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ needs.build.outputs.artifact_name }}
   refresh-status:
     needs: [build, deploy]
     # A status-service outage must not change the result of the deployment.

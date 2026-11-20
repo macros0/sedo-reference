@@ -194,6 +194,68 @@ const workbook=()=>exporter.createWorkbook(ExcelJS,{...options,results:core.comp
  }
  // Public-source reproduction of the reported workbook; no user file is committed.
  const old105=rev("105"),next105=rev("10510"),a105=fields(old105),b105=fields(next105),o105={left:old105,right:next105,before:a105,after:b105};
+ const parent105={beforePath:"approveSocialAssistResult",afterPath:"benefitResponseResult",comment:"Проверенный блок"};
+ const rejected105={beforePath:"approveSocialAssistResult/status",afterPath:"benefitResponseResult/status"};
+ const reversePairs=pairs=>pairs.map(p=>({...p,beforePath:p.afterPath,afterPath:p.beforePath}));
+ const loadBook=async book=>{const loaded=new ExcelJS.Workbook();await loaded.xlsx.load(await book.xlsx.writeBuffer());return loaded};
+ const export105=(view,pairs,dismissed)=>exporter.createWorkbook(ExcelJS,{...view,mappings:pairs,dismissed,
+  results:core.compare(view.before,view.after,pairs),baseURL:"https://example.test/"});
+ const reportWithDismissal=await loadBook(export105(o105,[parent105],[rejected105]));
+ for(const reverse of [false,true]){
+  const view=reverse?{left:next105,right:old105,before:b105,after:a105}:o105;
+  const orient=pairs=>reverse?reversePairs(pairs):pairs;
+  const report=mapping.parseWorkbook(reportWithDismissal,view);
+  assert.deepEqual(report.errors,[]);
+  assert.deepEqual(report.dismissed,orient([rejected105]),"exact exclusions are read in comparison orientation");
+  const preview=mapping.preparePreview(report,view.before,view.after);
+  const selected=[...report.pairs,...preview.suggestions.map(({beforePath,afterPath,comment})=>({beforePath,afterPath,comment}))];
+  assert.equal(selected.length,13);
+  const cleanStore=mapping.createStore(()=>{throw Error("Blocked storage")});
+  await cleanStore.apply(view,[],selected,{draft:report.deleted},{dismissed:report.dismissed});
+  const saved=cleanStore.load(view);
+  const exported=await loadBook(export105(view,saved.pairs,saved.dismissed));
+  const restored=mapping.parseWorkbook(exported,view);
+  assert.deepEqual(restored.dismissed,orient([rejected105]));
+  assert.deepEqual(restored.pairs.sort((a,b)=>a.beforePath.localeCompare(b.beforePath)),selected.sort((a,b)=>a.beforePath.localeCompare(b.beforePath)));
+  assert.deepEqual(mapping.parseWorkbook(exported,reverse?o105:{left:next105,right:old105,before:b105,after:a105}).dismissed,
+   reverse?[rejected105]:reversePairs([rejected105]),"re-export retains exact paths in either direction");
+ }
+ const refilled=await loadBook(export105(o105,[parent105],[rejected105])),refilledSheet=refilled.getWorksheet("Сопоставление");
+ const excludedRow=a105.findIndex(f=>f.path===rejected105.beforePath)+6;
+ refilledSheet.getCell(excludedRow,5).value=rejected105.afterPath;
+ refilledSheet.getCell(excludedRow,9).value="Проверено повторно";
+ const alternative={...rejected105,afterPath:"benefitResponseResult/responseInfo",comment:"Другая пара"};
+ refilledSheet.addRow(["",alternative.beforePath,"","",alternative.afterPath,"","","Не проверено",alternative.comment]);
+ const prepared=mapping.preparePreview(mapping.parseWorkbook(refilled,o105),a105,b105);
+ assert.deepEqual(prepared.suggestions.filter(p=>p.beforePath===rejected105.beforePath).map(({afterPath,comment})=>({afterPath,comment})),
+  [{afterPath:alternative.afterPath,comment:alternative.comment}],"exclusion suppresses the filled candidate while keeping another pair with the same source");
+ refilledSheet.getCell(excludedRow,8).value="Подтверждено";
+ const confirmed=mapping.parseWorkbook(refilled,o105);
+ assert.ok(confirmed.pairs.some(p=>p.beforePath===rejected105.beforePath&&p.afterPath===rejected105.afterPath&&p.comment==="Проверено повторно"));
+ const confirmedStore=mapping.createStore(()=>{throw Error("Blocked storage")});
+ await confirmedStore.apply(o105,[],confirmed.pairs,{draft:confirmed.deleted},{dismissed:confirmed.dismissed});
+ assert.deepEqual(confirmedStore.load(o105).dismissed,[]);
+ for(const [label,column,value] of [
+  ["Версия исключений XML",2,"99"],["Версия исключений XML",3,50001],["Версия исключений XML",3,2],
+  ["Исключённые пары XML",3,"another-edition"],["Исключённая пара XML",2,"missing"],
+  ["Исключённая пара XML",3,{formula:'"benefitResponseResult/status"',result:"benefitResponseResult/status"}]
+ ]){
+  const damaged=export105(o105,[parent105],[rejected105]),meta=damaged.getWorksheet("О выгрузке");
+  const row=meta.getRows(1,meta.rowCount).find(row=>row.getCell(1).value===label);
+  row.getCell(column).value=value;
+  const invalid=mapping.parseWorkbook(await loadBook(damaged),o105);
+  assert.ok(invalid.errors.length,label);
+  assert.deepEqual(invalid.pairs,[]);
+  assert.deepEqual(invalid.dismissed,[]);
+ }
+ assert.deepEqual(mapping.parseWorkbook(await loadBook(export105(o105,[parent105],[])),o105).dismissed,[],"old workbooks without a section remain readable");
+ const duplicateExclusion=export105(o105,[parent105],[rejected105,alternative]);
+ const duplicateMeta=duplicateExclusion.getWorksheet("О выгрузке");
+ const exclusions=duplicateMeta.getRows(1,duplicateMeta.rowCount).filter(row=>row.getCell(1).value==="Исключённая пара XML");
+ exclusions[1].getCell(3).value=exclusions[0].getCell(3).value;
+ const duplicateReport=mapping.parseWorkbook(await loadBook(duplicateExclusion),o105);
+ assert.match(duplicateReport.errors.join(" "),/Повтор исключённой пары/,"a duplicate must not replace another exclusion silently");
+ assert.deepEqual(duplicateReport.dismissed,[]);
  const book105=exporter.createWorkbook(ExcelJS,{...o105,results:core.compare(a105,b105),baseURL:"https://example.test/"}),sheet105=book105.getWorksheet("Сопоставление");
  const checked=new Set(["","status","responseInfo","registryNum","errorList","errorList/error","errorList/error/code","errorList/error/message"]);
  a105.forEach((f,i)=>{

@@ -1,5 +1,6 @@
 const {test,expect}=require('@playwright/test');
 const fs=require('node:fs');
+const path=require('node:path');
 const ExcelJS=require('../../web/vendor/exceljs.min.js');
 const {catalog}=require('./catalog-fixtures.cjs');
 const left=catalog.revisions.find(r=>r.number==='105'&&r.environment==='prod'&&r.document_version==='2.28'&&r.ready);
@@ -8,11 +9,12 @@ const rootPair={beforePath:'approveSocialAssistResult',afterPath:'benefitRespons
 const statusPair={beforePath:rootPair.beforePath+'/status',afterPath:rootPair.afterPath+'/status',comment:'Применено'};
 const key='sedo-field-mappings:v1:'+[left.revision_id,right.revision_id].sort().map(encodeURIComponent).join(':');
 const url='/site/#'+new URLSearchParams({message:'10510',compare:'1',left:left.revision_id,right:right.revision_id});
+const reverseUrl='/site/#'+new URLSearchParams({message:'10510',compare:'1',left:right.revision_id,right:left.revision_id});
 
-test.beforeEach(async({context})=>{
- const path=require('node:path');
+async function serveCurrentMapping(context){
  for(const script of ['compare.js','compare-core.js','comparison-export.js','comparison-mapping.js','mapping-draft.js','mapping-editor.js'])await context.route('**/'+script+'*',route=>route.fulfill({path:path.join(__dirname,'../../web',script),contentType:'application/javascript'}));
-});
+}
+test.beforeEach(async({context})=>{await serveCurrentMapping(context)});
 
 const visitField=async page=>{
  await page.locator('.difference-links').getByRole('link',{name:'Поле в «Было»',exact:true}).first().click();
@@ -46,6 +48,250 @@ const workbookRow=(sheet,path)=>{
  expect(found).toBeDefined();
  return found;
 };
+const samePaths=(a,b)=>a.beforePath===b.beforePath&&a.afterPath===b.afterPath;
+const reversed=({beforePath,afterPath,...props})=>({...props,beforePath:afterPath,afterPath:beforePath});
+const {comment:statusComment,...rejectedStatus}=statusPair;
+const mappingChoice=(page,pair)=>page.locator(`input[data-before-path="${pair.beforePath}"][data-after-path="${pair.afterPath}"]`);
+const mappingRow=(page,pair)=>mappingChoice(page,pair).locator('xpath=ancestor::tr');
+const applyMappings=async page=>{
+ await page.locator('.mapping-apply').click();
+ await expect(page.locator('.mapping-applied-feedback')).toBeVisible();
+ await expect(page.locator('.mapping-apply')).toHaveCount(0);
+};
+const loadWorkbook=async download=>{
+ const book=new ExcelJS.Workbook();await book.xlsx.load(fs.readFileSync(await download.path()));return book;
+};
+const enterExcelStatus=async (page,decision)=>{
+ const book=await loadWorkbook(await compareDownload(page));
+ const row=workbookRow(book.getWorksheet('Сопоставление'),statusPair.beforePath);
+ row.getCell(5).value=statusPair.afterPath;row.getCell(8).value=decision;
+ row.getCell(9).value='Решение из Excel';
+ await uploadWorkbook(page,book);
+ await expect(mappingRow(page,statusPair)).toContainText('Из Excel');
+};
+
+test('downloaded XLSX keeps exact exclusions and 13 saved pairs in clean forward and reverse comparisons',async({baseURL,browser,page})=>{
+ await loadSaved(page,rootPair);
+ await page.locator('.mapping-suggest').click();
+ await mappingRow(page,statusPair).locator('.mapping-remove-row').click();
+ await applyMappings(page);
+ const saved=await readSaved(page);
+ expect(saved.pairs).toHaveLength(13);
+ expect(saved.dismissed).toEqual([rejectedStatus]);
+ const file=await (await compareDownload(page)).path();
+ const book=await loadWorkbook(await compareDownload(page));
+ const candidate=workbookRow(book.getWorksheet('Сопоставление'),statusPair.beforePath);
+ candidate.getCell(5).value=statusPair.afterPath;
+ expect(candidate.getCell(8).value).toBe('Не проверено');
+ for(const reverse of [false,true]){
+  const context=await browser.newContext({baseURL});
+  try{
+   await serveCurrentMapping(context);
+   const other=await context.newPage(),orient=reverse?reversed:pair=>pair;
+   await other.goto(reverse?reverseUrl:url);
+   expect(await readSaved(other)).toBeNull();
+   if(reverse)await uploadWorkbook(other,book);
+   else await other.locator('.mapping-file').setInputFiles(file);
+   await expect(other.locator('.mapping-apply')).toHaveText('Применить и обновить сравнение (13)');
+   await expect(other.locator('.mapping-explicit:checked')).toHaveCount(13);
+   await expect(mappingChoice(other,orient(statusPair))).toHaveCount(0);
+   expect(await readSaved(other)).toBeNull();
+   await other.locator('.mapping-discard').click();
+   expect(await readSaved(other)).toBeNull();
+   await other.locator('.mapping-file').setInputFiles(file);
+   await applyMappings(other);
+   const restored=await readSaved(other);
+   expect(restored.dismissed).toEqual([orient(rejectedStatus)]);
+   expect(restored.pairs).toHaveLength(13);
+   expect(restored.pairs).toEqual(expect.arrayContaining(saved.pairs.map(orient)));
+   await other.locator('.mapping-suggest').click();
+   await expect(mappingChoice(other,orient(statusPair))).toHaveCount(0);
+   const reexport=await loadWorkbook(await compareDownload(other));
+   const rows=reexport.getWorksheet('Сопоставление').getRows(6,reexport.getWorksheet('Сопоставление').rowCount-5);
+   const confirmed=rows.filter(row=>row.getCell(8).value==='Подтверждено')
+    .map(row=>({beforePath:row.getCell(2).value,afterPath:row.getCell(5).value,comment:row.getCell(9).value}));
+   expect(confirmed).toHaveLength(13);
+   expect(confirmed).toEqual(expect.arrayContaining(saved.pairs.map(orient)));
+   await other.locator('.mapping-file').setInputFiles(await (await compareDownload(other)).path());
+   await expect(other.locator('.mapping-explicit:checked')).toHaveCount(13);
+   await expect(mappingChoice(other,orient(statusPair))).toHaveCount(0);
+  }finally{await context.close()}
+ }
+});
+
+for(const decision of ['Не проверено','Требует уточнения']){
+ test('removing a '+decision+' Excel row survives apply, reopen and explicit acceptance',async({baseURL,browser,page})=>{
+  await loadSaved(page,rootPair);
+  await enterExcelStatus(page,decision);
+  const choice=mappingChoice(page,statusPair);
+  if(decision==='Не проверено')await expect(choice).toBeChecked();
+  else await expect(choice).not.toBeChecked();
+  await mappingRow(page,statusPair).locator('.mapping-remove-row').click();
+  await applyMappings(page);
+  const saved=await readSaved(page);
+  expect(saved.dismissed).toContainEqual(rejectedStatus);
+  expect(saved.pairs.some(pair=>samePaths(pair,statusPair))).toBe(false);
+  await page.locator('.mapping-suggest').click();
+  await expect(choice).toHaveCount(0);
+  if(decision==='Требует уточнения'){
+   const file=await (await compareDownload(page)).path(),context=await browser.newContext({baseURL});
+   try{
+    await serveCurrentMapping(context);
+    const other=await context.newPage();await other.goto(url);
+    expect(await readSaved(other)).toBeNull();
+    await other.locator('.mapping-file').setInputFiles(file);
+    await expect(other.locator('.mapping-apply')).toBeEnabled();
+    await expect(mappingChoice(other,statusPair)).toHaveCount(0);
+    await applyMappings(other);
+    expect((await readSaved(other)).dismissed).toContainEqual(rejectedStatus);
+   }finally{await context.close()}
+  }
+  await page.locator('.mapping-add-row').click();
+  await choosePaths(page,statusPair.beforePath,statusPair.afterPath);
+  await page.locator('.mapping-edit-comment').fill(statusComment);
+  await page.locator('.mapping-editor-save').click();
+  await page.locator('.mapping-editor-cancel').click();
+  await applyMappings(page);
+  const accepted=await readSaved(page);
+  expect(accepted.dismissed??[]).not.toContainEqual(rejectedStatus);
+  expect(accepted.pairs).toContainEqual(statusPair);
+ });
+}
+
+for(const bulk of [false,true]){
+ test((bulk?'Bulk-deselected':'Untouched')+' Excel proposals remain eligible when the preview reopens',async({page})=>{
+  await loadSaved(page,rootPair);
+  await enterExcelStatus(page,bulk?'Не проверено':'Требует уточнения');
+  if(bulk)await page.locator('.mapping-select-none').click();
+  await expect(mappingChoice(page,statusPair)).not.toBeChecked();
+  await applyMappings(page);
+  expect((await readSaved(page)).dismissed??[]).toEqual([]);
+  await page.locator('.mapping-suggest').click();
+  await expect(mappingChoice(page,statusPair)).toBeChecked();
+ });
+}
+
+test('removing an unchecked Excel proposal preserves a confirmation in another tab',async({context,page})=>{
+ await loadSaved(page,rootPair);
+ await enterExcelStatus(page,'Требует уточнения');
+ await expect(mappingChoice(page,statusPair)).not.toBeChecked();
+ await page.locator('.mapping-select-none').click();
+ await mappingRow(page,statusPair).locator('.mapping-remove-row').click();
+ const other=await context.newPage();
+ await other.goto(reverseUrl);
+ await other.locator('.mapping-suggest').click();
+ await other.locator('.mapping-select-none').click();
+ const confirmed=reversed({...statusPair,comment:'Подтверждено во второй вкладке'});
+ await mappingRow(other,confirmed).locator('.mapping-edit-row').click();
+ await other.locator('.mapping-edit-comment').fill(confirmed.comment);
+ await other.locator('.mapping-editor-save').click();
+ await other.locator('.mapping-editor-cancel').click();
+ await applyMappings(other);
+ await applyMappings(page);
+ const saved=await readSaved(page);
+ expect(saved.pairs).toContainEqual(reversed(confirmed));
+ expect(saved.dismissed??[]).not.toContainEqual(rejectedStatus);
+ await page.locator('.mapping-suggest').click();
+ await expect(mappingRow(page,statusPair)).toContainText(confirmed.comment);
+});
+
+test('exclusion-only XLSX applies with zero pairs after a browser-storage denial',async({page})=>{
+ await loadSaved(page,statusPair);
+ await page.evaluate(key=>{
+  const save=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(name,value){if(name===key)throw new DOMException('Denied','SecurityError');return save.call(this,name,value)};
+ },key);
+ await page.locator('.mapping-undo').click();
+ await expect(page.locator('.mapping-panel')).toContainText('текущем сеансе');
+ expect((await readSaved(page)).pairs).toEqual([statusPair]);
+ const file=await (await compareDownload(page)).path();
+ const book=await loadWorkbook(await compareDownload(page));
+ const meta=book.getWorksheet('О выгрузке');
+ const version=meta.getRows(1,meta.rowCount).find(row=>row.getCell(1).value==='Версия исключений XML');
+ expect(version).toBeDefined();
+ version.getCell(2).value='99';
+ await page.reload();
+ await page.locator('.mapping-suggest').click();
+ await page.locator('.mapping-edit-row').click();
+ await page.locator('.mapping-edit-comment').fill('Сохранить открытый черновик');
+ await page.locator('.mapping-editor-save').click();
+ await page.locator('.mapping-editor-cancel').click();
+ await uploadWorkbook(page,book);
+ await expect(page.locator('.mapping-panel > [role=status]')).toContainText('Не удалось загрузить соответствия');
+ await expect(mappingRow(page,statusPair)).toContainText('Сохранить открытый черновик');
+ await page.locator('.mapping-discard').click();
+ await page.evaluate(key=>localStorage.removeItem(key),key);
+ await page.reload();
+ await page.locator('.mapping-file').setInputFiles(file);
+ const apply=page.locator('.mapping-apply');
+ await expect(apply).toHaveText('Применить и обновить сравнение (0)');
+ await expect(apply).toBeEnabled();
+ expect(await readSaved(page)).toBeNull();
+ await applyMappings(page);
+ expect(await readSaved(page)).toMatchObject({pairs:[],dismissed:[rejectedStatus]});
+});
+
+test('card undo keeps a child out of automatic mappings until it is added manually',async({page})=>{
+ await page.goto('/site/');
+ await page.evaluate(async ({key,left,right,parent,child,comparison})=>{
+  const [before,after]=await Promise.all([loadComparisonData(left),loadComparisonData(right)]);
+  const pairs=[parent,child,...SedoMapping.suggestDescendants([parent,child],before,after).suggestions.map(({beforePath,afterPath,comment})=>({beforePath,afterPath,comment}))];
+  localStorage.setItem(key,JSON.stringify({version:1,left,right,pairs}));
+  location.hash=comparison;
+ },{key,left:left.revision_id,right:right.revision_id,parent:rootPair,child:statusPair,comparison:url.split('#')[1]});
+ const suggest=page.locator('.mapping-suggest');
+ await suggest.click();
+ const childCard=page.locator('.difference').filter({has:page.locator('.mapping-comment').getByText(statusPair.comment,{exact:true})});
+ await childCard.locator('.mapping-undo').click();
+ await expect(page.locator('.mapping-applied-feedback')).toContainText('Сопоставление отменено');
+ const selectedChild=(path)=>page.locator(`.mapping-preview input[data-before-path="${path}"]:checked`);
+ await expect(selectedChild(statusPair.beforePath)).toHaveCount(0);
+ await expect(childCard).toHaveCount(0);
+ const extra={beforePath:rootPair.beforePath+'/socialAssistNum',afterPath:rootPair.afterPath+'/processNum',comment:'Независимая правка'};
+ async function addAndApply(pair){
+  await page.locator('.mapping-add').click();
+  await choosePaths(page,pair.beforePath,pair.afterPath);
+  await page.locator('.mapping-edit-comment').fill(pair.comment);
+  await page.locator('.mapping-editor-save').click();
+  await page.locator('.mapping-apply-top').click();
+  await expect(page.locator('.mapping-applied-feedback')).toContainText('Сравнение обновлено');
+ }
+ await addAndApply(extra);
+ await page.reload();
+ expect((await readSaved(page)).pairs).toContainEqual(extra);
+ expect((await readSaved(page)).pairs.some(pair=>pair.beforePath===statusPair.beforePath)).toBe(false);
+ await suggest.click();
+ await expect(childCard).toHaveCount(0);
+ await expect(selectedChild(statusPair.beforePath)).toHaveCount(0);
+ await page.getByRole('button',{name:'Поменять местами',exact:true}).click();
+ await expect(page.locator('.compare-controls select').first()).toHaveValue(right.revision_id);
+ await suggest.click();
+ await expect(selectedChild(statusPair.afterPath)).toHaveCount(0);
+ const reversed={beforePath:statusPair.afterPath,afterPath:statusPair.beforePath,comment:'Возвращено вручную'};
+ await addAndApply(reversed);
+ await expect(page.locator('.mapping-comment').getByText(reversed.comment,{exact:true})).toBeVisible();
+ expect((await readSaved(page)).pairs).toContainEqual(reversed);
+});
+
+test('card undo protects deselected proposals even when all saved pairs are still selected',async({page})=>{
+ await loadSaved(page,rootPair);
+ await page.evaluate(({key,child,comparison})=>{
+  const record=JSON.parse(localStorage.getItem(key));
+  record.pairs.push(child);
+  localStorage.setItem(key,JSON.stringify(record));
+  location.hash=comparison;
+ },{key,child:statusPair,comparison:url.split('#')[1]});
+ await page.reload();
+ await page.locator('.mapping-suggest').click();
+ const selected=page.locator('.mapping-proposal:checked');
+ expect(await selected.count()).toBeGreaterThan(0);
+ await page.locator('.mapping-select-none').click();
+ const card=page.locator('.difference').filter({has:page.locator('.mapping-comment').getByText(statusPair.comment,{exact:true})});
+ await card.locator('.mapping-undo').click();
+ await expect(card.locator('.mapping-undo-error')).toContainText('Сначала примените или отмените черновик');
+ await expect(selected).toHaveCount(0);
+ expect((await readSaved(page)).pairs).toContainEqual(statusPair);
+});
 
 for(const mode of ['add','edit']){
  test('unfinished '+mode+' form survives returning from a field and stays local to its direction',async({page})=>{
@@ -121,7 +367,12 @@ test('downloaded workbook accepts lowercase decisions in both directions and rej
  blank.getCell(8).value=null;blank.getCell(5).value=rootPair.afterPath+'/processNum';
  deleted.getCell(8).value='удалено';
  for(const reversed of [false,true]){
-  if(reversed)await page.getByRole('button',{name:'Поменять местами',exact:true}).click();
+  if(reversed){
+   // Repeat the decision parsing with a fresh baseline. The first apply
+   // deliberately excluded the blank-decision pair in both orientations.
+   await loadSaved(page);
+   await page.getByRole('button',{name:'Поменять местами',exact:true}).click();
+  }
   await uploadWorkbook(page,book);
   const beforePath=reversed?statusPair.afterPath:statusPair.beforePath;
   const confirmed=page.locator('.mapping-explicit[data-before-path="'+beforePath+'"]');

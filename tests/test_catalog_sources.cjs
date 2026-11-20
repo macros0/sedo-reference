@@ -12,6 +12,7 @@ const nodes=new Map(),document={createElement:tag=>new Element(tag),createTextNo
 const context=vm.createContext({document,window:{SEDO_CATALOG:catalog,SedoReviewJournal:require('../web/review-journal.js')},URL,URLSearchParams,Intl,
  newestEditionFirst:()=>0,appendRelatedComparisons(){},comparisonDefaults:()=>({}),comparisonRoute:()=>'',updatesRoute:()=>''});
 // Load the real rendering functions without starting the route/event loop.
+vm.runInContext(fs.readFileSync(path.join(root,'web/journal.js'),'utf8'),context);
 vm.runInContext(fs.readFileSync(path.join(root,'web/app.js'),'utf8').split('window.addEventListener("message",')[0],context);
 const text=node=>[node.textContent,...(node.children||[]).map(text)].join(' ');
 const descendants=node=>[node,...(node.children||[]).flatMap(descendants)];

@@ -94,6 +94,29 @@ class OfflineIntegrityTests(unittest.TestCase):
 
 
 class ReportGroupingTests(unittest.TestCase):
+    def test_source_report_matches_journal_at_equal_and_unknown_times(self):
+        import auto_update
+        import build_site
+        from edition_groups import group_editions, source_updates
+        from tests.test_source_updates import SourceUpdatesTests
+
+        for stamp in ('2026-11-12T12:00:00+00:00', None):
+            with self.subTest(stamp=stamp), tempfile.TemporaryDirectory() as temp:
+                current, fields = SourceUpdatesTests().fixture()
+                for event in current['updates']:
+                    event['observed_at'] = stamp
+                previous = dict(current, revisions=current['revisions'][:1], updates=current['updates'][:1])
+                directory = Path(temp)
+                write(directory / 'index.json', encode([dict(revision_id=rid, status='ready') for rid in fields]))
+                for rid, tree in fields.items():
+                    write(directory / (rid + '.json'), encode(dict(fields=tree)))
+                grouped = group_editions(current, fields.__getitem__)
+                grouped['updates'] = journal = build_site.summarize_journal(grouped, directory)
+                expected, = source_updates(grouped)
+                schemas, sources = auto_update.edition_changes(previous, current, directory, journal=journal)
+                self.assertEqual(schemas, [])
+                self.assertEqual(sources, [expected])
+
     def test_new_docx_for_existing_schema_reports_source_without_new_xml_edition(self):
         import auto_update
         from tests.test_source_updates import SourceUpdatesTests
@@ -108,7 +131,7 @@ class ReportGroupingTests(unittest.TestCase):
             write(directory / 'index.json', encode([dict(revision_id=rid, status='ready') for rid in fields]))
             for rid, tree in fields.items():
                 write(directory / (rid + '.json'), encode(dict(fields=tree)))
-            schemas, sources = auto_update.edition_changes(previous, current, directory)
+            schemas, sources = auto_update.edition_changes(previous, current, directory, journal=current['updates'])
         self.assertEqual(schemas, [])
         self.assertEqual(len(sources), 1)
         self.assertEqual(sources[0]['source_revision_id'], 'second')

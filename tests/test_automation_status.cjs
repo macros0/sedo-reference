@@ -1,5 +1,82 @@
 const assert=require('node:assert/strict');
 const {model,date,safeLink}=require('../web/automation-status.js');
+const {execFileSync}=require('node:child_process');
+const path=require('node:path');
+const clockReports=JSON.parse(execFileSync(process.env.SEDO_PYTHON||'python',
+ ['-B','-m','tests.status_clock_fixture'],{cwd:path.join(__dirname,'..'),encoding:'utf8'}));
+const clockAt=Date.parse('2026-11-13T21:00:00Z');
+for(const {utc,report} of require('./fixtures/legacy-automation-status.json')){
+ const instant=Date.parse(utc),view=model(report,instant);
+ assert.equal(view.tone,'success',report.sourcecraft.finished_at);
+ assert.match(view.cards[2].independentDeployment.text,/Независимая выкладка · Успешно/);
+ for(const delta of [-1,0,1]){
+  assert.equal(model(report,instant+36*3600*1000+delta).tone,delta>0?'stale':'success');
+  const running={...report,sourcecraft:{...report.sourcecraft,state:'processing'}};
+  assert.equal(model(running,instant+30*60*1000+delta).cards[0].state,delta>0?'stale':'processing');
+ }
+ const invalid={...report,sourcecraft:{...report.sourcecraft,finished_at_utc:null}};
+ assert.equal(model(invalid,instant).cards[0].state,'unknown');
+}
+assert.equal(date('2021-W53-1T00:00:00Z'),'время неизвестно');
+assert.equal(date('2020-W53-7T00:00:00Z'),date('2021-01-03T00:00:00Z'));
+assert.equal(date('2026-W46-6T00:00:00'),'время неизвестно');
+for(const value of ['20261114T1200+01:0203','20261114T1200+0102:03']){
+ assert.equal(date(value),'время неизвестно');
+}
+for(const [utc,offset] of Object.values(clockReports)){
+ const view=model(offset,clockAt);
+ assert.deepEqual(view,model(utc,clockAt));
+ assert.equal(view.tone,'success');
+ assert.match(view.updated,/14\.11\.2026, 00:00 МСК/);
+ assert.match(view.cards[2].latestDeployment.text,/14\.11\.2026, 00:00 МСК/);
+ for(const delta of [-1,0,1]){
+  const after36Hours=clockAt+36*3600*1000+delta;
+  assert.equal(model(offset,after36Hours).tone,delta>0?'stale':'success');
+ }
+}
+const working=structuredClone(clockReports.sourcecraft[1]);
+working.sourcecraft.state='processing';
+for(const delta of [-1,0,1]){
+ const after30Minutes=clockAt+30*60*1000+delta;
+ assert.equal(model(working,after30Minutes).cards[0].state,delta>0?'stale':'processing');
+}
+const legacy=report=>JSON.parse(JSON.stringify(report,(key,value)=>key.endsWith('_utc')?undefined:value));
+const legacyUtc=legacy(clockReports.sourcecraft[0]);
+const legacyOffset=legacy(clockReports.sourcecraft[1]);
+const negative='2026-11-13T17:59:45.000001-03:00:15';
+const legacyNegative=JSON.parse(JSON.stringify(legacyOffset,(_,value)=>
+ value==='2026-11-14T00:00:15.000001+03:00:15'?negative:value));
+for(const report of [legacyOffset,legacyNegative]){
+ assert.deepEqual(model(report,clockAt),model(legacyUtc,clockAt));
+ for(const delta of [-1,0,1]){
+  assert.equal(model(report,clockAt+36*3600*1000+delta).tone,delta>0?'stale':'success');
+  const active=structuredClone(report);
+  active.sourcecraft.state='processing';
+  assert.equal(model(active,clockAt+30*60*1000+delta).cards[0].state,delta>0?'stale':'processing');
+ }
+}
+for(const normalized of [null,'bad','2026-11-13T21:00:00','2026-11-31T21:00:00Z','2026-11-14T00:00:15+03:00:15','2026-11-13T21:00:00Z\n']){
+ const invalid=structuredClone(legacyOffset);
+ invalid.sourcecraft.finished_at_utc=normalized;
+ const view=model(invalid,clockAt);
+ assert.equal(view.cards[0].state,'unknown');
+ assert.match(view.cards[2].independentDeployment.text,/Независимая выкладка · Успешно.*00:00 МСК/);
+}
+for(const stamp of ['2026-11-14T00:00:15.010001+03:00:15.010000','2026-11-13T21:00:00.000001+00:00:00.000002']){
+ const fractional=JSON.parse(JSON.stringify(legacyUtc,(_,value)=>value==='2026-11-13T21:00:00.000001Z'?stamp:value));
+ assert.deepEqual(model(fractional,clockAt),model(legacyUtc,clockAt));
+}
+assert.equal(date('2026-11-14t00:00:15+03:00:15'),date('2026-11-13T21:00:00Z'));
+const noZone=structuredClone(legacyUtc);
+noZone.sourcecraft.finished_at='2026-11-13T21:00:00';
+assert.equal(model(noZone,clockAt).cards[0].state,'unknown');
+const oldReport=structuredClone(clockReports.home[0]);
+delete oldReport.generated_at;
+delete oldReport.generated_at_utc;
+delete oldReport.github.last_successful_publication.finished_at_utc;
+const oldView=model(oldReport,clockAt);
+assert.equal(oldView.tone,'unknown');
+assert.match(oldView.cards[2].latestDeployment.text,/14\.11\.2026, 00:00 МСК/);
 const now=Date.parse('2026-11-13T12:00:00Z');
 const data={format:1,generated_at:'2026-11-13T11:00:00Z',sourcecraft:{state:'success',finished_at:'2026-11-13T07:02:00Z',contours:{prod:{observed_at:'2026-11-13T07:01:00Z',changed:false},test:{observed_at:'2026-11-13T07:02:00Z',changed:false}}},github:{check:{state:'success'},versions:{count:0,checked_at:'2026-11-13T08:00:00Z'},publication:{state:'success',finished_at:'2026-11-13T09:00:00Z'}}};
 assert.equal(model(data,now).tone,'success');

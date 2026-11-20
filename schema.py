@@ -18,6 +18,7 @@ X = "{" + XS + "}"
 HERE = Path(__file__).resolve().parent
 MAX_FIELDS = 50000
 FACETS = set("length minLength maxLength pattern enumeration maxInclusive minInclusive maxExclusive minExclusive totalDigits fractionDigits whiteSpace".split())
+IDENTITY_CONSTRAINTS = {X + kind for kind in ("key", "keyref", "unique")}
 
 BUILTIN_SIMPLE_TYPES = set('anySimpleType string boolean decimal float double duration dateTime time date gYearMonth gYear gMonthDay gDay gMonth hexBinary base64Binary anyURI QName NOTATION normalizedString token language NMTOKEN NMTOKENS Name NCName ID IDREF IDREFS ENTITY ENTITIES integer nonPositiveInteger negativeInteger long int short byte nonNegativeInteger unsignedLong unsignedInt unsignedShort unsignedByte positiveInteger'.split())
 EXPANDED_NAME_TYPES = {'QName', 'NOTATION'}
@@ -188,16 +189,42 @@ def resolve_import(files, origin, location, namespace=None, kind="import"):
             pending.append((tuple(sorted(children)), child_namespace))
     return candidates[0]
 
-def dependency_set(schemas,entry):
-    files={s["path"]:s for s in schemas};visited={};contexts=set()
-    def visit(path,inherited_namespace=None):
-        s=files[path];effective=s.get("namespace") or inherited_namespace or ""
-        if (path,effective) in contexts:return
-        contexts.add((path,effective));visited[path]=s["sha256"]
-        for loc,namespace,kind in _edges(s,effective):
-            visit(resolve_import(files,path,loc,namespace,kind),effective if kind=="include" else None)
-    visit(entry)
-    return sorted((posixpath.relpath(p,posixpath.dirname(entry)),h) for p,h in visited.items())
+def resolved_dependencies(schemas, entry, *, member_identity=None):
+    """Return historical dependency pairs and the resolved graph for equivalence."""
+    files = {schema["path"]: schema for schema in schemas}
+    directory = posixpath.dirname(entry)
+    if member_identity is None:
+        def member_identity(path):
+            return "" if path == entry else posixpath.relpath(path, directory)
+
+    def node(path, inherited=None):
+        schema = files[path]
+        return member_identity(path), schema.get("namespace") or inherited or "", schema["sha256"]
+
+    visited, contexts, edges = {}, set(), []
+
+    def visit(path, source):
+        effective = source[1]
+        if (path, effective) in contexts:
+            return
+        contexts.add((path, effective))
+        visited[path] = files[path]["sha256"]
+        for index, (location, namespace, kind) in enumerate(_edges(files[path], effective)):
+            target = resolve_import(files, path, location, namespace, kind)
+            # Includes adopt the including schema's target namespace when
+            # the referenced schema has no target namespace of its own.
+            target_node = node(target, effective if kind == "include" else None)
+            edges.append((source, index, kind, location, target_node))
+            visit(target, target_node)
+
+    root = node(entry)
+    visit(entry, root)
+    dependencies = sorted((posixpath.relpath(path, directory), digest) for path, digest in visited.items())
+    return dependencies, (root, tuple(sorted(set(edges))))
+
+
+def dependency_set(schemas, entry):
+    return resolved_dependencies(schemas, entry)[0]
 
 
 def included_roots(files, entry, *, chameleon_only=False):
@@ -352,6 +379,37 @@ class Schema:
             yield qname, union
         for member in union.findall(X+"simpleType"):
             yield None, member
+
+    def scalar_source(self, node, restrictions=None):
+        """Find the scalar declaration and any enclosing simpleContent facets."""
+        seen = set()
+        children = {X+'complexType', X+'simpleContent', X+'restriction', X+'extension'}
+        while node is not None and node not in seen:
+            seen.add(node)
+            if node.get('ref') and node.tag in (X+'attribute', X+'element'):
+                node = self.resolve(node.get('ref'), node, [local(node)])
+                continue
+            if restrictions is not None and node.tag == X+'restriction':
+                restrictions.append(node)
+            if node.tag == X+'simpleType' or node.find(X+'simpleType') is not None:
+                return node
+            qname = node.get('type') or node.get('base')
+            if not qname:
+                node = next((child for child in node if child.tag in children), None)
+                continue
+            namespace, name = self.qname_namespace(qname, node), qname.rsplit(':', 1)[-1]
+            if namespace == XS:
+                return node if name in BUILTIN_SIMPLE_TYPES else None
+            if (namespace, 'simpleType', name) in self.symbol:
+                return node
+            node = self.symbol.get((namespace, 'complexType', name))
+        return None
+
+    def scalar_member(self, source):
+        if source is None or source.tag == X+'simpleType':
+            return source
+        inline = source.find(X+'simpleType')
+        return inline if inline is not None else self._enum_member_type(source.get('type') or source.get('base'), source)
 
     def _enum_member_type(self, qname, source):
         if qname is None:
@@ -622,7 +680,8 @@ class Schema:
             compact.append(field)
         self.fields=compact
 
-    def field(self, decl, parent=-1, group="", chain=(), *, coalesce_choices=True, skip_inactive_particles=False):
+    def field(self, decl, parent=-1, group="", chain=(), *, coalesce_choices=True, skip_inactive_particles=False,
+              native_identity_constraints=False, validation_particles=None):
         if self.expanded_fields >= MAX_FIELDS:
             raise ValueError("Слишком большой каталог.")
         self.expanded_fields += 1
@@ -630,7 +689,8 @@ class Schema:
         src = decl
         if decl.get("ref"):
             src = self.resolve(decl.get("ref"),decl,[tag])
-        self.check_substitution_rules(src)
+        if validation_particles is None:
+            self.check_substitution_rules(src)
         name = ("@" if tag in ("attribute","anyAttribute") else "") + src.get("name","*")
         path = (self.fields[parent]["path"]+"/" if parent >= 0 else "")+name
         idx = len(self.fields)
@@ -710,7 +770,7 @@ class Schema:
                         raise ValueError('Отсутствует простой тип в '+path)
                     temporary.append(simple)
                 self.fields, self.field_declarations = [], {}
-                self.field(temporary, chain=stack)
+                self.field(temporary, chain=stack, validation_particles=validation_particles)
                 if len(self.fields) != 1:
                     raise ValueError('Нескалярный тип в '+path)
                 option = self.fields[0]
@@ -725,7 +785,7 @@ class Schema:
             nonlocal nodegroups, complex_type, enum_union, enum_list, enum_whitespace
             kind = local(e)
             replace_enum = kind == "restriction"
-            if kind == 'complexType':
+            if kind == 'complexType' and validation_particles is None:
                 self.check_substitution_rules(e)
             if kind == "complexType" and not complex_type:
                 complex_type = True
@@ -779,10 +839,24 @@ class Schema:
                     # A simple-content restriction also keeps its scalar base and facets.
                     if restricted_base and t != "attribute":continue
                     if t=="attribute" and (c.get("use")=="prohibited" or attribute_key(c) in excluded_attributes):continue
-                    child = self.field(c,idx,child_group,stack,skip_inactive_particles=skip_inactive_particles)
-                    if t in ("element", "any"):
-                        particles.append(self.fields[child]["name"])
-                        bounded_particles.append(self.fields[child]["name"])
+                    instances = (c,)
+                    child_particles, child_bounds = particles, bounded_particles
+                    if validation_particles and t == "element" and c.get("ref"):
+                        instances = validation_particles(c)
+                        # Each concrete declaration can fill this particle. Its
+                        # occurrence range applies once to the entire choice.
+                        alternatives = ["choice"]
+                        bounds = dict(kind="choice", min=occurrence(c.get("minOccurs","1")),
+                                      max=occurrence(c.get("maxOccurs","1")), children=[])
+                        particles.append(alternatives)
+                        bounded_particles.append(bounds)
+                        child_particles, child_bounds = alternatives, bounds["children"]
+                    for declaration in instances:
+                        child = self.field(declaration,idx,child_group,stack,skip_inactive_particles=skip_inactive_particles,
+                                           native_identity_constraints=native_identity_constraints, validation_particles=validation_particles)
+                        if t in ("element", "any"):
+                            child_particles.append(self.fields[child]["name"])
+                            child_bounds.append(self.fields[child]["name"])
                 elif t in ("complexType","simpleType","complexContent","simpleContent","extension","restriction","sequence","choice","all"):
                     walk(c,child_group,stack,particles,bounded_particles,restricted_base,excluded_attributes,kind)
                     if kind == 'restriction' and t == 'simpleType':
@@ -818,13 +892,15 @@ class Schema:
                     enum_nodes.append(c)
                 elif t in FACETS:
                     d["facets"].append([t,c.get("value")])
+                elif native_identity_constraints and kind == 'element' and c.tag in IDENTITY_CONSTRAINTS:
+                    continue
                 else:
                     raise ValueError("Неподдерживаемая конструкция "+t+" в "+path)
         if src.get("type"):
             # A named type supplies the content, but the element itself can
             # carry identity constraints that are not represented by this tree.
             for child in src:
-                if child.tag != X+"annotation":
+                if child.tag != X+"annotation" and not (native_identity_constraints and child.tag in IDENTITY_CONSTRAINTS):
                     raise ValueError("Неподдерживаемая конструкция "+local(child)+" в "+path)
             expand_type(src.get("type"),src,chain,content,content_bounds)
         else:

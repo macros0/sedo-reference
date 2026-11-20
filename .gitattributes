@@ -18,6 +18,8 @@
 /site/schemas/*.validation.json.gz -text
 
 /web/vendor/xmllint/* -text
+/web/vendor/README.md text eol=lf
+/web/vendor/exceljs-LICENSE text eol=lf
 /site/vendor/xmllint/* -text
 
 /web/vendor/xmllint/xmllint-browser.mjs -whitespace

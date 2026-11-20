@@ -10,16 +10,49 @@
  function documentName(r){
   return sourceFilename(r.document_url,r.manual_source?.filename||r.document_filename||r.manual_source?.label||'Загруженная спецификация');
  }
+ function specificationSources(revision){
+  const observed=revision.schema_source_observations?.filter(source=>
+   source.revision_id===revision.revision_id&&source.document_sha256===revision.document_sha256&&
+   source.resolved_schema_graph===revision.resolved_schema_graph);
+  if(observed?.length)return observed;
+  const sources=[revision],keys=new Set([specificationKey(revision)]);
+  for(const source of revision.edition_sources||[]){
+   // A display group can contain several specifications. The source must
+   // belong to the exact revision whose review produced this finding.
+   if(!source.document_url||!revision.document_sha256||source.document_sha256!==revision.document_sha256||
+      source.revision_id!==revision.revision_id)continue;
+   const key=specificationKey(source);
+   if(keys.has(key))continue;
+   keys.add(key);
+   const sameEntry=source.schema_path&&source.schema_path===revision.schema_path;
+   sources.push({...revision,...source,document_download:source.document_download||revision.document_download,
+    document_version:source.document_version??revision.document_version,label_date:source.label_date??revision.label_date,
+    schema_sources:source.schema_sources,schema_source_type:source.schema_source_type,schema_source_url:source.schema_source_url,
+    schema_publication_page:source.schema_publication_page,
+    archive_url:sameEntry?source.archive_url:undefined,
+    historical_source:true});
+  }
+  return sources;
+ }
  function collect(catalog){
-  const rows=[],seen=new Set();
+  const byFinding=new Map();
   for(const revision of catalog.revisions){
-   for(const finding of revision.schema_review?.findings||[]){
-    const identity=JSON.stringify([revision.number,revision.environment,revision.document_sha256||revision.document_url||revision.revision_id,revision.dependency_digest||revision.archive_sha256,finding]);
-    if(seen.has(identity))continue;
-    seen.add(identity);rows.push({revision,finding});
+   const findings=revision.schema_review?.findings||[];
+   if(!findings.length)continue;
+   const sources=specificationSources(revision);
+   const schemaIdentity=revision.resolved_schema_graph?['graph',revision.root,revision.namespace,revision.resolved_schema_graph]:
+    ['legacy',revision.dependency_digest||revision.archive_sha256];
+   for(const finding of findings){
+    const identity=JSON.stringify([revision.number,revision.environment,revision.document_sha256||revision.document_url||revision.revision_id,schemaIdentity,finding]);
+    let row=byFinding.get(identity);
+    if(!row){
+     row={revision,finding,specifications:[]};
+     byFinding.set(identity,row);
+    }
+    row.specifications.push(...sources);
    }
   }
-  return rows.sort((a,b)=>Number(a.revision.number)-Number(b.revision.number)||a.revision.environment.localeCompare(b.revision.environment)||documentName(a.revision).localeCompare(documentName(b.revision),'ru'));
+  return [...byFinding.values()].sort((a,b)=>Number(a.revision.number)-Number(b.revision.number)||a.revision.environment.localeCompare(b.revision.environment)||documentName(a.revision).localeCompare(documentName(b.revision),'ru'));
  }
  function fieldLink(revision,path){
   return '#'+new URLSearchParams({message:revision.number,env:revision.environment,rev:revision.revision_id,field:path});
@@ -29,6 +62,15 @@
  }
  function legacySpecificationKey(r){return r.document_url||r.document_download||r.document_sha256||r.revision_id}
  function specificationKey(r){return r.document_sha256?JSON.stringify([legacySpecificationKey(r),r.document_sha256]):legacySpecificationKey(r)}
+ function rowSpecifications(row){return row.specifications||specificationSources(row.revision)}
+ function matchesSpecification(source,key){return specificationKey(source)===key||legacySpecificationKey(source)===key}
+ function selectedSpecification(row,key){
+  if(!key)return row.revision;
+  return rowSpecifications(row).find(source=>matchesSpecification(source,key));
+ }
+ function specificationLabel(r){
+  return [documentName(r),envNames[r.environment],r.document_version&&'версия '+r.document_version,r.document_sha256?.slice(0,8)].filter(Boolean).join(' · ');
+ }
  function legacyXsdKey(r,sources){
   return JSON.stringify([sources.publication.url||r.archive_url||r.manual_source?.label||'',sources.file.text]);
  }
@@ -36,13 +78,24 @@
   const legacy=legacyXsdKey(r,sources);
   return sources.file.sha256?JSON.stringify([JSON.parse(legacy),sources.file.sha256]):legacy;
  }
- function xsdKey(r,f){return versionedXsdKey(r,schemaSources(r,f))}
+ function observationXsdKey(r,sources){
+  const key=versionedXsdKey(r,sources);
+  return r.snapshot&&sources.official?.url?JSON.stringify([JSON.parse(key),sources.official.url]):key;
+ }
+ function matchesXsdKey(r,s,key){
+  return observationXsdKey(r,s)===key||versionedXsdKey(r,s)===key||legacyXsdKey(r,s)===key;
+ }
+ function xsdKey(r,f){return observationXsdKey(r,schemaSources(r,f))}
  function sourceOptions(rows){
   const specifications=new Map(),schemas=new Map();
-  for(const {revision:r,finding:f} of rows){
-   specifications.set(specificationKey(r),[documentName(r),envNames[r.environment],r.document_version&&'версия '+r.document_version,r.document_sha256?.slice(0,8)].filter(Boolean).join(' · '));
-   for(const sources of schemaChains(r,f)){
-    schemas.set(versionedXsdKey(r,sources),[sources.file.text,sources.publication.text,sources.file.sha256?.slice(0,8),envNames[r.environment]].filter(Boolean).join(' · '));
+  for(const row of rows){
+   for(const r of rowSpecifications(row)){
+    specifications.set(specificationKey(r),specificationLabel(r));
+    for(const sources of schemaChains(r,row.finding)){
+     if(r.snapshot&&!sources.file.url)continue;
+     schemas.set(observationXsdKey(r,sources),[sources.file.text,sources.publication.text,sources.file.sha256?.slice(0,8),
+      r.snapshot&&sources.official?.url,envNames[r.environment]].filter(Boolean).join(' · '));
+    }
    }
   }
   const sorted=map=>[...map].map(([value,text])=>({value,text})).sort((a,b)=>a.text.localeCompare(b.text,'ru'));
@@ -50,9 +103,17 @@
  }
  function filter(rows,number='',env='',specification='',xsd=''){
   const query=number.trim();
-  return rows.filter(({revision:r,finding:f})=>(!query||r.number===query)&&(!env||r.environment===env)
-   &&(!specification||specificationKey(r)===specification||legacySpecificationKey(r)===specification)
-   &&(!xsd||schemaChains(r,f).some(s=>versionedXsdKey(r,s)===xsd||legacyXsdKey(r,s)===xsd)));
+  const result=[];
+  for(const row of rows){
+   const r=row.revision;
+   if((query&&r.number!==query)||(env&&r.environment!==env))continue;
+   const candidates=(specification?rowSpecifications(row).filter(source=>matchesSpecification(source,specification)):rowSpecifications(row));
+   const chosen=xsd?candidates.find(source=>schemaChains(source,row.finding)
+    .some(s=>(!source.snapshot||s.file.url)&&matchesXsdKey(source,s,xsd))):
+    !specification||matchesSpecification(r,specification)?r:candidates[0];
+   if(chosen)result.push(chosen===row.revision?row:{...row,revision:chosen});
+  }
+  return result;
  }
  function link(text,url,baseURL){
   if(!url)return text;
@@ -85,10 +146,14 @@
    const candidates=files.filter(s=>location.includes(s.path.split('/').pop()));
    if(candidates.length===1)compared=candidates[0];
   }
+  const verified=!!r.snapshot;
   const path=explicit?.path||compared?.path||r.schema_path;
   const file=path?.split('/').pop();
-  const digest=explicit?.sha256||compared?.sha256||r.dependencies?.find(([name])=>name===file)?.[1];
-  const remote=['wsdl','wsdl_bridge'].includes(r.schema_source_type)?remoteSchemaSource(r,path,digest):null;
+  if(!compared&&path===r.schema_path)compared=files.find(item=>item.path===path&&!explicit);
+  const digest=verified?compared?.sha256:explicit?.sha256||compared?.sha256||r.dependencies?.find(([name])=>name===file)?.[1];
+  const remote=verified?(compared?.official_url?{url:compared.official_url}:null):
+   ['wsdl','wsdl_bridge'].includes(r.schema_source_type)?remoteSchemaSource(r,path,digest):null;
+  const official=verified||r.historical_source?remote?.url:explicit?.url||remote?.url;
   const embedded=r.schema_source_type==='wsdl_bridge'||r.archive_url?.includes('#embedded=');
   const manual=origin?.startsWith('manual:');
   const publication=r.schema_source_type==='wsdl'||remote
@@ -98,8 +163,9 @@
    page:{text:r.schema_publication_page?'Страница СФР ('+new URL(r.schema_publication_page).host+new URL(r.schema_publication_page).pathname+')':'Страница публикации не сохранена',url:r.schema_publication_page},
    publication,
    container:embedded&&!remote?(r.archive_url?.includes('#schema-')?'Схема в тексте документа':r.schema_source_type==='wsdl_bridge'?'Вложенная XSD':r.archive_name||'Вложенная XSD'):'',
-   file:{text:path||'Файл XSD не указан',sha256:digest,url:explicit?.download||compared?.download||(digest&&/^[0-9a-f]{64}$/.test(digest)?'sources/'+digest+'.xsd':path===r.schema_path?r.schema_file_download:undefined)},
-   official:explicit?.url||remote?.url?{text:'Официальная публикация XSD',url:explicit?.url||remote?.url}:null,
+   file:{text:path||'Файл XSD не указан',sha256:digest,url:verified?compared?.download:
+    explicit?.download||compared?.download||(digest&&/^[0-9a-f]{64}$/.test(digest)?'sources/'+digest+'.xsd':path===r.schema_path?r.schema_file_download:undefined)},
+   official:official?{text:'Официальная публикация XSD',url:official}:null,
    wsdl:r.schema_source_type==='wsdl_bridge'&&!remote?{text:service||'Источник зависимостей не указан',url:service}:null
   };
  }
@@ -147,7 +213,12 @@
    values.push(r.document_url?link('Публикация СФР',r.document_url,baseURL):'');
    values.push(cell(sources.official));
    const sameSource=(a,b)=>a?.text===b?.text&&a?.url===b?.url;
-   for(const additional of chains.slice(1)){
+   for(let i=1;i<schemaCount;i++){
+    const additional=chains[i];
+    if(!additional){
+     values.push('','','','','');
+     continue;
+    }
     values.push(cell(additional.file),cell(additional.official),
      sameSource(additional.publication,sources.publication)?'':cell(additional.publication),
      additional.container===sources.container?'':additional.container,
@@ -170,7 +241,8 @@
   const options=sourceOptions(rows);
   info.addRows([
    ['Номер сообщения',number||'Все сообщения'],['Контур',envNames[env]||'Все контуры'],['Записей',rows.length],
-   ['Спецификация',options.specifications.find(s=>s.value===specification)?.text||specification||'Все спецификации'],
+   ['Спецификация',options.specifications.find(s=>s.value===specification)?.text
+    ||(specification&&rows.length?documentName(rows[0].revision)+' · все версии по сохранённой ссылке':specification||'Все спецификации')],
    ['Файл XSD',options.schemas.find(s=>s.value===xsd)?.text||xsd||'Все файлы XSD'],
    ['Охват','Все сохранённые редакции. Одна строка — замечание к определённой спецификации и её комплекту XSD своего контура.'],
    ['Обновление','Замечания пересчитываются при каждой сборке справочника по исходным DOCX и XSD.'],
@@ -179,6 +251,7 @@
   ]);info.eachRow(row=>{row.alignment={wrapText:true,vertical:'top'}});
   return workbook;
  }
+ const exportStates=new WeakMap();
  function mount(container,catalog,params){
   const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n};
   container.replaceChildren(el('h1','Журнал замечаний'));
@@ -192,17 +265,14 @@
   select.value=params.get('env')||'';envLabel.append(select);controls.append(label,envLabel);
   const all=collect(catalog),options=sourceOptions(all),requestedSpecification=params.get('specification');
   if(requestedSpecification&&!options.specifications.some(s=>s.value===requestedSpecification)){
-   const legacy=all.find(({revision})=>legacySpecificationKey(revision)===requestedSpecification);
-   if(legacy)options.specifications.unshift({value:requestedSpecification,text:documentName(legacy.revision)+' · все версии по сохранённой ссылке'});
+   const legacy=all.map(row=>selectedSpecification(row,requestedSpecification)).find(Boolean);
+   if(legacy)options.specifications.unshift({value:requestedSpecification,text:documentName(legacy)+' · все версии по сохранённой ссылке'});
   }
   const requestedXsd=params.get('xsd');
   if(requestedXsd&&!options.schemas.some(s=>s.value===requestedXsd)){
-   for(const {revision,finding} of all){
-    const legacy=schemaChains(revision,finding).find(s=>legacyXsdKey(revision,s)===requestedXsd);
-    if(!legacy)continue;
-    options.schemas.unshift({value:requestedXsd,text:legacy.file.text+' · все версии по сохранённой ссылке'});
-    break;
-   }
+   const row=filter(all,'','','',requestedXsd)[0];
+   const legacy=row&&schemaChains(row.revision,row.finding).find(s=>matchesXsdKey(row.revision,s,requestedXsd));
+   if(legacy)options.schemas.unshift({value:requestedXsd,text:legacy.file.text+' · все версии по сохранённой ссылке'});
   }
   const sourceControls=el('div',undefined,'review-source-filters');
   function sourceSelect(title,id,items,initial,empty){
@@ -226,10 +296,17 @@
    if(typeof resolved==='object'){item.href=resolved.hyperlink;item.target='_blank';item.rel='noopener'}
    return item;
   }
+  const exportState=exportStates.get(container)||{running:false};
+  exportStates.set(container,exportState);
   let visible=[];
+  function updateExport(message){
+   button.disabled=exportState.running||!visible.length;
+   status.textContent=exportState.running?'Готовим Excel…':message||'Замечаний: '+visible.length;
+  }
+  exportState.update=updateExport;
   function render(){
    visible=filter(all,input.value,select.value,specification.value,xsd.value);result.replaceChildren();
-   status.textContent='Замечаний: '+visible.length;button.disabled=!visible.length;
+   updateExport();
    const route=new URLSearchParams({remarks:'1'});
    if(input.value.trim())route.set('number',input.value.trim());
    if(select.value)route.set('env',select.value);
@@ -268,16 +345,18 @@
   }
   input.oninput=render;select.onchange=render;specification.onchange=render;xsd.onchange=render;
   button.onclick=async()=>{
-   const snapshot=visible.slice(),number=input.value.trim(),env=select.value;
-   const selectedSpecification=specification.value,selectedXsd=xsd.value;button.disabled=true;
+   if(exportState.update!==updateExport||exportState.running||!visible.length)return;
+   const snapshot=visible.slice(),filters={number:input.value.trim(),env:select.value,specification:specification.value,xsd:xsd.value,baseURL:location.href};
+   exportState.running=true;updateExport();
+   let message;
    try{
     const ExcelJS=await root.SedoComparisonExport.loadLibrary();
-    const workbook=createWorkbook(ExcelJS,snapshot,{number,env,specification:selectedSpecification,xsd:selectedXsd,baseURL:location.href});
+    const workbook=createWorkbook(ExcelJS,snapshot,filters);
     const buffer=await workbook.xlsx.writeBuffer(),url=URL.createObjectURL(new Blob([buffer],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
-    const a=el('a');a.href=url;a.download='sedo-remarks-'+(number||'all')+'-'+(env||'all')+'.xlsx';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
-    status.textContent='В Excel выгружено замечаний: '+snapshot.length;
-   }catch(error){status.textContent='Не удалось выгрузить Excel. '+error.message}
-   finally{button.disabled=!visible.length}
+    const a=el('a');a.href=url;a.download='sedo-remarks-'+(filters.number||'all')+'-'+(filters.env||'all')+'.xlsx';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    message='В Excel выгружено замечаний: '+snapshot.length;
+   }catch(error){message='Не удалось выгрузить Excel. '+error.message}
+   finally{exportState.running=false;exportState.update(message)}
   };
   render();
  }
