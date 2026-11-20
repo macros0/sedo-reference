@@ -142,7 +142,8 @@ function documentName(r){
 function editionSources(r){return r.edition_sources||[r]}
 function catalogRows(m,env){return [...m.rows,...m.revisions,...m.documents].filter(r=>!env||r.environment===env)}
 function appendDocumentHistory(container,source){
- container.append(node('p','meta','Дата из подписи ссылки · '+date(source.label_date)));
+ const dateLabel=source.source_type==='manual'?'Дата спецификации при импорте':'Дата в названии документа на сайте СФР';
+ container.append(node('p','meta',dateLabel+' · '+date(source.label_date)));
  const revision=catalog.revisions.find(row=>row.revision_id===source.revision_id);
  const changes=source.document_history||catalog.document_histories?.[source.document_sha256]
   ||revision?.document_history||catalog.document_histories?.[revision?.document_sha256]||[];
@@ -174,7 +175,7 @@ function appendDocumentHistory(container,source){
    const publicationIndex=headers.findIndex(label=>/дат[аы].*публикац/i.test(label));
    const publication=row[publicationIndex];
    if(versionIndex>=0&&row[versionIndex]===source.document_version&&publication&&source.label_date&&date(publication)!==date(source.label_date))
-    entry.append(node('p','meta version-date-warning','Дата из подписи ссылки не совпадает с датой публикации спецификации в таблице DOCX.'));
+    entry.append(node('p','meta version-date-warning',dateLabel+' отличается от даты публикации спецификации в таблице DOCX.'));
    history.append(entry);
   }
  }

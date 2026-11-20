@@ -19,11 +19,11 @@ const descendants=node=>[node,...(node.children||[]).flatMap(descendants)];
 function render(number){vm.runInContext('renderVersions(messages.get('+JSON.stringify(number)+'),"prod")',context);return nodes.get('versions')}
 {
  const view=render('7810'),source=descendants(view).find(n=>n.className==='edition-source'&&text(n).includes('3.1'));
- assert.match(text(source),/Дата из подписи ссылки.*08\.06\.2026/);
+ assert.match(text(source),/Дата в названии документа на сайте СФР.*08\.06\.2026/);
  assert.match(text(source),/Дата публикации спецификации.*08\.06\.2025/);
  assert.match(text(source),/Период действия XML-схемы «С».*08\.06\.2026/);
  assert.match(text(source),/Номер версии XML-схемы.*3\.0/);
- assert.match(text(source),/Дата.*не совпадает/i);
+ assert.match(text(source),/Дата в названии документа на сайте СФР отличается от даты публикации спецификации в таблице DOCX/);
  assert.match(text(source),/17\.11\.2025/,'past versions stay visible with their own date');
  const revision=catalog.revisions.find(r=>r.number==='7810'&&r.environment==='prod');
  assert.ok(descendants(source).some(n=>n.tagName==='a'&&n.href===revision.document_url),'version table source opens its actual DOCX');
@@ -42,9 +42,10 @@ function render(number){vm.runInContext('renderVersions(messages.get('+JSON.stri
 console.log('Catalog provenance verified: DOCX version history, distinct dates, project warning and ready tree.');
 
 {
- const source={number:'122',environment:'test',label_date:'18.12.2025',document_history:[{version:'2.49',date:'18.12.2025',description:'Изменена структура ответа'}]};
+ const source={number:'122',environment:'test',source_type:'manual',label_date:'18.12.2025',document_history:[{version:'2.49',date:'18.12.2025',description:'Изменена структура ответа'}]};
  const host=new Element('section'); context.historyTestSource=source;context.historyTestHost=host;
  vm.runInContext('appendDocumentHistory(historyTestHost,historyTestSource)',context);
+ assert.match(text(host),/Дата спецификации при импорте.*18\.12\.2025/);
  assert.match(text(host),/Версия документа.*2\.49/);
  assert.match(text(host),/Дата изменения.*18\.12\.2025/);
  assert.match(text(host),/Изменена структура ответа/);
