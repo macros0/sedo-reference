@@ -185,6 +185,18 @@ test('catalog search finds each module of the shared schema in its contour',asyn
  }
 });
 
+test('10110 shows its ready schema first and lists the same DOCX once',async({page})=>{
+ await page.goto('/site/#message=10110&env=test');
+ const panel=page.locator('.version-panel').filter({has:page.getByRole('heading',{name:'Тестовый контур'})});
+ await expect(panel.locator('.card').first().getByRole('link',{name:'Открыть дерево'})).toBeVisible();
+ const record=panel.locator('.registry-source');
+ await expect(record).toHaveCount(1);
+ await expect(record).toHaveClass(/\bcard\b/);
+ await expect(record).toContainText('Описание из перечня СФР');
+ await expect(record).toContainText('Актуальная запись · Версия 2.21 · 22.06.2026');
+ await expect(record.getByRole('link',{name:'Скачать DOCX'})).toHaveCount(1);
+});
+
 test('edition counts follow the active contour on message 10110',async({page})=>{
  const pair=['prod','test'].map(env=>catalog.revisions.find(r=>r.number==='10110'&&r.environment===env&&r.ready&&r.revision_id===r.display_revision_id));
  await page.route('**/catalog-data.js*',route=>route.fulfill({contentType:'application/javascript',body:'window.SEDO_CATALOG='+JSON.stringify({...catalog,revisions:pair})+';'}));

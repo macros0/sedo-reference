@@ -201,24 +201,28 @@ function appendEditionSources(container,r){
  container.append(list);return list;
 }
 function appendRegistrySources(panel,rows){
- const descriptions=new Map();
+ const sources=new Map();
  for(const row of rows){
-  const key=JSON.stringify([row.module,row.description||row.title,row.source_type,row.source_type==='module'?[row.document_version,row.label_date]:null,row.listed_now!==false]);
-  if(!descriptions.has(key))descriptions.set(key,[]);
-  descriptions.get(key).push(row);
+  const url=row.source||row.document_url;
+  const file=row.document_sha256||row.document_download||[row.document_version,row.label_date];
+  const key=JSON.stringify([row.module,row.description||row.title,row.source_type,url,file]);
+  const previous=sources.get(key);
+  if(!previous||(previous.listed_now===false&&row.listed_now!==false))sources.set(key,row);
  }
- for(const records of descriptions.values()){
-  const r=records[0],entry=node('section','registry-source');
-  entry.append(node('p','meta',r.module),node('p','',r.description||r.title));
-  if(r.source_type==='module')entry.append(node('p','meta','Отдельная спецификация модуля · версия '+(r.document_version||'не указана')+' · '+date(r.label_date)));
-  if(r.listed_now===false)entry.append(node('p','meta','Описание сохранено в истории'));
-  const sources=new Set();
-  for(const source of records){
-   const url=source.source||source.document_url;
-   const key=JSON.stringify([url,source.document_download]);if(sources.has(key))continue;sources.add(key);
-   if(source.document_download)entry.append(documentDownload(source),document.createTextNode(' · '));
-   if(url)entry.append(external(source.source_type==='module'?'Спецификация модуля СФР ↗':'Открыть официальный перечень ↗',url));
-  }
+ const entries=[...sources.values()].sort((a,b)=>Number(a.listed_now===false)-Number(b.listed_now===false));
+ for(const r of entries){
+  const entry=node('section','card registry-source'),module=r.source_type==='module';
+  entry.append(node('strong','',module?'Спецификация модуля СФР':'Описание из перечня СФР'));
+  if(r.module)entry.append(node('p','meta',r.module));
+  entry.append(node('p','',r.description||r.title));
+  const status=r.listed_now===false?'Описание сохранено в истории':'Актуальная запись';
+  const details=[status,r.document_version&&'Версия '+r.document_version,r.label_date&&date(r.label_date)];
+  entry.append(node('p','meta',details.filter(Boolean).join(' · ')));
+  const url=r.source||r.document_url;
+  if(entries.length>1&&url)entry.append(node('p','meta',documentName({...r,document_url:url})));
+  if(r.document_download)entry.append(documentDownload(r));
+  if(r.document_download&&url)entry.append(document.createTextNode(' · '));
+  if(url)entry.append(external(module?'Спецификация модуля СФР ↗':'Открыть официальный перечень ↗',url));
   panel.append(entry);
  }
 }
@@ -306,7 +310,6 @@ function renderVersions(m,env){
   }
   const documented=new Set(documents.map(sourceKey));
   const rows=m.rows.filter(r=>r.environment===e&&!documented.has(sourceKey(r)));
-  appendRegistrySources(panel,rows);
   if(revisions.length){
    for(const r of revisions){
     const card=node("div","card");card.append(node("strong","",editionSources(r).length>1?"Редакция схемы · источников: "+editionSources(r).length:"Версия документа "+(r.document_version||"не указана")));
@@ -323,6 +326,7 @@ function renderVersions(m,env){
   }else{
    if(rows.length||!documents.length)panel.append(node("p","",rows.length?"Доступно описание в перечне сообщений. Дерево схемы пока не сопоставлено.":"В собранных источниках этого контура сообщение не найдено."));
   }
+  appendRegistrySources(panel,rows);
   for(const observations of standalone.values()){
    const source=observations.find(row=>row.listed_now!==false)||observations[0];
    const card=node("div","card document-source");
