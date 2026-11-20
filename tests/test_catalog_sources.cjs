@@ -39,6 +39,25 @@ function render(number){vm.runInContext('renderVersions(messages.get('+JSON.stri
  const duplicateView=render('600'),testPanel=descendants(duplicateView).filter(n=>n.className==='version-panel')[1];
  assert.equal(descendants(testPanel).filter(n=>n.textContent==='Является проектом, возможны модификации').length,1,'repeated registry descriptions stay unique');
 }
+{
+ const rows=()=>descendants(render('10110')).filter(n=>n.className?.split(' ').includes('registry-source'));
+ const source=rows();
+ assert.equal(source.length,1,'the same DOCX listed now and in history gives one record');
+ assert.match(text(source[0]),/Актуальная запись.*Версия 2\.21.*22\.06\.2026/);
+ assert.doesNotMatch(text(source[0]),/Описание сохранено в истории/);
+ vm.runInContext(`messages.get("10110").rows.push({
+  ...messages.get("10110").rows.find(r=>r.environment==="test"),
+  document_version:"2.20",label_date:"01.06.2026",listed_now:false,
+  source:"https://lk-test.fss.ru/specs_sedo/earlier.docx",
+  document_sha256:"a".repeat(64),document_download:"documents/"+"a".repeat(64)+".docx"
+ })`,context);
+ const distinct=rows();
+ assert.equal(distinct.length,2,'different documents with the same description retain both cards');
+ assert.ok(distinct.every(n=>n.className.split(' ').includes('card')));
+ assert.match(text(distinct[0]),/Актуальная запись.*Версия 2\.21/);
+ assert.match(text(distinct[1]),/Описание сохранено в истории.*Версия 2\.20.*01\.06\.2026/);
+ assert.ok(descendants(distinct[1]).some(n=>n.href==='https://lk-test.fss.ru/specs_sedo/earlier.docx'));
+}
 console.log('Catalog provenance verified: DOCX version history, distinct dates, project warning and ready tree.');
 
 {
