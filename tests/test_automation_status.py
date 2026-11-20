@@ -34,6 +34,47 @@ class AutomationStatusTests(unittest.TestCase):
                        checked_catalog_sha256='c'*64, catalog_sha256='c'*64)
         return check, pages, reports, receipt
 
+    def test_final_status_preserves_raw_dates_and_publishes_browser_utc(self):
+        from tests.status_clock_fixture import OFFSET, UTC, collect
+
+        status = collect(OFFSET, 'sourcecraft')
+        self.assertEqual(status['errors'], [])
+        source = status['sourcecraft']
+        github = status['github']
+        self.assertEqual(github['publication']['run_id'], 20)
+        self.assertEqual(github['last_successful_publication']['run_id'], 21)
+        for record, field in [
+            (status, 'generated_at'), (source, 'started_at'), (source, 'finished_at'),
+            (source, 'last_success_at'), (source['contours']['prod'], 'observed_at'),
+            (source['contours']['test'], 'observed_at'), (github['check'], 'finished_at'),
+            (github['versions'], 'checked_at'), (github['publication'], 'finished_at'),
+            (github['independent_publication'], 'finished_at'),
+            (github['last_successful_publication'], 'finished_at'),
+        ]:
+            with self.subTest(field=field, id=record.get('run_id')):
+                self.assertEqual(record[field], OFFSET)
+                self.assertEqual(record[field + '_utc'], UTC)
+
+    def test_frozen_legacy_status_times_are_accepted_by_the_producer(self):
+        import json
+        from pathlib import Path
+
+        from observation_time import observation_clock
+        from tests.status_clock_fixture import collect
+
+        path = Path(__file__).with_name('fixtures') / 'legacy-automation-status.json'
+        for row in json.loads(path.read_bytes()):
+            old = row['report']
+            stamp = old['sourcecraft']['finished_at']
+            with self.subTest(stamp=stamp):
+                self.assertNotIn('finished_at_utc', old['sourcecraft'])
+                self.assertEqual(observation_clock(stamp)['observed_at_utc'], row['utc'])
+                current = collect(stamp, 'sourcecraft')
+                self.assertEqual(current['sourcecraft']['finished_at_utc'], row['utc'])
+                self.assertEqual(current['sourcecraft']['state'], 'success')
+        for stamp in ('2021-W53-1T00:00:00Z', '2026-W46-6T00:00:00'):
+            self.assertIsNone(observation_clock(stamp)['observed_at_utc'])
+
     def test_dispatch_of_descendant_uses_attempt_and_deployed_catalog(self):
         check, pages, reports, receipt = self.publication_fixture()
         for change, state in (({}, 'success'), ({'catalog_sha256': 'e'*64}, 'superseded'),

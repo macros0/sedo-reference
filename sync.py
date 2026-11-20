@@ -194,7 +194,8 @@ def _get(url, timeout=30, attempts=3, *, wsdl_seed=None):
 from collector_transport import PoliteFetch
 _polite_fetch = PoliteFetch(_get, max_requests=1000)
 
-def inspect_file(b,kind,*,legacy_module_bindings=False,binding_changes=None,legacy_schema_roots=False,legacy_docx=False):
+def inspect_file(b,kind,*,legacy_module_bindings=False,binding_changes=None,legacy_schema_roots=False,
+                 legacy_docx=False,quotation_rules=None):
     if kind not in ("docx","zip"): return {}
     with zipfile.ZipFile(io.BytesIO(b)) as z:
         members = z.infolist()
@@ -280,20 +281,57 @@ def inspect_file(b,kind,*,legacy_module_bindings=False,binding_changes=None,lega
                 messages.setdefault(number, dict(number=number, title=title.strip()))
         if messages:
             info["message_types"] = list(messages.values())
-            from module_xsd import document_bindings
-            bindings = document_bindings(doc, legacy=legacy_module_bindings, changes=binding_changes)
+            from module_xsd import CURRENT_QUOTATIONS, document_bindings
+            bindings = document_bindings(doc, legacy=legacy_module_bindings, changes=binding_changes,
+                                         quotation_rules=quotation_rules if quotation_rules is not None else CURRENT_QUOTATIONS)
             if bindings: info["module_bindings"] = bindings
         return info
 
-def match_modules(base, entries, supports, blob, *, legacy=False, changes=None, combined_bridge=True, legacy_schema_roots=False):
+def inspect_download(content, kind, *, legacy_module_bindings=False, binding_changes=None,
+                     legacy_schema_roots=False, legacy_docx=False, quotation_rules=None):
+    """Inspect downloaded or archived bytes using the same DOCX and ZIP rules."""
+    metadata = inspect_file(content, kind, legacy_module_bindings=legacy_module_bindings,
+                            binding_changes=binding_changes, legacy_schema_roots=legacy_schema_roots,
+                            legacy_docx=legacy_docx, quotation_rules=quotation_rules)
+    if kind != "docx":
+        return metadata, []
+    from module_xsd import CURRENT_QUOTATIONS, extract_archives
+    rules = CURRENT_QUOTATIONS if quotation_rules is None else quotation_rules
+    packages, issues = extract_archives(content, quotation_rules=rules, changes=binding_changes)
+    if issues:
+        metadata["schema_diagnostics"] = issues
+    archives = []
+    for package in packages:
+        raw = package.pop("content")
+        package.update(sha256=sha(raw), **inspect_file(
+            raw, "zip", legacy_schema_roots=legacy_schema_roots, binding_changes=binding_changes))
+        archives.append(dict(package))
+        package["content"] = raw
+    if archives:
+        metadata["embedded_archives"] = archives
+    return metadata, packages
+
+
+def match_modules(base, entries, supports, blob, *, legacy=False, changes=None, combined_bridge=True,
+                  legacy_schema_roots=False, quotation_rules=None, diagnostic_namespaces=False, declaration_decisions=True):
     """Match documents with one explicitly selected set of contour libraries."""
-    from module_xsd import match_document
+    from module_xsd import CURRENT_QUOTATIONS, match_document
     from wsdl_sources import bridge
+    if quotation_rules is None:
+        quotation_rules = CURRENT_QUOTATIONS
     for r in entries:
         if not r.get("module_bindings"):continue
         read_object=lambda h:(base/"objects"/h).read_bytes()
-        matches,issues=match_document(r,entries,read_object,legacy=legacy,changes=changes)
-        if {b["number"] for b in r["module_bindings"]}-{m["number"] for m in matches}:
+        options = dict(legacy=legacy, changes=changes, quotation_rules=quotation_rules,
+                       diagnostic_namespaces=diagnostic_namespaces)
+        decisions = [] if declaration_decisions else None
+        attempts = [] if declaration_decisions else None
+        matches,issues=match_document(r,entries,read_object,decisions=decisions,attempts=attempts,**options)
+        if decisions is None:
+            unresolved = {b['number'] for b in r['module_bindings']} - {m['number'] for m in matches}
+        else:
+            unresolved = any('reason' in d for d in decisions)
+        if unresolved:
             archives=[]
             for support in supports:
                 for archive in bridge(r,support,read_object,include_combined=combined_bridge,legacy_schema_roots=legacy_schema_roots):
@@ -302,7 +340,18 @@ def match_modules(base, entries, supports, blob, *, legacy=False, changes=None, 
                     blob(archive.pop("content"));archives.append(archive)
             if archives:
                 r["wsdl_archives"]=archives
-                matches,issues=match_document(r,entries,read_object,legacy=legacy,changes=changes)
+                if decisions is not None:
+                    decisions.clear()
+                    attempts.clear()
+                matches,issues=match_document(r,entries,read_object,decisions=decisions,attempts=attempts,**options)
+        if decisions is not None and len({d['number'] for d in decisions}) < len(decisions):
+            if attempts:
+                r['schema_attempt_diagnostics'] = attempts
+            r['module_decisions'] = decisions
+            issues = [dict(number=d['number'], root=d['root'], namespace=d.get('namespace'), reason=d['reason'])
+                      for d in decisions if 'reason' in d]
+            if changes is not None:
+                changes.add('module_decisions')
         if matches:r["module_matches"]=matches
         if issues:r.setdefault("schema_diagnostics",[]).extend(issues)
 
@@ -356,15 +405,16 @@ def recover_confirmation(base):
     journal.unlink()
 
 
-def sync(base, *, wsdl_entries=None, snapshot_format=None, individual_wsdl=False):
+def sync(base, *, wsdl_entries=None, snapshot_format=None, individual_wsdl=False, quotation_rules=None):
     base = Path(base)
     base.mkdir(parents=True, exist_ok=True)
     with confirmation_lock(base):
         _collect_confirmed(base, wsdl_entries=wsdl_entries, snapshot_format=snapshot_format,
-                           individual_wsdl=individual_wsdl)
+                           individual_wsdl=individual_wsdl, quotation_rules=quotation_rules)
 
 
-def _collect_confirmed(base, *, wsdl_entries=None, snapshot_format=None, individual_wsdl=False):
+def _collect_confirmed(base, *, wsdl_entries=None, snapshot_format=None, individual_wsdl=False,
+                       quotation_rules=None):
     recover_confirmation(base)
     success, pointer = base / "last-success.json", base / "current.json"
     if not success.exists() and pointer.exists():
@@ -381,7 +431,8 @@ def _collect_confirmed(base, *, wsdl_entries=None, snapshot_format=None, individ
     report = dict(status="processing", started_at=started_at, observed_at=started_at, errors=[])
     try:
         write(base / "last-run.json", encode(report))
-        _sync(base, report, wsdl_entries=wsdl_entries, snapshot_format=snapshot_format, individual_wsdl=individual_wsdl)
+        _sync(base, report, wsdl_entries=wsdl_entries, snapshot_format=snapshot_format,
+              individual_wsdl=individual_wsdl, quotation_rules=quotation_rules)
         write(success, encode(dict(snapshot=report["snapshot"], observed_at=report["observed_at"])))
         report["status"] = "ok"
         write(base / "last-run.json", encode(report))
@@ -395,12 +446,28 @@ def _collect_confirmed(base, *, wsdl_entries=None, snapshot_format=None, individ
         raise
 
 
-def _sync(base, report, *, wsdl_entries=None, snapshot_format=None, individual_wsdl=False):
+def _sync(base, report, *, wsdl_entries=None, snapshot_format=None, individual_wsdl=False,
+          quotation_rules=None):
     """Collect sources, optionally replaying the recorded WSDL observations offline."""
+    from module_xsd import (CURRENT_QUOTATIONS, DECLARATION_SNAPSHOT_FORMAT, FORMAT8_QUOTATIONS, FORMAT9_QUOTATIONS,
+                            FORMAT9_SNAPSHOT, FORMAT10_QUOTATIONS, FORMAT10_SNAPSHOT,
+                            PUBLISHED_QUOTATIONS, QUOTATION_SNAPSHOT_FORMAT)
+
     entries=[]; pages={}; errors=[]; tasks=[]
     # Keep the original snapshot identity when none of the new inputs is needed.
     # Explicit formats are used by verify.py to replay the original collector.
     output_format = snapshot_format or 2
+    if quotation_rules is None:
+        if snapshot_format is None or snapshot_format >= QUOTATION_SNAPSHOT_FORMAT:
+            quotation_rules = CURRENT_QUOTATIONS
+        elif snapshot_format == FORMAT10_SNAPSHOT:
+            quotation_rules = FORMAT10_QUOTATIONS
+        elif snapshot_format == FORMAT9_SNAPSHOT:
+            quotation_rules = FORMAT9_QUOTATIONS
+        elif snapshot_format == 8:
+            quotation_rules = FORMAT8_QUOTATIONS
+        else:
+            quotation_rules = PUBLISHED_QUOTATIONS
     resolve_page_urls = snapshot_format is None or snapshot_format >= 3
     page_redirects = {}
     source_rules = snapshot_format is None or snapshot_format >= 6
@@ -495,18 +562,11 @@ def _sync(base, report, *, wsdl_entries=None, snapshot_format=None, individual_w
     match_changes = set()
     def fetch(r):
         changes = set()
-        b=get(r.get("download_url") or resource_url(r["url"]));meta=inspect_file(b,r["kind"],legacy_module_bindings=legacy_match,binding_changes=changes,legacy_schema_roots=snapshot_format is not None and snapshot_format < 7,legacy_docx=snapshot_format is not None and snapshot_format < 7);packages=[]
-        if r["kind"]=="docx":
-            from module_xsd import extract_archives
-            packages,issues=extract_archives(b)
-            if issues:meta["schema_diagnostics"]=issues
-            archives=[]
-            for package in packages:
-                content=package.pop("content")
-                package.update(sha256=sha(content),**inspect_file(content,"zip",legacy_schema_roots=snapshot_format is not None and snapshot_format < 7,binding_changes=changes))
-                archives.append(package)
-                package["content"]=content
-            if archives:meta["embedded_archives"]=[{k:v for k,v in a.items() if k!="content"} for a in archives]
+        b=get(r.get("download_url") or resource_url(r["url"]))
+        meta,packages=inspect_download(b,r["kind"],legacy_module_bindings=legacy_match,binding_changes=changes,
+                                       legacy_schema_roots=snapshot_format is not None and snapshot_format < 7,
+                                       legacy_docx=snapshot_format is not None and snapshot_format < 7,
+                                       quotation_rules=quotation_rules)
         if not source_rules:
             meta.pop("document_history", None)
         elif meta.get("document_history"):
@@ -578,7 +638,10 @@ def _sync(base, report, *, wsdl_entries=None, snapshot_format=None, individual_w
     with snapshot_matching(legacy_match, match_changes):
         match_modules(base, entries, supports, blob, legacy=legacy_match, changes=match_changes,
                       combined_bridge=snapshot_format is None or snapshot_format >= 5,
-                      legacy_schema_roots=snapshot_format is not None and snapshot_format < 7)
+                      legacy_schema_roots=snapshot_format is not None and snapshot_format < 7,
+                      quotation_rules=quotation_rules, declaration_decisions=snapshot_format is None or snapshot_format >= DECLARATION_SNAPSHOT_FORMAT)
+    if "module_decisions" in match_changes:
+        output_format = max(output_format, DECLARATION_SNAPSHOT_FORMAT)
     if not legacy_match and match_changes:
         output_format = max(output_format, 4)
     if "combined_bridge" in match_changes:
@@ -587,6 +650,14 @@ def _sync(base, report, *, wsdl_entries=None, snapshot_format=None, individual_w
         output_format = max(output_format, 6)
     if {"included_roots", "docx_text", "docx_url"} & match_changes:
         output_format = max(output_format, 7)
+    if "module_quotations" in match_changes:
+        output_format = max(output_format, 8)
+    if {"module_typed_values", "module_resolved_graph"} & match_changes:
+        output_format = max(output_format, FORMAT9_SNAPSHOT)
+    if "module_typed_contract" in match_changes:
+        output_format = max(output_format, FORMAT10_SNAPSHOT)
+    if "module_document_context" in match_changes:
+        output_format = max(output_format, QUOTATION_SNAPSHOT_FORMAT)
     if snapshot_format is None or individual_wsdl:
         from catalog import record_individual_wsdl_matches
         evidence_version = {'version': individual_wsdl} if type(individual_wsdl) is int else {}

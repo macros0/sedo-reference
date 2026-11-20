@@ -74,8 +74,10 @@ def publish_sources(catalog, state, site):
     packages = {}
     prior_editions = {}
     revisions = {row.get("revision_id"): row for row in catalog["revisions"]}
+    from catalog import archived_graph_reader, derive
+    archive_graph = archived_graph_reader(state)
 
-    def publish(row, snapshot, *, revision=False):
+    def publish(row, snapshot, *, revision=False, observation=False):
         row.pop("schema_publication_page", None)
         row.pop("schema_file_download", None)
         row.pop("schema_file_name", None)
@@ -88,10 +90,10 @@ def publish_sources(catalog, state, site):
             # Old exports lack per-observation packaging. Recover it from the
             # original inventory, including when an external ZIP moved alone.
             if snapshot not in prior_editions:
-                from catalog import derive
                 saved = json.loads((state / "snapshots" / (snapshot + ".json")).read_bytes())
                 prior_editions[snapshot] = {(r["revision_id"], r.get("document_sha256"), r.get("document_url")): r
-                                            for r in derive(saved, revisions)["revisions"] if r.get("status") == "matched"}
+                                            for r in derive(saved, revisions, archive_graph=archive_graph)["revisions"]
+                                            if r.get("status") == "matched"}
             match = prior_editions[snapshot].get((row.get("revision_id"),row.get("document_sha256"),row.get("document_url")), {})
             row.update({k: match[k] for k in SCHEMA_SOURCE_KEYS if k in match})
         if not row.get("schema_path") or not row.get("archive_sha256"):
@@ -132,6 +134,12 @@ def publish_sources(catalog, state, site):
         files = packages[package]
         if revision:
             row["schema_files"] = list(files.values())
+        if observation:
+            sources = row.get('schema_sources', [])
+            row['schema_files'] = []
+            for record in files.values():
+                original = original_schema_source(sources, record['path'], record['sha256'])
+                row['schema_files'].append(dict(record, official_url=original['url']) if original else record)
         row["schema_file_download"] = files[entry]["download"]
         row["schema_file_name"] = posixpath.basename(entry)
         if row.get("schema_source_type") == "wsdl":
@@ -159,15 +167,34 @@ def publish_sources(catalog, state, site):
             row.pop("dependencies", None)
             row.pop("schema_sources", None)
 
+    schema_observations = catalog.pop('schema_source_observations', {})
     for row in catalog["revisions"]:
         if row.get("status") != "matched":
             continue
         snapshot = current if row.get("listed_now", True) else first_snapshots.get(row.get("revision_id"))
         publish(row, snapshot, revision=True)
+        variants = schema_observations.get(row.get('revision_id'), [])
+        if variants:
+            row['schema_source_observations'] = []
+        for source in sorted(variants, key=lambda source: source['snapshot'] != snapshot):
+            if source.get('document_sha256') != row.get('document_sha256') or (
+                    source.get('resolved_schema_graph'), source.get('root'), source.get('namespace') or ''
+                    ) != (row.get('resolved_schema_graph'), row.get('root'), row.get('namespace') or ''):
+                continue
+            publish(source, source['snapshot'], observation=True)
+            if not source.get('schema_files'):
+                continue
+            if row.get('document_download'):
+                source['document_download'] = row['document_download']
+                source['document_filename'] = row['document_filename']
+            row['schema_source_observations'].append(source)
         for source in row.get("listed_sources", []):
             publish(source, current)
-    for event in catalog.get("source_observations", []):
+    for event in [*catalog.get("source_observations", []), *catalog.get('earlier_source_observations', [])]:
         if "source" in event:
             publish(event["source"], event.get("snapshot"))
+    for observation in catalog.get('earlier_revision_observations', {}).values():
+        for source in observation['sources']:
+            publish(source, observation['snapshot'])
     for rid, source in catalog.get("update_sources", {}).items():
         publish(source, first_snapshots.get(rid))

@@ -6,6 +6,7 @@ from unittest.mock import patch
 from sync import RedirectedBytes,SITES,resource_url,sync
 from sync import write
 from catalog import dependency_set,derive
+from module_xsd import UNVERSIONED_QUOTATIONS
 
 def failure_probe_url(snapshot, requests):
     requested = {resource_url(url) for url in requests}
@@ -66,7 +67,12 @@ def verify(state,data):
             p={n["path"]:n for n in f}
             assert p["benefitResponse/benefit1/assignmentParams/contractsInfo/workerAndGPHcontract/GPHcontract"]["base"]=="xs:boolean"
             assert dict(p["benefitResponse/benefit1/calculationData/calcConditionList/calcCondition"]["values"])["46"]
-    # Replay the exact source bytes to test idempotence and failed retrieval.
+    verify_snapshot_replay(state, snapshot, current)
+    print("Verified revision isolation, field trees and code 46.")
+
+
+def verify_snapshot_replay(state, snapshot, current):
+    """Replay the archived bytes and require the exact recorded snapshot digest."""
     cached = fetch_archived(state, snapshot)
     wsdl_entries = [row for row in snapshot["entries"]
                     if row.get("source_type") == "wsdl" or row.get("kind") == "wsdl_status"]
@@ -77,23 +83,41 @@ def verify(state,data):
             validate_manifest(make_manifest(library, "2000-01-01T00:00:00+00:00"),
                               lambda digest: (state/"objects"/digest).read_bytes())
     with TemporaryDirectory() as tmp:
-        base=Path(tmp)
         versions = {evidence.get('version', 1) if isinstance(evidence, dict) else 1 for row in snapshot['entries']
                     if (evidence := row.get('wsdl_schema_matches'))}
         if len(versions) > 1:
             raise ValueError("Mixed WSDL evidence versions in active snapshot")
-        replay = dict(wsdl_entries=wsdl_entries, snapshot_format=snapshot.get("format", 1),
+        recorded_format = snapshot.get("format")
+        replay = dict(wsdl_entries=wsdl_entries, snapshot_format=recorded_format or 1,
                       individual_wsdl=next(iter(versions), False))
-        # These are inputs of this exact snapshot, independent of today's
-        # collector configuration, links and availability.
-        for row in wsdl_entries:
-            if row.get("sha256"):
-                for digest in [row["sha256"], *(source["sha256"] for source in row.get("source_files", []))]:
-                    write(base/"objects"/digest, (state/"objects"/digest).read_bytes())
+        # A short-lived collector used newer quotation rules without raising
+        # the snapshot format. Only the recorded digest can identify such a run.
+        alternatives = [None]
+        if replay["snapshot_format"] < 8:
+            alternatives.append(UNVERSIONED_QUOTATIONS)
         with patch("sync.get",side_effect=cached) as downloads:
-            sync(base, **replay);first=(base/"current.json").read_bytes()
-            if snapshot.get("format") in (1, 2, 3, 4, 5, 6, 7):
-                assert json.loads(first)["snapshot"] == current, "Replayed snapshot differs from expected current snapshot " + current
+            initial_error = None
+            for rules in alternatives:
+                base = Path(tmp) / str(rules)
+                # Each attempt receives only inputs of the recorded snapshot.
+                for row in wsdl_entries:
+                    if row.get("sha256"):
+                        for digest in [row["sha256"], *(source["sha256"] for source in row.get("source_files", []))]:
+                            write(base/"objects"/digest, (state/"objects"/digest).read_bytes())
+                candidate = dict(replay, quotation_rules=rules)
+                try:
+                    sync(base, **candidate)
+                except ValueError as exc:
+                    initial_error = exc
+                    continue
+                first = (base/"current.json").read_bytes()
+                # Unversioned legacy inventories were never emitted by sync
+                # with this envelope. Verify their stable normal form.
+                if recorded_format is None or json.loads(first)["snapshot"] == current:
+                    replay = candidate
+                    break
+            else:
+                raise AssertionError("Replayed snapshot differs from expected current snapshot " + current) from initial_error
             sync(base, **replay)
         assert first==(base/"current.json").read_bytes() and not any(json.loads((base/"last-run.json").read_bytes())["diff"].values())
         probe_url = failure_probe_url(snapshot, (call.args[0] for call in downloads.call_args_list))
@@ -105,7 +129,6 @@ def verify(state,data):
             except (ValueError, OSError):pass
             else:raise AssertionError("failed download accepted")
         assert first==(base/"current.json").read_bytes()
-    print("Verified revision isolation, field trees and code 46.")
 if __name__=="__main__":
     import argparse
     p=argparse.ArgumentParser();p.add_argument("--state",type=Path,default=Path("state"));p.add_argument("--out",type=Path,default=Path("data"))

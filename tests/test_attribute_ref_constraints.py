@@ -487,17 +487,31 @@ class AttributeRefConstraintTests(unittest.TestCase):
                         with self.subTest(xml=xml):
                             self.assertEqual(validator.validate(etree.fromstring(xml.encode())),expected)
 
-    def test_reachable_block_rules_still_report_unsupported_expansion(self):
-        row,files=dynamic_fixture('dynamic')
-        for original,changed,diagnostic in (
-            (b'name="request" type=',b'name="request" block="restriction" type=','block'),
-            (b'targetNamespace="urn:main"',b'targetNamespace="urn:main" blockDefault="restriction"','blockDefault'),
-            (b'name="Derived"',b'name="Derived" block="restriction"','block'),
+    def test_reachable_block_rules_preserve_allowed_type_and_fixed_constraints(self):
+        row, files = dynamic_fixture('dynamic')
+        namespaces = ('xmlns:m="urn:main" xmlns:a="urn:attrs" '
+                      'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"')
+        for original, changed, permits_derived in (
+            (b'name="request" type=', b'name="request" block="restriction" type=', False),
+            (b'targetNamespace="urn:main"', b'targetNamespace="urn:main" blockDefault="restriction"', False),
+            (b'name="Derived"', b'name="Derived" block="restriction"', True),
         ):
-            with self.subTest(diagnostic=diagnostic,changed=changed):
-                source=files['main.xsd'].replace(original,changed)
-                with self.assertRaisesRegex(ValueError,'неподдерживаемое правило XSD '+diagnostic+' в main.xsd'):
-                    _prepare(row,dict(files,**{'main.xsd':source}))
+            with self.subTest(changed=changed), tempfile.TemporaryDirectory() as folder:
+                source = files['main.xsd'].replace(original, changed)
+                result = _prepare(row, files | {'main.xsd': source})
+                base = Path(folder)
+                with zipfile.ZipFile(io.BytesIO(_zip(row, *result))) as archive:
+                    archive.extractall(base)
+                validator = compile_schema(base/'message.xsd', base)
+                for xtype, editable, valid in [('Base', 'true', True), ('Derived', 'false', permits_derived),
+                                               ('Derived', 'true', False)]:
+                    xml = f'<m:request {namespaces} xsi:type="m:{xtype}" a:editable="{editable}"/>'
+                    with self.subTest(xtype=xtype, editable=editable):
+                        self.assertEqual(validator.validate(etree.fromstring(xml.encode())), valid, validator.error_log)
+                        if not valid:
+                            diagnostic = 'editable' if permits_derived else 'Derived'
+                            self.assertTrue(any(diagnostic in issue.message for issue in validator.error_log),
+                                            validator.error_log)
 
     def test_shared_attribute_use_diagnostics_identify_the_actual_element_occurrence(self):
         row,files=fixture()

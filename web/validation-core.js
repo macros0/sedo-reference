@@ -72,8 +72,15 @@ function checkPack(pack,expected){
    !Object.hasOwn(pack.files,name)||typeof alternate!=='string'||!/^schemas\/boolean-fixed-\d+\.xsd$/.test(alternate)||!Object.hasOwn(pack.files,alternate)))throw Error('Некорректные схемы для проверки логического fixed.');
  }
  if(pack.attribute_type_profiles_complete!==undefined&&typeof pack.attribute_type_profiles_complete!=='boolean')throw Error('Некорректная версия профилей типов XSD.');
- if([pack.attribute_checks,pack.attribute_type_checks,pack.attribute_wildcard_paths,pack.attribute_element_checks,pack.attribute_global_checks,pack.attribute_wildcards,pack.attribute_known_elements,pack.attribute_any_type_paths].some(value=>value!==undefined)){
+ const documentProbes=pack.document_value_probes;
+ if(documentProbes!==undefined&&(!Array.isArray(documentProbes)||documentProbes.length>50000
+  ||!documentProbes.every(name=>typeof name==='string'&&name.length>0&&name.length<=8192&&validNamespacePrefix(name))))
+  throw Error('Некорректные настройки дополнительных проверок типов XSD.');
+ if(pack.document_ids_complete!==undefined&&typeof pack.document_ids_complete!=='boolean')throw Error('Некорректная версия профилей ID.');
+ if([pack.id_types,pack.attribute_checks,pack.attribute_type_checks,pack.attribute_wildcard_paths,pack.attribute_element_checks,pack.attribute_global_checks,pack.attribute_wildcards,pack.attribute_known_elements,pack.attribute_any_type_paths,pack.element_type_unions,pack.element_type_values].some(value=>value!==undefined)){
   const pair=value=>Array.isArray(value)&&value.length===2&&value.every(x=>typeof x==='string'&&x.length<=8192)&&value[1].length>0;
+  const scope=value=>value&&typeof value==='object'&&!Array.isArray(value)
+   &&Object.entries(value).every(([prefix,uri])=>validNamespacePrefix(prefix)&&typeof uri==='string');
   const path=(value,relative)=>Array.isArray(value)&&(relative||value.length>0)&&value.length<=256&&value.every(pair);
   const guards=(value,relative)=>{
    if(value.guards===undefined)return true;
@@ -87,30 +94,53 @@ function checkPack(pack,expected){
    });
   };
   const calendar=value=>value.calendar_fixed===undefined||Array.isArray(value.calendar_fixed)
-   &&value.calendar_fixed.length===2&&['dateTime','time'].includes(value.calendar_fixed[0])&&typeof value.calendar_fixed[1]==='string';
+   &&value.calendar_fixed.length===2&&['dateTime','time','duration'].includes(value.calendar_fixed[0])&&typeof value.calendar_fixed[1]==='string';
   function compoundShape(shape,depth=0){
    if(depth>64||++total>50000)return false;
-   if(typeof shape==='string')return ['native','dateTime','time'].includes(shape);
+   if(typeof shape==='string')return ['native','dateTime','time','duration'].includes(shape)||/^item[0-9]+$/.test(shape);
    if(!Array.isArray(shape)||(shape.length!==2&&shape.length!==3))return false;
    const [kind,content,item]=shape;
    if(kind==='list')return (shape.length===2||typeof item==='string'&&/^item[0-9]+$/.test(item))&&compoundShape(content,depth+1);
+   if(kind==='whitespace')return shape.length===3&&['preserve','replace','collapse'].includes(item)&&compoundShape(content,depth+1);
+   if(kind==='limited')return shape.length===2&&compoundShape(content,depth+1);
+   if(kind==='duration-enumeration')return shape.length===3&&Array.isArray(item)&&item.length>0&&item.length<=50000
+    &&item.every(value=>typeof value==='string')&&compoundShape(content,depth+1);
+   if(kind==='calendar-facets')return shape.length===3&&Array.isArray(item)&&item.length>0&&(total+=item.length)<=50000
+    &&item.every(facet=>Array.isArray(facet)&&facet.length===3
+     &&['enumeration','minInclusive','minExclusive','maxInclusive','maxExclusive'].includes(facet[0])
+     &&typeof facet[1]==='string'&&facet[2]&&typeof facet[2]==='object'&&!Array.isArray(facet[2])
+     &&Object.entries(facet[2]).every(([prefix,uri])=>validNamespacePrefix(prefix)&&typeof uri==='string'))
+    &&compoundShape(content,depth+1);
    return shape.length===2&&kind==='union'&&Array.isArray(content)&&content.length>0&&content.every(member=>Array.isArray(member)
     &&member.length===2&&typeof member[0]==='string'&&/^member[0-9]+$/.test(member[0])&&compoundShape(member[1],depth+1));
   }
   function compound(value){
    const check=value.calendar_compound;
-   return check===undefined||check&&typeof check==='object'&&!Array.isArray(check)&&value.calendar_fixed===undefined
-    &&typeof check.fixed==='string'&&typeof check.comparison==='string'&&/^compound[0-9]+$/.test(check.comparison)
-    &&(check.limited===undefined||typeof check.limited==='boolean')
-    &&check.namespaces&&typeof check.namespaces==='object'&&!Array.isArray(check.namespaces)
-    &&Object.entries(check.namespaces).every(([prefix,uri])=>validNamespacePrefix(prefix)&&typeof uri==='string')
-    &&Array.isArray(check.shape)&&compoundShape(check.shape);
+   if(check===undefined)return true;
+   if(!check||typeof check!=='object'||Array.isArray(check)||value.calendar_fixed!==undefined
+    ||!Array.isArray(check.shape)||!compoundShape(check.shape))return false;
+   if(!Object.hasOwn(check,'fixed'))return Object.keys(check).length===1;
+   return typeof check.fixed==='string'&&typeof check.comparison==='string'&&/^compound[0-9]+$/.test(check.comparison)
+    &&(check.limited===undefined||typeof check.limited==='boolean')&&scope(check.namespaces);
+  }
+  const fixed=value=>value.fixed_value===undefined||value.fixed_value&&value.element_value
+   &&typeof value.fixed_value.lexical==='string'&&scope(value.fixed_value.namespaces);
+  function idShape(shape,depth=0){
+   if(depth>64||++total>50000)return false;
+   return typeof shape==='boolean'||Array.isArray(shape)&&shape.length>0&&shape.every(choice=>Array.isArray(choice)
+    &&choice.length===2&&typeof choice[0]==='string'&&/^member[0-9]+$/.test(choice[0])&&idShape(choice[1],depth+1));
   }
   const rule=(value,relative)=>value&&path(value.path,relative)&&pair(value.attribute)&&typeof value.element==='string'&&/^value[0-9]+$/.test(value.element)&&typeof value.field==='string'&&value.field.length<=8192
-   &&(value.element_value===undefined||typeof value.element_value==='boolean')&&guards(value,relative)&&calendar(value)&&compound(value);
+   &&(value.element_value===undefined||typeof value.element_value==='boolean')&&(value.id_shape===undefined||idShape(value.id_shape))&&(value.identity_only===undefined||value.identity_only===true&&value.id_shape!==undefined)&&guards(value,relative)&&calendar(value)&&compound(value)&&fixed(value);
   if(!Array.isArray(pack.attribute_checks)||pack.attribute_checks.length>50000||typeof pack.supplementary_namespace!=='string'||!pack.supplementary_namespace||pack.supplementary_namespace.length>8192||typeof pack.supplementary_schema!=='string'||!Object.hasOwn(pack.files,pack.supplementary_schema))throw Error('Некорректные дополнительные проверки XSD.');
   let total=pack.attribute_checks.length;
+  if(pack.id_types!==undefined&&(!Array.isArray(pack.id_types)||!pack.id_types.every(p=>p&&pair(p.type)&&idShape(p.shape))))throw Error('Некорректные профили ID.');
   if(!pack.attribute_checks.every(value=>rule(value,false)))throw Error('Некорректный путь дополнительной проверки XSD.');
+  for(const [profiles,name] of [[pack.element_type_unions,/^union[0-9]+$/],[pack.element_type_values,/^effective[0-9]+$/]]){
+   if(profiles!==undefined&&(!Array.isArray(profiles)||(total+=profiles.length)>50000
+     ||!profiles.every(profile=>profile&&pair(profile.type)&&typeof profile.element==='string'
+       &&name.test(profile.element)&&compoundShape(profile.shape))))throw Error('Некорректные профили фактических типов XSD.');
+  }
   const globalAttributes=pack.attribute_global_checks;
   if(globalAttributes!==undefined&&(!Array.isArray(globalAttributes)||(total+=globalAttributes.length)>50000
     ||!globalAttributes.every(value=>rule(value,true)&&!value.path.length&&!value.element_value)))throw Error('Некорректная проверка глобального атрибута XSD.');

@@ -1,6 +1,7 @@
 """Shared typed fixed regression corpus for native and actual WASM validators."""
 import base64
 import json
+import sys
 
 XS = 'http://www.w3.org/2001/XMLSchema'
 
@@ -93,7 +94,7 @@ CASES = [
     ('<literal xsi:type="xs:token"> true </literal>', True),
     ('<literal xsi:type="xs:string"> true </literal>', False),
     ('<literal xsi:type="Collapsed"> true </literal>', True),
-    ('<spacedliteral xsi:type="xs:token">foo bar</spacedliteral>', False),
+    ('<spacedliteral xsi:type="xs:token">foo bar</spacedliteral>', True),
     ('<literal xsi:type="xs:token">   </literal>', False),
     ('<literal xsi:type="Collapsed">   </literal>', False),
 ] + [(body, expected) for body, expected, _ in CALENDAR_CASES]
@@ -232,6 +233,98 @@ COMPOUND_CASES += [(kind, subject) for subject in ('element', 'simple-content')
                    for kind in ('union', 'list', 'patterned-union-list')]
 
 
+def cross_branch_lists_fixture():
+    stamp = '2026-11-17T00:00:00.1234567890123456781Z'
+    alias = '2026-11-16T23:00:00.1234567890123456781000-01:00'
+    other = stamp.replace('6781Z', '6782Z')
+    source = f'''<xs:schema xmlns:xs="{XS}" xmlns:k="urn:key">
+      <xs:simpleType name="FirstItem"><xs:union memberTypes="xs:dateTime xs:int xs:QName"/></xs:simpleType>
+      <xs:simpleType name="Digits"><xs:restriction base="xs:int"><xs:pattern value="[0-9]+"/></xs:restriction></xs:simpleType>
+      <xs:simpleType name="OtherItem"><xs:union memberTypes="xs:dateTime xs:QName Digits"/></xs:simpleType>
+      <xs:simpleType name="TextItem"><xs:union memberTypes="xs:dateTime xs:QName xs:string"/></xs:simpleType>
+      <xs:simpleType name="FirstList"><xs:list itemType="FirstItem"/></xs:simpleType>
+      <xs:simpleType name="First"><xs:restriction base="FirstList"><xs:pattern value=".*Z 7 k:known"/></xs:restriction></xs:simpleType>
+      <xs:simpleType name="OtherList"><xs:list itemType="OtherItem"/></xs:simpleType>
+      <xs:simpleType name="TextList"><xs:list itemType="TextItem"/></xs:simpleType>
+      <xs:simpleType name="Compatible"><xs:union memberTypes="First OtherList"/></xs:simpleType>
+      <xs:simpleType name="Incompatible"><xs:union memberTypes="First TextList"/></xs:simpleType>
+      <xs:element name="request"><xs:complexType>
+        <xs:attribute name="same" type="Compatible" fixed="{stamp} 7 k:known"/>
+        <xs:attribute name="distinct" type="Incompatible" fixed="{stamp} 7 k:known"/>
+      </xs:complexType></xs:element>
+    </xs:schema>'''
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    # Expected validator and original libxml2 verdicts. Native comparison
+    # rounds fractional seconds and rejects the offset alias on this list.
+    cases = [
+        ('same', stamp+' 7 k:known', 'urn:key', True, True),
+        ('same', stamp+' 007 k:known', 'urn:key', True, True),
+        ('same', stamp+' 007 p:known', 'urn:key', True, True),
+        ('same', alias+' 007 p:known', 'urn:key', True, False),
+        ('same', stamp+' 008 p:known', 'urn:key', False, False),
+        ('same', other+' 007 p:known', 'urn:key', False, True),
+        ('same', stamp+' 007 p:other', 'urn:key', False, False),
+        ('same', stamp+' 007 k:known', 'urn:other', False, False),
+        ('distinct', stamp+' 007 p:known', 'urn:key', False, False),
+        ('distinct', stamp+' 7 p:known', 'urn:key', False, False),
+    ]
+    return row, {'main.xsd': source.encode()}, [
+        (f'<request xmlns:k="{namespace}" xmlns:p="urn:key" {attr}="{value}"/>', valid, native)
+        for attr, value, namespace, valid, native in cases
+    ]
+
+
+def duration_fixture():
+    stamp = '2026-11-17T00:00:00.1234567890123456781Z'
+    precise = 'PT0.1234567890123456781S'
+    source = f'''<xs:schema xmlns:xs="{XS}">
+      <xs:simpleType name="Item"><xs:union memberTypes="xs:dateTime xs:duration"/></xs:simpleType>
+      <xs:simpleType name="Items"><xs:list itemType="Item"/></xs:simpleType>
+      <xs:simpleType name="Patterned"><xs:restriction base="Items">
+        <xs:pattern value="{stamp.replace('.', '[.]')} {precise.replace('.', '[.]')}"/>
+      </xs:restriction></xs:simpleType>
+      <xs:simpleType name="Values"><xs:union memberTypes="Patterned Items"/></xs:simpleType>
+      <xs:simpleType name="OneDay"><xs:restriction base="xs:duration">
+        <xs:enumeration value="P1D"/>
+      </xs:restriction></xs:simpleType>
+      <xs:simpleType name="DayOrText"><xs:union memberTypes="OneDay xs:string"/></xs:simpleType>
+      <xs:simpleType name="BoundedStamp"><xs:restriction base="xs:dateTime">
+        <xs:minInclusive value="{stamp}"/>
+      </xs:restriction></xs:simpleType>
+      <xs:simpleType name="DateDayText"><xs:union memberTypes="BoundedStamp OneDay xs:string"/></xs:simpleType>
+      <xs:simpleType name="DayList"><xs:list itemType="DayOrText"/></xs:simpleType>
+      <xs:element name="request"><xs:complexType>
+        <xs:attribute name="precise" type="Values" fixed="{stamp} {precise}"/>
+        <xs:attribute name="day" type="xs:duration" fixed="P1D"/>
+        <xs:attribute name="month" type="xs:duration" fixed="P1M"/>
+        <xs:attribute name="negative" type="xs:duration" fixed="-P1DT0.75S"/>
+        <xs:attribute name="zero" type="xs:duration" fixed="-PT0.00S"/>
+        <xs:attribute name="selectedDay" type="DayOrText" fixed="P1D"/>
+        <xs:attribute name="dateDayText" type="DateDayText" fixed="P1D"/>
+        <xs:attribute name="dayList" type="DayList" fixed="P1D note"/>
+      </xs:complexType></xs:element>
+    </xs:schema>'''
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    cases = [('precise', stamp+' '+precise, True),
+             ('precise', stamp+' PT0.1234567890123456781000S', True),
+             ('precise', stamp+' PT0.1234567890123456782S', False),
+             ('day', 'PT24H', True), ('month', 'P30D', False),
+             ('negative', '-PT86400.75000S', True), ('negative', 'PT86400.75S', False),
+             ('zero', 'P0Y', True), ('day', 'P1DT', False),
+             ('day', 'P' + '0' * 4299 + '1D', True),
+             ('day', 'P' + '0' * 4300 + '1D', True),
+             ('day', 'PT' + '0' * 4300 + '24H', True),
+             ('day', 'P' + '0' * 4300 + '2D', False),
+             ('selectedDay', 'PT24H', True), ('selectedDay', 'P1DT0.0S', True),
+             ('selectedDay', 'P1DT1S', False),
+             ('selectedDay', 'P1DT0.0000000000000000001S', False),
+             ('dateDayText', 'PT24H', True), ('dateDayText', stamp, False),
+             ('dayList', 'PT24H note', True), ('dayList', 'PT25H note', False)]
+    return row, {'main.xsd': source.encode()}, [(f'<request {attr}="{value}"/>', valid) for attr, value, valid in cases]
+
+
 def compound_depth_fixture(depth):
     types = '<xs:simpleType name="t0"><xs:union memberTypes="xs:dateTime xs:int"/></xs:simpleType>'
     types += ''.join(f'<xs:simpleType name="t{i}"><xs:union memberTypes="t{i-1}"/></xs:simpleType>'
@@ -364,7 +457,623 @@ def notation_packs():
                        cases=notation_examples(uri))
 
 
+def calendar_facets_fixture():
+    time = '2026-11-17T00:00:00.125Z'
+    offset = '2026-11-16T23:00:00.12500-01:00'
+    near = '2026-11-17T00:00:00.1250000000000000002Z'
+    near_offset = '2026-11-16T23:00:00.125000000000000000200-01:00'
+    duration = 'PT0.1250000000000000002S'
+    prefix = f'<xs:schema xmlns:xs="{XS}" xmlns:k="urn:item">'
+    types = {
+        'Bound': '<xs:restriction base="xs:duration"><xs:minInclusive value="P1D"/></xs:restriction>',
+        'EnumDate': f'<xs:restriction base="xs:dateTime"><xs:enumeration value="{time}"/></xs:restriction>',
+        'BoundDate': f'<xs:restriction base="xs:dateTime"><xs:minInclusive value="{time}"/></xs:restriction>',
+        'A': '<xs:union memberTypes="Bound xs:string"/>',
+        'B': '<xs:union memberTypes="EnumDate xs:string"/>',
+        'C': '<xs:union memberTypes="BoundDate xs:string"/>',
+        'Exclusive': '<xs:restriction base="xs:dateTime"><xs:minExclusive value="2026-11-17T00:00:00.1250000000000000001Z"/></xs:restriction>',
+        'Above': '<xs:union memberTypes="Exclusive xs:string"/>',
+        'DurationExclusive': '<xs:restriction base="xs:duration"><xs:minExclusive value="PT0.1250000000000000001S"/></xs:restriction>',
+        'DurationAbove': '<xs:union memberTypes="DurationExclusive xs:string"/>',
+        'TextFirst': '<xs:union memberTypes="xs:string Bound"/>',
+        'Item': '<xs:union memberTypes="xs:duration xs:QName"/>',
+        'Items': '<xs:list itemType="Item"/>',
+        'List': '<xs:restriction base="Items"><xs:enumeration value="P1D P2D k:a"/>'
+                '<xs:enumeration value="P3D P4D k:b"/></xs:restriction>',
+    }
+    fields = [('day', 'A', 'P1D'), ('date', 'B', time), ('boundary', 'C', time),
+              ('list', 'List', 'P1D P2D k:a'), ('string', 'TextFirst', 'P1D'),
+              ('above', 'Above', near), ('durationAbove', 'DurationAbove', duration)]
+    declarations = ''.join(f'<xs:simpleType name="{name}">{body}</xs:simpleType>'
+                           for name, body in types.items())
+    attributes = ''.join(f'<xs:attribute name="{name}" type="{typ}" fixed="{fixed}"/>'
+                         for name, typ, fixed in fields)
+    source = f'{prefix}{declarations}<xs:element name="request"><xs:complexType>{attributes}</xs:complexType></xs:element></xs:schema>'
+    cases = [('day', 'PT24H', True), ('day', 'P1DT0.000000000000000001S', False),
+             ('day', 'PT23H', False), ('date', offset, True), ('date', time, True),
+             ('date', time.replace('125Z', '126Z'), False), ('boundary', offset, True),
+             ('list', 'PT24H PT48H q:a', True), ('list', 'PT48H PT24H q:a', False),
+             ('list', 'PT24H q:a', False), ('list', 'PT24H PT48H q:b', False),
+             ('list', 'PT72H PT96H q:b', False), ('string', 'PT24H', False),
+             ('above', near_offset, True), ('above', near.replace('2Z', '1Z'), False),
+             ('durationAbove', duration.replace('2S', '200S'), True),
+             ('durationAbove', duration.replace('2S', '1S'), False)]
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    return row, {'main.xsd': source.encode()}, [
+        (f'<request xmlns:q="urn:item" {field}="{value}"/>', valid) for field, value, valid in cases
+    ]
+
+
+def local_simple_content_fixture():
+    source = f'''<xs:schema xmlns:xs="{XS}" xmlns:k="urn:item" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+      <xs:complexType name="Base"><xs:simpleContent><xs:extension base="xs:string"/>
+      </xs:simpleContent></xs:complexType>
+      <xs:complexType name="Typed"><xs:simpleContent><xs:restriction base="Base">
+        <xs:simpleType><xs:restriction base="xs:string"><xs:whiteSpace value="collapse"/>
+        </xs:restriction></xs:simpleType>
+        <xs:minLength value="2"/>
+      </xs:restriction></xs:simpleContent></xs:complexType>
+      <xs:complexType name="Outer"><xs:simpleContent><xs:restriction base="Base">
+        <xs:simpleType><xs:restriction base="xs:string"><xs:whiteSpace value="replace"/>
+        </xs:restriction></xs:simpleType>
+        <xs:whiteSpace value="collapse"/>
+      </xs:restriction></xs:simpleContent></xs:complexType>
+      <xs:complexType name="Replace"><xs:simpleContent><xs:restriction base="Base">
+        <xs:whiteSpace value="replace"/>
+      </xs:restriction></xs:simpleContent></xs:complexType>
+      <xs:complexType name="QNameBase"><xs:simpleContent><xs:extension base="xs:QName"/>
+      </xs:simpleContent></xs:complexType>
+      <xs:complexType name="Name"><xs:simpleContent><xs:restriction base="QNameBase">
+        <xs:simpleType><xs:restriction base="xs:QName"/></xs:simpleType>
+      </xs:restriction></xs:simpleContent></xs:complexType>
+      <xs:element name="request"><xs:complexType><xs:sequence>
+        <xs:element name="text" type="Typed" fixed="go" minOccurs="0"/>
+        <xs:element name="name" type="Name" fixed="k:one" minOccurs="0"/>
+        <xs:element name="plain" type="Base" fixed="go" minOccurs="0"/>
+        <xs:element name="spaced" type="Base" fixed=" go " minOccurs="0"/>
+        <xs:element name="replaced" type="Base" fixed="a   b" minOccurs="0"/>
+      </xs:sequence></xs:complexType></xs:element>
+    </xs:schema>'''
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    cases = [('<text> go </text>', True), ('<text>g</text>', False), ('<text>no</text>', False),
+             ('<name>p:one</name>', True), ('<name>p:two</name>', False),
+             ('<plain>go</plain>', True), ('<plain> go </plain>', False),
+             ('<plain xsi:type="Typed"> go </plain>', True),
+             ('<plain xsi:type="Typed"> no </plain>', False),
+             ('<spaced> go </spaced>', True),
+             ('<spaced xsi:type="Typed"> go </spaced>', True),
+             ('<plain xsi:type="Outer">&#x9; go </plain>', True),
+             ('<spaced xsi:type="Outer">&#x9; go </spaced>', True),
+             ('<replaced>a&#x9;  b</replaced>', False),
+             ('<replaced xsi:type="Replace">a&#x9;  b</replaced>', True),
+             ('<replaced xsi:type="Replace">a&#x9; b</replaced>', False)]
+    return row, {'main.xsd': source.encode()}, [
+        (f'<request xmlns:p="urn:item" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">{body}</request>', valid)
+        for body, valid in cases
+    ]
+
+
+def direct_calendar_bounds_fixture():
+    forms = {
+        'duration': ('PT0.{}S', 'PT00.{}0S', 'PT000.{}S', 'PT0[0]?[.].*S'),
+        'dateTime': ('2026-11-17T00:00:00.{}Z', '2026-11-16T23:00:00.{}0-01:00',
+                     '2026-11-17T01:00:00.{}+01:00', '2026-11-(16T23|17T00):.*'),
+    }
+    declarations, attributes, cases = [], [], []
+    for kind, (lexical, alias, wrong_pattern, pattern) in forms.items():
+        for prefix in ('875000000000000', '8750000000000000', '12500000000000000'):
+            bound, fixed, next_value = [lexical.format(prefix+digit) for digit in '123']
+            name = kind+str(len(prefix)+1)
+            declarations.append(f'<xs:simpleType name="{name}"><xs:restriction base="xs:{kind}">'
+                                f'<xs:minExclusive value="{bound}"/><xs:pattern value="{pattern}"/>'
+                                '</xs:restriction></xs:simpleType>')
+            attributes.extend((f'<xs:attribute name="{name}" type="{name}" fixed="{fixed}"/>',
+                               f'<xs:attribute name="{name}Other" type="{name}"/>'))
+            cases.extend((f'<request {attribute}="{value}"/>', valid) for attribute, value, valid in (
+                (name, fixed, True), (name, alias.format(prefix+'2'), True),
+                (name, bound, False), (name, lexical.format(prefix+'0'), False), (name, next_value, False),
+                (name, wrong_pattern.format(prefix+'2'), False),
+                *((name+'Other', lexical.format(prefix+digit), int(prefix+digit) > int(prefix+'1'))
+                  for digit in '0123'),
+                (name+'Other', alias.format(prefix+'2'), True),
+                (name+'Other', wrong_pattern.format(prefix+'2'), False),
+            ))
+    source = (f'<xs:schema xmlns:xs="{XS}">{"".join(declarations)}'
+              f'<xs:element name="request"><xs:complexType>{"".join(attributes)}</xs:complexType></xs:element>'
+              '</xs:schema>')
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    return row, {'main.xsd': source.encode()}, [('<request/>', True), *cases]
+
+
+def union_instance_type_fixture():
+    source = f'''<xs:schema xmlns:xs="{XS}" xmlns:k="urn:item">
+      <xs:simpleType name="WordUnion"><xs:union memberTypes="xs:string xs:boolean"/></xs:simpleType>
+      <xs:simpleType name="NameUnion"><xs:union memberTypes="xs:QName xs:string"/></xs:simpleType>
+      <xs:simpleType name="FlagUnion"><xs:union memberTypes="xs:boolean xs:string"/></xs:simpleType>
+      <xs:simpleType name="Normalized"><xs:union memberTypes="xs:normalizedString xs:boolean"/></xs:simpleType>
+      <xs:simpleType name="Token"><xs:union memberTypes="xs:token xs:boolean"/></xs:simpleType>
+      <xs:simpleType name="Code"><xs:restriction base="xs:token"><xs:pattern value="go"/></xs:restriction></xs:simpleType>
+      <xs:simpleType name="CodeUnion"><xs:union memberTypes="Code xs:string"/></xs:simpleType>
+      <xs:complexType name="Base"><xs:simpleContent><xs:extension base="xs:anySimpleType"/></xs:simpleContent></xs:complexType>
+      <xs:complexType name="WordContent"><xs:simpleContent><xs:restriction base="Base"><xs:simpleType>
+        <xs:restriction base="WordUnion"/></xs:simpleType></xs:restriction></xs:simpleContent></xs:complexType>
+      <xs:element name="request"><xs:complexType><xs:sequence>
+        <xs:element name="word" type="Base" fixed=" go " minOccurs="0"/>
+        <xs:element name="wrong" type="Base" fixed="go" minOccurs="0"/>
+        <xs:element name="plain" type="xs:anySimpleType" fixed=" go " minOccurs="0"/>
+        <xs:element name="tight" type="xs:anySimpleType" fixed="go" minOccurs="0"/>
+        <xs:element name="spaced" type="xs:anySimpleType" fixed=" a   b " minOccurs="0"/>
+        <xs:element name="flag" type="xs:anySimpleType" fixed="true" minOccurs="0"/>
+        <xs:element name="name" type="xs:anySimpleType" fixed="k:one" minOccurs="0"/>
+      </xs:sequence></xs:complexType></xs:element>
+    </xs:schema>'''
+    cases = [('word', 'WordContent', ' go ', True), ('wrong', 'WordContent', ' go ', False),
+             ('plain', 'WordUnion', ' go ', True), ('tight', 'WordUnion', ' go ', False),
+             ('spaced', 'Normalized', ' a&#x9;  b ', True), ('spaced', 'Normalized', 'a b', False),
+             ('spaced', 'Token', 'a b', True), ('spaced', 'Token', 'a c', False),
+             ('flag', 'FlagUnion', ' 1 ', True), ('flag', 'FlagUnion', ' false ', False),
+             ('name', 'NameUnion', 'p:one', True), ('name', 'NameUnion', 'k:one', False),
+             ('tight', 'CodeUnion', ' go ', True), ('tight', 'CodeUnion', ' no ', False)]
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    return row, {'main.xsd': source.encode()}, [
+        (f'<request xmlns:p="urn:item" xmlns:k="urn:other" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">'
+         f'<{element} xsi:type="{kind}">{value}</{element}></request>', valid)
+        for element, kind, value, valid in cases
+    ]
+
+
+def calendar_without_fixed_fixture(kind, context='direct', *, inclusive_max=False, default=False):
+    value = 'PT0.{}S' if kind == 'duration' else '2026-11-20T00:00:00.{}Z'
+    digits = '8750000000000000'
+    bound = value.format(digits+'1')
+    facet = 'maxInclusive' if inclusive_max else 'minExclusive'
+    attribute = '<xs:attribute name="peer" type="Bound"/>'
+    if default:
+        attribute = attribute.replace('/>', f' default="{value.format(digits+"2")}"/>')
+    owner = '<xs:element name="request"><xs:complexType>{}</xs:complexType></xs:element>'
+    body = {
+        'direct': owner.format(attribute),
+        'inline': owner.format(attribute.replace(' type="Bound"', '').replace('/>', '><xs:simpleType>'
+            f'<xs:restriction base="xs:{kind}"><xs:{facet} value="{bound}"/></xs:restriction>'
+            '</xs:simpleType></xs:attribute>')),
+        'ref': attribute + owner.format('<xs:attribute ref="peer"/>'),
+        'group': f'<xs:attributeGroup name="Fields">{attribute}</xs:attributeGroup>' +
+            owner.format('<xs:attributeGroup ref="Fields"/>'),
+        'named-owner': f'<xs:complexType name="Owner">{attribute}</xs:complexType>'
+            '<xs:element name="request" type="Owner"/>',
+        'element': '<xs:element name="request" type="Bound"/>',
+        'identity-key': ('<xs:element name="request"><xs:complexType><xs:attribute name="peer" type="Bound"/>'
+                         '</xs:complexType><xs:key name="selected"><xs:selector xpath="."/>'
+                         '<xs:field xpath="@peer"/></xs:key></xs:element>'),
+        'derived-substitution': (
+            '<xs:complexType name="Base"/>'
+            '<xs:complexType name="Derived"><xs:complexContent><xs:extension base="Base">'
+            '<xs:sequence><xs:element ref="head"/></xs:sequence>'
+            '</xs:extension></xs:complexContent></xs:complexType>'
+            '<xs:complexType name="ChildBase"/><xs:element name="head" type="ChildBase" abstract="true"/>'
+            '<xs:element name="member" substitutionGroup="head"><xs:complexType><xs:complexContent>'
+            f'<xs:extension base="ChildBase">{attribute}</xs:extension>'
+            '</xs:complexContent></xs:complexType></xs:element>'
+            '<xs:element name="request" type="Base"/>'),
+        'identity-union': '<xs:simpleType name="IdentityChoice"><xs:union memberTypes="Bound xs:ID"/></xs:simpleType>'
+            + owner.format('<xs:sequence><xs:element name="item"><xs:complexType>'
+                           '<xs:attribute name="id" type="xs:ID"/></xs:complexType></xs:element></xs:sequence>'
+                           + attribute.replace('"Bound"', '"IdentityChoice"')),
+    }[context]
+    raw = (f'<xs:schema xmlns:xs="{XS}"><xs:simpleType name="Bound"><xs:restriction base="xs:{kind}">'
+           f'<xs:{facet} value="{bound}"/></xs:restriction></xs:simpleType>{body}</xs:schema>')
+    cases = [('<request/>', True)] + [
+        (f'<request peer="{value.format(digits+digit)}"/>',
+         int(digits+digit) <= int(digits+'1') if inclusive_max else int(digits+digit) > int(digits+'1'))
+        for digit in '0123'
+    ]
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+    return row, {'main.xsd': raw.encode()}, cases
+
+
+def effective_value_and_projection_fixtures():
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+
+    def files(body, attributes=''):
+        return {'main.xsd': f'<xs:schema xmlns:xs="{XS}" {attributes}>{body}</xs:schema>'.encode()}
+
+    def instance(kind, value, bindings=''):
+        return (f'<request xmlns:xs="{XS}" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" '
+                f'{bindings} xsi:type="{kind}">{value}</request>')
+
+    scalar = [
+        ('string', ' a  b ', '', [('xs:token', 'a b', '', True), ('xs:token', ' a  b ', '', True),
+                                 ('xs:token', 'a c', '', False), ('xs:string', 'a b', '', False)]),
+        ('anySimpleType', 'k:one', 'xmlns:k="urn:expected"',
+         [('xs:QName', 'p:one', 'xmlns:p="urn:expected"', True),
+          ('xs:QName', 'k:one', 'xmlns:k="urn:other"', False)]),
+        ('anySimpleType', '1', '', [('xs:int', '+01', '', True), ('xs:int', '2', '', False)]),
+        ('anySimpleType', 'true', '', [('xs:boolean', '1', '', True), ('xs:boolean', '0', '', False)]),
+        ('anySimpleType', 'PT60S', '', [('xs:duration', 'PT1M', '', True), ('xs:duration', 'PT61S', '', False)]),
+    ]
+    for base, fixed, namespaces, cases in scalar:
+        source = files(f'<xs:element name="request" type="xs:{base}" fixed="{fixed}"/>', namespaces)
+        yield 'effective-'+cases[0][0].split(':')[-1], (row.copy(), source, [
+            (instance(kind, value, bindings), valid) for kind, value, bindings, valid in cases
+        ])
+    declarations = ('<xs:simpleType name="List"><xs:list itemType="xs:decimal"/></xs:simpleType>'
+                    '<xs:simpleType name="Token"><xs:restriction base="xs:token"/></xs:simpleType>')
+    yield 'effective-list', (row.copy(), files(declarations +
+        '<xs:element name="request" type="xs:anySimpleType" fixed="1 2"/>'), [
+        (instance('List', '1.0 2.00'), True), (instance('List', '1 3'), False)])
+    yield 'effective-named-token', (row.copy(), files(declarations +
+        '<xs:element name="request" type="xs:string" fixed=" a  b "/>'), [
+        (instance('Token', ' a  b '), True), (instance('Token', 'a c'), False)])
+
+    digits = '8750000000000000'
+    bound = f'PT0.{digits}1S'
+    exact = f'PT0.{digits}2S'
+    duration = ('<xs:simpleType name="Bound"><xs:restriction base="xs:duration">'
+                f'<xs:minExclusive value="{bound}"/></xs:restriction></xs:simpleType>')
+    request = '<xs:element name="request"><xs:complexType>{}</xs:complexType></xs:element>'
+    attribute = '<xs:attribute name="d" type="Bound"/>'
+    other = ('<xs:element name="other"><xs:complexType><xs:sequence>'
+             '<xs:element name="label" type="xs:int"/></xs:sequence></xs:complexType>'
+             '<xs:key name="key"><xs:selector xpath="label"/><xs:field xpath="."/></xs:key></xs:element>')
+    for key, fragment in [
+        ('owner', request.replace('name="request"', 'name="other"').format(attribute)),
+        ('group', f'<xs:attributeGroup name="Unused">{attribute}</xs:attributeGroup>'),
+    ]:
+        selected = '<xs:element name="request" type="xs:string"/>'
+        yield 'unreachable-'+key, (row.copy(), files(duration+selected+fragment), [
+            ('<request>value</request>', True)])
+    yield 'unreachable-key', (row.copy(), files(duration+request.format(attribute)+other), [
+        (f'<request d="PT0.{digits}{digit}S"/>', int(digits+digit)>int(digits+'1')) for digit in '0123'
+    ])
+    with_sibling_key = request.format('<xs:sequence><xs:element ref="other"/>'
+                                      '</xs:sequence>'+attribute)
+    # The sibling's key refers to an attribute with the same name, but cannot
+    # select a value on its ancestor. Changing the selected root's attribute
+    # can neither alter the key nor hide a violation of it.
+    sibling = ('<xs:element name="other"><xs:complexType><xs:attribute name="d" type="xs:int"/>'
+               '</xs:complexType><xs:key name="k"><xs:selector xpath="."/>'
+               '<xs:field xpath="@d"/></xs:key></xs:element>')
+    yield 'unrelated-sibling-key', (row.copy(), files(duration+with_sibling_key+sibling), [
+        (f'<request d="{exact}"><other d="7"/></request>', True),
+        (f'<request d="{bound}"><other d="7"/></request>', False),
+        (f'<request d="{exact}"><other/></request>', False),
+    ])
+    own_key = ('<xs:key name="codeKey"><xs:selector xpath="."/>'
+               '<xs:field xpath="@code"/></xs:key></xs:element>')
+    source = request.format(attribute+'<xs:attribute name="code" type="xs:int"/>').removesuffix('</xs:element>')
+    yield 'unrelated-own-key-field', (row.copy(), files(duration+source+own_key), [
+        (f'<request d="{exact}" code="7"/>', True),
+        (f'<request d="{bound}" code="7"/>', False),
+    ])
+    for key, attributes, element_block in [('block', '', ' block="#all"'),
+                                            ('block-default', 'blockDefault="#all"', '')]:
+        derived = ('<xs:complexType name="Base"/>'
+                   '<xs:complexType name="Derived"><xs:complexContent><xs:extension base="Base">'
+                   f'{attribute}</xs:extension></xs:complexContent></xs:complexType>'
+                   f'<xs:element name="request" type="Base"{element_block}/>')
+        yield 'unreachable-derived-'+key, (row.copy(), files(duration+derived, attributes), [
+            ('<request/>', True), (instance('Derived', ''), False)
+        ])
+    types = ('<xs:complexType name="Base"/><xs:complexType name="Derived"><xs:complexContent>'
+             '<xs:extension base="t:Base"><xs:attribute name="d" type="t:Bound"/>'
+             '</xs:extension></xs:complexContent></xs:complexType>')
+    for key, type_block, schema_block in [('type-block', ' block="#all"', ''),
+                                           ('type-block-default', '', ' blockDefault="#all"')]:
+        schemas = files('<xs:import namespace="urn:types" schemaLocation="types.xsd"/>'
+                        '<xs:element name="request" type="t:Base"/>', 'xmlns:t="urn:types"')
+        schemas['types.xsd'] = files(duration+types.replace('name="Base"', f'name="Base"{type_block}'),
+                                    'xmlns:t="urn:types" targetNamespace="urn:types"'+schema_block)['main.xsd']
+        yield 'unreachable-derived-'+key, (row.copy(), schemas, [
+            ('<request/>', True), (instance('t:Derived', '', 'xmlns:t="urn:types"'), False)
+        ])
+
+    union = '<xs:simpleType name="Choice"><xs:union memberTypes="Bound xs:boolean"/></xs:simpleType>'
+    for kind, definition, constraint, value in [
+        ('union', union, 'fixed', exact),
+        ('list', '<xs:simpleType name="Items"><xs:list itemType="Bound"/></xs:simpleType>'
+                 '<xs:simpleType name="Choice"><xs:restriction base="Items">'
+                 '<xs:length value="2"/></xs:restriction></xs:simpleType>', 'default', f'{exact} {exact}'),
+    ]:
+        selected = request.format(f'<xs:attribute name="d" type="Choice" {constraint}="{value}"/>')
+        cases = [('<request/>', True), (f'<request d="{value}"/>', True),
+                 (f'<request d="{value.replace(exact, bound, 1)}"/>', False)]
+        if kind == 'list':
+            cases.extend([(f'<request d="{exact}"/>', False), (f'<request d="{exact} nope"/>', False),
+                          (f'<request d="{exact} PT0.{digits}3S"/>', True)])
+        else:
+            cases.append(('<request d="true"/>', False))
+        yield 'projected-'+kind, (row.copy(), files(duration+definition+selected), cases)
+
+    union = ('<xs:simpleType name="Choice">'
+             '<xs:union xmlns="" memberTypes="m:Bound Text"/></xs:simpleType>')
+    qualified = row | dict(namespace='urn:main')
+    for variant in ('default', 'prefixed', 'included'):
+        nested = variant == 'included'
+        type_name = 'm:Choice' if variant == 'prefixed' else 'Choice'
+        body = duration+union+request.format(f'<xs:attribute name="d" type="{type_name}"/>')
+        attrs = 'xmlns:m="urn:main" targetNamespace="urn:main"'
+        if variant != 'prefixed':
+            attrs += ' xmlns="urn:main"'
+        schemas = files('<xs:import schemaLocation="plain.xsd"/>' +
+                       ('<xs:include schemaLocation="nested.xsd"/>' if nested else body), attrs)
+        if nested:
+            schemas['nested.xsd'] = files(body, attrs)['main.xsd']
+        schemas['plain.xsd'] = files('<xs:simpleType name="Text"><xs:restriction base="xs:string">'
+                                    '<xs:enumeration value="ok"/></xs:restriction></xs:simpleType>')['main.xsd']
+        yield 'projected-QName-'+variant, (qualified.copy(), schemas, [
+            ('<request xmlns="urn:main" d="ok"/>', True), ('<request xmlns="urn:main" d="bad"/>', False),
+            (f'<request xmlns="urn:main" d="{exact}"/>', True), (f'<request xmlns="urn:main" d="{bound}"/>', False)])
+
+
+def validation_scope_fixtures():
+    """Shared XML expectations for the downloaded, audit and WASM validators."""
+    row = dict(number='42', environment='prod', revision_id='a'*64,
+               root='request', namespace=None, schema_path='main.xsd')
+
+    def schema(body, bindings=''):
+        return f'<xs:schema xmlns:xs="{XS}" {bindings}>{body}</xs:schema>'.encode()
+
+    def fixture(body, cases, *, unavailable=None, bindings=''):
+        return row.copy(), {'main.xsd': schema(body, bindings)}, cases, unavailable
+
+    xsi = 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+    union = '<xs:simpleType name="Choice"><xs:union memberTypes="xs:ID xs:int"/></xs:simpleType>'
+    owner = '<xs:element name="record" maxOccurs="unbounded"><xs:complexType><xs:sequence>'
+    ending = ('</xs:sequence></xs:complexType></xs:element></xs:sequence>'
+              '<xs:attribute name="id" type="xs:ID"/></xs:complexType></xs:element>')
+    for name, declared, types, explicit, identifies in [
+            ('direct','xs:ID','','',True),
+            ('derived','Derived','<xs:simpleType name="Derived"><xs:restriction base="xs:ID"/></xs:simpleType>','',True),
+            ('instance','xs:anySimpleType','',' xsi:type="xs:ID"',True),
+            ('union','Choice',union.replace('xs:int','xs:string'),'',True),
+            ('union-instance','xs:anySimpleType',union.replace('xs:int','xs:string'),' xsi:type="Choice"',True),
+            ('string-first','Choice',union.replace('xs:ID xs:int','xs:string xs:ID'),'',False),
+            ('string','xs:string','','',False)]:
+        body = (types+'<xs:element name="request"><xs:complexType><xs:sequence>'+owner
+                +f'<xs:element name="value" type="{declared}" maxOccurs="unbounded"/>'+ending)
+        def document(groups, attribute=''):
+            header = f'<request {xsi} xmlns:xs="{XS}"{attribute}>'
+            return header+'\n'.join('<record>'+''.join(f'<value{explicit}>{v}</value>' for v in group)
+                                     +'</record>' for group in groups)+'</request>'
+        duplicate = ('/request/record/value', 'Значение ID') if identifies else (None, None)
+        yield 'document-id-'+name, fixture(body, [
+            (document([['hello']]),None,None), (document([['hello'],['world']]),None,None),
+            (document([['hello','hello']]),None,None),
+            (document([['hello'],['  hello  ']]),*duplicate),
+            (document([['world'],['hello']], ' id="hello"'),*duplicate),
+        ])
+
+    no_profiles = ('<xs:element name="request"><xs:complexType><xs:sequence>'
+                   '<xs:element name="record" maxOccurs="unbounded"><xs:complexType><xs:sequence>'
+                   '<xs:element name="value" type="xs:anySimpleType" minOccurs="0"/>'
+                   '<xs:any namespace="urn:skip" processContents="skip" minOccurs="0"/>'
+                   '</xs:sequence></xs:complexType></xs:element></xs:sequence></xs:complexType></xs:element>')
+    header = f'<request {xsi} xmlns:xs="{XS}" xmlns:s="urn:skip">'
+    active = '<record><value xsi:type="xs:ID">hello</value></record>'
+    skipped = '<record><s:extra xsi:type="xs:ID">hello</s:extra></record>'
+    yield 'document-id-no-profiles', fixture(no_profiles, [
+        (header+active+'\n'+active+'</request>','/request/record/value','Значение ID'),
+        (header+active+'\n'+skipped+'</request>',None,None),
+        (header+skipped+'\n'+active+'</request>',None,None),
+        (header+skipped+'\n'+skipped+'</request>',None,None),
+    ])
+    yield 'contextual-union', fixture(union +
+        '<xs:element name="request" type="xs:anySimpleType" fixed="hello"/>', [
+            (f'<request {xsi} xsi:type="Choice">{value}</request>', path, reason)
+            for value, path, reason in [
+                ('hello', None, None), (' hello ', None, None), ('world', '/request', 'fixed value'),
+            ]
+        ])
+    yield 'contextual-real-duplicate', fixture(union +
+        '<xs:element name="request"><xs:complexType><xs:sequence>'
+        '<xs:element name="value" type="xs:anySimpleType" fixed="hello"/>'
+        '<xs:element name="repeat" minOccurs="0"><xs:complexType>'
+        '<xs:attribute name="id" type="xs:ID"/></xs:complexType></xs:element>'
+        '</xs:sequence><xs:attribute name="id" type="xs:ID"/></xs:complexType></xs:element>', [
+            (f'<request {xsi}>\n<value xsi:type="Choice">hello</value>\n</request>', None, None),
+            (f'<request {xsi} id="hello">\n<value xsi:type="Choice">hello</value>\n<repeat id="hello"/>\n</request>',
+             '/request/repeat/@id', 'ID'),
+        ])
+
+    bound = 'PT0.87500000000000001S'
+    exact = 'PT0.87500000000000002S'
+    duration = ('<xs:simpleType name="Bound"><xs:restriction base="xs:duration">'
+                f'<xs:minExclusive value="{bound}"/></xs:restriction></xs:simpleType>')
+    child = ('<xs:element name="other"><xs:complexType>'
+             '<xs:attribute name="d" type="xs:int"/></xs:complexType></xs:element>')
+    for name, selector, field, constraint in (
+        ('selector', 'other', '@d', 'key'),
+        ('field', '.', 'other/@d', 'key'),
+        ('descendant', './/other', '@d', 'key'),
+        ('union', 'absent | child::other', 'attribute::d', 'unique'),
+        ('self', '.', '@d', 'key'),
+    ):
+        checks = (f'<xs:{constraint} name="k"><xs:selector xpath="{selector}"/>'
+                  f'<xs:field xpath="{field}"/></xs:{constraint}>')
+        request = ('<xs:element name="request"><xs:complexType><xs:sequence>'+child+'</xs:sequence>'
+                   '<xs:attribute name="d" type="Bound"/></xs:complexType>'+checks+'</xs:element>')
+        cases = [(f'<request d="{exact}">\n<other d="7"/>\n</request>', None, None),
+                 (f'<request d="{bound}">\n<other d="7"/>\n</request>', '/request/@d', 'календарное ограничение')]
+        if constraint == 'key' and name != 'self':
+            cases.append(('<request d="PT1S">\n<other/>\n</request>',
+                          '/request' if name == 'field' else '/request/other', 'key'))
+        yield 'identity-path-'+name, fixture(duration+request, cases, unavailable='minExclusive' if name == 'self' else None)
+
+    inclusive = duration.replace('minExclusive', 'minInclusive').replace(bound, exact)
+    for mode in ('none', 'lax', 'strict', 'skip'):
+        wildcard = '' if mode == 'none' else f'<xs:any minOccurs="0" namespace="urn:extra" processContents="{mode}"/>'
+        key = '<xs:key name="k"><xs:selector xpath="other"/><xs:field xpath="@d"/></xs:key>'
+        request = ('<xs:element name="request"><xs:complexType><xs:sequence>'+child+wildcard+'</xs:sequence>'
+                   '<xs:attribute name="d" type="Bound"/></xs:complexType>'+key+'</xs:element>')
+        cases = [(f'<request d="{exact}">\n<other d="7"/>\n</request>', None, None),
+                 (f'<request d="{bound}">\n<other d="7"/>\n</request>', '/request/@d', 'календарное ограничение'),
+                 ('<request d="PT1S">\n<other/>\n</request>', '/request/other', 'key')]
+        if mode == 'lax':
+            for value, location in [(exact, None), (bound, '/request/extra')]:
+                xml = (f'<request d="{exact}" {xsi} xmlns:e="urn:extra">\n'
+                       f'<other d="7"/><e:extra xsi:type="Bound">{value}</e:extra>\n</request>')
+                cases.append((xml, location, 'календарное ограничение' if location else None))
+        yield 'identity-sibling-'+mode, fixture(inclusive+request, cases)
+        if mode == 'lax':
+            for label, selector in [('self', '.'), ('descendant', './/request')]:
+                yield 'identity-lax-'+label, fixture(inclusive+request.replace('xpath="other"', f'xpath="{selector}"'),
+                                                     cases[:1], unavailable='minInclusive')
+
+    dynamic = ('<xs:complexType name="Dynamic"><xs:sequence><xs:element name="target"><xs:complexType>'
+               '<xs:attribute name="d" type="Bound"/></xs:complexType></xs:element></xs:sequence></xs:complexType>'
+               '<xs:element name="request"><xs:complexType><xs:sequence>'
+               '<xs:any namespace="urn:extra" processContents="lax"/></xs:sequence></xs:complexType>'
+               '<xs:key name="k"><xs:selector xpath=".//target"/><xs:field xpath="@d"/></xs:key></xs:element>')
+    yield 'identity-lax-explicit-complex-type', fixture(inclusive+dynamic, [
+        (f'<request {xsi} xmlns:e="urn:extra"><e:other xsi:type="Dynamic"><target d="PT1S"/></e:other></request>',
+         None, None),
+    ], unavailable='minInclusive')
+
+    namespaced = ('<xs:element name="request"><xs:complexType><xs:sequence>'+child+'</xs:sequence>'
+                  '<xs:attribute name="d" type="m:Bound"/><xs:attribute name="code" type="xs:int"/>'
+                  '</xs:complexType><xs:key name="codes"><xs:selector xpath="."/>'
+                  '<xs:field xpath="@m:code"/></xs:key><xs:keyref name="uses" refer="m:codes">'
+                  '<xs:selector xmlns:s="urn:request" xpath=".//s:other"/>'
+                  '<xs:field xmlns:f="urn:request" xpath="@f:d"/></xs:keyref></xs:element>')
+    yield 'identity-path-prefixed-keyref', (
+        row | {'namespace': 'urn:request'},
+        {'main.xsd': schema(duration+namespaced, 'xmlns:m="urn:request" targetNamespace="urn:request" '
+                           'elementFormDefault="qualified" attributeFormDefault="qualified"')},
+        [(f'<m:request xmlns:m="urn:request" m:d="{exact}" m:code="7">\n'
+          '<m:other m:d="7"/>\n</m:request>', None, None),
+         (f'<m:request xmlns:m="urn:request" m:d="{bound}" m:code="7">\n'
+          '<m:other m:d="7"/>\n</m:request>', '/request/@d', 'календарное ограничение')],
+        None,
+    )
+    recursive = ('<xs:element name="request"><xs:complexType><xs:sequence>'
+                 '<xs:element ref="request" minOccurs="0"/></xs:sequence>'
+                 '<xs:attribute name="d" type="Bound"/></xs:complexType>'
+                 '<xs:unique name="nested"><xs:selector xpath=".//request"/>'
+                 '<xs:field xpath="@d"/></xs:unique></xs:element>')
+    yield 'identity-path-recursive-intersection', fixture(duration+recursive, [
+        ('<request><request d="PT1S"/></request>', None, None),
+    ], unavailable='minExclusive')
+    implicit_member = ('<xs:element name="head"><xs:complexType>'
+                       '<xs:attribute name="d" type="Bound"/></xs:complexType></xs:element>'
+                       '<xs:element name="member" substitutionGroup="head"/>'
+                       '<xs:element name="request"><xs:complexType><xs:sequence><xs:element ref="head"/>'
+                       '</xs:sequence></xs:complexType><xs:key name="memberKey"><xs:selector xpath="member"/>'
+                       '<xs:field xpath="@d"/></xs:key></xs:element>')
+    yield 'identity-path-substitute-intersection', fixture(duration+implicit_member, [
+        ('<request><member d="PT1S"/></request>', None, None),
+    ], unavailable='minExclusive')
+
+    def substitution(head_block, mid_block='', refs=('head',), *, method='extension', tight=True, imported=False):
+        ns = 'm:' if imported else ''
+        base_attribute = '<xs:attribute name="d" type="xs:duration"/>' if method == 'restriction' else ''
+        bound_type = ns+'Bound' if tight else 'xs:duration'
+        base_block = ' block=""' if imported else ''
+        def block(value):
+            return f' block="{value}"' if value else ''
+        derived = (f'<xs:complexContent><xs:{method} base="{ns}Base">'
+                   f'<xs:attribute name="d" type="{bound_type}"/></xs:{method}></xs:complexContent>')
+        definitions = (
+            (duration if tight else '') + f'<xs:complexType name="Base"{base_block}>{base_attribute}</xs:complexType>'
+            f'<xs:element name="head" type="{ns}Base"{block("" if imported else head_block)}/>'
+            f'<xs:element name="mid" type="{ns}Base" substitutionGroup="{ns}head"{block(mid_block)}/>'
+            f'<xs:element name="leaf" substitutionGroup="{ns}mid"><xs:complexType>'
+            f'{derived}</xs:complexType></xs:element>'
+        )
+        request = '<xs:element name="request"><xs:complexType><xs:sequence>' + ''.join(
+            f'<xs:element ref="{ns}{ref}"/>' for ref in refs) + '</xs:sequence></xs:complexType></xs:element>'
+        if imported:
+            return {'main.xsd': schema('<xs:import namespace="urn:group" schemaLocation="group.xsd"/>'+request,
+                                       'xmlns:m="urn:group"'),
+                    'group.xsd': schema(definitions, 'xmlns:m="urn:group" targetNamespace="urn:group"'
+                                         f' blockDefault="{head_block}"')}
+        return {'main.xsd': schema(definitions+request)}
+
+    for name, head, mid, refs, accepted, rejected, method, imported in (
+        ('head-extension', 'extension', '', ('head',), ('head', 'mid'), ('leaf',), 'extension', False),
+        ('mid-extension', 'extension', '', ('mid',), ('mid', 'leaf'), ('head',), 'extension', False),
+        ('both-extension', 'extension', '', ('head', 'mid'), ('mid leaf',), ('leaf mid',), 'extension', False),
+        ('head-through-blocked-mid', '', 'substitution', ('head',), ('head', 'mid', 'leaf'), (), 'extension', False),
+        ('mid-substitution', '', 'substitution', ('mid',), ('mid',), ('leaf',), 'extension', False),
+        ('head-restriction', 'restriction', '', ('head',), ('head', 'mid'), ('leaf',), 'restriction', False),
+        ('head-all', '#all', '', ('head',), ('head',), ('mid', 'leaf'), 'extension', False),
+        ('imported-default', 'extension', '', ('head',), ('head', 'mid'), ('leaf',), 'extension', True),
+    ):
+        def xml(children):
+            prefix = 'm:' if imported else ''
+            attributes = ' xmlns:m="urn:group"' if imported else ''
+            return f'<request{attributes}>\n' + '\n'.join(
+                f'<{prefix}{name}'+(' d="PT1S"' if name == 'leaf' else '')+'/>' for name in children.split()
+            ) + '\n</request>'
+        cases = ([(xml(child), None, None) for child in accepted]
+                 + [(xml(child), '/request/'+child.split()[0], 'not expected') for child in rejected])
+        for tight in (False, True):
+            files = substitution(head, mid, refs, method=method, tight=tight, imported=imported)
+            unprojectable = tight and any('leaf' in children.split() for children in accepted)
+            yield ('substitution-'+name+('-exact' if tight else ''),
+                   (row.copy(), files, cases, 'minExclusive' if unprojectable else None))
+    definitions = ('<xs:complexType name="Base"/>'
+                   '<xs:complexType name="Derived"><xs:complexContent><xs:extension base="Base">'
+                   '<xs:attribute name="d" type="Bound"/></xs:extension></xs:complexContent></xs:complexType>'
+                   '<xs:element name="head" type="Base" block="extension"/>'
+                   '<xs:element name="member" type="Derived" substitutionGroup="head"/>'
+                   '<xs:element name="request"><xs:complexType><xs:sequence><xs:element ref="head"/>'
+                   '</xs:sequence></xs:complexType></xs:element>')
+    yield 'substitution-direct-extension', fixture(duration+definitions, [
+        ('<request>\n<head/>\n</request>', None, None),
+        ('<request>\n<member d="PT1S"/>\n</request>', '/request/member', 'not expected'),
+    ])
+    marker = '<xs:element name="marker" type="xs:decimal" fixed="1.0"/>'
+    marked = definitions.replace('<xs:element ref="head"/>', '<xs:element ref="head"/>'+marker)
+    yield 'substitution-fixed-neighbor', fixture(duration+marked, [
+        ('<request>\n<head/><marker>1.00</marker>\n</request>', None, None),
+        ('<request>\n<head/><marker>2</marker>\n</request>', '/request/marker', 'fixed'),
+        ('<request>\n<member/><marker>1</marker>\n</request>', '/request/member', 'not expected'),
+    ])
+    allowed = marked.replace('block="extension"', '').replace('type="Bound"', 'type="xs:decimal" fixed="2.0"')
+    yield 'substitution-fixed-member', fixture(allowed, [
+        ('<request>\n<member d="2.00"/><marker>1</marker>\n</request>', None, None),
+        ('<request>\n<member d="3"/><marker>1</marker>\n</request>', '/request/member/@d', 'fixed'),
+    ])
+    mixed = definitions.replace('<xs:complexType name="Derived">', '<xs:complexType name="Extended">').replace(
+        'name="d" type="Bound"', 'name="d" type="xs:duration"').replace(
+        '<xs:element name="head"',
+        '<xs:complexType name="Derived"><xs:complexContent><xs:restriction base="Extended">'
+        '<xs:attribute name="d" type="Bound"/></xs:restriction></xs:complexContent></xs:complexType>'
+        '<xs:element name="head"')
+    # libxml2 admits the member when walking a restriction above an extension.
+    # Do not publish without an exact check for the admitted attribute.
+    yield 'substitution-mixed-derivation', fixture(duration+mixed, [
+        ('<request>\n<member d="PT1S"/>\n</request>', None, None),
+    ], unavailable='minExclusive')
+    xtype_chain = ('<xs:complexType name="B"/><xs:complexType name="M" block="extension">'
+                   '<xs:complexContent><xs:extension base="B"/></xs:complexContent></xs:complexType>'
+                   '<xs:complexType name="Leaf"><xs:complexContent><xs:extension base="M">'
+                   '<xs:attribute name="d" type="Bound"/></xs:extension></xs:complexContent></xs:complexType>')
+    xtype_bound = duration.replace('minExclusive', 'minInclusive').replace(bound, exact)
+    for base, value, path, reason, unavailable in (
+        ('B', f' d="{bound}"', None, None, 'minInclusive'),
+        ('M', '', '/request/@type', 'validly derived', None),
+    ):
+        yield 'instance-type-block-from-'+base, fixture(
+            xtype_bound+xtype_chain+f'<xs:element name="request" type="{base}"/>', [
+                ('<request/>', None, None),
+                (f'<request {xsi} xsi:type="Leaf"{value}/>', path, reason),
+            ], unavailable=unavailable,
+        )
+
+
 if __name__ == '__main__':
+    if '--validation-scopes' in sys.argv:
+        print(json.dumps({name: dict(pack=pack(row, files), cases=cases)
+                          for name, (row, files, cases, unavailable) in validation_scope_fixtures()
+                          if unavailable is None and (len(sys.argv) < 3 or name.startswith(sys.argv[2]))}))
+        sys.exit()
     attributes = [(kind, attribute_fixture(kind)) for kind in ('direct', 'reference', 'neighbor', 'required')]
     attributes.append(('chameleon', chameleon_attribute_fixture()))
     attributes.extend((kind if subject == 'attribute' else subject+'-'+kind, compound_attribute_fixture(kind, subject))
@@ -372,6 +1081,19 @@ if __name__ == '__main__':
     attributes.extend((name, wildcard_attribute_fixture(explicit))
                       for name, explicit in (('wildcard-only', False), ('wildcard-with-explicit', True)))
     attributes.append(('implicit-wildcard-only', wildcard_attribute_fixture(False, implicit_only=True)))
+    row, files, cases = cross_branch_lists_fixture()
+    attributes.append(('cross-branch-lists', (row, files, [(document, valid) for document, valid, _ in cases])))
+    attributes.append(('duration', duration_fixture()))
+    attributes.append(('calendar-facets', calendar_facets_fixture()))
+    attributes.append(('local-simple-content', local_simple_content_fixture()))
+    attributes.append(('direct-calendar-bounds', direct_calendar_bounds_fixture()))
+    attributes.append(('union-instance-type', union_instance_type_fixture()))
+    attributes.extend((kind+'-'+context+'-without-fixed', calendar_without_fixed_fixture(kind, context))
+                      for kind in ('duration', 'dateTime') for context in ('direct', 'inline'))
+    attributes.extend((kind+'-max-inclusive-without-fixed', calendar_without_fixed_fixture(kind, inclusive_max=True))
+                      for kind in ('duration', 'dateTime'))
+    attributes.append(('duration-default-without-fixed', calendar_without_fixed_fixture('duration', default=True)))
+    attributes.extend(effective_value_and_projection_fixtures())
     payload = dict(pack=pack(*fixture()), cases=[(xml(body), expected) for body, expected in CASES],
                    attributes={kind: dict(pack=pack(row, files), cases=cases)
                                for kind, (row, files, cases) in attributes},

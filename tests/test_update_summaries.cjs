@@ -70,18 +70,39 @@ const result=summarizeUpdates(catalog,id=>fields[id]);
   'same-batch':'later',tie:'ready',other:'first'});
  assert.equal(results[4].comparison.counts.changed,1,'a separately supplied ZIP is compared against the prior ready edition');
  assert.equal(results[2].previous_revision_id,'later','the raw history is preserved');
+ assert.equal(results[1].chronological_previous_revision_id,'replayed');
+ assert.equal(results[2].chronological_previous_revision_id,'first');
+ assert.equal(results[7].chronological_previous_revision_id,null,'the other contour is only a comparison baseline');
  const fallback=summarizeUpdates({
   revisions:[revision('doc','prod',{ready:false}),revision('ready'),revision('other','test')],
   updates:[observed('doc',1),observed('other',2),observed('ready',3,'doc')]
  },()=>fields.p1)[2];
  assert.equal(fallback.comparison.left,'other');
  assert.equal(fallback.comparison.basis,'other_contour');
+ assert.equal(fallback.chronological_previous_revision_id,'doc','the journal preserves the preceding document-only edition');
+ const untimed=summarizeUpdates({revisions:[revision('first'),revision('second')],updates:[
+  {...event('first'),snapshot:'first'}, {...event('second','first'),snapshot:'second'}
+ ]},()=>fields.p1);
+ assert.equal(untimed[1].chronological_previous_revision_id,'first','append order breaks an unknown date tie');
+ const mixed=summarizeUpdates({revisions:[revision('later'),revision('undated'),revision('replayed')],updates:[
+  observed('later',4), {...event('undated','later'),snapshot:'unknown'}, observed('replayed',3,'undated')
+ ]},()=>fields.p1);
+ assert.deepEqual(mixed.map(row=>row.chronological_previous_revision_id),['replayed','later',null]);
+ assert.equal(mixed[2].comparison.status,'no_baseline','an undated replay neighbor cannot create a predecessor cycle');
  const grouped=summarizeUpdates({
   revisions:[revision('first'),revision('later'),revision('alias','prod',{display_revision_id:'later'})],
   updates:[observed('first',1),observed('later',4,'first'),observed('alias',3,'later')]
  },()=>fields.p1);
  assert.equal(grouped[1].comparison.left,'first','an earlier alias of the current schema cannot be its own baseline');
  assert.equal(grouped[2].comparison.left,'first');
+ const aliasReplay=summarizeUpdates({
+  revisions:[revision('main'),revision('second'),revision('alias','prod',{display_revision_id:'main'}),revision('third')],
+  updates:[observed('main',4),observed('second',3,'main'),observed('alias',1,'second'),observed('third',5,'alias')]
+ },()=>fields.p1);
+ assert.deepEqual(aliasReplay.filter(row=>row.chronological_first).map(row=>[
+  row.revision_id,row.chronological_previous_revision_id,row.comparison.left
+ ]),[['second','alias','alias'],['alias',null,null],['third','second','second']],
+ 'a schema group is anchored at its earliest proven appearance, even when an alias is restored later');
  const importReport=summarizeUpdates({
   revisions:[revision('later'),revision('alias','prod',{display_revision_id:'later'})],
   updates:[observed('later',3),observed('alias',4,'later')]
@@ -135,6 +156,31 @@ assert.equal(unavailable.comparison.status,'unavailable');assert.equal(unavailab
 assert.throws(()=>summarizeUpdates({revisions:[revision('p1','test'),revision('p2')],updates:[event('p2','p1')]},id=>fields[id]),/contour|контур/i);
 const preferred=summarizeUpdates({revisions:[revision('p1'),revision('old-test','test',{listed_now:false,label_date:'31.12.2027'}),revision('t1','test',{label_date:'12.11.2026'})],updates:[{...event('old-test'),snapshot:'old',observed_at:'2026-11-10T00:00:00Z'},{...event('t1'),snapshot:'new',observed_at:'2026-11-12T00:00:00Z'},{...event('p1'),snapshot:'prod',observed_at:'2026-11-13T00:00:00Z'}]},id=>fields[id]||fields.t1)[2];
 assert.equal(preferred.comparison.left,'t1','prefer the latest known counterpart, independently of current membership');
+{
+ const observations=[
+  {...event('late'),snapshot:'late',observed_at:'2026-11-13T03:00:00.000003+03:00'},
+  {...event('early'),snapshot:'early',observed_at:'2026-11-13T00:00:00.000001Z'},
+  {...event('middle'),snapshot:'middle',observed_at:'2026-11-12T20:00:00.000002-04:00'},
+  {...event('same-instant'),snapshot:'equivalent',observed_at:'2026-11-13T00:00:00.000001+00:00'}
+ ];
+ const [late,early]=summarizeUpdates({
+  revisions:[revision('late'),revision('early'),revision('middle','test'),revision('same-instant','test')],
+  updates:observations
+ },()=>[field('root')]);
+ assert.equal(late.chronological_previous_revision_id,'early');
+ assert.equal(early.chronological_previous_revision_id,null);
+ assert.equal(early.comparison.left,'same-instant','only the simultaneous counterpart was known');
+ const [,,middle]=summarizeUpdates({
+  revisions:[revision('late'),revision('early'),revision('middle','test')],
+  updates:observations.slice(0,3)
+ },()=>[field('root')]);
+ assert.equal(middle.comparison.left,'early','the later production observation was still unknown');
+ const [current]=summarizeUpdates({
+  revisions:[revision('late'),revision('early','test'),revision('middle','test')],
+  updates:[observations[0],observations[2],observations[1]]
+ },()=>[field('root')]);
+ assert.equal(current.comparison.left,'middle','the later counterpart wins regardless of append order');
+}
 console.log('Journal summaries verified: counts, direction, same-contour predecessor, cross-contour baseline, zero vs unavailable, stable events.');
 
 for(const [type,a,b] of [['dateTime','2026-11-17T12:00:00.123456789+03:00','2026-11-17T09:00:00.1234567890Z'],['hexBinary','aB','AB'],['base64Binary','QUJD','Q U J D']]){

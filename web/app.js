@@ -5,8 +5,8 @@ const envNames={prod:"Продуктивный",test:"Тестовый"};
 const node=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
 const normalize=s=>String(s||"").toLocaleLowerCase("ru").replaceAll("ё","е");
 if(catalog.checked_at){
- const dateText=new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',dateStyle:'short',timeStyle:'short'}).format(new Date(catalog.checked_at));
- document.querySelector('header small').textContent='Каталог проверен '+dateText+' МСК';
+ const checkedAt=journalDate(catalog.checked_at_utc??catalog.checked_at);
+ if(checkedAt)document.querySelector('header small').textContent='Каталог проверен '+observationDate(checkedAt);
 }
 const messages=new Map(),documentSourceRows=new Set(catalog.document_sources||[]);
 for(const r of [...catalog.revisions,...catalog.registry,...documentSourceRows]){
@@ -288,7 +288,21 @@ function renderVersions(m,env){
   const revisions=m.revisions.filter(r=>r.environment===e).sort(newestEditionFirst);
   const sourceKey=row=>JSON.stringify([row.document_sha256,row.document_url||row.source,row.listed_now!==false]);
   const represented=new Set(revisions.flatMap(r=>editionSources(r).map(sourceKey)));
-  const documents=m.documents.filter(r=>r.environment===e&&!represented.has(sourceKey(r)));
+  const documents=m.documents.filter(r=>r.environment===e);
+  const diagnostics=new Map();
+  for(const source of documents){
+   if(!source.schema_diagnostic||!represented.has(sourceKey(source)))continue;
+   const key=sourceKey(source);
+   if(!diagnostics.has(key))diagnostics.set(key,[]);
+   diagnostics.get(key).push(source);
+  }
+  const standalone=new Map();
+  for(const source of documents){
+   if(represented.has(sourceKey(source)))continue;
+   const identity=JSON.stringify([source.document_sha256,source.document_url||source.source]);
+   if(!standalone.has(identity))standalone.set(identity,[]);
+   standalone.get(identity).push(source);
+  }
   const documented=new Set(documents.map(sourceKey));
   const rows=m.rows.filter(r=>r.environment===e&&!documented.has(sourceKey(r)));
   appendRegistrySources(panel,rows);
@@ -300,18 +314,42 @@ function renderVersions(m,env){
     const schemaControl=schemaExportControl(r);if(schemaControl)card.append(schemaControl);
     if(r.validation_download)card.append(anchor('Проверить XML локально',route(m.number,e,r.revision_id)+'&validate=1','open validation-link'));
     appendEditionSources(card,r);
+    const issues=editionSources(r).flatMap(source=>diagnostics.get(sourceKey(source))||[]);
+    for(const source of new Set(issues))card.append(renderSchemaDiagnostic(source));
     if(!r.listed_now&&r.source_type!=="manual")card.append(node("p","meta","Редакция сохранена в истории"));
     panel.append(card)
    }
   }else{
    if(rows.length||!documents.length)panel.append(node("p","",rows.length?"Доступно описание в перечне сообщений. Дерево схемы пока не сопоставлено.":"В собранных источниках этого контура сообщение не найдено."));
   }
-  for(const source of documents){
+  for(const observations of standalone.values()){
+   const source=observations.find(row=>row.listed_now!==false)||observations[0];
    const card=node("div","card document-source");
-   card.append(node("strong","","Спецификация без дерева XSD"),node("p","",source.schema_reason));
+   card.append(node("strong","","Спецификация без дерева XSD"));
+   const rendered=new Set();
+   for(const observation of observations){
+    const detail=observation.schema_diagnostic;
+    const historical=source.listed_now!==false&&observation.listed_now===false;
+    const key=JSON.stringify([observation.schema_reason,detail?.code,detail?.root,detail?.namespace,
+     detail?.declared_namespace,historical]);
+    if(rendered.has(key))continue;
+    rendered.add(key);
+    const diagnostic=detail?renderSchemaDiagnostic(observation):node("p","",observation.schema_reason);
+    if(historical)diagnostic.prepend(document.createTextNode("Архивное наблюдение · "));
+    card.append(diagnostic);
+   }
    appendEditionSources(card,source);panel.append(card);
   }
  }
+}
+function renderSchemaDiagnostic(source){
+ const unspecified=source.schema_diagnostic?.code==='module_binding_unmatched'&&
+  source.schema_diagnostic.declared_namespace===null;
+ const qname=source.namespace?'{' + source.namespace + '}' + source.root:
+  source.root+(unspecified?' (пространство имён не указано)':' (без пространства имён)');
+ const paragraph=node("p","schema-diagnostic");
+ paragraph.append(node("code","",qname),document.createTextNode(" — "+source.schema_reason));
+ return paragraph;
 }
 function editionUrl(revision,field){return 'editions/'+revision.revision_id+'.html'+(revision.viewer_sha256?'?v='+revision.viewer_sha256.slice(0,16):'')+(field?'#'+new URLSearchParams({field}):'')}
 function openValidationField(revision,path){
@@ -338,6 +376,13 @@ function renderRoute(){
  if(p.has("import")){$("import-help").hidden=false;document.title="Ручная загрузка · СЭДО";return}
  if(p.has("updates")){$("updates").hidden=false;$("crumbs").append(node("span","","/"),node("span","","Журнал обновлений"));document.title="Журнал обновлений · СЭДО";renderUpdates(p);return}
  if(!number){document.title="Справочник СЭДО";$("catalog").hidden=false;renderMessages();return}
+ const revoked=catalog.revoked_revisions?.find(r=>r.number===number&&r.revision_id===rev&&r.environment===env);
+ if(revoked){
+  document.title="Редакция отозвана · СЭДО";$("error").hidden=false;
+  $("error").replaceChildren(node("h1","","Редакция отозвана"),node("p","",revoked.schema_reason),
+   documentDownload(revoked),anchor("Посмотреть доступные редакции",route(number,env)));
+  return;
+ }
  const m=messages.get(number);
  if(!m){document.title="Сообщение не найдено · СЭДО";$("error").hidden=false;$("error").replaceChildren(node("h1","","Сообщение не найдено"),node("p","","Выберите сообщение из каталога."));return}
  $("crumbs").append(node("span","","/"),anchor(number,route(number,env)));

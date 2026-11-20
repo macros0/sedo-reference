@@ -67,22 +67,28 @@
   if(value&&Array.isArray(value.richText)&&value.richText.every(v=>typeof v.text==="string")){const text=value.richText.map(v=>v.text).join("");return trim?text.trim():text}
   throw Error("Нужен текст без формул, чисел и ошибок Excel.");
  }
+ const pairKey=p=>JSON.stringify([p.beforePath,p.afterPath]);
+ const pairPaths=p=>({beforePath:p.beforePath,afterPath:p.afterPath});
+ const reversePaths=p=>({beforePath:p.afterPath,afterPath:p.beforePath});
+ const reverseProposal=p=>({...p,...reversePaths(p),parentBeforePath:p.parentAfterPath,parentAfterPath:p.parentBeforePath});
+ const parentKey=p=>JSON.stringify([p.parentBeforePath,p.parentAfterPath]);
  function orient(record,left,right){
   if(record.left===left.revision_id&&record.right===right.revision_id)return {pairs:record.pairs,reversed:false};
-  if(record.left===right.revision_id&&record.right===left.revision_id)return {pairs:record.pairs.map(p=>({beforePath:p.afterPath,afterPath:p.beforePath,comment:p.comment||""})),reversed:true};
+  if(record.left===right.revision_id&&record.right===left.revision_id)return {pairs:record.pairs.map(p=>({...reversePaths(p),comment:p.comment||""})),reversed:true};
   throw Error("Книга относится к другой паре редакций. Откройте указанные в ней редакции или выгрузите новую книгу.");
  }
- function validatePair(p,old,next){
-  if(!p||typeof p.beforePath!=="string"||typeof p.afterPath!=="string"||typeof p.comment!=="string"||!old.has(p.beforePath)||!next.has(p.afterPath))throw Error("Не найден XML-путь соответствия: "+String(p?.beforePath)+" → "+String(p?.afterPath));
+ function validatePair(p,old,next,requireComment=true){
+  if(!p||typeof p.beforePath!=="string"||typeof p.afterPath!=="string"||(requireComment&&typeof p.comment!=="string")||!old.has(p.beforePath)||!next.has(p.afterPath))throw Error("Не найден XML-путь соответствия: "+String(p?.beforePath)+" → "+String(p?.afterPath));
  }
- function validatePairs(pairs,before,after){
+ function validatePairs(pairs,before,after,requireComment=true){
   if(!Array.isArray(pairs)||pairs.length>MAX_ROWS)throw Error("Некорректный список соответствий.");
   const old=new Set(before.map(f=>f.path)),next=new Set(after.map(f=>f.path));
-  for(const p of pairs)validatePair(p,old,next);
+  for(const p of pairs)validatePair(p,old,next,requireComment);
  }
- function suggestDescendants(pairs,before,after,deleted={}){
+ function suggestDescendants(pairs,before,after,deleted={},dismissed=[]){
   validatePairs(pairs,before,after);
   const deletedBefore=new Set(deleted.before),deletedAfter=new Set(deleted.after);
+  const dismissedKeys=new Set(dismissed.map(pairKey));
   // A confirmed child block can start its own mapping below a deleted ancestor.
   const excluded=(path,parent,paths)=>{
    for(let candidate=path;candidate.length>parent.length;candidate=candidate.slice(0,candidate.lastIndexOf("/"))){
@@ -91,7 +97,7 @@
    return false;
   };
   const oldParents=new Map(),newParents=new Map(),unique=new Map(),targets=new Set(after.map(f=>f.path));
-  for(const pair of pairs){const key=JSON.stringify([pair.beforePath,pair.afterPath]);if(!unique.has(key))unique.set(key,{...pair,key})}
+  for(const pair of pairs){const key=pairKey(pair);if(!unique.has(key))unique.set(key,{...pair,key})}
   const add=(map,path,pair)=>{if(!map.has(path))map.set(path,[]);map.get(path).push(pair)};
   for(const pair of unique.values()){add(oldParents,pair.beforePath,pair);add(newParents,pair.afterPath,pair)}
   const nearest=(path,parents)=>{
@@ -106,7 +112,7 @@
    for(const parent of nearest(field.path,oldParents)){
     const suffix=field.path.slice(parent.beforePath.length),afterPath=parent.afterPath+suffix;
     if(!targets.has(afterPath)||excluded(field.path,parent.beforePath,deletedBefore)||excluded(afterPath,parent.afterPath,deletedAfter))continue;
-    const key=JSON.stringify([field.path,afterPath]);if(seen.has(key))continue;seen.add(key);
+    const key=JSON.stringify([field.path,afterPath]);if(seen.has(key)||dismissedKeys.has(key))continue;seen.add(key);
     if(seen.size+unique.size>MAX_ROWS)throw Error("Слишком много предложений. Уточните родительские соответствия или разбейте книгу.");
     const proposal={beforePath:field.path,afterPath,relativePath:suffix.slice(1),parentBeforePath:parent.beforePath,parentAfterPath:parent.afterPath,comment:"Сопоставлено по одинаковому относительному пути внутри родительского блока."};
     if(newParents.has(afterPath)){conflicts.push({...proposal,reason:"Путь «Стало» уже сопоставлен вручную."});continue}
@@ -124,8 +130,39 @@
   }
   return {suggestions,conflicts};
  }
+ function parseDismissals(metadata,ids,oldPaths,newPaths,reversed){
+  const section=Excel.dismissalSection,dismissed=[],seen=new Set();
+  let scope,count;
+  metadata.eachRow((row,number)=>{
+   const label=row.getCell(1).value;
+   if(label===section.scope){
+    if(scope)throw Error("Редакции в списке исключённых пар указаны несколько раз.");
+    scope={left:cellText(row.getCell(2)),right:cellText(row.getCell(3))};
+   }else if(label===section.format){
+    if(count!==undefined||cellText(row.getCell(2))!==section.version)throw Error("Некорректная версия списка исключённых пар.");
+    count=row.getCell(3).value;
+    if(!Number.isInteger(count)||count<0||count>section.maxRows)throw Error("Некорректное число строк в списке исключённых пар.");
+   }else if(label===section.pair){
+    if(dismissed.length>=section.maxRows)throw Error("В списке исключённых пар больше 50000 строк.");
+    try{
+     const paths={beforePath:cellText(row.getCell(2),false),afterPath:cellText(row.getCell(3),false)};
+     const pair=reversed?reversePaths(paths):paths;
+     validatePair(pair,oldPaths,newPaths,false);
+     const key=pairKey(pair);
+     if(seen.has(key))throw Error("Повтор исключённой пары.");
+     seen.add(key);
+     dismissed.push(pair);
+    }catch(error){throw Error("Список исключённых пар, строка "+number+": "+error.message)}
+   }
+  });
+  if(scope||count!==undefined||dismissed.length){
+   if(scope?.left!==ids.left||scope?.right!==ids.right)throw Error("Редакции списка исключённых пар не совпадают с редакциями книги.");
+   if(dismissed.length!==count)throw Error("Число строк в списке исключённых пар не совпадает с указанным в книге.");
+  }
+  return dismissed;
+ }
  function parseWorkbook(workbook,options){
-  const report={pairs:[],candidates:[],deleted:{before:[],after:[]},warnings:[],errors:[],ignored:0,duplicates:0,reversed:false};
+  const report={pairs:[],candidates:[],deleted:{before:[],after:[]},dismissed:[],warnings:[],errors:[],ignored:0,duplicates:0,reversed:false};
   try{
    const metadata=workbook.getWorksheet("О выгрузке"),sheet=workbook.getWorksheet("Сопоставление");
    if(!metadata||!sheet)throw Error("Нужна книга справочника с листами «Сопоставление» и «О выгрузке».");
@@ -147,6 +184,7 @@
    }
    if(!headerRow)throw Error("Не найдены заголовки таблицы сопоставления.");
    const seen=new Map(),oldPaths=new Set(options.before.map(f=>f.path)),newPaths=new Set(options.after.map(f=>f.path));
+   report.dismissed=parseDismissals(metadata,ids,oldPaths,newPaths,report.reversed);
    metadata.eachRow((row,number)=>{
     if(row.getCell(1).value!=="Исключённый путь «Стало»")return;
     const path=cellText(row.getCell(3)),paths=report.reversed?oldPaths:newPaths;
@@ -189,15 +227,16 @@
      seen.set(key,pair);report.pairs.push(pair);
     }catch(error){report.errors.push("Строка "+row+": "+error.message)}
    }
-  }catch(error){report.errors.push(error.message);report.pairs=[];report.candidates=[]}
+  }catch(error){report.errors.push(error.message);report.pairs=[];report.candidates=[];report.dismissed=[]}
   return report;
  }
- function preparePreview(report,before,after){
+ function preparePreview(report,before,after,dismissed=[]){
   if(report.errors?.length)return {suggestions:[],conflicts:[],excelCount:0,descendantCount:0};
   const pairs=report.pairs||[],candidates=report.candidates||[];validatePairs(candidates,before,after);
-  const confirmed=new Set(pairs.map(p=>JSON.stringify([p.beforePath,p.afterPath]))),pending=new Map();
+  const exclusions=[...dismissed,...(report.dismissed??[])];
+  const unavailable=new Set([...pairs,...exclusions].map(pairKey)),pending=new Map();
   for(const candidate of candidates){
-   const key=JSON.stringify([candidate.beforePath,candidate.afterPath]);if(confirmed.has(key))continue;
+   const key=pairKey(candidate);if(unavailable.has(key))continue;
    const existing=pending.get(key);
    if(existing){
     try{existing.comment=mergeComments(existing.comment,candidate.comment)}
@@ -212,7 +251,7 @@
    for(let slash=path.lastIndexOf("/");slash>=minLength;slash=path.lastIndexOf("/",slash-1)){if(roots.has(path.slice(0,slash)))return true;if(slash===0)break}
    return false;
   };
-  const available=p=>!inside(p.beforePath,oldRoots,p.parentBeforePath.length)&&!inside(p.afterPath,newRoots,p.parentAfterPath.length),relative=suggestDescendants(pairs,before,after,report.deleted);
+  const available=p=>!inside(p.beforePath,oldRoots,p.parentBeforePath.length)&&!inside(p.afterPath,newRoots,p.parentAfterPath.length),relative=suggestDescendants(pairs,before,after,report.deleted,exclusions);
   const descendants=relative.suggestions.filter(available).map(p=>({...p,origin:"relative",defaultSelected:true}));
   if(pairs.length+pending.size+descendants.length>MAX_ROWS)throw Error("Слишком много предложений. Разбейте книгу на несколько наборов.");
   return {suggestions:[...pending.values(),...descendants],conflicts:relative.conflicts.filter(available),excelCount:pending.size,descendantCount:descendants.length};
@@ -238,6 +277,13 @@
   }
   return result;
  }
+ function mergeDismissed(base=[],draft=[],current=[],pairs){
+  const previous=new Set(base.map(pairKey)),proposed=new Map(draft.map(p=>[pairKey(p),p])),latest=new Map(current.map(p=>[pairKey(p),p]));
+  for(const key of previous)if(!proposed.has(key))latest.delete(key);
+  for(const [key,pair] of proposed)if(!previous.has(key))latest.set(key,pair);
+  for(const pair of pairs)latest.delete(pairKey(pair));
+  return [...latest.values()];
+ }
  function checkedDeleted(deleted,options){
   for(const side of ["before","after"]){
    const paths=deleted[side],known=new Set(options[side].map(f=>f.path));
@@ -252,9 +298,9 @@
    excluded[side]=new Set((addedByOther?.[side]||[]).filter(path=>!known.has(path)));
   }
   if(!excluded.before.size&&!excluded.after.size)return;
-  const key=p=>JSON.stringify([p.beforePath,p.afterPath]),original=new Map(basePairs.map(p=>[key(p),p.comment]));
+  const original=new Map(basePairs.map(p=>[pairKey(p),p.comment]));
   for(const pair of updatedPairs){
-   if(original.has(key(pair))&&original.get(key(pair))===pair.comment)continue;
+   if(original.has(pairKey(pair))&&original.get(pairKey(pair))===pair.comment)continue;
    for(const side of ["before","after"]){
     let path=pair[side+"Path"];
     while(path){
@@ -265,7 +311,7 @@
   }
  }
  function mergeDraft(base,draft,current){
-  const key=p=>JSON.stringify([p.beforePath,p.afterPath]),map=pairs=>new Map(pairs.map(p=>[key(p),p])),equal=(a,b)=>a?.comment===b?.comment&&!!a===!!b;
+  const map=pairs=>new Map(pairs.map(p=>[pairKey(p),p])),equal=(a,b)=>a?.comment===b?.comment&&!!a===!!b;
   const original=map(base),local=map(draft),latest=map(current),changes=next=>[...new Set([...original.keys(),...next.keys()])].filter(k=>!equal(original.get(k),next.get(k)));
   const ours=changes(local),theirs=changes(latest),conflicts=new Map(),sources=new Map(),targets=new Map();
   const add=(index,path,key)=>{if(!index.has(path))index.set(path,[]);index.get(path).push(key)};
@@ -285,27 +331,122 @@
   for(const k of ours){if(local.has(k))latest.set(k,local.get(k));else latest.delete(k)}
   return [...latest.values()];
  }
+ function withoutAutomatic(snapshot,automatic=snapshot.automatic??[]){
+  if(!automatic.length)return snapshot;
+  const comments=new Map(automatic.map(p=>[pairKey(p),p.comment]));
+  return {...snapshot,pairs:snapshot.pairs.filter(p=>comments.get(pairKey(p))!==p.comment)};
+ }
  function createStore(getStorage){
-  const lastStored=new Map(),sessionOnly=new Map(),failedReads=new Set(),compatibilityNotices=new Map();
-  function readRecord(raw,options,notice=""){
-   if(!raw)return {pairs:[],notice};
+  const lastStored=new Map(),sessionOnly=new Map(),compatibilityNotices=new Map();
+  const damaged="Сохранённые соответствия повреждены или не подходят к схемам и не применены. Сбросьте их или загрузите Excel снова.";
+  const unavailable="Хранилище браузера недоступно. Соответствия будут действовать в текущем сеансе.";
+  function readRecord(raw,options){
    const record=JSON.parse(raw);
    if(record.version!==1||!Array.isArray(record.pairs))throw Error("Неизвестный формат сохранённых соответствий.");
    const current=orient(record,options.left,options.right);validatePairs(current.pairs,options.before,options.after);
    const deleted=record.deleted||{before:[],after:[]};
-   return {pairs:current.pairs,deleted:checkedDeleted(current.reversed?{before:deleted.after,after:deleted.before}:deleted,options),notice};
+   const storedDismissed=record.dismissed??[],dismissed=current.reversed?storedDismissed.map(reversePaths):storedDismissed;
+   validatePairs(dismissed,options.before,options.after,false);
+   return {pairs:current.pairs,deleted:checkedDeleted(current.reversed?{before:deleted.after,after:deleted.before}:deleted,options),dismissed};
   }
+  function checkedRecord(raw,options){
+   const left=options.left.revision_id;
+   if(raw===null)return {raw,left,state:"missing",snapshot:{pairs:[]}};
+   try{return {raw,left,state:"valid",snapshot:readRecord(raw,options)}}
+   catch{return {raw,left,state:"invalid",snapshot:{pairs:[]}}}
+  }
+  function readStored(key,options){
+   const cached=lastStored.get(key);
+   let storage,raw;
+   try{storage=getStorage();raw=storage.getItem(key)??null}
+   catch{return {record:cached,notice:unavailable}}
+   const record=cached?.raw===raw?cached:checkedRecord(raw,options);
+   lastStored.set(key,record);
+   return {storage,record,notice:record.state==="invalid"?damaged:compatibilityNotices.get(key)||""};
+  }
+  function orientSnapshot(record,options){
+   if(!record)return {pairs:[]};
+   const {pairs,deleted,dismissed}=record.snapshot;
+   const reversed=record.left!==options.left.revision_id;
+   const orientPair=reversed?reversePaths:pairPaths;
+   return {pairs:pairs.map(p=>({...orientPair(p),comment:p.comment})),
+    ...(deleted?{deleted:{before:[...(reversed?deleted.after:deleted.before)],after:[...(reversed?deleted.before:deleted.after)]}}:{}),
+    ...(dismissed?{dismissed:dismissed.map(orientPair)}:{})};
+  }
+  function readSession(pending,options){
+   const orientProposal=pending.left===options.left.revision_id?p=>({...p}):reverseProposal;
+   const automatic=pending.automatic.map(orientProposal);
+   return {...orientSnapshot(pending,options),notice:pending.notice,automatic,pending:true,
+    storageBaseline:storageBaseline(pending.baseline)};
+  }
+  const storageBaseline=record=>record?{state:record.state,raw:record.raw}:null;
   function mergeChanges(base,draft,current){
-   const pairs=mergeDraft(base.pairs,draft.pairs,current.pairs);
-   checkDeletionConflicts(base.pairs,draft.pairs,base.deleted,current.deleted,draft.deleted);
+   const selected=draft.pairs;
+   // Only removing a pair from the original selection is an explicit deletion.
+   // Dismissing a proposal changes exclusions and preserves a concurrent pair.
+   const pairs=mergeDraft(base.pairs,selected,current.pairs);
+   checkDeletionConflicts(base.pairs,selected,base.deleted,current.deleted,draft.deleted);
    checkDeletionConflicts(base.pairs,current.pairs,base.deleted,draft.deleted,current.deleted);
-   return {pairs,deleted:mergeDeleted(base.deleted,draft.deleted,current.deleted)};
+   const deleted=mergeDeleted(base.deleted,draft.deleted,current.deleted);
+   const dismissed=mergeDismissed(base.dismissed,draft.dismissed,current.dismissed,pairs);
+   return {pairs,deleted,dismissed};
+  }
+  function publish(options,key,stored,baseline,{pairs,deleted,dismissed},proposals=[],reset=false){
+   // Check both the session and durable result against the same final parents
+   // and exclusions. Pending descendants cannot establish parents themselves.
+   let automatic=[];
+   if(proposals.length){
+    const eligible=new Map(suggestDescendants(pairs,options.before,options.after,deleted,dismissed).suggestions.map(p=>[pairKey(p),parentKey(p)]));
+    automatic=proposals.filter(p=>eligible.get(pairKey(p))===parentKey(p));
+    pairs=[...pairs,...automatic.map(p=>({...pairPaths(p),comment:p.comment}))];
+   }
+   validatePairs(pairs,options.before,options.after);checkedDeleted(deleted,options);validatePairs(dismissed,options.before,options.after,false);
+   const left=options.left.revision_id,right=options.right.revision_id;
+   const snapshot=orientSnapshot({left,snapshot:{pairs,deleted,dismissed}},options);
+   const clear=reset&&!pairs.length&&!deleted.before.length&&!deleted.after.length&&!dismissed.length;
+   if(stored.storage){
+    try{
+     if(clear){stored.storage.removeItem(key);lastStored.set(key,checkedRecord(null,options))}
+     else{
+      const raw=JSON.stringify({version:1,left,right,pairs,deleted,...(dismissed.length?{dismissed}:{})});
+      stored.storage.setItem(key,raw);
+      lastStored.set(key,{raw,left,state:"valid",snapshot});
+     }
+     sessionOnly.delete(key);return "";
+    }catch{/* Keep the validated snapshot available for the next transaction. */}
+   }
+   const notice=clear?"Соответствия сброшены только в текущем сеансе. Повторите сохранение, когда хранилище станет доступно.":
+    "Не удалось сохранить соответствия в браузере. Они действуют только в текущем сеансе; сохраните Excel для повторной загрузки.";
+   sessionOnly.set(key,{snapshot,notice,left,automatic,baseline,reset});return notice;
+  }
+  function commit(options,opened,prepare){
+   return transaction(options,(key,stored,pending)=>{
+    if(!prepare&&!pending)return "";
+    const expected=pending?[opened,pending.baseline??null]:[opened];
+    const record=stored.record;
+    if(record?.state==="invalid"&&expected.some(base=>base!==undefined&&
+      (base?.state!=="invalid"||base.raw!==record.raw))){
+     throw Error("Сохранённые соответствия изменились и повреждены. Исправьте или сбросьте запись в другой вкладке и повторите сохранение.");
+    }
+    const current=pending?readSession(pending,options):orientSnapshot(record,options);
+    let {snapshot,proposals}=prepare?prepare(current):{snapshot:withoutAutomatic(current),proposals:current.automatic};
+    // A failed write saves the rebased operation together with the durable
+    // record it incorporated, so that retry can merge just the new changes.
+    const baseline=pending&&!stored.storage?pending.baseline:record;
+    if(pending&&stored.storage&&pending.baseline?.raw!==baseline.raw){
+     snapshot=mergeChanges(orientSnapshot(pending.baseline,options),snapshot,orientSnapshot(baseline,options));
+    }
+    return publish(options,key,stored,baseline,snapshot,proposals,pending?.reset);
+   });
   }
   function transaction(options,update){
    const key=storageKey(options.left,options.right),locks=globalThis.navigator?.locks;
    // Every normal write (apply, reset and card undo) shares this lock. Check
    // navigation after acquisition; keep the final read and write synchronous.
-   const run=()=>{if(options.isCurrent&&!options.isCurrent())throw Error("Выбранная пара редакций изменилась. Откройте предпросмотр снова.");return update()};
+   const run=()=>{
+    if(options.isCurrent&&!options.isCurrent())throw Error("Выбранная пара редакций изменилась. Откройте предпросмотр снова.");
+    return update(key,readStored(key,options),sessionOnly.get(key));
+   };
    if(locks?.request){compatibilityNotices.delete(key);return locks.request(key,run)}
    compatibilityNotices.set(key,"Для одновременной работы в нескольких вкладках нужен современный браузер. Применяйте изменения по очереди.");
    return run();
@@ -314,54 +455,55 @@
    load(options){
     const key=storageKey(options.left,options.right);
     const pending=sessionOnly.get(key);
-    let raw=pending?pending.raw:lastStored.get(key),notice=pending?.notice||compatibilityNotices.get(key)||"";
-    if(!pending){
-     try{raw=getStorage().getItem(key);lastStored.set(key,raw);failedReads.delete(key)}
-     catch{failedReads.add(key);notice="Хранилище браузера недоступно. Соответствия будут действовать в текущем сеансе."}
-    }
-    try{return readRecord(raw,options,notice)}
-    catch{return {pairs:[],notice:"Сохранённые соответствия повреждены или не подходят к схемам и не применены. Сбросьте их или загрузите Excel снова."}}
+    if(pending)return readSession(pending,options);
+    const stored=readStored(key,options);
+    return {...orientSnapshot(stored.record,options),notice:stored.notice,storageBaseline:storageBaseline(stored.record)};
    },
-   save(options,pairs,deleted={before:[],after:[]}){
-    validatePairs(pairs,options.before,options.after);checkedDeleted(deleted,options);
+   save(options,pairs,deleted={before:[],after:[]},dismissed=[]){
     const key=storageKey(options.left,options.right);
-    const encode=()=>JSON.stringify({version:1,left:options.left.revision_id,right:options.right.revision_id,pairs,deleted});
-    const retain=()=>{
-     const notice="Не удалось сохранить соответствия в браузере. Они действуют только в текущем сеансе; сохраните Excel для повторной загрузки.";
-     sessionOnly.set(key,{raw:encode(),notice});return notice;
-    };
-    let storage,stored;
-    try{storage=getStorage();stored=storage.getItem(key)}catch{return retain()}
-    // A session-only draft and another tab may both have advanced since the
-    // last durable baseline. Reconcile in the caller's current orientation.
-    if((sessionOnly.has(key)||failedReads.has(key))&&lastStored.get(key)!==stored){
-     const base=readRecord(lastStored.get(key),options),current=readRecord(stored,options);
-     ({pairs,deleted}=mergeChanges(base,{pairs,deleted},current));
-     validatePairs(pairs,options.before,options.after);checkedDeleted(deleted,options);
-    }
-    lastStored.set(key,stored);failedReads.delete(key);
-    const raw=encode();
-    try{storage.setItem(key,raw)}catch{return retain()}
-    lastStored.set(key,raw);sessionOnly.delete(key);return "";
+    const stored=readStored(key,options);
+    return publish(options,key,stored,stored.record,{pairs,deleted,dismissed});
    },
-   async apply(options,base,pairs,deletions){
+   async apply(options,base,pairs,deletions,{removed=[],dismissed=removed,automatic=[],adopted=[],baseAutomatic,baseDismissed,opened}={}){
     validatePairs(base,options.before,options.after);validatePairs(pairs,options.before,options.after);
-    return transaction(options,()=>{
-     const current=this.load(options),merged=mergeChanges({pairs:base,deleted:deletions?.base},{pairs,deleted:deletions?.draft},current);
-     return this.save(options,merged.pairs,merged.deleted);
+    validatePairs(dismissed,options.before,options.after,false);
+    const key=storageKey(options.left,options.right),pending=sessionOnly.get(key);
+    const basis=opened===undefined?storageBaseline(pending?pending.baseline:lastStored.get(key)):opened;
+    return commit(options,basis,current=>{
+     const latestDismissed=baseDismissed??current.dismissed??[];
+     const nextDismissed=[...new Map([...latestDismissed,...dismissed].map(p=>[pairKey(p),pairPaths(p)])).values()];
+     // Merge explicit edits before testing any inference against its parent.
+     // A preview can predate a session edit made in the reverse comparison.
+     const inherited=baseAutomatic??current.automatic??[];
+     const selected=new Map([...inherited,...automatic].map(p=>[pairKey(p),p]));
+     for(const pair of adopted)selected.delete(pairKey(pair));
+     const draftAutomatic=pairs.flatMap(pair=>{
+      const proposal=selected.get(pairKey(pair));
+      return proposal?.comment===pair.comment?[proposal]:[];
+     });
+     const proposals=new Map((current.automatic??[]).map(p=>[pairKey(p),p]));
+     for(const pair of inherited)proposals.delete(pairKey(pair));
+     for(const pair of draftAutomatic)proposals.set(pairKey(pair),pair);
+     const baseline=withoutAutomatic({pairs:base,deleted:deletions?.base,dismissed:latestDismissed},inherited);
+     const draft=withoutAutomatic({pairs,deleted:deletions?.draft,dismissed:nextDismissed},draftAutomatic);
+     const merged=mergeChanges(baseline,draft,withoutAutomatic(current));
+     return {snapshot:merged,proposals:[...proposals.values()]};
     });
    },
+   async retry(options){
+    return commit(options);
+   },
    async reset(options,discardDrafts){
-    return transaction(options,()=>{
-     const notice=this.clear(options);
+    return transaction(options,(key,stored)=>{
+     const notice=publish(options,key,stored,stored.record,{pairs:[],deleted:{before:[],after:[]},dismissed:[]},[],true);
      discardDrafts?.();
      return notice;
     });
    },
    clear(options){
     const key=storageKey(options.left,options.right);
-    try{getStorage().removeItem(key);lastStored.set(key,null);failedReads.delete(key);sessionOnly.delete(key);return ""}
-    catch{const notice="Соответствия сброшены в текущем сеансе. Хранилище браузера недоступно; после перезапуска может потребоваться повторный сброс.";sessionOnly.set(key,{raw:null,notice});return notice}
+    const stored=readStored(key,options);
+    return publish(options,key,stored,stored.record,{pairs:[],deleted:{before:[],after:[]},dismissed:[]},[],true);
    }
   };
  }
@@ -375,47 +517,75 @@
  }
  // Routing to a field remounts the comparison. Keep its unapplied draft in
  // this page session, independently for each ordered pair of original IDs.
- function mount(container,options,saved,onChange){
+ function mount(container,options,comparisonSaved,onChange,{openSaved=false,onSavedChange=()=>{}}={}){
   const draftKey=JSON.stringify([options.left.revision_id,options.right.revision_id]),retained=draftSessions.get(draftKey);
+  let saved=comparisonSaved;
   const el=(tag,cls,value)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(value!==undefined)e.textContent=value;return e},button=(cls,value)=>{const e=el("button",cls,value);e.type="button";return e};
   const panel=el("section","mapping-panel"),status=el("p","meta"),preview=el("div","mapping-preview"),controls=el("div","mapping-controls"),notice=el("div","mapping-draft-notice");notice.hidden=true;
   panel.append(el("h2","","Ручные соответствия"),el("p","meta","Редактируйте пары в браузере или загрузите Excel. Правки остаются в черновике до кнопки «Применить и обновить сравнение». Файлы обрабатываются в браузере."));status.setAttribute("role","status");
   const restoreStatus=()=>{status.textContent="Применено пар: "+saved.pairs.length+(saved.notice?". "+saved.notice:"")};restoreStatus();
   const input=el("input","mapping-file");input.type="file";input.accept=".xlsx";input.hidden=true;
-  const hasSaved=saved.pairs.length||saved.deleted?.before.length||saved.deleted?.after.length;
-  const upload=button("swap","Загрузить сопоставления из Excel"),reset=button("swap","Сбросить сопоставления"),add=button("swap mapping-add","Добавить соответствие");reset.disabled=!hasSaved&&!saved.notice;
-  let active=null,savedSuggest=null,operation=null;
+  const hasSaved=()=>saved.pairs.length||saved.deleted?.before.length||saved.deleted?.after.length;
+  const canReset=()=>hasSaved()||saved.dismissed?.length||saved.notice;
+  const upload=button("swap","Загрузить сопоставления из Excel"),reset=button("swap","Сбросить сопоставления"),add=button("swap mapping-add","Добавить соответствие");reset.disabled=!canReset();
+  const retry=button("swap mapping-retry","Повторить сохранение в браузере");
+  let active=null,savedSuggest=null,operation=null,externalChange=false;
   const canStart=()=>!operation&&options.isCurrent();
   const owns=session=>options.isCurrent()&&draftSessions.get(draftKey)===session;
   const transactionOptions=session=>({...options,isCurrent:()=>owns(session)});
+  function updateRetry(){retry.hidden=!saved.pending||!!active;retry.disabled=!!operation}
   function setOperation(next){
    operation=next;
    upload.disabled=add.disabled=!!next;
-   reset.disabled=!!next||(!hasSaved&&!saved.notice);
+   reset.disabled=!!next||!canReset();
    if(savedSuggest)savedSuggest.disabled=!!next;
    preview.inert=!!next;
    notice.inert=!!next&&next!=="apply";
-   active?.setApplying(next==="apply");
+   active?.setApplying(next==="apply"||next==="undo");
+   updateRetry();
+   if(!next&&externalChange&&options.isCurrent())refreshSaved();
   }
-  function createSession(report,fromWorkbook,baselineSaved=store.load(options)){
-   const baseline=baselineSaved.pairs.map(p=>({...p}));
-   const prepared=preparePreview(report,options.before,options.after),entries=[...report.pairs.map(p=>({...p,origin:"confirmed",selected:true})),...prepared.suggestions.map(p=>({...p,selected:p.defaultSelected}))];
-   const draft=Drafts.create({before:options.before,after:options.after,savedPairs:baseline,savedDeleted:baselineSaved.deleted,entries,deleted:report.deleted,suggest:suggestDescendants});
+  function refreshSaved(){
+   if(operation){externalChange=true;return}
+   externalChange=false;
+   const latest=store.load(options);
+   if(JSON.stringify(saved)===JSON.stringify(latest))return;
+   saved=latest;
+   reset.disabled=!canReset();
+   updateSavedSuggest();
+   updateRetry();
+   if(active)active.refreshSaved();else restoreStatus();
+   onSavedChange(saved);
+  }
+  function createSession(report,fromWorkbook,baselineSaved){
+   const baseline=baselineSaved.pairs.map(p=>({...p})),dismissed=baselineSaved.dismissed;
+   const savedAutomatic=baselineSaved.automatic??[];
+   const explicit=fromWorkbook?report:withoutAutomatic(report,savedAutomatic);
+   const prepared=preparePreview(explicit,options.before,options.after,dismissed);
+   const entries=[
+    ...explicit.pairs.map(p=>({...p,origin:"confirmed",selected:true,adopted:fromWorkbook})),
+    ...prepared.suggestions.map(p=>({...p,selected:p.defaultSelected}))
+   ];
+   const draft=Drafts.create({before:options.before,after:options.after,savedPairs:baseline,savedDeleted:baselineSaved.deleted,savedAutomatic,
+    savedDismissed:dismissed,importedDismissed:report.dismissed,entries,deleted:report.deleted,suggest:suggestDescendants});
    return {draft,report,fromWorkbook,saved:baselineSaved,form:null};
   }
   function showPreview(session){
    const {report,fromWorkbook,draft,saved:baseline}=session;
    active?.destroy();
    draftSessions.set(draftKey,session);
-   active=Editor.mount({container:preview,notice,status,options,report,draft,session,manualLabel:fromWorkbook?"Из Excel":"Ранее применено",panelAdd:add,onCancel:()=>{
+   active=Editor.mount({container:preview,notice,status,options,report,draft,session,manualLabel:fromWorkbook?"Из Excel":"Ранее применено",panelAdd:add,getSavedCount:()=>saved.pairs.length,getSavedNotice:()=>saved.notice,getPending:()=>saved.pending,onCancel:()=>{
     if(operation||!owns(session))return;
-    draftSessions.delete(draftKey);active.destroy();active=null;preview.replaceChildren();saved=store.load(options);restoreStatus();
+    draftSessions.delete(draftKey);active.destroy();active=null;preview.replaceChildren();refreshSaved();restoreStatus();updateRetry();
    },onApply:async pairs=>{
     if(operation)return;
     if(!owns(session))throw Error("Выбранная пара редакций изменилась. Откройте предпросмотр снова.");
     setOperation("apply");
     try{
-     await store.apply(transactionOptions(session),baseline.pairs,pairs,{base:baseline.deleted,draft:report.deleted});
+     await store.apply(transactionOptions(session),baseline.pairs,pairs,{base:baseline.deleted,draft:report.deleted},{
+      dismissed:draft.dismissedPairs,automatic:draft.automaticPairs,adopted:draft.adoptedPairs,
+      baseAutomatic:baseline.automatic??[],baseDismissed:baseline.dismissed??[],opened:baseline.storageBaseline
+     });
      if(!owns(session))return;
      draftSessions.delete(draftKey);
      const result=await onChange();
@@ -423,11 +593,29 @@
      active.destroy();
     }finally{setOperation(null)}
    }});
+   updateRetry();
   }
   function showSavedPreview(){
-   saved=store.load(options);
+   refreshSaved();
    const report={pairs:saved.pairs,deleted:saved.deleted,candidates:[],errors:[],warnings:[],ignored:0,duplicates:0,reversed:false};
    showPreview(createSession(report,false,saved));
+  }
+  const hasUnapplied=()=>!!operation||(active?.hasUnapplied()??false)||sessionHasEdits(draftSessions.get(draftKey));
+  async function undoPair(pair,refresh){
+   if(!options.isCurrent())throw Error("Выбранная пара редакций изменилась. Откройте сравнение снова.");
+   if(hasUnapplied())throw Error("Сначала примените или отмените черновик соответствий выше, чтобы не потерять правки.");
+   const session=draftSessions.get(draftKey),baseline=saved.pairs;
+   const remaining=baseline.filter(p=>p.beforePath!==pair.beforePath||p.afterPath!==pair.afterPath);
+   setOperation("undo");
+   try{
+    await store.apply(transactionOptions(session),baseline,remaining,undefined,{
+     dismissed:[pair],baseAutomatic:saved.automatic??[],baseDismissed:saved.dismissed??[],opened:saved.storageBaseline
+    });
+    if(!owns(session))return;
+    draftSessions.delete(draftKey);
+    if(await refresh(!!active)===false)throw Error("Пара отменена, но обновить сравнение не удалось. Откройте его снова.");
+    active?.destroy();
+   }finally{setOperation(null)}
   }
   upload.onclick=()=>{if(canStart())input.click()};
   reset.onclick=async()=>{
@@ -455,22 +643,40 @@
    }catch(e){if(options.isCurrent())status.textContent="Не удалось обновить сравнение. "+e.message}
    finally{setOperation(null)}
   };
+  retry.onclick=async()=>{
+   if(!canStart()||!saved.pending||active)return;
+   setOperation("retry");
+   try{
+    await store.retry(transactionOptions(undefined));
+    if(owns(undefined)&&await onChange()===false)throw Error("Не удалось обновить результат. Повторите открытие сравнения.");
+   }catch(e){if(owns(undefined)){restoreStatus();status.textContent+=" "+e.message}}
+   finally{setOperation(null);if(owns(undefined))refreshSaved()}
+  };
   add.onclick=()=>{if(canStart()){if(!active)showSavedPreview();active.openEditor()}};
-  controls.append(upload,reset,input,add);panel.append(controls,status,preview);container.append(notice,panel);
-  if(hasSaved){
-   try{const available=suggestDescendants(saved.pairs,options.before,options.after,saved.deleted),view=button("swap mapping-suggest",available.suggestions.length||available.conflicts.length?"Предпросмотр вложенных тегов ("+available.suggestions.length+")":"Просмотреть сопоставления");
-   view.onclick=()=>{if(canStart()){try{if(!active)showSavedPreview()}catch(e){status.textContent="Не удалось открыть черновик. "+e.message}}};savedSuggest=view;controls.append(view)}catch(e){status.textContent+=" Не удалось подготовить предложения. "+e.message}
+  controls.append(upload,reset,input,add,retry);panel.append(controls,status,preview);container.append(notice,panel);updateRetry();
+  function updateSavedSuggest(){
+   if(!hasSaved()){savedSuggest?.remove();savedSuggest=null;return}
+   try{
+    const available=suggestDescendants(withoutAutomatic(saved).pairs,options.before,options.after,saved.deleted,saved.dismissed);
+    const label=available.suggestions.length||available.conflicts.length?"Предпросмотр вложенных тегов ("+available.suggestions.length+")":"Просмотреть сопоставления";
+    if(savedSuggest){savedSuggest.textContent=label;return}
+    savedSuggest=button("swap mapping-suggest",label);
+    savedSuggest.onclick=()=>{if(canStart()){try{if(!active)showSavedPreview()}catch(e){status.textContent="Не удалось открыть черновик. "+e.message}}};
+    controls.append(savedSuggest);
+   }catch(e){status.textContent+=" Не удалось подготовить предложения. "+e.message}
   }
+  updateSavedSuggest();
   input.onchange=async()=>{
    const file=input.files?.[0];input.value="";
    if(!file||!canStart())return;
-   const session=draftSessions.get(draftKey),previousStatus=status.textContent;
+   refreshSaved();
+   const baseline=saved,session=draftSessions.get(draftKey),previousStatus=status.textContent;
    setOperation("import");status.textContent="Читаем Excel…";
    try{
     const report=await readFile(file,options);
     if(!owns(session))return;
     if(report.errors.length)throw Error(report.errors.join(" "));
-    const replacement=createSession(report,true);
+    const replacement=createSession(report,true,baseline);
     if(sessionHasEdits(session)&&!globalThis.confirm("Заменить текущий черновик сопоставлений данными из Excel? Неприменённые правки будут потеряны.")){
      status.textContent=previousStatus;return;
     }
@@ -479,7 +685,8 @@
    finally{setOperation(null)}
   };
   if(retained)showPreview(retained);
-  return {hasUnapplied:()=>!!operation||(active?.hasUnapplied()??false)};
+  else if(openSaved)showSavedPreview();
+  return {hasUnapplied,undoPair,refreshSaved};
  }
  return {preflightArchive,suggestDescendants,parseWorkbook,preparePreview,storageKey,createStore,store,readFile,mount};
 });

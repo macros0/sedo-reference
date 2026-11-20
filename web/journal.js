@@ -1,15 +1,34 @@
 "use strict";
 function updatesRoute(number,env){return new URLSearchParams(Object.fromEntries(Object.entries({updates:"1",message:number,env}).filter(([,v])=>v))).toString()}
+function journalDate(value){
+ if(value===null||value===undefined||value==="")return null;
+ const date=new Date(value);
+ return Number.isFinite(date.getTime())?date:null;
+}
 function observationDate(value,dayOnly=false){
- if(!value)return "Дата обнаружения не сохранена";
+ const date=journalDate(value);
+ if(!date)return "Дата обнаружения не сохранена";
  const options=dayOnly?{dateStyle:"long"}:{dateStyle:"short",timeStyle:"short"};
- return new Intl.DateTimeFormat("ru-RU",{timeZone:"Europe/Moscow",...options}).format(new Date(value))+(dayOnly?"":" МСК");
+ return new Intl.DateTimeFormat("ru-RU",{timeZone:"Europe/Moscow",...options}).format(date)+(dayOnly?"":" МСК");
 }
 function journalMoscowDay(value){
- if(value===null||value===undefined||value==="")return null;
- const date=new Date(value);if(!Number.isFinite(date.getTime()))return null;
+ const date=journalDate(value);
+ if(!date)return null;
  const parts=Object.fromEntries(new Intl.DateTimeFormat("en",{timeZone:"Europe/Moscow",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date).map(p=>[p.type,p.value]));
  return parts.year+"-"+parts.month+"-"+parts.day;
+}
+function journalObservation(event){
+ const precise=Object.hasOwn(event,"observed_at_us");
+ const date=journalDate(precise?event.observed_at_utc:event.observed_at);
+ if(!date)return {instant:null,date:null,dateTime:null};
+ const instant=precise&&/^-?\d+$/.test(event.observed_at_us)?BigInt(event.observed_at_us):BigInt(date.getTime())*1000n;
+ return {instant,date,dateTime:precise?event.observed_at_utc:date.toISOString()};
+}
+function newestObservationFirst(a,b){
+ if(a.instant===b.instant)return 0;
+ if(a.instant===null)return 1;
+ if(b.instant===null)return -1;
+ return a.instant>b.instant?-1:1;
 }
 function journalValidDay(value){
  if(!/^\d{4}-\d{2}-\d{2}$/.test(value||""))return false;
@@ -34,7 +53,10 @@ function journalEventSources(event,revision){return event.event_type==="source_a
 function renderUpdates(params){
  const section=$("updates");section.replaceChildren(node("h1","","Журнал обновлений"),node("p","","Появление редакций и добавление источников к существующим схемам. Время обнаружения указано по Москве; дата документа СФР показана отдельно."),node("p","meta","«Первичное наполнение» — редакции, уже существовавшие при первом сборе. Повторные проверки без новых схем или источников в журнал не добавляются."));
  const revisions=new Map(catalog.revisions.map(r=>[r.revision_id,r]));
- const entries=[...(catalog.schema_updates||catalog.updates||[]),...(catalog.source_updates||[])].map(event=>({event,r:revisions.get(event.revision_id)})).filter(x=>x.r).sort((a,b)=>(Date.parse(b.event.observed_at)||0)-(Date.parse(a.event.observed_at)||0)||Number(a.r.number)-Number(b.r.number)||a.r.environment.localeCompare(b.r.environment));
+ const entries=[...(catalog.schema_updates||catalog.updates||[]),...(catalog.source_updates||[])]
+  .map(event=>({event,r:revisions.get(event.revision_id),...journalObservation(event)}))
+  .filter(x=>x.r)
+  .sort((a,b)=>newestObservationFirst(a,b)||Number(a.r.number)-Number(b.r.number)||a.r.environment.localeCompare(b.r.environment));
  const filters=node("div","searchbar journal-filters"),queryLabel=node("label","","Номер, название или версия"),query=node("input");query.type="search";query.id="updates-query";query.placeholder="Например, 10110 или 3.0.4";query.value=params.has("q")?params.get("q"):params.get("message")||"";queryLabel.append(query);
  const envLabel=node("label","","Контур"),env=node("select");env.id="updates-env";for(const [value,text] of [["","Все контуры"],["prod","Продуктивный"],["test","Тестовый"]])env.add(new Option(text,value));env.value=params.get("env")||"";envLabel.append(env);filters.append(queryLabel,envLabel);section.append(filters);
  const periodRow=node("div","journal-period"),periodLabel=node("label","","Период обнаружения"),period=node("select");period.id="updates-period";
@@ -51,10 +73,10 @@ function renderUpdates(params){
   if(range.error){count.textContent="Проверьте выбранный период";list.replaceChildren();return}
   const terms=normalize(query.value).split(/\s+/).filter(Boolean);
   const exactNumber=/^\d+$/.test(query.value.trim())&&messages.has(query.value.trim())?query.value.trim():null;
-  const visible=entries.filter(({event,r})=>journalDateMatches(event.observed_at,range)&&(!onlyChanges.checked||(event.comparison?.status==="ready"&&["added","removed","changed"].some(key=>event.comparison.counts[key]>0)))&&(!exactNumber||r.number===exactNumber)&&(!env.value||r.environment===env.value)&&terms.every(t=>normalize([r.number,r.title,event.event_type==="source_added"?"Добавлен источник":"",...journalEventSources(event,r).flatMap(s=>[s.title,s.document_version,s.label_date,documentName(s),s.manual_source?.label]),envNames[r.environment],observationDate(event.observed_at)].join(" ")).includes(t)));
+  const visible=entries.filter(({event,r,date})=>journalDateMatches(date,range)&&(!onlyChanges.checked||(event.comparison?.status==="ready"&&["added","removed","changed"].some(key=>event.comparison.counts[key]>0)))&&(!exactNumber||r.number===exactNumber)&&(!env.value||r.environment===env.value)&&terms.every(t=>normalize([r.number,r.title,event.event_type==="source_added"?"Добавлен источник":"",...journalEventSources(event,r).flatMap(s=>[s.title,s.document_version,s.label_date,documentName(s),s.manual_source?.label]),envNames[r.environment],observationDate(date)].join(" ")).includes(t)));
   count.textContent="Событий в журнале · "+visible.length;list.replaceChildren();let day=null;
-  for(const {event,r} of visible){
-   const nextDay=observationDate(event.observed_at,true);
+  for(const {event,r,date,dateTime} of visible){
+   const nextDay=observationDate(date,true);
    if(nextDay!==day){list.append(node("h2","journal-day",nextDay));day=nextDay}
    const addedSource=event.event_type==="source_added",sources=journalEventSources(event,r);
    const card=node("article","update-card");card.dataset.revision=r.revision_id;card.dataset.eventType=addedSource?"source_added":"schema";card.dataset.event=event.event_id||r.revision_id;
@@ -62,7 +84,7 @@ function renderUpdates(params){
    const heading=node("h3");heading.append(anchor(r.number+" · "+(addedSource?"Источник существующей редакции":sources.length>1?"Редакция схемы · источников: "+sources.length:"Версия документа "+(sources[0]?.document_version||"не указана")),route(r.number,r.environment,r.ready?r.revision_id:undefined)));card.append(heading);
    for(const title of new Set(sources.map(source=>source.title||r.title)))card.append(node("p","",title));
    appendEditionSources(card,{...r,edition_sources:sources});
-   const time=node("time","meta",event.observed_at?"Обнаружено: "+observationDate(event.observed_at):observationDate(null));if(event.observed_at)time.dateTime=event.observed_at;card.append(time,node("p","meta","Редакция "+r.revision_id.slice(0,8)));
+   const time=node("time","meta",dateTime?"Обнаружено: "+observationDate(date):observationDate(null));if(dateTime)time.dateTime=dateTime;card.append(time,node("p","meta","Редакция "+r.revision_id.slice(0,8)));
    if(addedSource){
     card.append(node("p","meta",r.ready?"XML-схема не изменилась. Добавлен новый документ-источник.":"Добавлен источник документа. Дерево XSD для этой редакции недоступно."));
     const links=node("div","journal-links");links.append(anchor(r.ready?"Открыть существующую редакцию":"Открыть карточку сообщения",route(r.number,r.environment,r.ready?r.revision_id:undefined)));card.append(links);list.append(card);continue;
@@ -91,4 +113,4 @@ function renderUpdates(params){
  reset.onclick=()=>{query.value="";env.value="";period.value="all";from.value="";to.value="";onlyChanges.checked=false;history.replaceState(null,"","#"+updatesRoute());draw()};
  query.oninput=change;env.onchange=change;onlyChanges.onchange=change;period.onchange=change;from.onchange=change;to.onchange=change;draw();
 }
-if(typeof module!=="undefined"&&module.exports)module.exports={journalDateRange,journalDateMatches};
+if(typeof module!=="undefined"&&module.exports)module.exports={journalDateRange,journalDateMatches,journalObservation,newestObservationFirst};

@@ -10,6 +10,7 @@ import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
+from observation_time import observation_clock
 
 REPO = 'macros0/sedo-reference'
 STATUS_BRANCH = 'automation-status'
@@ -21,6 +22,11 @@ def utcnow():
     return datetime.now(timezone.utc).isoformat()
 
 
+def with_public_times(record, *fields):
+    return record | {name + '_utc': observation_clock(record[name])['observed_at_utc']
+                     for name in fields if record.get(name) is not None}
+
+
 def run_info(run):
     if not run:
         return dict(state='unknown')
@@ -28,9 +34,10 @@ def run_info(run):
              'success' if run.get('conclusion') == 'success' else
              'unknown' if run.get('conclusion') == 'unknown' else
              'cancelled' if run.get('conclusion') in ('cancelled', 'skipped', 'neutral') else 'failure')
-    return dict(state=state, run_id=run['id'], url=run.get('html_url'),
+    info = dict(state=state, run_id=run['id'], url=run.get('html_url'),
                 run_attempt=run.get('run_attempt', 1), started_at=run.get('run_started_at') or run.get('created_at'),
                 finished_at=run.get('updated_at') if state not in ('processing', 'unknown') else None)
+    return with_public_times(info, 'started_at', 'finished_at')
 
 
 def targets_check(target, check):
@@ -143,10 +150,13 @@ def build_status(source, checks, pages, reports, legacy_catalogs, now=None, conf
                     publication['state'] = 'unknown'
     independent = latest_independent_page(pages, publication.get('run_id'))
     previous = latest_success(pages)
-    return dict(format=1, generated_at=now or utcnow(), collector_source=collector_source, sourcecraft=sc,
-                github=dict(check=check_info, versions=versions, publication=publication,
-                            independent_publication=run_info(independent),
-                            last_successful_publication=run_info(previous)))
+    sc['contours'] = {env: with_public_times(contour, 'observed_at') for env, contour in sc['contours'].items()}
+    status = dict(format=1, generated_at=now or utcnow(), collector_source=collector_source,
+                  sourcecraft=with_public_times(sc, 'started_at', 'finished_at', 'last_success_at'),
+                  github=dict(check=check_info, versions=with_public_times(versions, 'checked_at'),
+                              publication=publication, independent_publication=run_info(independent),
+                              last_successful_publication=run_info(previous)))
+    return with_public_times(status, 'generated_at')
 
 def latest_success(runs):
     return max((run for run in runs if run_info(run)['state'] == 'success'),

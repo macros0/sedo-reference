@@ -1,0 +1,16 @@
+{
+  "number": "42",
+  "environment": "prod",
+  "revision_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "root": "request",
+  "namespace": null,
+  "schema_path": "main.xsd",
+  "format": 1,
+  "entrypoint": "message.xsd",
+  "fields": [],
+  "field_namespaces": [],
+  "files": {
+    "message.xsd": "PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPHhzOnNjaGVtYSB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiPjx4czppbmNsdWRlIHNjaGVtYUxvY2F0aW9uPSJzY2hlbWFzLzAwMl90eXBlcy54c2QiLz48eHM6ZWxlbWVudCBuYW1lPSJyZXF1ZXN0Ij48eHM6Y29tcGxleFR5cGU+PHhzOnNlcXVlbmNlPjx4czplbGVtZW50IG5hbWU9InJlY29yZCIgbWF4T2NjdXJzPSJ1bmJvdW5kZWQiPjx4czpjb21wbGV4VHlwZT48eHM6c2VxdWVuY2U+PHhzOmVsZW1lbnQgbmFtZT0idmFsdWUiIHR5cGU9IkNob2ljZSIvPjwveHM6c2VxdWVuY2U+PC94czpjb21wbGV4VHlwZT48L3hzOmVsZW1lbnQ+PC94czpzZXF1ZW5jZT48L3hzOmNvbXBsZXhUeXBlPjwveHM6ZWxlbWVudD48L3hzOnNjaGVtYT4=",
+    "schemas/002_types.xsd": "PD94bWwgdmVyc2lvbj0nMS4wJyBlbmNvZGluZz0nVVRGLTgnPz4KPHhzOnNjaGVtYSB4bWxuczp4cz0iaHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEiPjx4czpzaW1wbGVUeXBlIG5hbWU9IkNob2ljZSI+PHhzOnVuaW9uIG1lbWJlclR5cGVzPSJ4czpJRCB4czpzdHJpbmciLz48L3hzOnNpbXBsZVR5cGU+PC94czpzY2hlbWE+"
+  }
+}

@@ -1,6 +1,6 @@
 "use strict";
 const comparisonData=new Map();
-let comparisonRequest=0;
+let comparisonRequest=0,stopWatchingMappings=()=>{};
 function validComparisonTree(fields){
  if(!fields.length)return false;
  const linked=new Set(),paths=new Set();
@@ -98,6 +98,7 @@ function formatDifference(value,key){
  return String(value);
 }
 async function renderComparison(m,params,applied=false,view=null){
+ stopWatchingMappings();
  const comparisonHash=location.hash,request=++comparisonRequest,section=$("comparison");section.replaceChildren(node("h1","","Сравнение сообщения "+m.number),node("p","",title(m)));
  const defaults=comparisonDefaults(m),leftId=params.get("left")||defaults.left,rightId=params.get("right")||defaults.right;
  const ready=comparisonPool(m),left=comparisonRevision(ready,leftId),right=comparisonRevision(ready,rightId);
@@ -124,31 +125,38 @@ async function renderComparison(m,params,applied=false,view=null){
   const [a,b]=await Promise.all([loadComparisonData(leftId),loadComparisonData(rightId)]);
   if(request!==comparisonRequest||!new URLSearchParams(location.hash.slice(1)).has("compare"))return false;
   const mappingOptions={left,right,before:a,after:b,isCurrent:()=>request===comparisonRequest&&location.hash===comparisonHash};
-  const saved=SedoMapping.store.load(mappingOptions),mappings=saved.pairs;
-  const results=SedoCompare.compare(a,b,mappings);state.remove();
-  const counts={added:0,removed:0,changed:0,mapped:0};results.forEach(r=>counts[r.status]++);
-  const summaries=node("div","compare-counts");for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])summaries.append(node("span",key,text+" · "+counts[key]));if(mappings.length)summaries.append(node("span","mapped","Ручных соответствий · "+mappings.length));section.append(summaries);
+  let saved=SedoMapping.store.load(mappingOptions),results,indexedResults,undoFailure;
+  state.remove();
+  const summaries=node("div","compare-counts");section.append(summaries);
   const unresolvedUnion=a.some(SedoCompare.hasUnresolvedUnionValues)||b.some(SedoCompare.hasUnresolvedUnionValues);
   const unresolvedNotation=a.some(SedoCompare.hasUnresolvedNotationValues)||b.some(SedoCompare.hasUnresolvedNotationValues);
   const unresolvedList=a.some(SedoCompare.hasUnresolvedListValues)||b.some(SedoCompare.hasUnresolvedListValues);
   if(unresolvedUnion)section.append(node("p","meta",SedoCompare.unionCoverageNote));
   if(unresolvedNotation)section.append(node("p","meta",SedoCompare.notationCoverageNote));
   if(unresolvedList)section.append(node("p","meta",SedoCompare.listCoverageNote));
-  if(applied){const feedback=node("p","mapping-applied-feedback",(applied==="cancelled"?"Сопоставление отменено. Сохранено пар: ":"Сравнение обновлено. Применено пар: ")+mappings.length);feedback.setAttribute("role","status");section.append(feedback)}
-  const mappingPanel=SedoMapping.mount(section,mappingOptions,saved,()=>renderComparison(m,params,true));let cancelling=false;
+  const feedback=applied?node("p","mapping-applied-feedback",(applied==="cancelled"?"Сопоставление отменено. Сохранено пар: ":"Сравнение обновлено. Применено пар: ")+saved.pairs.length):null;
+  if(feedback){feedback.setAttribute("role","status");section.append(feedback)}
+  const mappingHost=node("div");section.append(mappingHost);
   const exports=node("div","comparison-export"),exportButton=node("button","open","Выгрузить Excel для сопоставления"),exportState=node("span","meta");exportButton.type="button";exportState.setAttribute("role","status");
   exportButton.onclick=async()=>{
    exportButton.disabled=true;exportState.textContent="Готовим книгу…";
-   try{await SedoComparisonExport.download({left,right,before:a,after:b,results,mappings,deleted:saved.deleted,baseURL:new URL(".",location.href).href});exportState.textContent="Книга передана браузеру для скачивания."}
+   try{
+    const {pairs,deleted,dismissed}=SedoMapping.store.load(mappingOptions);
+    const results=SedoCompare.compare(a,b,pairs);
+    await SedoComparisonExport.download({left,right,before:a,after:b,results,mappings:pairs,deleted,dismissed,baseURL:new URL(".",location.href).href});
+    exportState.textContent="Книга передана браузеру для скачивания.";
+   }
    catch(error){exportState.textContent="Не удалось выгрузить Excel. "+error.message}
    finally{exportButton.disabled=false}
   };
   exports.append(exportButton,exportState,node("p","meta","Вся выбранная пара редакций: исходные поля, изменения и таблица ручного сопоставления. Поиск и фильтры не ограничивают выгрузку."));section.append(exports);
-  if(!results.length){section.append(node("p","empty",(unresolvedUnion||unresolvedNotation||unresolvedList?"":"Деревья совпадают. ")+"Изменений в тегах, ограничениях и описаниях не найдено."));if(applied)summaries.scrollIntoView?.({block:"start",behavior:"smooth"});return true}
+  const resultsHost=node("div");section.append(resultsHost);
   const filters=node("div","searchbar"),searchLabel=node("label","","Поиск по изменениям"),search=node("input");search.type="search";search.placeholder="Тег, путь, описание или ограничение";searchLabel.append(search);
-  const kindLabel=node("label","","Вид изменения"),kind=node("select");for(const [value,text] of [["","Все изменения"],["added","Добавлено"],["removed","Удалено"],["changed","Изменено"],["mapped","Сопоставлено без изменений"]])kind.add(new Option(text,value));kindLabel.append(kind);filters.append(searchLabel,kindLabel);section.append(filters);
+  const kindLabel=node("label","","Вид изменения"),kind=node("select");for(const [value,text] of [["","Все изменения"],["added","Добавлено"],["removed","Удалено"],["changed","Изменено"],["mapped","Сопоставлено без изменений"]])kind.add(new Option(text,value));kindLabel.append(kind);filters.append(searchLabel,kindLabel);
   if(view){search.value=view.search;kind.value=view.kind}
-  const count=node("p","meta");count.setAttribute("role","status");const list=node("div","differences");section.append(count,list);
+  const count=node("p","meta");count.setAttribute("role","status");const list=node("div","differences");
+  const detachedUndoError=node("p","mapping-errors");
+  detachedUndoError.setAttribute("role","alert");detachedUndoError.hidden=true;
   function fieldText(field){
    if(!field)return "";
    // Formatters quote values for display and can escape literal XSD characters.
@@ -156,14 +164,28 @@ async function renderComparison(m,params,applied=false,view=null){
     ...(field.facets||[]).flat(),...(field.patternGroups||[]).flat(),...Object.entries(field.flags||{}).flat(),
     ...(field.values||[]).flat(),...(field.alternatives||[]).map(fieldText),fieldText(field.listItem)].join(" ");
   }
-  const indexedResults=results.map(result=>{
-   const changes=result.changes.map(({key,label,before,after})=>({label,before:formatDifference(before,key),after:formatDifference(after,key)}));
-   const terms=[result.path,result.beforePath,result.afterPath,result.comment,fieldText(result.before),fieldText(result.after),...changes.flatMap(c=>[c.label,c.before,c.after])];
-   return {result,changes,text:normalize(terms.join(" "))};
-  });
+  function refreshComparison(){
+   results=SedoCompare.compare(a,b,saved.pairs);
+   const counts={added:0,removed:0,changed:0,mapped:0};results.forEach(r=>counts[r.status]++);
+   summaries.replaceChildren();
+   for(const [key,text] of [["added","Добавлено"],["removed","Удалено"],["changed","Изменено"]])summaries.append(node("span",key,text+" · "+counts[key]));
+   if(saved.pairs.length)summaries.append(node("span","mapped","Ручных соответствий · "+saved.pairs.length));
+   indexedResults=results.map(result=>{
+    const changes=result.changes.map(({key,label,before,after})=>({label,before:formatDifference(before,key),after:formatDifference(after,key)}));
+    const terms=[result.path,result.beforePath,result.afterPath,result.comment,fieldText(result.before),fieldText(result.after),...changes.flatMap(c=>[c.label,c.before,c.after])];
+    return {result,changes,text:normalize(terms.join(" "))};
+   });
+   if(!results.length){
+    resultsHost.replaceChildren(detachedUndoError,node("p","empty",(unresolvedUnion||unresolvedNotation||unresolvedList?"":"Деревья совпадают. ")+"Изменений в тегах, ограничениях и описаниях не найдено."));
+    return;
+   }
+   if(filters.parentNode!==resultsHost)resultsHost.replaceChildren(detachedUndoError,filters,count,list);
+   draw();
+  }
   function draw(){
    const terms=normalize(search.value).split(/\s+/).filter(Boolean);
    const visible=indexedResults.filter(({result,text})=>(!kind.value||result.status===kind.value)&&terms.every(t=>text.includes(t)));
+   let undoErrorDisplayed=false;
    count.textContent="Показано изменений · "+visible.length;list.replaceChildren();
    for(const {result:r,changes} of visible){
     const card=node("article","difference "+r.status),head=node("div","difference-head");head.append(node("span","badge",({added:"Добавлено",removed:"Удалено",changed:"Изменено",mapped:"Сопоставлено без изменений"})[r.status]),node("code","",r.manual&&r.beforePath!==r.afterPath?r.beforePath+" → "+r.afterPath:r.path));if(r.manual)head.append(node("span","badge mapped","Ручное соответствие"));card.append(head);if(r.comment)card.append(node("p","mapping-comment",r.comment));
@@ -186,30 +208,45 @@ async function renderComparison(m,params,applied=false,view=null){
     if(r.before)links.append(anchor("Поле в «Было»",route(left.number,left.environment,leftId,r.before?.path||r.path)));
     if(r.after)links.append(anchor("Поле в «Стало»",route(right.number,right.environment,rightId,r.after?.path||r.path)));
     if(r.manual){
-     const undo=node("button","swap mapping-undo","Отменить сопоставление"),error=node("p","mapping-undo-error");undo.type="button";error.setAttribute("role","alert");error.hidden=true;
+     const key=JSON.stringify([r.beforePath,r.afterPath]),message=undoFailure?.key===key?undoFailure.message:"";
+     const undo=node("button","swap mapping-undo","Отменить сопоставление"),error=node("p","mapping-undo-error",message);undo.type="button";error.setAttribute("role","alert");error.hidden=!message;
+     if(message)undoErrorDisplayed=true;
      undo.onclick=async()=>{
-      if(cancelling)return;error.hidden=false;error.textContent="";
-      if(!mappingOptions.isCurrent()){error.textContent="Выбранная пара редакций изменилась. Откройте сравнение снова.";return}
-      if(mappingPanel?.hasUnapplied()){error.textContent="Сначала примените или отмените черновик соответствий выше, чтобы не потерять правки.";return}
-      cancelling=true;undo.disabled=true;
+      if(undo.disabled)return;
+      undoFailure=null;detachedUndoError.hidden=true;error.hidden=false;error.textContent="";undo.disabled=true;
       try{
-       const remaining=mappings.filter(p=>p.beforePath!==r.beforePath||p.afterPath!==r.afterPath);
-       const undoOptions={...mappingOptions,isCurrent:()=>{
-        if(!mappingOptions.isCurrent())return false;
-        if(mappingPanel?.hasUnapplied())throw Error("Сначала примените или отмените черновик соответствий выше, чтобы не потерять правки.");
-        return true;
-       }};
-       await SedoMapping.store.apply(undoOptions,mappings,remaining);
-       const updated=await renderComparison(m,params,"cancelled",{search:search.value,kind:kind.value});
-       if(updated===false)throw Error("Пара отменена, но обновить сравнение не удалось. Откройте его снова.");
-      }catch(e){cancelling=false;undo.disabled=false;error.textContent="Не удалось отменить сопоставление. "+e.message}
+       await mappingPanel.undoPair(r,openSaved=>renderComparison(m,params,"cancelled",{search:search.value,kind:kind.value,openSaved}));
+      }catch(e){
+       if(!mappingOptions.isCurrent())return;
+       undoFailure={key,message:"Не удалось отменить сопоставление. "+e.message};
+       if(error.isConnected)error.textContent=undoFailure.message;
+       else draw();
+      }
+      finally{undo.disabled=false}
      };
      links.append(undo);card.append(error);
     }
     card.append(links);list.append(card);
    }
+   detachedUndoError.hidden=!undoFailure||undoErrorDisplayed;
+   detachedUndoError.textContent=detachedUndoError.hidden?"":undoFailure.message;
   }
-  search.oninput=draw;kind.onchange=draw;draw();if(applied)summaries.scrollIntoView?.({block:"start",behavior:"smooth"});return true;
+  search.oninput=draw;kind.onchange=draw;refreshComparison();
+  const mappingPanel=SedoMapping.mount(mappingHost,mappingOptions,saved,()=>renderComparison(m,params,true),{openSaved:view?.openSaved,onSavedChange:latest=>{
+   saved=latest;feedback?.remove();refreshComparison();
+  }});
+  const storageKey=SedoMapping.storageKey(left,right);
+  const onStorage=event=>{
+   if(mappingOptions.isCurrent()&&(event.key===null||event.key===storageKey))mappingPanel.refreshSaved();
+  };
+  const onNavigate=()=>{if(!mappingOptions.isCurrent())stopWatchingMappings()};
+  globalThis.addEventListener?.("storage",onStorage);
+  globalThis.addEventListener?.("hashchange",onNavigate);
+  stopWatchingMappings=()=>{
+   globalThis.removeEventListener?.("storage",onStorage);
+   globalThis.removeEventListener?.("hashchange",onNavigate);
+  };
+  if(applied)summaries.scrollIntoView?.({block:"start",behavior:"smooth"});return true;
  }catch(error){if(request===comparisonRequest){const message="Сравнение недоступно. "+error.message;if(state.isConnected)state.textContent=message;else{const failure=node("p","empty",message);failure.setAttribute("role","alert");section.append(failure)}}return false}
 }
 

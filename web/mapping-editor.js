@@ -2,7 +2,7 @@
 (function(root,factory){"use strict";const api=factory();if(typeof module==="object"&&module.exports)module.exports=api;else root.SedoMappingEditor=api})(typeof globalThis!=="undefined"?globalThis:this,function(){
  "use strict";
  const normalized=v=>String(v||"").normalize("NFKC").toLocaleLowerCase("ru").replace(/ё/g,"е");
- function mount({container,notice,status,options,report,draft,session,manualLabel,panelAdd,onApply,onCancel}){
+ function mount({container,notice,status,options,report,draft,session,manualLabel,panelAdd,getSavedCount,getSavedNotice=()=>"",getPending,onApply,onCancel}){
   const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e};
   const button=(cls,text)=>{const e=el("button",cls,text);e.type="button";return e};
   const old=new Map(options.before.map(f=>[f.path,f])),next=new Map(options.after.map(f=>[f.path,f]));
@@ -73,19 +73,22 @@
   container.append(el("p","meta","Поиск и фильтр меняют только список. Применяются все отмеченные пары, включая скрытые фильтром."));
   const conflictsHost=el("div","mapping-conflicts-host");container.append(conflictsHost);
   const apply=button("open mapping-apply","Применить и обновить сравнение"),cancel=button("swap mapping-discard","Отменить предпросмотр"),footer=el("div","mapping-controls");footer.append(apply,cancel);container.append(footer,el("p","meta","Правки пока находятся в черновике. Основная кнопка сохранит выбранные пары в браузере и обновит сравнение. Схемы и исходный Excel не изменяются."));
-  function update(){
+  function update({preserveErrors=false}={}){
    const state=draft.summary(),rows=draft.rows,proposed=rows.filter(draft.isProposal),fixed=rows.filter(r=>!draft.isProposal(r)&&r.selected).length;
+   const savedCount=getSavedCount();
    selection.textContent="К применению: подтверждённых пар "+fixed+", предложений "+proposed.filter(r=>r.selected).length+" из "+proposed.length;
-   validation.textContent=state.errors.join("\n");
-   status.textContent="Сохранено пар: "+state.savedCount+". В предпросмотре выбрано: "+state.selectedCount+". Предложено из Excel "+rows.filter(r=>r.origin==="workbook").length+", предложено вложенных "+rows.filter(r=>r.origin==="relative").length+", ошибок "+sourceErrors.length+"."+(report.reversed?" Направление пар развёрнуто.":"");
+   if(!preserveErrors)validation.textContent=state.errors.join("\n");
+   status.textContent="Сохранено пар: "+savedCount+". В предпросмотре выбрано: "+state.selectedCount+". Предложено из Excel "+rows.filter(r=>r.origin==="workbook").length+", предложено вложенных "+rows.filter(r=>r.origin==="relative").length+", ошибок "+sourceErrors.length+"."+(report.reversed?" Направление пар развёрнуто.":"");
    const excluded=(report.deleted?.before.length||0)+(report.deleted?.after.length||0);
    if(excluded)status.textContent+=" Исключено из автосопоставления: "+excluded+".";
-   const unfinished=editorOpen&&formPending(),disabled=busy||unfinished||!!sourceErrors.length||!!state.errors.length||(!rows.length&&!state.savedCount&&!state.dirty);
+   const savedNotice=getSavedNotice();
+   if(savedNotice)status.textContent+=" "+savedNotice;
+   const unfinished=editorOpen&&formPending(),disabled=busy||unfinished||!!sourceErrors.length||!!state.errors.length||(!rows.length&&!state.savedCount&&!state.dirty&&!getPending());
    apply.disabled=topApply.disabled=disabled;apply.textContent="Применить и обновить сравнение ("+state.selectedCount+")";topApply.textContent=busy?"Обновляем сравнение…":"Применить ("+state.selectedCount+")";
    all.disabled=none.disabled=add.disabled=busy||editorOpen;cancel.disabled=busy;
    cancelEdit.hidden=!unfinished;cancelEdit.disabled=busy;
    notice.hidden=!state.dirty&&!unfinished;
-   noticeText.textContent=unfinished?unfinishedMessage(session.form):"Черновик ещё не применён. Сравнение ниже использует "+state.savedCount+" сохранённых пар; в черновике выбрано "+state.selectedCount+". Нажмите «Применить», чтобы обновить результат.";
+   noticeText.textContent=unfinished?unfinishedMessage(session.form):"Черновик ещё не применён. Сравнение ниже использует "+savedCount+" сохранённых пар; в черновике выбрано "+state.selectedCount+". Нажмите «Применить», чтобы обновить результат.";
   }
   function refresh(reset=false){
    redraw(reset);conflictsHost.replaceChildren();const conflicts=draft.conflicts;
@@ -170,6 +173,7 @@
   return {
    openEditor,
    hasUnapplied:()=>editorOpen||draft.summary().dirty,
+   refreshSaved(){if(!closed)update({preserveErrors:true})},
    setApplying(applying){if(!closed&&busy!==applying){busy=applying;refresh()}},
    destroy(){closed=true;notice.hidden=true}
   };

@@ -5,8 +5,8 @@ const records=new Map(),storage={getItem:k=>records.get(k)??null,setItem:(k,v)=>
 let tail=Promise.resolve(),locksTaken=0;
 const locks={request(name,callback){assert.equal(name,'sedo-field-mappings:v1:new:old');locksTaken++;const pending=tail.then(()=>callback());tail=pending.catch(()=>{});return pending}};
 const opts={left:{revision_id:'old'},right:{revision_id:'new'},before:['old/a','old/b','old/c'].map(path=>({path})),after:['new/a','new/b','new/c'].map(path=>({path})),isCurrent:()=>true};
-function tab(useLocks=true){
- const ctx=vm.createContext({document:{createElement:tag=>new Element(tag)},localStorage:storage,navigator:useLocks?{locks}:{},confirm:()=>true});
+function tab(useLocks=true,localStorage=storage){
+ const ctx=vm.createContext({document:{createElement:tag=>new Element(tag)},localStorage,navigator:useLocks?{locks}:{},confirm:()=>true});
  for(const name of ['comparison-export.js','mapping-draft.js','mapping-editor.js','comparison-mapping.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../web',name),'utf8'),ctx);
  const api=ctx.SedoMapping,host=new Element('host');let changes=0,ui;
  const find=cls=>walk(host).filter(e=>e.className.split(' ').includes(cls)),mount=()=>{host.replaceChildren();ui=api.mount(host,opts,api.store.load(opts),async()=>{changes++;return true})};
@@ -14,10 +14,107 @@ function tab(useLocks=true){
  const save=()=>find('mapping-edit-form')[0].onsubmit({preventDefault(){}});
  const add=(beforePath,afterPath,comment='')=>{find('mapping-add')[0].onclick();choose('before',beforePath);choose('after',afterPath);find('mapping-edit-comment')[0].value=comment;save();find('mapping-editor-cancel')[0].onclick()};
  const edit=comment=>{find('mapping-suggest')[0].onclick();find('mapping-edit-row')[0].onclick();find('mapping-edit-comment')[0].value=comment;save();find('mapping-editor-cancel')[0].onclick()};
- return {api,mount,find,add,edit,apply:()=>find('mapping-apply')[0].onclick(),get changes(){return changes},get dirty(){return ui.hasUnapplied()}};
+ return {api,mount,find,add,edit,apply:()=>find('mapping-apply')[0].onclick(),undo:pair=>ui.undoPair(pair,async()=>true),get changes(){return changes},get dirty(){return ui.hasUnapplied()}};
 }
 const pairs=t=>JSON.parse(JSON.stringify(t.api.store.load(opts).pairs));
 (async()=>{
+ for(const reverse of [false,true])for(const failedWrite of [false,true]){
+  const view={...opts,before:['old','old/item'].map(path=>({path})),after:['new','new/item'].map(path=>({path}))};
+  const otherView=reverse?{...view,left:view.right,right:view.left,before:view.after,after:view.before}:view;
+  const orient=pair=>reverse?{beforePath:pair.afterPath,afterPath:pair.beforePath,comment:pair.comment}:pair;
+  const parent={beforePath:'old',afterPath:'new',comment:'Parent'};
+  const child={beforePath:'old/item',afterPath:'new/item',comment:reverse?'':'Confirmed in the other tab'};
+  let raw=null,fail=false;
+  const storage={getItem:()=>raw,setItem:(_key,value)=>{raw=value}};
+  const local=tab().api.createStore(()=>({...storage,setItem(key,value){if(fail){fail=false;throw Error('quota')}storage.setItem(key,value)}}));
+  const remote=tab().api.createStore(()=>storage);
+  local.save(view,[parent]);
+  const preview=local.load(view);
+  if(!failedWrite)await remote.apply(otherView,[orient(parent)],[orient(parent),orient(child)]);
+  fail=failedWrite;
+  await local.apply(view,preview.pairs,[parent],undefined,{removed:[child],opened:preview.storageBaseline});
+  if(failedWrite){
+   assert.equal(local.load(view).pending,true);
+   await remote.apply(otherView,[orient(parent)],[orient(parent),orient(child)]);
+   await local.retry(view);
+  }
+  const saved=remote.load(view);
+  assert.deepEqual(JSON.parse(JSON.stringify(saved.pairs)),[parent,child],'dismissing a proposal must preserve a concurrent confirmed pair');
+  assert.deepEqual(JSON.parse(JSON.stringify(saved.dismissed)),[]);
+  await local.apply(view,saved.pairs,[parent],undefined,{dismissed:[child],opened:saved.storageBaseline});
+  assert.deepEqual(JSON.parse(JSON.stringify(remote.load(view).pairs)),[parent],'removing the same pair after seeing its confirmation must still work');
+ }
+ for(const pending of [false,true]){
+  let raw=null,fail=false,writes=0;
+  const backing={getItem:()=>raw,setItem:(_key,value)=>{writes++;if(fail){fail=false;throw Error('quota')}raw=value},removeItem:()=>{writes++;raw=null}};
+  const local=tab().api.createStore(()=>backing);
+  const parent={beforePath:'old/a',afterPath:'new/a',comment:'Initial pair'},added={beforePath:'old/b',afterPath:'new/b',comment:'Draft pair'};
+  local.save(opts,[parent]);
+  const opened=local.load(opts);
+  if(pending){fail=true;await local.apply(opts,opened.pairs,[parent,added],undefined,{opened:opened.storageBaseline})}
+  raw='{';
+  const damaged=local.load(opts);
+  if(!pending)assert.match(damaged.notice,/повреждены/);
+  const priorWrites=writes;
+  const apply=()=>local.apply(opts,opened.pairs,[parent,added],undefined,{opened:opened.storageBaseline});
+  await assert.rejects(pending?local.retry(opts):apply(),/изменились и повреждены/);
+  assert.equal(writes,priorWrites,'do not write over newly damaged storage');
+  assert.equal(raw,'{');
+  const remote=tab().api.createStore(()=>backing);
+  await remote.reset(opts);
+  await (pending?local.retry(opts):apply());
+  assert.deepEqual(JSON.parse(JSON.stringify(remote.load(opts).pairs)),[added],'after recovery, preserve the other tab reset and apply only the local change');
+ }
+ for(const reverse of [false,true]){
+  let raw='{',blocked=true;
+  const backing={getItem:()=>raw,setItem:(_key,value)=>{raw=value},removeItem:()=>{raw=null}};
+  const local=tab(true,{...backing,setItem(key,value){if(blocked)throw Error('quota');backing.setItem(key,value)}}),remote=tab(true,backing);
+  const other=reverse?{...opts,left:opts.right,right:opts.left,before:opts.after,after:opts.before}:opts;
+  const orient=pair=>reverse?{beforePath:pair.afterPath,afterPath:pair.beforePath,comment:pair.comment}:pair;
+  const first={beforePath:'old/a',afterPath:'new/a',comment:'Local'},second={beforePath:'old/b',afterPath:'new/b',comment:'Remote'},third={...second,comment:'Remote revision'};
+  assert.match(local.api.store.load(opts).notice,/повреждены/);
+  await local.api.store.apply(opts,[],[first]);
+  assert.equal(raw,'{');
+  await remote.api.store.reset(other);
+  await remote.api.store.apply(other,[],[orient(second)],{base:undefined,draft:reverse?{after:['old/c']}:{before:['old/c']}});
+  await local.api.store.apply(opts,[first],[first]);
+  assert.deepEqual(pairs(local),[second,first],'the failed retry still shows a valid concurrent pair and rebases its operation');
+  assert.deepEqual(pairs(remote),[second]);
+  await remote.api.store.apply(other,[orient(second)],[orient(third)]);
+  blocked=false;
+  local.mount();
+  await local.find('mapping-retry')[0].onclick();
+  const reloaded=tab(true,backing);
+  assert.deepEqual(pairs(reloaded),[third,first]);
+  assert.deepEqual(JSON.parse(raw).deleted,{before:['old/c'],after:[]});
+ }
+ for(const action of ['undo','reset']){
+  let raw=null,blocked=false;
+  const backing={getItem:()=>raw,setItem:(_key,value)=>{raw=value},removeItem:()=>{raw=null}};
+  const reject=()=>{if(blocked)throw Error('quota')};
+  const local=tab(true,{...backing,setItem(key,value){reject();backing.setItem(key,value)},removeItem(key){reject();backing.removeItem(key)}}),remote=tab(true,backing);
+  const first={beforePath:'old/a',afterPath:'new/a',comment:'Local'},second={beforePath:'old/b',afterPath:'new/b',comment:'Remote'};
+  local.api.store.save(opts,[first]);
+  local.mount();blocked=true;
+  if(action==='undo')await local.undo(first);else await local.find('mapping-controls')[0].children[1].onclick();
+  local.mount();
+  assert.deepEqual(pairs(local),[]);
+  assert.deepEqual(pairs(remote),[first]);
+  local.find('mapping-add')[0].onclick();
+  local.find('mapping-editor-cancel')[0].onclick();
+  assert.equal(local.find('mapping-apply')[0].disabled,false,'no pair must be required to retry an unsaved undo or reset');
+  await local.apply();
+  assert.deepEqual(pairs(local),[]);
+  await remote.api.store.apply(opts,[first],[first,second]);
+  blocked=false;
+  local.mount();
+  await local.find('mapping-retry')[0].onclick();
+  const reloaded=tab(true,backing);
+  assert.deepEqual(pairs(reloaded),[second]);
+  assert.deepEqual(JSON.parse(raw).dismissed??[],action==='undo'?[{beforePath:first.beforePath,afterPath:first.afterPath}]:[]);
+  reloaded.mount();
+  assert.equal(reloaded.find('mapping-retry')[0].hidden,true);
+ }
  {
   const saved=new Map(),backing={getItem:key=>saved.get(key)??null,setItem:(key,value)=>saved.set(key,value)};
   let readsBlocked=false,failOnce=false;
@@ -106,6 +203,83 @@ const pairs=t=>JSON.parse(JSON.stringify(t.api.store.load(opts).pairs));
  }
  const normal={...opts,before:['old','old/note','old/sibling'].map(path=>({path})),after:['new','new/note','new/sibling'].map(path=>({path}))};
  const reverse={...normal,left:normal.right,right:normal.left,before:normal.after,after:normal.before};
+ for(const readFirst of [false,true])for(const remap of [false,true]){
+  const view={...normal,after:[...normal.after,{path:'replacement'}]};
+  let raw=null,canRead=true,canWrite=true;
+  const backing={getItem:()=>raw,setItem:(_key,value)=>{raw=value}};
+  const recovery=a.api.createStore(()=>({
+   getItem(key){if(!canRead)throw Error('read denied');return backing.getItem(key)},
+   setItem(key,value){if(!canWrite)throw Error('write denied');backing.setItem(key,value)}
+  })),other=b.api.createStore(()=>backing);
+  const parent={beforePath:'old',afterPath:'new',comment:'Parent'};
+  const proposal={...a.api.suggestDescendants([parent],view.before,view.after).suggestions[0]};
+  const child={beforePath:proposal.beforePath,afterPath:proposal.afterPath,comment:proposal.comment};
+  const independent={beforePath:'old/sibling',afterPath:'new/sibling',comment:'Manual'};
+  const replacement={...parent,afterPath:'replacement'};
+  const remaining=remap?[replacement]:[];
+  recovery.save(view,[parent]);
+  canRead=canWrite=false;
+  await recovery.apply(view,[parent],[parent,child],undefined,{automatic:[proposal]});
+  assert.deepEqual(JSON.parse(JSON.stringify(recovery.load(view).automatic)),[proposal]);
+  await recovery.apply(view,[parent,child],[child,...remaining],undefined,{removed:[parent],adopted:remaining});
+  assert.deepEqual(JSON.parse(JSON.stringify(recovery.load(view).pairs)),remaining,
+   'undo and remap must prune pending automatic pairs while reads and writes fail');
+  await other.apply(view,[parent],[parent,independent]);
+  if(readFirst)canRead=true;else canWrite=true;
+  await recovery.apply(view,remaining,remaining);
+  assert.deepEqual(JSON.parse(raw).pairs,[parent,independent],'the first recovered operation must not overwrite a newer record until both storage methods work');
+  if(readFirst)canWrite=true;else canRead=true;
+  const snapshot=recovery.load(view);
+  await recovery.apply(view,snapshot.pairs,snapshot.pairs);
+  assert.deepEqual(JSON.parse(raw).pairs,[independent,...remaining],'retry preserves the concurrent manual pair without reviving pending descendants');
+ }
+ for(const direction of [normal,reverse])for(const reparent of [false,true]){
+  const view={...direction,after:[...direction.after,{path:'replacement'}]};
+  const saved=new Map();
+  let failWrite=false;
+  const store=a.api.createStore(()=>({
+   getItem:key=>saved.get(key)??null,
+   setItem(key,value){if(failWrite)throw Error('quota');saved.set(key,value)}
+  }));
+  const parent={beforePath:view.before[0].path,afterPath:view.after[0].path,comment:''};
+  const proposal=a.api.suggestDescendants([parent],view.before,view.after).suggestions[0];
+  const child={beforePath:proposal.beforePath,afterPath:proposal.afterPath,comment:proposal.comment};
+  const explicit={beforePath:view.before[2].path,afterPath:view.after[2].path,comment:'Explicit'};
+  store.save(view,[parent,explicit]);
+  failWrite=true;
+  await store.apply(view,[parent,explicit],[parent,explicit,child],undefined,{automatic:[proposal]});
+  assert.equal(store.load(view).pairs.length,3,'the failed write kept the automatic child only in the session');
+  failWrite=false;
+  const pending=store.load(view).pairs;
+  const replacement={...parent,afterPath:'replacement'};
+  const expected=reparent?[explicit,replacement]:[explicit];
+  const draft=pending.filter(pair=>pair.beforePath!==parent.beforePath);
+  if(reparent)draft.push(replacement);
+  await store.apply(view,pending,draft,undefined,{removed:[parent],adopted:reparent?[replacement]:[]});
+  const durable=JSON.parse(saved.values().next().value);
+  assert.deepEqual(durable.pairs,expected,'the first durable write checks the parent even without a competing tab');
+ }
+ {
+  let raw=null,failWrite=false;
+  const backing={getItem:()=>raw,setItem:(_key,value)=>{raw=value}};
+  const recover=a.api.createStore(()=>({...backing,setItem(key,value){
+   if(failWrite){failWrite=false;throw Error('quota')}
+   backing.setItem(key,value);
+  }})),other=b.api.createStore(()=>backing);
+  const parent={beforePath:'old',afterPath:'new',comment:''};
+  const proposal=a.api.suggestDescendants([parent],normal.before,normal.after).suggestions[0];
+  const child={beforePath:proposal.beforePath,afterPath:proposal.afterPath,comment:proposal.comment};
+  recover.save(normal,[parent]);failWrite=true;
+  await recover.apply(normal,[parent],[parent,child],undefined,{automatic:[proposal]});
+  assert.equal(recover.load(normal).pairs.length,2,'a failed write keeps its result in the session');
+  assert.equal(other.load(normal).pairs.length,1);
+  await other.apply(normal,[parent],[],undefined,{removed:[parent]});
+  const retained=recover.load(reverse).pairs;
+  const independent={beforePath:'new/sibling',afterPath:'old/sibling',comment:'Explicit'};
+  await recover.apply(reverse,retained,[...retained,independent]);
+  assert.equal(other.load(normal).pairs.length,1,'retry in the reverse comparison cannot save an orphaned proposal');
+  assert.equal(other.load(normal).pairs[0].comment,'Explicit');
+ }
  for(const deletionOpts of [normal,reverse]){
   const pairOpts=deletionOpts===normal?reverse:normal;
   const pair=({before,after},name)=>({beforePath:before[0].path+name,afterPath:after[0].path+name,comment:''});

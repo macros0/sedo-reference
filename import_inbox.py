@@ -11,12 +11,14 @@ from unittest.mock import patch
 
 import build_site
 from auto_update import update_lock, validate_history, build_history_baseline
-from catalog import dependency_set
-from schema import equivalent_closure
+from catalog import graph_digest, known_catalog_revisions, schema_revision_id
+from schema import resolved_dependencies
 from document_metadata import root_metadata, root_matches, prefer_schema_location
 from fields import build
 from manual_import import filename_metadata, fingerprint, inspect_upload, stage_import, promote_import, import_structure
 from sync import MAX_BYTES, encode, sha, write
+
+GRAPH_MATCH_VERSION = 3
 
 
 def detect_metadata(filename, environment, override=None):
@@ -88,8 +90,9 @@ def collect(root, ledger=None):
         if unknown:
             raise ValueError(str(folder.relative_to(root)) + ": неизвестные DOCX в metadata.json: " + ", ".join(sorted(unknown)))
     catalog_path = root / 'data/catalog.json'
-    known_revisions = {row['revision_id'] for row in json.loads(catalog_path.read_bytes()).get('revisions', [])} if catalog_path.is_file() else set()
-    known_revisions.update(saved['revision_id'] for saved in (ledger or {}).get('files', {}).values() if saved.get('revision_id'))
+    catalog = json.loads(catalog_path.read_bytes()) if catalog_path.is_file() else {}
+    rows = [*catalog.get('revisions', []), *catalog.get('revoked_revisions', [])]
+    known_revisions = known_catalog_revisions(rows, root / 'state')
     tasks=[]
     archive_info={}
     archive_folder=None
@@ -102,28 +105,32 @@ def collect(root, ledger=None):
         explicit_fields=sorted(set(override or {}) & {"version","date","title","source"})
         input_signature=sha(encode([inputs[path], [(a.name,inputs[a]) for a in archives.get(path.parent,[])], meta, explicit_fields]))
         saved=(ledger or {}).get("files",{}).get(path.relative_to(root).as_posix(),{})
-        if saved.get("input_signature")==input_signature and saved.get("explicit_fields",[])==explicit_fields:
+        if (saved.get("input_signature") == input_signature and saved.get("explicit_fields", []) == explicit_fields
+                and (not archives.get(path.parent) or saved.get('graph_match_version') == GRAPH_MATCH_VERSION)):
             continue
         if path.parent != archive_folder:
             archive_info={}
             archive_folder=path.parent
         try:
-            structure=dict(import_structure(inspect_upload(read_checked(path, inputs[path]),"docx"),meta['number'])[0])
+            for archive in archives.get(path.parent, []):
+                if archive not in archive_info:
+                    archive_info[archive] = inspect_upload(read_checked(archive, inputs[archive]), "zip")
+            schemas = [info.get('schemas', []) for info in archive_info.values()] if archive_info else None
+            structure=dict(import_structure(inspect_upload(read_checked(path, inputs[path]),"docx"),meta['number'], schemas)[0])
             root_name, namespace, namespace_declared = root_metadata(structure.items())
             candidates=[]
             matches=[]
             for archive in archives.get(path.parent,[]):
-                if archive not in archive_info:
-                    archive_info[archive]=inspect_upload(read_checked(archive, inputs[archive]),"zip")
                 info=archive_info[archive]
                 for schema in info.get("schemas",[]):
                     if root_matches(schema, root_name, namespace, namespace_declared):
                         matches.append((archive,schema))
             for archive,schema in prefer_schema_location(matches,structure.items()):
-                closure = dependency_set(archive_info[archive]["schemas"], schema["path"])
-                digest = equivalent_closure(closure, schema["path"])
-                rid = sha(encode([env, meta["number"], inputs[path], sha(encode(closure))]))
-                candidates.append((digest,archive,rid))
+                closure, graph = resolved_dependencies(archive_info[archive]["schemas"], schema["path"])
+                digest = graph_digest(graph)
+                rid = schema_revision_id(env, meta['number'], inputs[path], sha(encode(closure)), digest,
+                                         known_revisions, root=root_name, namespace=schema['namespace'])
+                candidates.append(((digest, schema["namespace"] or "", root_name), archive, rid))
             if archives.get(path.parent) and not candidates:raise ValueError("В ZIP рядом с DOCX не найдена подходящая XSD")
             if len({x[0] for x in candidates})>1:raise ValueError("Подходят несколько разных XSD. Разнесите версии по отдельным папкам.")
             chosen=next((c for c in candidates if c[2] == saved.get("revision_id")),
@@ -173,6 +180,8 @@ def _process_inbox(root, check):
                 report["new_revisions"]+=int(result["new_revision"])
                 ledger["files"][relative]=dict(signature=task["signature"],input_signature=task["input_signature"],explicit_fields=task["explicit_fields"],
                                                revision_id=rid,processed_at=datetime.now(timezone.utc).isoformat())
+                if task['archive']:
+                    ledger['files'][relative]['graph_match_version'] = GRAPH_MATCH_VERSION
                 report["files"].append(dict(path=relative,number=revision["number"],environment=revision["environment"],
                                             version=revision["document_version"],revision_id=rid,
                                             new_revision=result["new_revision"],status=revision["status"]))

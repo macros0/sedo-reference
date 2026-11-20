@@ -96,10 +96,12 @@ def _schema(path, revision):
             imp.set("schemaLocation", urls[target])
             pending.append((target,None if imp.tag==X+'import' else effective_namespace))
         resources[url] = etree.tostring(root, encoding='UTF-8')
-    primary = etree.XMLSchema(_parse(resources[urls[entry]], resources, urls[entry]))
-    if any(root.xpath(".//xs:attribute[@fixed] | .//xs:element[@fixed]",
-                      namespaces={"xs": X[1:-1]}) for root in roots.values()):
-        from xsd_bundle import _prepare
+    from xsd_bundle import ORDERED_FACET_TAGS, _calendar_bound_literal, _prepare
+    from xsd_validate import AttributeUseValidator, schema_has_skip, schema_mentions_id
+    needs_bundle = any(schema_mentions_id(root) for root in roots.values()) or any(
+        node.get('fixed') is not None or node.tag in ORDERED_FACET_TAGS and _calendar_bound_literal(node.get('value'))
+        for root in roots.values() for node in root.iter(X+'attribute', X+'element', *ORDERED_FACET_TAGS))
+    if needs_bundle:
         from xsd_validate import AttributeUseValidator, BooleanFixedValidator
         selected = SchemaFiles((name, originals[name]) for name, url in urls.items() if url in resources)
         selected.import_targets = {name: {location: target for location, target in edges.items() if target in selected}
@@ -108,17 +110,20 @@ def _schema(path, revision):
         if constraints:
             prefix = "sedo-memory:///bundle/"
             local_resources = {prefix+name: raw for name, raw in output.items() if not name.startswith("originals/")}
+            entry_url = prefix+'message.xsd'
+            primary = etree.XMLSchema(_parse(local_resources[entry_url], local_resources, entry_url))
             if constraints.get('boolean_fixed_replacements'):
                 alternate = dict(local_resources)
                 for name, replacement in constraints['boolean_fixed_replacements'].items():
                     alternate[prefix+name] = local_resources[prefix+replacement]
-                entry_url = prefix+'message.xsd'
                 primary = BooleanFixedValidator(primary, etree.XMLSchema(_parse(alternate[entry_url], alternate, entry_url)))
             if constraints.get("supplementary_schema"):
                 source = prefix + constraints["supplementary_schema"]
                 supplementary = etree.XMLSchema(_parse(local_resources[source], local_resources, source))
                 return AttributeUseValidator(primary, supplementary, constraints)
-    return primary
+            return AttributeUseValidator(primary, None, constraints, unprofiled_skip=schema_has_skip(roots.values()))
+    return AttributeUseValidator(etree.XMLSchema(_parse(resources[urls[entry]], resources, urls[entry])), None, {},
+                                 unprofiled_skip=schema_has_skip(roots.values()))
 
 
 def _paragraphs(body):

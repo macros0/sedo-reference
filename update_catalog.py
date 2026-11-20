@@ -6,7 +6,8 @@ import shutil
 import tempfile
 from pathlib import Path, PurePosixPath
 
-from auto_update import active_inventory, catalog_locks, validate_inventory, validate_publications, validate_saved_history
+from auto_update import (active_inventory, catalog_locks, validate_inventory, validate_publications,
+                         validate_published_trees, validate_saved_history)
 from catalog import derive, export
 from fields import build
 from sync import CONFIRMATION_FILES, confirmation_lock, encode, recover_confirmation, sync, write
@@ -72,14 +73,9 @@ def recover_catalog(state, out):
     cleanup_site_recovery(recovery)
 
 
-def build_candidate(state, data):
+def build_candidate(state, data, *, prior, previously_rejected):
     index = data / "catalog.json"
     field_index = data / "fields/index.json"
-    prior = json.loads(index.read_bytes()) if index.exists() else {}
-    old_fields = json.loads(field_index.read_bytes()) if field_index.exists() else []
-    prior_ids = {row["revision_id"] for row in prior.get("revisions", [])}
-    previously_rejected = {row["revision_id"] for row in old_fields if row["status"] == "review"
-                           and not (data / "fields" / (row["revision_id"] + ".json")).exists()} & prior_ids
     export(state, index)
     build(index, state, data / "fields")
     statuses = json.loads(field_index.read_bytes())
@@ -161,24 +157,40 @@ def main():
             candidate, data = stage / "state", stage / "data"
             copy_inputs(state, candidate, STATE_INPUTS)
             copy_inputs(out, data, ("catalog.json", "fields"))
-            if not args.offline:
-                sync(candidate)
-                if (state / 'current.json').is_file():
-                    validate_inventory(active_inventory(state), active_inventory(candidate))
             prior_index = out / "catalog.json"
-            previous = json.loads(prior_index.read_bytes()) if prior_index.is_file() else None
+            saved = json.loads(prior_index.read_bytes()) if prior_index.is_file() else None
+            previous = saved
+            if not args.offline:
+                previous = None
+                if (state / 'current.json').is_file():
+                    baseline = stage / 'confirmed-catalog.json'
+                    export(candidate, baseline)
+                    previous = json.loads(baseline.read_bytes())
+                sync(candidate)
+                if previous is not None:
+                    before, after = active_inventory(state), active_inventory(candidate)
+                    validate_inventory(before, after)
+                    validate_published_trees(before, after, state=state, candidate_state=candidate)
             old_status_path = out / "fields/index.json"
-            rejected = {r["revision_id"] for r in json.loads(old_status_path.read_bytes())
-                        if r["status"] == "review" and not (out / "fields" / (r["revision_id"] + ".json")).exists()} if old_status_path.is_file() else set()
-            build_candidate(candidate, data)
-            if previous is not None:
+            rejected = set()
+            if saved is not None and old_status_path.is_file():
+                prior_ids = {row['revision_id'] for row in saved['revisions']}
+                rejected = {r["revision_id"] for r in json.loads(old_status_path.read_bytes())
+                            if r["status"] == "review" and not (out / "fields" / (r["revision_id"] + ".json")).exists()} & prior_ids
+            build_candidate(candidate, data, prior=saved if saved is not None else previous or {},
+                            previously_rejected=rejected)
+            baselines = [previous] if previous is not None else []
+            # The installed catalog can retain editions missing from a damaged state history.
+            if saved is not None and saved != previous:
+                baselines.append(saved)
+            if baselines:
                 archive = candidate / "archived-reviews.json"
                 evidence = json.loads(archive.read_bytes()) if archive.is_file() else {}
                 allowed = {rid for rows in evidence.values() for rid in rows} & rejected
-                validate_saved_history(previous, json.loads((data / "catalog.json").read_bytes()), allowed)
-            if previous is not None:
-                validate_publications(json.loads((out / 'catalog.json').read_bytes()),
-                                      json.loads((data / 'catalog.json').read_bytes()))
+                current = json.loads((data / "catalog.json").read_bytes())
+                for baseline in baselines:
+                    validate_saved_history(baseline, current, allowed, state=candidate)
+                    validate_publications(baseline, current)
             install(state, out, stage)
 
 

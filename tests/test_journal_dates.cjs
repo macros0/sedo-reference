@@ -1,5 +1,5 @@
 const assert=require('node:assert/strict');
-const {journalDateRange,journalDateMatches}=require('../web/journal.js');
+const {journalDateRange,journalDateMatches,journalObservation,newestObservationFirst}=require('../web/journal.js');
 assert.equal(typeof journalDateRange,'function','journal date range API exists');
 const now=new Date('2026-11-12T12:00:00Z');
 const week=journalDateRange('week','','',now);
@@ -27,4 +27,14 @@ assert.equal(journalDateMatches(null,week),false);
 assert.equal(journalDateMatches('invalid',week),false);
 assert.equal(journalDateMatches(null,journalDateRange('all','','',now)),true,'unknown dates visible without date filter');
 assert.equal(journalDateMatches('2026-11-12T12:00:00Z',journalDateRange('custom','2026-11-13','2026-11-12',now)),false);
+const early=journalObservation({observed_at:'2026-11-13T00:00:14.999998+03:00:15',
+ observed_at_utc:'2026-11-12T20:59:59.999998Z',observed_at_us:'1794517199999998'});
+const late=journalObservation({observed_at:'2026-11-12T20:59:59.999999Z',
+ observed_at_utc:'2026-11-12T20:59:59.999999Z',observed_at_us:'1794517199999999'});
+const unknown=journalObservation({observed_at:'invalid'});
+assert.deepEqual([early,unknown,late].sort(newestObservationFirst),[late,early,unknown]);
+assert.equal(journalDateMatches(early.date,custom),true);
+assert.equal(early.dateTime,'2026-11-12T20:59:59.999998Z');
+assert.equal(unknown.dateTime,null);
+assert.equal(journalObservation({observed_at:'1970-01-01T00:00:00Z'}).instant,0n);
 console.log('Journal date filters verified: Moscow boundaries, inclusive days, 7/30 days, leap years, open intervals and invalid input.');

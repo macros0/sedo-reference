@@ -105,12 +105,15 @@ class HistoryTests(unittest.TestCase):
                     f.resources[url] = sources.archive('main.xsd', b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:main"><xs:element name="response" type="xs:int"/></xs:schema>')
                     f.run_update()
                     old = (f.out/'catalog.json').read_bytes()
-                    pointer = json.loads((f.state/'current.json').read_bytes())['snapshot']
-                    write(f.state/'history.json', encode([pointer]))
+                    pointer = (f.state/'current.json').read_bytes()
+                    truncated = encode([json.loads(pointer)['snapshot']])
+                    write(f.state/'history.json', truncated)
                     args = ['update_catalog.py', '--state', str(f.state), '--out', str(f.out), *(['--offline'] if offline else [])]
                     with patch('sys.argv', args), patch('sync.get', side_effect=f.resources.__getitem__), self.assertRaisesRegex(ValueError, 'редакц|событи'):
                         updates.main()
                     self.assertEqual((f.out/'catalog.json').read_bytes(), old)
+                    self.assertEqual((f.state/'current.json').read_bytes(), pointer)
+                    self.assertEqual((f.state/'history.json').read_bytes(), truncated)
                 finally: f.doCleanups()
 
     def test_archive_wrapper_rename_retains_identity_and_current_entry(self):

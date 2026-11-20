@@ -8,6 +8,7 @@
  "use strict";
  const statuses={added:"Добавлено",removed:"Удалено",changed:"Изменено",mapped:"Сопоставлено без изменений",same:"Без изменений"};
  const mappingDecisions=Object.freeze(["Не проверено","Подтверждено","Удалено","Переработано","Требует уточнения"]);
+ const dismissalSection=Object.freeze({scope:"Исключённые пары XML",format:"Версия исключений XML",pair:"Исключённая пара XML",version:"1",maxRows:50000});
  const maxCellLength=32767;
  function checkMappingComment(comment){
   if(comment.length>maxCellLength)throw Error("Комментарий превышает лимит Excel ("+maxCellLength+" символов). Сократите комментарий.");
@@ -39,7 +40,8 @@
   const side=r=>[r.number,r.environment,r.edition_sources?.length>1?"schema":"v"+(r.document_version||"unknown"),r.revision_id.slice(0,8)].join("-");
   return ("sedo-"+side(left)+"__"+side(right)+".xlsx").replace(/[^\p{L}\p{N}._-]/gu,"_");
  }
- function createWorkbook(ExcelJS,{left,right,before,after,results,mappings=[],deleted={},baseURL,createdAt=new Date()}){
+ function createWorkbook(ExcelJS,{left,right,before,after,results,mappings=[],deleted={},dismissed=[],baseURL,createdAt=new Date()}){
+  if(dismissed.length>dismissalSection.maxRows)throw Error("В списке исключённых пар больше 50000 строк.");
   const wb=new ExcelJS.Workbook();
   wb.creator="Справочник СЭДО";wb.created=createdAt;wb.modified=createdAt;
   wb.calcProperties.fullCalcOnLoad=true;
@@ -155,6 +157,11 @@
   }
   // A reversed comparison has no input row for an excluded target-only field.
   for(const path of deletedAfter)metaRows.push(["Исключённый путь «Стало»","Не сопоставлять автоматически",path]);
+  if(dismissed.length){
+   const {scope,format,pair,version}=dismissalSection;
+   metaRows.push([scope,left.revision_id,right.revision_id],[format,version,dismissed.length]);
+   for(const {beforePath,afterPath} of dismissed)metaRows.push([pair,beforePath,afterPath]);
+  }
   const meta=sheet("О выгрузке",["Параметр / инструкция","Было / пояснение","Стало"],[32,95,95],metaRows);
   for(const n of [7,8,9])for(const c of [2,3]){const cell=meta.getCell(n,c);if(cell.value)cell.value={text:cell.value,hyperlink:cell.value}}
   for(const n of sourceLinks)for(const c of [2,3]){const cell=meta.getCell(n,c);if(cell.value)cell.value={text:cell.value,hyperlink:cell.value}}
@@ -177,5 +184,5 @@
   const url=URL.createObjectURL(new Blob([bytes],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
   const link=document.createElement("a");link.href=url;link.download=filename(options.left,options.right);document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
  }
- return {constraints,edition,filename,createWorkbook,download,loadLibrary,mappingDecisions,checkMappingComment};
+ return {constraints,edition,filename,createWorkbook,download,loadLibrary,mappingDecisions,checkMappingComment,dismissalSection};
 });

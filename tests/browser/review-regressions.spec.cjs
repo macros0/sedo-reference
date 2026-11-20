@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs');
 const path = require('node:path');
+const {pythonFixture} = require('./catalog-fixtures.cjs');
 const root = path.resolve(__dirname, '../..');
 const catalog = JSON.parse(fs.readFileSync(path.join(root, 'site/catalog-data.js'), 'utf8').replace(/^window.SEDO_CATALOG=/, '').replace(/;\s*$/, ''));
 
@@ -257,6 +258,45 @@ test('the update journal marks partial union and NOTATION coverage and filters b
   await expect(card('notation-zero')).toHaveCount(0);
   await expect(card('complete-zero')).toHaveCount(0);
   await expect(card('partial-change')).toBeVisible();
+});
+
+test('the built update journal keeps microsecond order and handles Moscow day boundaries', async ({page}) => {
+  const data = pythonFixture([
+    'import contextlib, io, json',
+    'from tests.test_review_40_history import fixtures, late_import_journal',
+    'fixture = fixtures.SourceCollectionTests()',
+    'fixture.setUp()',
+    'try:',
+    '    with contextlib.redirect_stdout(io.StringIO()):',
+    '        catalog, _, _ = late_import_journal(fixture)',
+    '    print(json.dumps(catalog))',
+    'finally:',
+    '    fixture.doCleanups()'
+  ].join('\n'));
+  const [first]=data.schema_updates, [added]=data.source_updates;
+  for (const [id,observed_at] of [['midnight','2026-11-14T21:00:00Z'],['undated','retired-date']]) {
+    data.schema_updates.push({event_id:id,revision_id:first.revision_id,observed_at});
+  }
+  await page.route('**/catalog-data.js*',route=>route.fulfill({contentType:'application/javascript',
+    body:'window.SEDO_CATALOG='+JSON.stringify(data)+';'}));
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.goto('/site/#updates=1');
+  const cards=page.locator('.update-card');
+  const card=id=>page.locator('.update-card[data-event="'+id+'"]');
+  await expect(page.locator('header small')).toContainText('Каталог проверен 14.11.2026');
+  await expect(cards).toHaveCount(4);
+  await expect(cards.nth(0)).toHaveAttribute('data-event','midnight');
+  await expect(cards.nth(1)).toHaveAttribute('data-event',added.event_id);
+  await expect(cards.nth(2).locator('time')).toHaveAttribute('datetime','2026-11-14T01:00:00.000001Z');
+  await expect(cards.nth(1).locator('time')).toHaveAttribute('datetime','2026-11-14T01:00:00.000002Z');
+  await expect(card('undated')).toContainText('Дата обнаружения не сохранена');
+  await page.locator('#updates-period').selectOption('custom');
+  await page.locator('#updates-from').fill('2026-11-14');
+  await page.locator('#updates-to').fill('2026-11-14');
+  await expect(cards).toHaveCount(2);
+  await expect(cards.first()).toHaveAttribute('data-event',added.event_id);
+  await expect(cards.last()).toContainText('04:00 МСК');
+  expect(errors).toEqual([]);
 });
 
 test('a pattern containing a backslash can be pasted into comparison search', async ({ page }) => {

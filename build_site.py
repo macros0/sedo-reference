@@ -4,6 +4,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+from html import escape
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 from sync import inspect_file, sha, write
@@ -12,11 +13,32 @@ from schema_review import compare_revision
 from review_field_links import review_sources
 from source_provenance import publish_sources
 from edition_groups import group_editions, display_updates, source_updates, prepare_observed_sources
+from observation_time import observation_clock
 from xsd_bundle import publish_bundles
 HERE=Path(__file__).resolve().parent
 SITE_ASSETS=("review-journal.js","app.js","app.css","automation-status.js","compare-core.js","compare.js","comparison-export.js","mapping-draft.js","mapping-editor.js","comparison-mapping.js","vendor/exceljs.min.js","vendor/exceljs-LICENSE","vendor/README.md","journal.js","message-transitions.js","favicon.svg","validation.js","validation-core.js","validation-frame.js","validation-worker.js","validation-paths.js","validation-source.js","validation-messages.js","vendor/xmllint/xmllint-browser.mjs","vendor/xmllint/xmllint.wasm","vendor/xmllint/COPYING","vendor/xmllint/README.md")
 def packed(value):
     return json.dumps(value,ensure_ascii=False,separators=(",",":")).replace("<","\\u003c")
+
+
+def summarize_journal(catalog, fields_directory):
+    if not catalog.get("updates"):
+        return []
+    observations = [*catalog["updates"], *catalog.get("earlier_revision_observations", {}).values()]
+    # Preserve the recorded spelling for provenance and send the exact instant as
+    # an integer string so Node can compare the same dates as the source journal.
+    observed_times = {}
+    for value in {event["observed_at"] for event in observations if isinstance(event.get("observed_at"), str)}:
+        observed_times[value] = observation_clock(value)["observed_at_us"]
+    try:
+        result = subprocess.run(
+            ["node", str(Path(__file__).with_name("summarize_updates.cjs")), str(fields_directory)],
+            input=packed(dict(catalog, _observation_times=observed_times)),
+            capture_output=True, text=True, encoding="utf8", check=True, timeout=120)
+    except (OSError, subprocess.SubprocessError) as exc:
+        detail = getattr(exc, "stderr", None) or str(exc)
+        raise ValueError("Не удалось посчитать изменения журнала (нужен Node.js 18+): " + detail[:1500]) from exc
+    return json.loads(result.stdout)
 
 
 def share_document_histories(catalog):
@@ -55,7 +77,7 @@ def share_document_histories(catalog):
 def archive_documents(catalog, state, site):
     """Publish exact original bytes, once per document hash; never fetch from SFR."""
     checked = set()
-    documents = [*catalog["revisions"], *catalog.get("document_sources", []),
+    documents = [*catalog["revisions"], *catalog.get("document_sources", []), *catalog.get("revoked_revisions", []),
                  *(r for r in catalog.get("registry", []) if r.get("document_sha256"))]
     for r in documents:
         digest = r["document_sha256"]
@@ -155,6 +177,17 @@ restoreField();
         if r["ready"]:
             r["schema_review"]=compare_revision(r,field_cache[rid],HERE/"state"/"objects")
     catalog=group_editions(catalog,field_cache.__getitem__)
+    for row in catalog.get('revoked_revisions', []):
+        if not re.fullmatch(r'[0-9a-f]{64}', row['revision_id']):
+            raise ValueError('Некорректный ID отозванной редакции')
+        download = escape(row['document_download'], quote=True)
+        filename = escape(row['document_filename'], quote=True)
+        reason = escape(row['schema_reason'])
+        write(editions / (row['revision_id'] + '.html'), (
+            '<!doctype html><html lang="ru"><meta charset="utf-8">'
+            '<title>Редакция отозвана · СЭДО</title><h1>Редакция отозвана</h1>'
+            f'<p>{reason}</p><p><a href="../{download}" download="{filename}">Скачать архивный DOCX</a></p>'
+            '<p><a href="../index.html">Все сообщения</a></p></html>').encode('utf8'))
     for r in catalog["revisions"]:
         rid=r["revision_id"]
         if not r["ready"]:continue
@@ -168,18 +201,22 @@ restoreField();
         if not page.is_file() or page.read_bytes()!=html:
             write(page,html)
         r["viewer_sha256"]=sha(page.read_bytes())
-    if catalog.get("updates"):
-        try:
-            result=subprocess.run(["node",str(Path(__file__).with_name("summarize_updates.cjs")),str(HERE/"data/fields")],
-                                  input=packed(catalog),capture_output=True,text=True,encoding="utf8",check=True,timeout=120)
-        except (OSError,subprocess.SubprocessError) as exc:
-            detail=getattr(exc,"stderr",None) or str(exc)
-            raise ValueError("Не удалось посчитать изменения журнала (нужен Node.js 18+): "+detail[:1500]) from exc
-        catalog["updates"]=json.loads(result.stdout)
+    journal = summarize_journal(catalog, HERE / "data/fields")
+    if journal:
+        catalog["updates"] = journal
         # Keep complete source events for importer reports and old workbook IDs;
         # the browser journal consumes only the grouped schema events.
-        catalog["schema_updates"]=display_updates(catalog)
-        catalog["source_updates"]=source_updates(catalog)
+        catalog["schema_updates"]=[event | observation_clock(event.get("observed_at"))
+                                   for event in display_updates(catalog)]
+        catalog["source_updates"]=[event | observation_clock(event.get("observed_at"))
+                                   for event in source_updates(catalog)]
+        catalog["updates"] = [{key: value for key, value in event.items() if not key.startswith("chronological_")}
+                              for event in journal]
+    catalog.pop('earlier_revision_observations', None)
+    catalog.pop('earlier_source_observations', None)
+    catalog.pop('rejected_binding_observations', None)
+    if catalog.get("checked_at"):
+        catalog["checked_at_utc"] = observation_clock(catalog["checked_at"])["observed_at_utc"]
     share_document_histories(catalog)
     (site/"catalog-data.js").write_text("window.SEDO_CATALOG="+packed(catalog)+";",encoding="utf8",newline="\n")
     assets=SITE_ASSETS
@@ -199,6 +236,7 @@ restoreField();
     (site/"index.html").write_text(html,encoding="utf8",newline="\n")
     (site/".nojekyll").touch()
     print(f"Built {len(catalog['revisions'])} revisions in {site}")
+    return journal
 def cleanup_site_recovery(recovery):
     marker = recovery / 'cleanup.json'
     if marker.exists():
