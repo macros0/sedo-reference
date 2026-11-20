@@ -47,11 +47,11 @@ test('7810 production shows label date and version history from its DOCX',async(
  await page.goto('/site/#message=7810&env=prod');
  const panel=page.locator('.version-panel').filter({has:page.getByRole('heading',{name:'Продуктивный контур'})});
  const source=panel.locator('.edition-source').filter({hasText:'версия 3.1'});
- await expect(source).toContainText('Дата из подписи ссылки · 08.06.2026');
+ await expect(source).toContainText('Дата в названии документа на сайте СФР · 08.06.2026');
  await expect(source).toContainText('Дата публикации спецификации · 08.06.2025');
  await expect(source).toContainText('Период действия XML-схемы «С» · 08.06.2026');
  await expect(source).toContainText('Номер версии XML-схемы · 3.0');
- await expect(source).toContainText('не совпадает');
+ await expect(source.locator('.version-date-warning')).toHaveText('Дата в названии документа на сайте СФР отличается от даты публикации спецификации в таблице DOCX.');
  await expect(source).toContainText('17.11.2025');
  const revision=catalog.revisions.find(r=>r.number==='7810'&&r.environment==='prod');
  await expect(source.getByRole('link',{name:'Источник таблицы версий — DOCX'})).toHaveAttribute('href',revision.document_url);
