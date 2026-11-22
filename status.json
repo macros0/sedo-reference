@@ -1,33 +1,33 @@
 {
   "format": 1,
-  "generated_at": "2026-11-21T14:40:57.666004+00:00",
+  "generated_at": "2026-11-22T12:22:45.205958+00:00",
   "collector_source": "sourcecraft",
   "sourcecraft": {
     "state": "success",
-    "started_at": "2026-11-21T04:01:10.357204+00:00",
-    "finished_at": "2026-11-21T04:02:48.749189+00:00",
+    "started_at": "2026-11-22T04:01:14.596858+00:00",
+    "finished_at": "2026-11-22T04:02:53.101680+00:00",
     "contours": {
       "prod": {
         "content_id": "9b194ccd99775c37a0f925ce0436a44101040de33820daac069b945e54f38e68",
         "source_count": 9,
-        "observed_at": "2026-11-21T04:01:57.827608+00:00",
+        "observed_at": "2026-11-22T04:02:01.969554+00:00",
         "changed": false,
-        "observed_at_utc": "2026-11-21T04:01:57.827608Z"
+        "observed_at_utc": "2026-11-22T04:02:01.969554Z"
       },
       "test": {
         "content_id": "42e44b408e7edf8f9540e3758d727bd4944a1ddd5dfa1fbdd14d75f00f0cddc3",
         "source_count": 9,
-        "observed_at": "2026-11-21T04:02:48.685957+00:00",
+        "observed_at": "2026-11-22T04:02:53.038851+00:00",
         "changed": false,
-        "observed_at_utc": "2026-11-21T04:02:48.685957Z"
+        "observed_at_utc": "2026-11-22T04:02:53.038851Z"
       }
     },
-    "run_id": "13",
+    "run_id": "14",
     "url": "https://sourcecraft.dev/alexey-sagitov/sedo-xsd-collector",
-    "last_success_at": "2026-11-21T04:02:48.749189+00:00",
-    "started_at_utc": "2026-11-21T04:01:10.357204Z",
-    "finished_at_utc": "2026-11-21T04:02:48.749189Z",
-    "last_success_at_utc": "2026-11-21T04:02:48.749189Z"
+    "last_success_at": "2026-11-22T04:02:53.101680+00:00",
+    "started_at_utc": "2026-11-22T04:01:14.596858Z",
+    "finished_at_utc": "2026-11-22T04:02:53.101680Z",
+    "last_success_at_utc": "2026-11-22T04:02:53.101680Z"
   },
   "github": {
     "check": {
@@ -77,6 +77,6 @@
       "finished_at_utc": "2026-11-21T14:40:30.000000Z"
     }
   },
-  "generated_at_utc": "2026-11-21T14:40:57.666004Z",
+  "generated_at_utc": "2026-11-22T12:22:45.205958Z",
   "errors": []
 }
