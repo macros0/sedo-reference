@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generated_at": "2026-11-24T14:58:19.782274+00:00",
+  "generated_at": "2026-11-24T14:58:45.737015+00:00",
   "collector_source": "sourcecraft",
   "sourcecraft": {
     "state": "success",
@@ -67,6 +67,6 @@
       "finished_at_utc": "2026-11-23T17:05:51.000000Z"
     }
   },
-  "generated_at_utc": "2026-11-24T14:58:19.782274Z",
+  "generated_at_utc": "2026-11-24T14:58:45.737015Z",
   "errors": []
 }
