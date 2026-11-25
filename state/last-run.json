@@ -1,41 +1,15 @@
 {
   "status": "ok",
-  "started_at": "2026-11-24T14:58:48.589041+00:00",
-  "observed_at": "2026-11-24T15:11:20.094466+00:00",
+  "started_at": "2026-11-25T14:34:21.661723+00:00",
+  "observed_at": "2026-11-25T14:46:37.059049+00:00",
   "errors": [],
   "snapshot": "f4fad677b58912349ad6694d17771dc6fcbef942f6c0f2254797ce8d1f41647a",
-  "previous": "838fb876d7244c5d58ee96dcb8912174f8c25a4429592685d6310479b37e28fc",
+  "previous": "f4fad677b58912349ad6694d17771dc6fcbef942f6c0f2254797ce8d1f41647a",
   "files": 110,
   "diff": {
-    "added": [
-      [
-        "prod",
-        "https://lk.sfr.gov.ru/sfr_certs_2026/Инструкция по использованию сертификатов СФР.docx"
-      ],
-      [
-        "prod",
-        "https://lk.sfr.gov.ru/sfr_certs_2026/ФОНД_ПЕНСИОННОГО_И_СОЦИАЛЬНОГО_СТРАХОВАНИЯ_РОССИЙСКОЙ_ФЕДЕРАЦИИ.cer"
-      ],
-      [
-        "test",
-        "https://vnim.sfr.gov.ru/api/quarantine/QuarantineStatementServicePorts?wsdl"
-      ],
-      [
-        "test",
-        "https://vnim.sfr.gov.ru/api/quarantine/SznServicePort?wsdl"
-      ]
-    ],
+    "added": [],
     "removed": [],
-    "changed": [
-      [
-        "prod",
-        "https://lk.fss.ru/cert.html"
-      ],
-      [
-        "prod",
-        "https://lk.fss.ru/tls.html"
-      ]
-    ]
+    "changed": []
   },
   "collector_replay": [
     {
