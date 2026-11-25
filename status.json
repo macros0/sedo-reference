@@ -1,15 +1,33 @@
 {
   "format": 1,
-  "generated_at": "2026-11-25T15:42:36.022239+00:00",
+  "generated_at": "2026-11-25T16:45:31.202933+00:00",
   "collector_source": "sourcecraft",
   "sourcecraft": {
-    "state": "unknown",
-    "started_at": null,
-    "finished_at": null,
-    "contours": {},
-    "run_id": null,
+    "state": "success",
+    "started_at": "2026-11-25T04:01:09.920182+00:00",
+    "finished_at": "2026-11-25T04:02:48.061762+00:00",
+    "contours": {
+      "prod": {
+        "content_id": "9b194ccd99775c37a0f925ce0436a44101040de33820daac069b945e54f38e68",
+        "source_count": 9,
+        "observed_at": "2026-11-25T04:01:57.186376+00:00",
+        "changed": false,
+        "observed_at_utc": "2026-11-25T04:01:57.186376Z"
+      },
+      "test": {
+        "content_id": "42e44b408e7edf8f9540e3758d727bd4944a1ddd5dfa1fbdd14d75f00f0cddc3",
+        "source_count": 9,
+        "observed_at": "2026-11-25T04:02:48.006746+00:00",
+        "changed": false,
+        "observed_at_utc": "2026-11-25T04:02:48.006746Z"
+      }
+    },
+    "run_id": "17",
     "url": "https://sourcecraft.dev/alexey-sagitov/sedo-xsd-collector",
-    "last_success_at": null
+    "last_success_at": "2026-11-25T04:02:48.061762+00:00",
+    "started_at_utc": "2026-11-25T04:01:09.920182Z",
+    "finished_at_utc": "2026-11-25T04:02:48.061762Z",
+    "last_success_at_utc": "2026-11-25T04:02:48.061762Z"
   },
   "github": {
     "check": {
@@ -23,17 +41,20 @@
       "finished_at_utc": "2026-11-25T15:41:30.000000Z"
     },
     "versions": {
-      "count": null,
-      "checked_at": null
+      "count": 0,
+      "checked_at": "2026-11-25T14:46:37.059049+00:00",
+      "checked_at_utc": "2026-11-25T14:46:37.059049Z"
     },
     "publication": {
-      "state": "processing",
+      "state": "success",
       "run_id": 45647996415,
       "url": "https://github.com/macros0/sedo-reference/actions/runs/45647996415",
       "run_attempt": 1,
       "started_at": "2026-11-25T15:41:26Z",
-      "finished_at": null,
-      "started_at_utc": "2026-11-25T15:41:26.000000Z"
+      "finished_at": "2026-11-25T16:45:03Z",
+      "started_at_utc": "2026-11-25T15:41:26.000000Z",
+      "finished_at_utc": "2026-11-25T16:45:03.000000Z",
+      "candidate_sha": "c65eb9a73422e21ec11332880f5771d2fda63c78"
     },
     "independent_publication": {
       "state": "success",
@@ -47,17 +68,15 @@
     },
     "last_successful_publication": {
       "state": "success",
-      "run_id": 45430798210,
-      "url": "https://github.com/macros0/sedo-reference/actions/runs/45430798210",
+      "run_id": 45647996415,
+      "url": "https://github.com/macros0/sedo-reference/actions/runs/45647996415",
       "run_attempt": 1,
-      "started_at": "2026-11-24T15:53:59Z",
-      "finished_at": "2026-11-24T16:50:02Z",
-      "started_at_utc": "2026-11-24T15:53:59.000000Z",
-      "finished_at_utc": "2026-11-24T16:50:02.000000Z"
+      "started_at": "2026-11-25T15:41:26Z",
+      "finished_at": "2026-11-25T16:45:03Z",
+      "started_at_utc": "2026-11-25T15:41:26.000000Z",
+      "finished_at_utc": "2026-11-25T16:45:03.000000Z"
     }
   },
-  "generated_at_utc": "2026-11-25T15:42:36.022239Z",
-  "errors": [
-    "SourceCraft: Command '['git', '-c', 'credential.helper=', 'ls-remote', 'https://git@git.sourcecraft.dev/alexey-sagitov/sedo-xsd-collector.git', 'refs/heads/status']' timed out after 45 seconds"
-  ]
+  "generated_at_utc": "2026-11-25T16:45:31.202933Z",
+  "errors": []
 }
