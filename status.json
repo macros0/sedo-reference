@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generated_at": "2026-11-25T14:00:27.374466+00:00",
+  "generated_at": "2026-11-25T14:33:51.507009+00:00",
   "collector_source": "sourcecraft",
   "sourcecraft": {
     "state": "success",
@@ -31,30 +31,20 @@
   },
   "github": {
     "check": {
-      "state": "success",
-      "run_id": 45419988902,
-      "url": "https://github.com/macros0/sedo-reference/actions/runs/45419988902",
+      "state": "processing",
+      "run_id": 45635367383,
+      "url": "https://github.com/macros0/sedo-reference/actions/runs/45635367383",
       "run_attempt": 1,
-      "started_at": "2026-11-24T14:57:59Z",
-      "finished_at": "2026-11-24T15:54:05Z",
-      "started_at_utc": "2026-11-24T14:57:59.000000Z",
-      "finished_at_utc": "2026-11-24T15:54:05.000000Z"
+      "started_at": "2026-11-25T14:33:32Z",
+      "finished_at": null,
+      "started_at_utc": "2026-11-25T14:33:32.000000Z"
     },
     "versions": {
-      "count": 0,
-      "checked_at": "2026-11-24T15:11:20.094466+00:00",
-      "checked_at_utc": "2026-11-24T15:11:20.094466Z"
+      "count": null,
+      "checked_at": null
     },
     "publication": {
-      "state": "success",
-      "run_id": 45430798210,
-      "url": "https://github.com/macros0/sedo-reference/actions/runs/45430798210",
-      "run_attempt": 1,
-      "started_at": "2026-11-24T15:53:59Z",
-      "finished_at": "2026-11-24T16:50:02Z",
-      "started_at_utc": "2026-11-24T15:53:59.000000Z",
-      "finished_at_utc": "2026-11-24T16:50:02.000000Z",
-      "candidate_sha": "e9b7fdd74ae8277b656e6f2e5f0e3137dd3ec189"
+      "state": "waiting"
     },
     "independent_publication": {
       "state": "success",
@@ -77,6 +67,6 @@
       "finished_at_utc": "2026-11-24T16:50:02.000000Z"
     }
   },
-  "generated_at_utc": "2026-11-25T14:00:27.374466Z",
+  "generated_at_utc": "2026-11-25T14:33:51.507009Z",
   "errors": []
 }
