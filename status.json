@@ -1,6 +1,6 @@
 {
   "format": 1,
-  "generated_at": "2026-11-27T18:11:02.651341+00:00",
+  "generated_at": "2026-11-27T18:16:33.917609+00:00",
   "collector_source": "sourcecraft",
   "sourcecraft": {
     "state": "success",
@@ -31,31 +31,29 @@
   },
   "github": {
     "check": {
-      "state": "failure",
-      "run_id": 46033993635,
-      "url": "https://github.com/macros0/sedo-reference/actions/runs/46033993635",
+      "state": "processing",
+      "run_id": 46048181209,
+      "url": "https://github.com/macros0/sedo-reference/actions/runs/46048181209",
       "run_attempt": 1,
-      "started_at": "2026-11-27T16:29:04Z",
-      "finished_at": "2026-11-27T18:10:36Z",
-      "started_at_utc": "2026-11-27T16:29:04.000000Z",
-      "finished_at_utc": "2026-11-27T18:10:36.000000Z"
+      "started_at": "2026-11-27T18:16:14Z",
+      "finished_at": null,
+      "started_at_utc": "2026-11-27T18:16:14.000000Z"
     },
     "versions": {
       "count": null,
       "checked_at": null
     },
     "publication": {
-      "state": "not_published"
+      "state": "waiting"
     },
     "independent_publication": {
-      "state": "success",
-      "run_id": 46033940602,
-      "url": "https://github.com/macros0/sedo-reference/actions/runs/46033940602",
+      "state": "processing",
+      "run_id": 46048162873,
+      "url": "https://github.com/macros0/sedo-reference/actions/runs/46048162873",
       "run_attempt": 1,
-      "started_at": "2026-11-27T16:28:41Z",
-      "finished_at": "2026-11-27T17:28:03Z",
-      "started_at_utc": "2026-11-27T16:28:41.000000Z",
-      "finished_at_utc": "2026-11-27T17:28:03.000000Z"
+      "started_at": "2026-11-27T18:16:05Z",
+      "finished_at": null,
+      "started_at_utc": "2026-11-27T18:16:05.000000Z"
     },
     "last_successful_publication": {
       "state": "success",
@@ -68,6 +66,6 @@
       "finished_at_utc": "2026-11-27T17:28:03.000000Z"
     }
   },
-  "generated_at_utc": "2026-11-27T18:11:02.651341Z",
+  "generated_at_utc": "2026-11-27T18:16:33.917609Z",
   "errors": []
 }
