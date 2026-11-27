@@ -607,21 +607,28 @@ class EmbeddedSchemaTests(unittest.TestCase):
 
     def test_service_documents_keep_their_archived_inline_schema_identities(self):
         state = ROOT / 'state'
-        current = json.loads((state / 'current.json').read_bytes())['snapshot']
-        entries = json.loads((state / 'snapshots' / (current + '.json')).read_bytes())['entries']
-        checked = 0
-        for row in entries:
-            expected = [item for item in row.get('embedded_archives', [])
-                        if item.get('original_sha256', '').startswith(('74dd3b60', '235809a4'))]
-            if not expected:
-                continue
-            packages, _ = extract_archives((state / 'objects' / row['sha256']).read_bytes())
-            for item in expected:
-                package = next(p for p in packages if p['container'] == item['container'])
-                self.assertEqual(package['original_sha256'], item['original_sha256'])
-                self.assertEqual(sha(package['content']), item['sha256'])
-                checked += 1
-        self.assertEqual(checked, 2)
+        pointer = json.loads((state / 'current.json').read_bytes())
+        snapshots = [pointer['snapshot'], *(item['snapshot'] for item in reversed(pointer['transitions']))]
+        remaining = {
+            '74dd3b6042f6290108956b859825451f403d6c683213d10eb36074f96e7840c6',
+            '235809a495df2a8e31e8b6014a4518186c1d1c7c2412a9859ae887e4d41da601',
+        }
+        # An official replacement can remove the old DOCX from the active snapshot.
+        for snapshot in dict.fromkeys(snapshots):
+            entries = json.loads((state / 'snapshots' / f'{snapshot}.json').read_bytes())['entries']
+            for row in entries:
+                for item in row.get('embedded_archives', []):
+                    original = item.get('original_sha256')
+                    if original not in remaining:
+                        continue
+                    packages, _ = extract_archives((state / 'objects' / row['sha256']).read_bytes())
+                    package = next(p for p in packages if p['container'] == item['container'])
+                    self.assertEqual(package['original_sha256'], original)
+                    self.assertEqual(sha(package['content']), item['sha256'])
+                    remaining.remove(original)
+            if not remaining:
+                break
+        self.assertEqual(remaining, set(), 'Historic inline schema missing from snapshot history')
 
     def test_embedded_inline_and_combined_archives_use_platform_independent_headers(self):
         import html
