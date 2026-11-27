@@ -1,0 +1,386 @@
+{
+  "revision_id": "b25e3f4215a934c701671689ec13e0dca760f29eeb3cf5c81e413c5845d14401",
+  "fields": [
+    {
+      "name": "refundUnemplSttmntResult",
+      "path": "refundUnemplSttmntResult",
+      "parent": -1,
+      "group": "",
+      "doc": "Результат обработки заявления на предоставление субсидии юридическим лицам и индивидуальным предпринимателям на стимулирование найма безработных граждан. Тип сообщения СЭДО №7910",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "SttmntRefundUnemplResultType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        5,
+        9,
+        10,
+        11,
+        12
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
+      "file": "RefundUnemplStatementResult.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
+      "typeFile": "RefundUnemplStatementResult.xsd",
+      "contentModel": [
+        "sequence",
+        "result",
+        "errorList"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "result",
+          "errorList"
+        ]
+      }
+    },
+    {
+      "name": "result",
+      "path": "refundUnemplSttmntResult/result",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные о принятом заявлении",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        2,
+        3,
+        4
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
+      "file": "RefundUnemplStatementResult.xsd",
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "sttmntNumber",
+        "status",
+        "*"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "sttmntNumber",
+          "status",
+          "*"
+        ]
+      }
+    },
+    {
+      "name": "sttmntNumber",
+      "path": "refundUnemplSttmntResult/result/sttmntNumber",
+      "parent": 1,
+      "group": "",
+      "doc": "Номер заявления",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "sttmntNumberType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "40"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
+      "file": "RefundUnemplStatementResult.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
+      "typeFile": "RefundUnemplStatementResult.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "status",
+      "path": "refundUnemplSttmntResult/result/status",
+      "parent": 1,
+      "group": "",
+      "doc": "Статус обработки заявления",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "StateType",
+      "base": "xs:string",
+      "facets": [],
+      "values": [
+        [
+          "ERROR",
+          "Не принят"
+        ],
+        [
+          "RECEIVED",
+          "Принят"
+        ]
+      ],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
+      "file": "RefundUnemplStatementResult.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
+      "typeFile": "RefundUnemplStatementResult.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "*",
+      "path": "refundUnemplSttmntResult/result/*",
+      "parent": 1,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "RefundUnemplStatementResult.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    },
+    {
+      "name": "errorList",
+      "path": "refundUnemplSttmntResult/errorList",
+      "parent": 0,
+      "group": "",
+      "doc": "Список сообщений об ошибках",
+      "kind": "element",
+      "min": "0",
+      "max": "unbounded",
+      "type": "com:errorType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        6,
+        7,
+        8
+      ],
+      "ns": "urn:ru:ecp:integration:wozm:refund:unempl:sttmnt:result:v3.0",
+      "file": "RefundUnemplStatementResult.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "message",
+        "details"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "message",
+          "details"
+        ]
+      }
+    },
+    {
+      "name": "code",
+      "path": "refundUnemplSttmntResult/errorList/code",
+      "parent": 5,
+      "group": "",
+      "doc": "Код ошибки",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "message",
+      "path": "refundUnemplSttmntResult/errorList/message",
+      "parent": 5,
+      "group": "",
+      "doc": "Сообщение ошибки",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "2000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "details",
+      "path": "refundUnemplSttmntResult/errorList/details",
+      "parent": 5,
+      "group": "",
+      "doc": "Детализация ошибки",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "2000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "@specVersion",
+      "path": "refundUnemplSttmntResult/@specVersion",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер версии спецификации для xml документа",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:specVersionType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "RefundUnemplStatementResult.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "@responseOn",
+      "path": "refundUnemplSttmntResult/@responseOn",
+      "parent": 0,
+      "group": "",
+      "doc": "Ссылка на транспортный идентификатор запроса (тип сообщения СЭДО №7810)",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:uuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "RefundUnemplStatementResult.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "@messageDateTime",
+      "path": "refundUnemplSttmntResult/@messageDateTime",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата и время формирования сообщения на стороне СФР",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "xs:dateTime",
+      "base": "xs:dateTime",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "RefundUnemplStatementResult.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "@*",
+      "path": "refundUnemplSttmntResult/@*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический атрибут, позволяющий расширять XML документ",
+      "kind": "anyAttribute",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "RefundUnemplStatementResult.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    }
+  ]
+}

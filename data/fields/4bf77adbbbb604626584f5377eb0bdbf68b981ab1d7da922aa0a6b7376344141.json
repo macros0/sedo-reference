@@ -1,0 +1,1818 @@
+{
+  "revision_id": "4bf77adbbbb604626584f5377eb0bdbf68b981ab1d7da922aa0a6b7376344141",
+  "fields": [
+    {
+      "name": "refusal",
+      "path": "refusal",
+      "parent": -1,
+      "group": "",
+      "doc": "Решение об отказе в назначении страхового обеспечения и иных выплат. Тип сообщения СЭДО №125",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        1,
+        2,
+        3,
+        6,
+        7,
+        14,
+        18,
+        41,
+        42,
+        49,
+        53,
+        56,
+        57,
+        58,
+        59,
+        60
+      ],
+      "ns": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "refusalNumber",
+        "refusalDate",
+        "tof",
+        "registryNum",
+        "insuredInfo",
+        "insurerInfo",
+        "benefitInfo",
+        "refusalText",
+        "attachments",
+        "senderInfo",
+        "signatoryInfo",
+        "*"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "refusalNumber",
+          "refusalDate",
+          "tof",
+          "registryNum",
+          "insuredInfo",
+          "insurerInfo",
+          "benefitInfo",
+          "refusalText",
+          "attachments",
+          "senderInfo",
+          "signatoryInfo",
+          "*"
+        ]
+      }
+    },
+    {
+      "name": "refusalNumber",
+      "path": "refusal/refusalNumber",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер отказа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "refusalNumberType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "35"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "typeFile": "Refusal.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "refusalDate",
+      "path": "refusal/refusalDate",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата формирования отказа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "tof",
+      "path": "refusal/tof",
+      "parent": 0,
+      "group": "",
+      "doc": "Территориальное подразделение СФР РФ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:territorialDivision",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        4,
+        5
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "code",
+        "name"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "code",
+          "name"
+        ]
+      }
+    },
+    {
+      "name": "code",
+      "path": "refusal/tof/code",
+      "parent": 3,
+      "group": "",
+      "doc": "Код",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "3"
+        ],
+        [
+          "maxLength",
+          "4"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "name",
+      "path": "refusal/tof/name",
+      "parent": 3,
+      "group": "",
+      "doc": "Наименование",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "300"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "registryNum",
+      "path": "refusal/registryNum",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер реестра (при наличии)",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "100"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "insuredInfo",
+      "path": "refusal/insuredInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные о застрахованном лице",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "notice:insuredInfoTypeRequest",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        8,
+        9,
+        13
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "snils",
+        "fullName",
+        "*"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "snils",
+          "fullName",
+          "*"
+        ]
+      }
+    },
+    {
+      "name": "snils",
+      "path": "refusal/insuredInfo/snils",
+      "parent": 7,
+      "group": "",
+      "doc": "СНИЛС застрахованного лица",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "fullName",
+      "path": "refusal/insuredInfo/fullName",
+      "parent": 7,
+      "group": "",
+      "doc": "ФИО",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:fullName",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        10,
+        11,
+        12
+      ],
+      "ns": "",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
+      "typeFile": "Person.xsd",
+      "contentModel": [
+        "sequence",
+        "firstName",
+        "lastName",
+        "middleName"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "firstName",
+          "lastName",
+          "middleName"
+        ]
+      }
+    },
+    {
+      "name": "firstName",
+      "path": "refusal/insuredInfo/fullName/firstName",
+      "parent": 9,
+      "group": "",
+      "doc": "Имя",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "firstName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "lastName",
+      "path": "refusal/insuredInfo/fullName/lastName",
+      "parent": 9,
+      "group": "",
+      "doc": "Фамилия",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "lastName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "middleName",
+      "path": "refusal/insuredInfo/fullName/middleName",
+      "parent": 9,
+      "group": "",
+      "doc": "Отчество",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "middleName",
+      "base": "xs:string",
+      "facets": [
+        [
+          "maxLength",
+          "60"
+        ],
+        [
+          "minLength",
+          "1"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:person:v3.0",
+      "file": "Person.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "*",
+      "path": "refusal/insuredInfo/*",
+      "parent": 7,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    },
+    {
+      "name": "insurerInfo",
+      "path": "refusal/insurerInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные о страхователе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "notice:insurerInfoTypeRequest",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        15,
+        16,
+        17
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:notice:v3.0",
+      "typeFile": "Notice.xsd",
+      "contentModel": [
+        "sequence",
+        "regNumSFR",
+        "insuranceType",
+        "*"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "regNumSFR",
+          "insuranceType",
+          "*"
+        ]
+      }
+    },
+    {
+      "name": "regNumSFR",
+      "path": "refusal/insurerInfo/regNumSFR",
+      "parent": 14,
+      "group": "",
+      "doc": "Единый рег. номер страхователя СФР",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:regNumSFR",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "10"
+        ],
+        [
+          "pattern",
+          "\\d{10}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "insuranceType",
+      "path": "refusal/insurerInfo/insuranceType",
+      "parent": 14,
+      "group": "",
+      "doc": "Вид страхования",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "org:insuranceType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "ОСС"
+        ],
+        [
+          "pattern",
+          "ДСС"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Notice.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:organization:v3.0",
+      "typeFile": "Organization.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema",
+      "patternGroups": [
+        [
+          "ОСС",
+          "ДСС"
+        ]
+      ]
+    },
+    {
+      "name": "*",
+      "path": "refusal/insurerInfo/*",
+      "parent": 14,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Notice.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    },
+    {
+      "name": "benefitInfo",
+      "path": "refusal/benefitInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные о пособии",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "benefitInfoTypeRequest",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        19,
+        20,
+        21,
+        24,
+        27,
+        31,
+        37,
+        40
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:vnim:refusal:v3.0",
+      "typeFile": "Refusal.xsd",
+      "contentModel": [
+        "sequence",
+        "proactiveProcessNum",
+        "rowNumber",
+        [
+          "choice",
+          "benefit1",
+          "benefit2",
+          "benefit4",
+          "benefit5",
+          "benefit6"
+        ],
+        "*"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "proactiveProcessNum",
+          "rowNumber",
+          {
+            "kind": "choice",
+            "min": "1",
+            "max": "1",
+            "children": [
+              "benefit1",
+              "benefit2",
+              "benefit4",
+              "benefit5",
+              "benefit6"
+            ]
+          },
+          "*"
+        ]
+      }
+    },
+    {
+      "name": "proactiveProcessNum",
+      "path": "refusal/benefitInfo/proactiveProcessNum",
+      "parent": 18,
+      "group": "",
+      "doc": "Номер проактивного процесса",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "com:proactiveProcessNumType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "25"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "rowNumber",
+      "path": "refusal/benefitInfo/rowNumber",
+      "parent": 18,
+      "group": "",
+      "doc": "Номер строки реестра, по которой сформирован отказ",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "3"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "benefit1",
+      "path": "refusal/benefitInfo/benefit1",
+      "parent": 18,
+      "group": "Выбор 1, вариант 1",
+      "doc": "Пособие по временной нетрудоспособности",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        22,
+        23
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber",
+        "*"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber",
+          "*"
+        ]
+      }
+    },
+    {
+      "name": "lnNumber",
+      "path": "refusal/benefitInfo/benefit1/lnNumber",
+      "parent": 21,
+      "group": "",
+      "doc": "Номер ЛН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:lnCode",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "12"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "*",
+      "path": "refusal/benefitInfo/benefit1/*",
+      "parent": 21,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    },
+    {
+      "name": "benefit2",
+      "path": "refusal/benefitInfo/benefit2",
+      "parent": 18,
+      "group": "Выбор 1, вариант 2",
+      "doc": "Пособие по беременности и родам",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        25,
+        26
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber",
+        "*"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber",
+          "*"
+        ]
+      }
+    },
+    {
+      "name": "lnNumber",
+      "path": "refusal/benefitInfo/benefit2/lnNumber",
+      "parent": 24,
+      "group": "",
+      "doc": "Номер ЛН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:lnCode",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "12"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "*",
+      "path": "refusal/benefitInfo/benefit2/*",
+      "parent": 24,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    },
+    {
+      "name": "benefit4",
+      "path": "refusal/benefitInfo/benefit4",
+      "parent": 18,
+      "group": "Выбор 1, вариант 3",
+      "doc": "Единовременное пособие при рождении ребенка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        28,
+        29,
+        30
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "childSnils",
+        "childBirthDate",
+        "*"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "childSnils",
+          "childBirthDate",
+          "*"
+        ]
+      }
+    },
+    {
+      "name": "childSnils",
+      "path": "refusal/benefitInfo/benefit4/childSnils",
+      "parent": 27,
+      "group": "",
+      "doc": "СНИЛС ребенка",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "childBirthDate",
+      "path": "refusal/benefitInfo/benefit4/childBirthDate",
+      "parent": 27,
+      "group": "",
+      "doc": "Дата рождения ребенка",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "*",
+      "path": "refusal/benefitInfo/benefit4/*",
+      "parent": 27,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    },
+    {
+      "name": "benefit5",
+      "path": "refusal/benefitInfo/benefit5",
+      "parent": 18,
+      "group": "Выбор 1, вариант 4",
+      "doc": "Ежемесячное пособие по уходу за ребенком до 1.5 лет",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        32,
+        33,
+        36
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "childSnils",
+        "vacationPeriod",
+        "*"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "childSnils",
+          "vacationPeriod",
+          "*"
+        ]
+      }
+    },
+    {
+      "name": "childSnils",
+      "path": "refusal/benefitInfo/benefit5/childSnils",
+      "parent": 31,
+      "group": "",
+      "doc": "СНИЛС ребенка",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "p:snils",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "11"
+        ],
+        [
+          "pattern",
+          "\\d{11}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "vacationPeriod",
+      "path": "refusal/benefitInfo/benefit5/vacationPeriod",
+      "parent": 31,
+      "group": "",
+      "doc": "Период отпуска",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:period",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        34,
+        35
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "contentModel": [
+        "sequence",
+        "begin",
+        "end"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "begin",
+          "end"
+        ]
+      }
+    },
+    {
+      "name": "begin",
+      "path": "refusal/benefitInfo/benefit5/vacationPeriod/begin",
+      "parent": 33,
+      "group": "",
+      "doc": "Дата начала",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "end",
+      "path": "refusal/benefitInfo/benefit5/vacationPeriod/end",
+      "parent": 33,
+      "group": "",
+      "doc": "Дата окончания",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:date",
+      "base": "xs:date",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:common:v3.0",
+      "file": "Common.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "*",
+      "path": "refusal/benefitInfo/benefit5/*",
+      "parent": 31,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    },
+    {
+      "name": "benefit6",
+      "path": "refusal/benefitInfo/benefit6",
+      "parent": 18,
+      "group": "Выбор 1, вариант 5",
+      "doc": "Пособие по временной нетрудоспособности в связи с несчастным случаем на производстве или профессиональным заболеванием",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        38,
+        39
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "lnNumber",
+        "*"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "lnNumber",
+          "*"
+        ]
+      }
+    },
+    {
+      "name": "lnNumber",
+      "path": "refusal/benefitInfo/benefit6/lnNumber",
+      "parent": 37,
+      "group": "",
+      "doc": "Номер ЛН",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:lnCode",
+      "base": "xs:string",
+      "facets": [
+        [
+          "length",
+          "12"
+        ],
+        [
+          "pattern",
+          "\\d{12}"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "*",
+      "path": "refusal/benefitInfo/benefit6/*",
+      "parent": 37,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    },
+    {
+      "name": "*",
+      "path": "refusal/benefitInfo/*",
+      "parent": 18,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    },
+    {
+      "name": "refusalText",
+      "path": "refusal/refusalText",
+      "parent": 0,
+      "group": "",
+      "doc": "Текст основания отказа",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "4000"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeFile": "Refusal.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "attachments",
+      "path": "refusal/attachments",
+      "parent": 0,
+      "group": "",
+      "doc": "Документ решения об отказе",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        43
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "attachment"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "attachment"
+        ]
+      }
+    },
+    {
+      "name": "attachment",
+      "path": "refusal/attachments/attachment",
+      "parent": 42,
+      "group": "",
+      "doc": "Файлы в формте pdf, xml",
+      "kind": "element",
+      "min": "1",
+      "max": "unbounded",
+      "type": "att:AttachmentType",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "typeFile": "Attachment.xsd",
+      "contentModel": [
+        "sequence",
+        "content",
+        "ext",
+        "mimeType",
+        "size",
+        "name"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "content",
+          "ext",
+          "mimeType",
+          "size",
+          "name"
+        ]
+      }
+    },
+    {
+      "name": "content",
+      "path": "refusal/attachments/attachment/content",
+      "parent": 43,
+      "group": "",
+      "doc": "Содержимое файла",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "xs:base64Binary",
+      "base": "xs:base64Binary",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "ext",
+      "path": "refusal/attachments/attachment/ext",
+      "parent": 43,
+      "group": "",
+      "doc": "Расширение файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "mimeType",
+      "path": "refusal/attachments/attachment/mimeType",
+      "parent": 43,
+      "group": "",
+      "doc": "Mime-тип файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "size",
+      "path": "refusal/attachments/attachment/size",
+      "parent": 43,
+      "group": "",
+      "doc": "Размер файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:integer",
+      "base": "xs:integer",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "name",
+      "path": "refusal/attachments/attachment/name",
+      "parent": 43,
+      "group": "",
+      "doc": "Название файла",
+      "kind": "element",
+      "min": "0",
+      "max": "1",
+      "type": "xs:string",
+      "base": "xs:string",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "urn:ru:ecp:integration:types:attachment:v3.0",
+      "file": "Attachment.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "senderInfo",
+      "path": "refusal/senderInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные лица, направившего отказ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        50,
+        51,
+        52
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "role",
+        "phone"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "role",
+          "phone"
+        ]
+      }
+    },
+    {
+      "name": "fullName",
+      "path": "refusal/senderInfo/fullName",
+      "parent": 49,
+      "group": "",
+      "doc": "ФИО работника СФР, направившего отказ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:fullNameSimple",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "255"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "role",
+      "path": "refusal/senderInfo/role",
+      "parent": 49,
+      "group": "",
+      "doc": "Должность",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:roleType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "800"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "phone",
+      "path": "refusal/senderInfo/phone",
+      "parent": 49,
+      "group": "",
+      "doc": "Контактный номер телефона",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:phoneNumberType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "5"
+        ],
+        [
+          "maxLength",
+          "30"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "signatoryInfo",
+      "path": "refusal/signatoryInfo",
+      "parent": 0,
+      "group": "",
+      "doc": "Данные лица, подписавшего отказ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [
+        54,
+        55
+      ],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "contentModel": [
+        "sequence",
+        "fullName",
+        "role"
+      ],
+      "contentModelBounds": {
+        "kind": "sequence",
+        "min": "1",
+        "max": "1",
+        "children": [
+          "fullName",
+          "role"
+        ]
+      }
+    },
+    {
+      "name": "fullName",
+      "path": "refusal/signatoryInfo/fullName",
+      "parent": 53,
+      "group": "",
+      "doc": "ФИО работника СФР, подписавшего отказ",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "p:fullNameSimple",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "255"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:person:v3.0",
+      "typeFile": "Person.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "role",
+      "path": "refusal/signatoryInfo/role",
+      "parent": 53,
+      "group": "",
+      "doc": "Должность",
+      "kind": "element",
+      "min": "1",
+      "max": "1",
+      "type": "com:roleType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "800"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "*",
+      "path": "refusal/*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический элемент, позволяющий расширять XML документ в перспективе",
+      "kind": "any",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    },
+    {
+      "name": "@specVersion",
+      "path": "refusal/@specVersion",
+      "parent": 0,
+      "group": "",
+      "doc": "Номер версии спецификации для xml документа",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "com:specVersionType",
+      "base": "xs:string",
+      "facets": [
+        [
+          "minLength",
+          "1"
+        ],
+        [
+          "maxLength",
+          "20"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "@messageUuid101",
+      "path": "refusal/@messageUuid101",
+      "parent": 0,
+      "group": "",
+      "doc": "Ссылка на транспортный идентификатор сообщения СЭДО №101 (при наличии)",
+      "kind": "attribute",
+      "min": "0",
+      "max": "1",
+      "type": "com:uuidV1Type",
+      "base": "xs:string",
+      "facets": [
+        [
+          "pattern",
+          "([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})"
+        ]
+      ],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "urn:ru:ecp:integration:types:common:v3.0",
+      "typeFile": "Common.xsd",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "@messageDateTime",
+      "path": "refusal/@messageDateTime",
+      "parent": 0,
+      "group": "",
+      "doc": "Дата и время формирования сообщения на стороне СФР",
+      "kind": "attribute",
+      "min": "1",
+      "max": "1",
+      "type": "xs:dateTime",
+      "base": "xs:dateTime",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {},
+      "typeNs": "http://www.w3.org/2001/XMLSchema",
+      "baseNs": "http://www.w3.org/2001/XMLSchema"
+    },
+    {
+      "name": "@*",
+      "path": "refusal/@*",
+      "parent": 0,
+      "group": "",
+      "doc": "Технический атрибут, позволяющий расширять XML документ",
+      "kind": "anyAttribute",
+      "min": "0",
+      "max": "unbounded",
+      "type": "",
+      "base": "",
+      "facets": [],
+      "values": [],
+      "children": [],
+      "ns": "",
+      "file": "Refusal.xsd",
+      "flags": {
+        "processContents": "skip"
+      },
+      "wildcardNamespace": "##any"
+    }
+  ]
+}

@@ -1,15 +1,170 @@
 {
   "status": "ok",
-  "started_at": "2026-11-26T14:01:02.702432+00:00",
-  "observed_at": "2026-11-26T14:14:08.295632+00:00",
+  "started_at": "2026-11-27T19:25:07.427950+00:00",
+  "observed_at": "2026-11-27T19:38:07.271995+00:00",
   "errors": [],
-  "snapshot": "f4fad677b58912349ad6694d17771dc6fcbef942f6c0f2254797ce8d1f41647a",
+  "snapshot": "627173adb685502adbe4e13a7817dcca8d1c96deab113182e9b6d0485a088031",
   "previous": "f4fad677b58912349ad6694d17771dc6fcbef942f6c0f2254797ce8d1f41647a",
-  "files": 110,
+  "files": 108,
   "diff": {
-    "added": [],
-    "removed": [],
-    "changed": []
+    "added": [
+      [
+        "test",
+        "https://lk-test.fss.ru/sedo/TLS ГОСТ инструкция внешние пользователи СЭДО тестовый контур.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/sedo/Спецификация сервис СЭДО v2.5 ЕЦП (24.11.2026).docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/VNIM_XSD_23_11_2026.zip"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/WOZM_XSD_23_11_26.zip"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_10_Тип_сообщения_125_v3.1.0_тест_23.11.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_11_Тип_сообщения_10410_v3.1.0_тест_23.11.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_16_Тип_сообщения_10110_v3.1.0_тест_23.11.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_2_Типовые_элементы_v3.0.8_тест_23.11.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_3_Тип_сообщения_1010_v3.1.1_тест_23.11.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_4_Тип_сообщения_32_v3.1.1_тест_23.11.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_5_Тип_сообщения_33_v3.1.0_тест_23.11.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_6_Тип_сообщения_34_v3.1.0_тест_23.11.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_7_Тип_сообщения_11000_v3.1.0_тест_23.11.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_6_Возмещения_Том_2_Типовые_элементы_v3.0.2_тест_23.11.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_6_Возмещения_Том_3_Тип_сообщения_12010_v3.4.0_тест_23.11.26"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_6_Возмещения_Том_5_Тип_сообщения_12210_v3.2.0_тест_23.11.26"
+      ]
+    ],
+    "removed": [
+      [
+        "test",
+        "https://ecp-test-sedo.sfr.gov.ru/sedo/fss/api/soap/SedoGateway?wsdl"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/XSD_13_08_2026.zip"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/xsd_01_06_26.zip"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение 10_ВНиМ_ССВ_Том_5_Тип_сообщения_33_v3.0.1_тест_05.03.25.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение 10_ВНиМ_ССВ_Том_6_Тип_сообщения_34_v3.0.0_тест_20.01.25.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_10_Тип_сообщения_125_v3.0.0_тест_22.12.25.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_11_Тип_сообщения_10410_v3.0.1_тест_30.03.26.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_16_Тип_сообщения_10110_v3_0_4_тест_13.08.2026.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_2_Типовые_элементы_v3_0_7_тест_13.08.2026.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_3_Тип_сообщения_1010_v3.1.0_тест_22.12.25.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_4_Тип_сообщения_32_v3.1.0_тест_22.12.25.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_10_ВНиМ_ССВ_Том_7_Тип_сообщения_11000_v3.0.0_тест_16.09.25.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_6_Возмещения_Том_2_Типовые_элементы_v3_0_1_тест_10_11.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_6_Возмещения_Том_3_Тип_сообщения_12010_v3_3_0_тест_01.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_6_Возмещения_Том_5_Тип_сообщения_12210_v3_1_0_тест_10.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Спецификация сервис СЭДО v2.4_ЕЦП (27.05.2026).docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Тестирование СЭДО_ЕЦП для_операторов.docx"
+      ],
+      [
+        "test",
+        "https://vnim.sfr.gov.ru/api/quarantine/QuarantineStatementServicePorts?wsdl"
+      ],
+      [
+        "test",
+        "https://vnim.sfr.gov.ru/api/quarantine/SznServicePort?wsdl"
+      ]
+    ],
+    "changed": [
+      [
+        "test",
+        "https://lk-test.fss.ru/cert.html"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/specs_sedo/Приложение_6_Возмещения_Том_7_Тип_сообщения_7810_v3_1_0_тест_01.docx"
+      ],
+      [
+        "test",
+        "https://lk-test.fss.ru/tls.html"
+      ]
+    ]
   },
   "collector_replay": [
     {
