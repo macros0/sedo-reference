@@ -55,6 +55,24 @@ class LocalGenerationTests(unittest.TestCase):
         self.run_update()
         self.assertEqual(len(json.loads((self.out/'catalog.json').read_bytes())['revisions']), 1)
 
+    def test_online_update_imports_replaced_volume_without_losing_the_old_edition(self):
+        host = SITES['prod'].removesuffix('/sedo.html')
+        names = ['/specs_sedo/Приложение_10_ВНиМ_Том_16_Тип_сообщения_10110_v3.0.4.docx',
+                 '/specs_sedo/Приложение_10_ВНиМ_Том_16_Тип_сообщения_10110_v3.1.0.docx']
+        self.resources[SITES['prod']] = (f'<a href="/specs_sedo/a.zip">XSD</a>'
+                                       f'<a href="{names[0]}">v3.0.4</a>'
+                                       '<a href="/retired.html">Retired</a>').encode()
+        self.resources[host + names[0]] = self.document
+        self.run_update()
+
+        self.resources[SITES['prod']] = (f'<a href="/specs_sedo/a.zip">XSD</a>'
+                                       f'<a href="{names[1]}">v3.1.0</a>').encode()
+        self.resources[host + names[1]] = individual_document('response', 'main.xsd')
+        self.run_update()
+        rows = json.loads((self.out / 'catalog.json').read_bytes())['revisions']
+        self.assertEqual({(row['document_url'], row['listed_now']) for row in rows},
+                         {(host + names[0], False), (host + names[1], True)})
+
     def test_recover_legacy_review_without_losing_snapshots_docx_or_ready_edition(self):
         self.run_update()
         previous = json.loads((self.out/'catalog.json').read_bytes())

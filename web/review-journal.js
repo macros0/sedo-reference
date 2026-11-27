@@ -210,7 +210,7 @@
     const target=targets[i];
     values.push(target?link(target.text,'index.html'+target.href,baseURL):(i===0?'Поле не определено':''));
    }
-   values.push(r.document_url?link('Публикация СФР',r.document_url,baseURL):'');
+   values.push(r.document_url?link('Публикация СФР',r.document_official_url||r.document_url,baseURL):'');
    values.push(cell(sources.official));
    const sameSource=(a,b)=>a?.text===b?.text&&a?.url===b?.url;
    for(let i=1;i<schemaCount;i++){

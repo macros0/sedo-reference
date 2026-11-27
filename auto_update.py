@@ -1,20 +1,24 @@
 """Stage, validate and promote a complete SFR update. Publication is done by Actions."""
 import json
+import re
 import shutil
 import tempfile
+from collections import defaultdict
 from contextlib import contextmanager, ExitStack
 from pathlib import Path
+from urllib.parse import urlsplit
 from unittest.mock import patch
 
 import build_site
-from catalog import (derive, document_identity, export, individual_documents, named_binding_rows,
-                     preserves_wsdl_binding, schema_qname, update_predecessors)
+from catalog import (derive, document_filename, document_identity, export, individual_documents, individual_number,
+                     named_binding_rows, preserves_wsdl_binding, schema_qname, update_predecessors)
 from collector_snapshots import (applicable_bindings, collector_source, confirmed_binding_index,
                                  replay_context)
+from document_metadata import numbered_volume
 from fields import build
 from edition_groups import display_updates, group_editions, source_updates
 from state_lock import catalog_lock_root, file_lock
-from sync import encode, resource_url, sync, write
+from sync import catalog_resource, encode, resource_url, sync, write
 
 
 def validate_publications(previous, current):
@@ -94,18 +98,55 @@ def validate_published_trees(previous, current, *, state, candidate_state):
                          + '; '.join(sorted(set(errors))))
 
 
-def validate_inventory(previous, current):
-    """Compare the links published by each contour, including guides and navigation."""
-    def resources(snapshot, env):
-        return {resource_url(row['url']) for row in snapshot['entries']
-                if row['environment'] == env and row.get('source_type') != 'wsdl'
-                and row['kind'] != 'wsdl_status' and row['url'].startswith(('http://', 'https://'))}
+def inventory_resources(snapshot, env):
+    urls, volumes = set(), defaultdict(set)
+    for row in snapshot['entries']:
+        url = row['url']
+        if (row['environment'] != env or row.get('source_type') == 'wsdl' or
+                row['kind'] == 'wsdl_status' or not url.startswith(('http://', 'https://'))):
+            continue
+        resource = resource_url(url)
+        urls.add(resource)
+        if (row['kind'] == 'docx' and row.get('sha256') and not row.get('error') and
+                urlsplit(url).path.startswith('/specs_sedo/') and catalog_resource(url, env)):
+            volume = numbered_volume(document_filename(row))
+            if volume and volume[2] == individual_number(row):
+                volumes[volume].add(resource)
+    return urls, volumes
+
+
+def inventory_changes(previous, current):
+    changes = {}
     for env in ('prod', 'test'):
-        old, new = resources(previous, env), resources(current, env)
-        removed = old - new
-        if len(removed) > max(1, len(old) * 0.2):
-            raise ValueError(f'Массовое исчезновение ссылок {env}: {len(old)} -> {len(new)}, '
-                             f'исчезло {len(removed)}; ' + ', '.join(sorted(removed)[:10]))
+        old, old_volumes = inventory_resources(previous, env)
+        new, new_volumes = inventory_resources(current, env)
+        removed, added = old - new, new - old
+        replacements = []
+        for volume, old_urls in sorted(old_volumes.items()):
+            new_urls = new_volumes.get(volume, set())
+            if len(old_urls) == len(new_urls) == 1 and old_urls <= removed and new_urls <= added:
+                replacements.append(dict(previous_url=next(iter(old_urls)), current_url=next(iter(new_urls))))
+        unexplained = sorted(removed - {pair['previous_url'] for pair in replacements})
+        changes[env] = dict(previous_count=len(old), current_count=len(new),
+                            added=sorted(added), removed=sorted(removed),
+                            unexplained_removed=unexplained, replacements=replacements)
+    return changes
+
+
+def validate_inventory(previous, current, *, diagnostics=None):
+    """Protect each contour against mass loss while allowing verified volume replacements."""
+    changes = inventory_changes(previous, current)
+    if diagnostics is not None:
+        diagnostics.update(changes)
+    errors = []
+    for env, delta in changes.items():
+        old, new = delta['previous_count'], delta['current_count']
+        unexplained = delta['unexplained_removed']
+        if len(unexplained) > max(1, old * 0.2):
+            errors.append(f'Массовое исчезновение ссылок {env}: {old} -> {new}, '
+                          f'исчезло без замены {len(unexplained)}; ' + ', '.join(unexplained[:10]))
+    if errors:
+        raise ValueError('; '.join(errors))
 
 
 def active_inventory(state):
@@ -452,6 +493,7 @@ def edition_changes(previous, current, fields_directory, *, journal):
 
 def _run(root, *, history_only=False):
     report = root / "update-report.json"
+    inventory = {}
     previous = json.loads((root / "data/catalog.json").read_bytes())
     try:
         with tempfile.TemporaryDirectory(prefix="sedo-update-") as tmp:
@@ -460,6 +502,9 @@ def _run(root, *, history_only=False):
                 shutil.copytree(root / folder, stage / folder)
             build_history_baseline(stage)
             shutil.copy2(root / "viewer-template.html", stage / "viewer-template.html")
+            failure = stage / "state/last-run.json"
+            prior_report = failure.read_bytes() if failure.is_file() else None
+            prior_snapshot = active_inventory(root / "state")
             try:
                 if history_only:
                     from collector_snapshots import replay_archived_inputs
@@ -467,12 +512,17 @@ def _run(root, *, history_only=False):
                 else:
                     sync(stage / "state")
             except Exception as exc:
-                failure = stage / "state/last-run.json"
-                detail = json.loads(failure.read_bytes()).get("errors", []) if failure.exists() else []
+                report_bytes = failure.read_bytes() if failure.is_file() else None
+                failed_run = json.loads(report_bytes) if report_bytes and report_bytes != prior_report else {}
+                failed_snapshot = failed_run.get('snapshot')
+                if failed_run.get('status') == 'failed' and re.fullmatch(r'[0-9a-f]{64}', failed_snapshot or ''):
+                    candidate = stage / 'state/snapshots' / (failed_snapshot + '.json')
+                    if candidate.is_file():
+                        inventory.update(inventory_changes(prior_snapshot, json.loads(candidate.read_bytes())))
+                detail = failed_run.get("errors", [])
                 raise ValueError(f"{exc}; source errors: {detail}") from exc
             snapshot = active_inventory(stage / "state")
-            prior_snapshot = active_inventory(root / "state")
-            validate_inventory(prior_snapshot, snapshot)
+            validate_inventory(prior_snapshot, snapshot, diagnostics=inventory)
             export(stage / "state", stage / "data/catalog.json")
             current = json.loads((stage / "data/catalog.json").read_bytes())
             validate_published_trees(prior_snapshot, snapshot, state=root / "state", candidate_state=stage / "state")
@@ -548,7 +598,8 @@ def _run(root, *, history_only=False):
                 missing.append(dict(environment=env,number=number,title=row["title"],reasons=reasons or ["В опубликованных источниках не найдена полная сопоставленная XSD."]))
             write(stage/"data/schema-coverage.json",encode(dict(checked_at=current["checked_at"],numbers_with_trees=len({n for e,n in ready_pairs}),source_checks=wsdl_status,missing=missing)))
             promote(root, stage)
-            result = dict(status="ok", collector_source=collector_source(), checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics, wsdl_status=wsdl_status, missing_trees=missing,
+            result = dict(status="ok", collector_source=collector_source(), inventory=inventory,
+                          checked_at=current["checked_at"], new_revisions=added, schema_diagnostics=schema_diagnostics, wsdl_status=wsdl_status, missing_trees=missing,
                           collector_replay=collector_replay,
                           new_schema_revisions=schema_events, new_source_events=source_events,
                           new_messages=[dict(environment=e, number=n) for e,n in new_messages],
@@ -558,7 +609,7 @@ def _run(root, *, history_only=False):
             write(report, encode(result))
             print(json.dumps(result, ensure_ascii=False))
     except Exception as exc:
-        write(report, encode(dict(status="failed", error=str(exc))))
+        write(report, encode(dict(status="failed", error=str(exc), inventory=inventory)))
         raise
 
 

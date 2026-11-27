@@ -21,6 +21,7 @@ from xml.etree import ElementTree as ET
 
 SITES = {"prod":"https://lk.sfr.gov.ru/sedo.html","test":"https://lk-test.fss.ru/sedo.html"}
 CATALOG_HOSTS = {"prod": {"lk.sfr.gov.ru", "lk.fss.ru"}, "test": {"lk-test.fss.ru"}}
+DOCX_EXTENSION_SNAPSHOT_FORMAT = 13
 MAX_BYTES = 96 * 1024 * 1024
 MAX_ARCHIVE_BYTES = 256 * 1024 * 1024
 MAX_ARCHIVE_FILES = 4000
@@ -504,6 +505,26 @@ def _sync(base, report, *, wsdl_entries=None, snapshot_format=None, individual_w
                 if download != resource_url(u):
                     r["download_url"] = download
                 tasks.append(r)
+        if snapshot_format is None or snapshot_format >= DOCX_EXTENSION_SNAPSHOT_FORMAT:
+            from document_metadata import filename_metadata, numbered_volume
+            for row in lookup.values():
+                if row['kind'] != 'link' and not row['kind'].isdecimal():
+                    continue
+                parts = urlsplit(row['url'])
+                filename = unquote(parts.path.rsplit('/', 1)[-1])
+                identity = numbered_volume(filename)
+                if (not parts.path.startswith('/specs_sedo/') or
+                        not row['label'].casefold().endswith('.docx') or not identity or
+                        numbered_volume(row['label']) != identity):
+                    continue
+                version = filename_metadata(filename)['version']
+                download = catalog_resource(row['url'], env)
+                if download and version and version == filename_metadata(row['label'])['version']:
+                    # The label supplies the omitted suffix. Keep the exact published URL for provenance.
+                    target = urlsplit(download)
+                    row.update(kind='docx', download_url=target._replace(path=target.path + '.docx').geturl())
+                    tasks.append(row)
+                    output_format = max(output_format, DOCX_EXTENSION_SNAPSHOT_FORMAT)
         # Old official aliases may be normalized onto the contour's current
         # endpoint. Never discard an unrelated or another contour's hostname.
         linked=set()

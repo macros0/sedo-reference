@@ -7,7 +7,7 @@ from observation_time import observed_datetime
 
 from sync import sha
 
-SOURCE_KEYS = ("revision_id", "number", "environment", "title", "document_version", "label_date", "document_url", "document_sha256",
+SOURCE_KEYS = ("revision_id", "number", "environment", "title", "document_version", "label_date", "document_url", "document_official_url", "document_sha256",
                "document_download", "document_filename", "source_type", "manual_source", "module", "listed_now", "document_history", "display_metadata_applied")
 SCHEMA_SOURCE_KEYS = ("archive_url", "archive_sha256", "archive_name", "schema_path", "schema_declaration_path", "schema_source_type",
                       "schema_source_url", "schema_sources", "dependencies",

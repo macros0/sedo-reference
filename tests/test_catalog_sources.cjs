@@ -18,6 +18,12 @@ const text=node=>[node.textContent,...(node.children||[]).map(text)].join(' ');
 const descendants=node=>[node,...(node.children||[]).flatMap(descendants)];
 function render(number){vm.runInContext('renderVersions(messages.get('+JSON.stringify(number)+'),"prod")',context);return nodes.get('versions')}
 {
+ const published='https://lk-test.fss.ru/specs_sedo/tom-v3.4.0';
+ const row={document_url:published,document_official_url:published+'.docx'};
+ const link=vm.runInContext('revisionOrigin('+JSON.stringify(row)+')',context);
+ assert.equal(link.href,published+'.docx','the official source opens the verified DOCX URL');
+}
+{
  const view=render('7810'),source=descendants(view).find(n=>n.className==='edition-source'&&text(n).includes('3.1'));
  assert.match(text(source),/Дата в названии документа на сайте СФР.*08\.06\.2026/);
  assert.match(text(source),/Дата публикации спецификации.*08\.06\.2025/);

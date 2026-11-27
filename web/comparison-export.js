@@ -122,7 +122,7 @@
    ["Идентификатор редакции",left.revision_id,right.revision_id],
    ["SHA-256 DOCX",left.document_sha256||"",right.document_sha256||""],
    ["SHA-256 архива XSD",left.archive_sha256||"",right.archive_sha256||""],
-   ["Документ источника",absolute(left.document_url||""),absolute(right.document_url||"")],
+   ["Документ источника",absolute(left.document_official_url||left.document_url),absolute(right.document_official_url||right.document_url)],
    ["Сохранённый DOCX",left.document_download?absolute(left.document_download):"",right.document_download?absolute(right.document_download):""],
    ["Дерево в справочнике",absolute("index.html#"+new URLSearchParams({message:left.number,env:left.environment,rev:left.revision_id})),absolute("index.html#"+new URLSearchParams({message:right.number,env:right.environment,rev:right.revision_id}))],
    ["Происхождение",left.manual_source?.label||left.source_type||"Публикация СФР",right.manual_source?.label||right.source_type||"Публикация СФР"],
@@ -149,8 +149,8 @@
    for(let i=0;i<Math.max(a.length,b.length);i++){
     const description=s=>s?"Версия документа "+(s.document_version||"не указана")+(s.label_date?" · "+s.label_date:""):"";
     metaRows.push(["Источник схемы "+(i+1)+" · документ",description(a[i]),description(b[i])]);
-    for(const [caption,key] of [["СФР","document_url"],["DOCX","document_download"]]){
-     metaRows.push(["Источник схемы "+(i+1)+" · "+caption,absolute(a[i]?.[key]),absolute(b[i]?.[key])]);
+    for(const [caption,url] of [["СФР",s=>s?.document_official_url||s?.document_url],["DOCX",s=>s?.document_download]]){
+     metaRows.push(["Источник схемы "+(i+1)+" · "+caption,absolute(url(a[i])),absolute(url(b[i]))]);
      sourceLinks.push(metaRows.length+1);
     }
    }
