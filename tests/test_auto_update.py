@@ -15,6 +15,72 @@ from verify import verify
 PROJECT = Path(__file__).resolve().parents[1]
 
 
+class InventoryReplacementTests(unittest.TestCase):
+    @staticmethod
+    def volume(env, appendix, volume, number, version='v3.0.0', date='23.11.26', separator='_'):
+        from sync import SITES
+        name = separator.join(('Приложение', str(appendix), 'ВНиМ', 'Том', str(volume),
+                               'Тип', 'сообщения', str(number), version, 'тест', date))
+        url = SITES[env].replace('/sedo.html', f'/specs_sedo/{name}.docx')
+        return dict(environment=env, kind='docx', url=url, sha256='a' * 64)
+
+    @staticmethod
+    def links(start, stop):
+        return [dict(environment='test', kind='link', url=f'https://lk-test.fss.ru/guide-{i}')
+                for i in range(start, stop)]
+
+    def test_accepts_eight_numbered_tom_replacements_in_the_70_to_67_inventory(self):
+        from auto_update import validate_inventory
+        volumes = [(3, 1010), (4, 32), (5, 33), (6, 34), (7, 11000),
+                   (10, 125), (11, 10410), (16, 10110)]
+        old = [self.volume('test', 10, v, n, 'v3_0_4', '13.08.2026',
+                           separator=' ' if v in (5, 6) else '_') for v, n in volumes]
+        new = [self.volume('test', 10, v, n, 'v3.1.0') for v, n in volumes]
+        before = dict(entries=old + self.links(0, 62))
+        after = dict(entries=new + self.links(9, 68))
+        diagnostics = {}
+        validate_inventory(before, after)
+        validate_inventory(before, after, diagnostics=diagnostics)
+        delta = diagnostics['test']
+        self.assertEqual((len(delta['removed']), len(delta['added'])), (17, 14))
+        self.assertEqual(delta['unexplained_removed'], sorted(row['url'] for row in self.links(0, 9)))
+        self.assertEqual({(pair['previous_url'], pair['current_url']) for pair in delta['replacements']},
+                         {(a['url'], b['url']) for a, b in zip(old, new)})
+
+    def test_unrelated_incomplete_or_ambiguous_links_leave_loss_above_threshold(self):
+        from auto_update import validate_inventory
+        old = self.volume('test', 10, 16, 10110)
+        new = self.volume('test', 10, 16, 10110, 'v3.1.0')
+        cases = {
+            'duplicate old key': ([old, self.volume('test', 10, 16, 10110, 'v2.9')], [new]),
+            'duplicate new key': ([old], [new, self.volume('test', 10, 16, 10110, 'v3.2')]),
+            'one URL retained for the same key': ([old, new], [new, self.volume('test', 10, 16, 10110, 'v3.2')]),
+            'other contour': ([old], [self.volume('prod', 10, 16, 10110, 'v3.1.0')]),
+            'other appendix': ([old], [self.volume('test', 6, 16, 10110, 'v3.1.0')]),
+            'other volume': ([old], [self.volume('test', 10, 15, 10110, 'v3.1.0')]),
+            'other number': ([old], [self.volume('test', 10, 16, 10010, 'v3.1.0')]),
+            'failed download': ([old], [dict(new, sha256=None, error='invalid DOCX')]),
+            'external host': ([old], [dict(new, url=new['url'].replace('lk-test.fss.ru', 'example.com'))]),
+        }
+        for name, (older, newer) in cases.items():
+            with self.subTest(name=name):
+                diagnostics = {}
+                links = self.links(0, 70 - len(older))
+                with self.assertRaisesRegex(ValueError, 'test.*исчезло'):
+                    validate_inventory(dict(entries=older + links),
+                                       dict(entries=newer + links[14:] + self.links(70, 90)),
+                                       diagnostics=diagnostics)
+                self.assertEqual(diagnostics['test']['replacements'], [])
+                self.assertGreaterEqual(len(diagnostics['test']['unexplained_removed']), 15)
+
+    def test_unexplained_loss_threshold_is_14_out_of_70(self):
+        from auto_update import validate_inventory
+        old = dict(entries=self.links(0, 70))
+        validate_inventory(old, dict(entries=self.links(14, 84)))
+        with self.assertRaisesRegex(ValueError, 'test.*15'):
+            validate_inventory(old, dict(entries=self.links(15, 85)))
+
+
 class OfflineReplayTests(unittest.TestCase):
     def test_fragment_only_and_multiple_aliases_replay_exact_snapshot(self):
         from sync import SITES
@@ -59,15 +125,36 @@ class OfflineReplayTests(unittest.TestCase):
         write(root / 'data/fields/index.json', b'[]')
         shutil.copytree(PROJECT / 'web', root / 'web')
         shutil.copy2(PROJECT / 'viewer-template.html', root)
-        pointer = (fixture.state / 'current.json').read_bytes()
+        files = [fixture.state / 'current.json', fixture.state / 'history.json', root / 'data/catalog.json']
+        confirmed = [path.read_bytes() for path in files]
         with patch('sync.get', side_effect=fixture.resources.__getitem__):
             listing(53)
             with self.assertRaisesRegex(ValueError, 'prod.*18'):
                 run(root)
-            self.assertEqual((fixture.state / 'current.json').read_bytes(), pointer)
+            self.assertEqual([path.read_bytes() for path in files], confirmed)
+            report = json.loads((root / 'update-report.json').read_bytes())
+            self.assertEqual(report['status'], 'failed')
+            delta = report['inventory']['prod']
+            self.assertEqual(len(delta['removed']), 18)
+            self.assertEqual(delta['removed'], delta['unexplained_removed'])
+            self.assertEqual(delta['replacements'], [])
             listing(70)
             run(root)
-        self.assertNotEqual((fixture.state / 'current.json').read_bytes(), pointer)
+        self.assertNotEqual(files[0].read_bytes(), confirmed[0])
+        report = json.loads((root / 'update-report.json').read_bytes())
+        self.assertEqual(report['status'], 'ok')
+        self.assertEqual(len(report['inventory']['prod']['unexplained_removed']), 1)
+
+        confirmed = [path.read_bytes() for path in files]
+        listing(69)
+        fixture.resources[page.replace('/sedo.html', '/specs_sedo/file.docx')] = b'<html>Error</html>'
+        with patch('sync.get', side_effect=fixture.resources.__getitem__), self.assertRaisesRegex(ValueError, '1 file errors'):
+            run(root)
+        self.assertEqual([path.read_bytes() for path in files], confirmed)
+        report = json.loads((root / 'update-report.json').read_bytes())
+        self.assertEqual(report['status'], 'failed')
+        self.assertEqual(report['inventory']['prod']['removed'],
+                         ['https://lk.sfr.gov.ru/specs_sedo/guide69.pdf'])
 
     def test_mass_disappearance_is_rejected_but_one_removed_publication_is_allowed(self):
         from auto_update import validate_publications

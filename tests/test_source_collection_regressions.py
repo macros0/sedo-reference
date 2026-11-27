@@ -489,6 +489,68 @@ class SourceCollectionTests(unittest.TestCase):
         self.collect(3)
         self.assertFalse(pending(self.root))
 
+    def test_numbered_docx_without_extension_is_downloaded_and_replayed(self):
+        from urllib.error import HTTPError
+        from catalog import derive
+        from verify import verify_snapshot_replay
+
+        page = SITES['test']
+        path = '/specs_sedo/Приложение_6_Возмещения_Том_3_Тип_сообщения_12010_v3.4.0_тест_23.11.26'
+        url = page.replace('/sedo.html', path)
+        label = 'Приложение_6 ВОЗМ Том_3_Тип_сообщения_12010 v3.4.0 (23.11.2026).docx'
+        self.resources[page] += f'<a href="{path}">{label}</a>'.encode()
+        docx = individual_document('response')
+        def get(candidate, **kwargs):
+            if candidate == url:
+                raise HTTPError(url, 404, 'Not found', {}, None)
+            return self.resources[candidate]
+        self.resources[url + '.docx'] = docx
+        self.resources[page.replace('/sedo.html', '/specs_sedo/file.zip')] = archive('root.xsd',
+            b'<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:main">'
+            b'<xs:element name="response" type="xs:string"/></xs:schema>')
+        with patch('sync.get', side_effect=get):
+            sync(self.state, wsdl_entries=[])
+        snapshot = self.current()
+        row = next(row for row in snapshot['entries'] if row['url'] == url)
+        self.assertEqual((row['kind'], row['sha256']), ('docx', sha(docx)))
+        self.assertEqual(row['download_url'], url + '.docx')
+        key = json.loads((self.state/'current.json').read_bytes())['snapshot']
+        verify_snapshot_replay(self.state, snapshot, key)
+        volume = next(row for row in derive(snapshot)['revisions'] if row['number'] == '12010')
+        self.assertEqual(volume['status'], 'matched')
+        self.assertEqual(volume['document_url'], url)
+        self.assertEqual(volume['document_official_url'], url + '.docx')
+
+    def test_numbered_volume_does_not_repair_a_link_to_another_version(self):
+        page = SITES['test']
+        path = '/specs_sedo/Приложение_6_Том_3_Тип_сообщения_12010_v3.3.0_тест_23.11.26'
+        label = 'Приложение_6 Том_3_Тип_сообщения_12010 v3.4.0 (23.11.2026).docx'
+        self.resources[page] += f'<a href="{path}">{label}</a>'.encode()
+        self.collect(1, wsdl_entries=[])
+        row = next(row for row in self.current()['entries'] if row['url'].endswith(path))
+        self.assertNotIn('sha256', row)
+
+    def test_missing_numbered_docx_keeps_previous_snapshot(self):
+        from urllib.error import HTTPError
+
+        self.collect(1)
+        previous = (self.state / 'current.json').read_bytes()
+        page = SITES['test']
+        href = '/specs_sedo/Приложение_6_Том_5_Тип_сообщения_12210_v3.2.0_23.11.26'
+        label = 'Приложение_6 Том_5_Тип_сообщения_12210 v3.2.0.docx'
+        self.resources[page] += f'<a href="{href}">{label}</a>'.encode()
+        for corrupt in (False, True):
+            with self.subTest(corrupt=corrupt):
+                def get(url, **kwargs):
+                    if href in url:
+                        if corrupt:
+                            return b'<html>Error page</html>'
+                        raise HTTPError(url, 404, 'Not found', {}, None)
+                    return self.resources[url]
+                with patch('sync.get', side_effect=get), self.assertRaisesRegex(ValueError, '1 file errors'):
+                    sync(self.state, wsdl_entries=[])
+                self.assertEqual((self.state / 'current.json').read_bytes(), previous)
+
     def test_catalog_alias_downloads_one_resource_and_skips_navigation_documents(self):
         from catalog import export
         page = SITES["prod"]

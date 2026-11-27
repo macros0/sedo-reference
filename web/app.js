@@ -21,6 +21,7 @@ const route=(number,env,rev,field)=>new URLSearchParams(Object.fromEntries(Objec
 const go=(number,env,rev,field)=>{location.hash=route(number,env,rev,field)};
 function anchor(text,hash,cls){const a=node("a",cls,text);a.href="#"+hash;return a}
 function external(text,url){const a=node("a","source",text);a.href=url;a.target="_blank";a.rel="noopener";return a}
+function officialDocumentURL(r){return r.document_official_url||r.document_url}
 function documentDownload(r){const a=node("a","source","Скачать DOCX");a.href=r.document_download;a.download=r.document_filename;return a}
 function appendSchemaOrigin(card,r){
  if(!r.schema_path)return;
@@ -150,7 +151,7 @@ function appendDocumentHistory(container,source){
  if(changes.length){
   const history=node('details','document-change-history');
   history.append(node('summary','','История изменений документа ('+changes.length+')'));
-  const url=source.document_url||source.document_download;
+  const url=officialDocumentURL(source)||source.document_download;
   if(url)history.append(external('Источник истории изменений — DOCX',url));
   for(const change of changes){
    const entry=node('div','document-version-entry');
@@ -163,7 +164,7 @@ function appendDocumentHistory(container,source){
  if(!tables.length)return;
  const history=node('section','document-version-history');
  history.append(node('h3','','История версий из DOCX'));
- const url=source.document_url||source.document_download;
+ const url=officialDocumentURL(source)||source.document_download;
  if(url)history.append(external('Источник таблицы версий — DOCX',url));
  for(const table of tables){
   const [headers,...rows]=table;
@@ -188,7 +189,8 @@ function appendEditionSources(container,r){
   item.append(node("p","meta","Формат описан в спецификации · версия "+(source.document_version||"не указана")));
   appendDocumentHistory(item,source);
   if(source.module)item.append(node("p","meta",source.module));
-  item.append(source.document_url?external(documentName(source),source.document_url):node("p","meta",documentName(source)));
+  const url=officialDocumentURL(source);
+  item.append(url?external(documentName(source),url):node("p","meta",documentName(source)));
   if(!source.document_url&&source.manual_source?.label&&source.manual_source.label!==documentName(source))
    item.append(node("p","meta","Источник загрузки · "+source.manual_source.label));
   if(source.document_download)item.append(node("br"),documentDownload(source));
@@ -226,7 +228,7 @@ function appendRegistrySources(panel,rows){
   panel.append(entry);
  }
 }
-function revisionOrigin(r){return r.document_url?external("Спецификация СФР ↗",r.document_url):node("span","source","Ручная загрузка · "+(r.manual_source?.label||"Файл владельца"))}
+function revisionOrigin(r){const url=officialDocumentURL(r);return url?external("Спецификация СФР ↗",url):node("span","source","Ручная загрузка · "+(r.manual_source?.label||"Файл владельца"))}
 function date(s){return s?s.replace(/\.(\d{2})$/,".20$1"):"Дата не указана"}
 function title(m,env){
  const revisions=m.revisions.filter(r=>!env||r.environment===env).sort(newestEditionFirst),rows=[...m.rows,...m.documents].filter(r=>!env||r.environment===env);
@@ -399,7 +401,8 @@ function renderRoute(){
  const warning=$("viewer-replacement");if(warning){warning.replaceChildren();const replacement=replacementNotice(m,env);if(replacement)warning.append(replacement);appendRelatedComparisons(warning,m,env)}
  $("view-title").textContent="Сообщение "+number;$("view-desc").textContent=r.title;
  const grouped=editionSources(r).length>1;
- $("doc-source").hidden=!r.document_url||grouped;if(r.document_url){$("doc-source").href=r.document_url;$("doc-source").textContent="Источник версии: "+documentName(r);}
+ const documentURL=officialDocumentURL(r);
+ $("doc-source").hidden=!documentURL||grouped;if(documentURL){$("doc-source").href=documentURL;$("doc-source").textContent="Источник версии: "+documentName(r);}
  $("manual-source").hidden=r.source_type!=="manual";$("manual-source").textContent="Ручная загрузка · "+(r.manual_source?.label||"Файл владельца");
  $("doc-download").href=r.document_download;$("doc-download").download=r.document_filename;
  $("doc-download").hidden=grouped;

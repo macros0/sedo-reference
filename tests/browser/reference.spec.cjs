@@ -15,6 +15,7 @@ function edition(number, environment) {
     return Date.UTC(year < 100 ? 2000 + year : year, month - 1, day);
   };
   const revision = candidates.sort((a, b) => timestamp(b) - timestamp(a)
+    || Number(b.listed_now !== false) - Number(a.listed_now !== false)
     || a.revision_id.localeCompare(b.revision_id))[0];
   if (!revision) throw Error(`Missing browser fixture edition ${number}/${environment}`);
   return revision;

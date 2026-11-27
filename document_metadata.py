@@ -6,6 +6,18 @@ from urllib.parse import parse_qsl, unquote, urljoin, urlsplit
 MODULE_FILENAME = re.compile(r"Пр[ _]+(\d+)[ _]+(.+?)(?:\s*\(|\.docx$)", re.I)
 
 
+NUMBERED_VOLUME = re.compile(
+    r"^Приложение[ _]+([0-9]+)(?:[ _]+.*?)?[ _]+Том[ _]+([0-9]+)"
+    r"[ _]+Тип[ _]+сообщения[ _]+([0-9]+)(?=[ _.]|$)", re.I)
+
+
+def numbered_volume(filename):
+    match = NUMBERED_VOLUME.match(filename)
+    if match:
+        appendix, volume, number = match.groups()
+        return int(appendix), int(volume), number
+
+
 def schema_location(structure):
     locations = [value.strip() for label,value in structure
                  if 'расположение файла xml-схемы' in normalized_heading(label)]

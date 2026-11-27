@@ -6,7 +6,7 @@ from collections.abc import Mapping
 from functools import lru_cache
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
-from sync import encode,sha,write
+from sync import DOCX_EXTENSION_SNAPSHOT_FORMAT, encode, sha, write
 
 from schema import dependency_set, resolved_dependencies
 from edition_groups import SOURCE_KEYS, SCHEMA_SOURCE_KEYS, observed_datetime
@@ -548,6 +548,9 @@ def derive(snapshot, known_revisions=(), *, preferred_revision_id=None, display_
         title=title_record["title"] if title_record is not None else r["label"]
         version,date=parse_label(r["label"])
         d=dict(number=number,environment=e,title=title,document_version=version,label_date=date,document_url=r["url"],document_sha256=r["sha256"],root=root,namespace=ns,namespace_declared=namespace_declared,version_tables=r.get("version_tables",[]),document_history=r.get("document_history",[]),status="review")
+        if (snapshot.get('format', 1) >= DOCX_EXTENSION_SNAPSHOT_FORMAT and
+                r.get('download_url') and not fname.casefold().endswith('.docx')):
+            d['document_official_url'] = r['download_url']
         ambiguous_location = modern and len(members) > 1
         if len(candidates)==1 and not incomplete and not ambiguous_location:
             key, (_, a, s, deps) = next(iter(equivalent.items()))
