@@ -9,7 +9,7 @@ function cardFor(r, environment, rows=[r], registry=[]) {
   const element = () => ({
     textContent: '', children: [], dataset:{}, value:'', get childNodes() { return this.children; }, append(...items) { this.children.push(...items); },
     replaceChildren(...items) { this.children = items; },
-    setAttribute(name,value) { this[name]=String(value); }
+    setAttribute(name,value) { this[name]=String(value); }, addEventListener() {}, removeEventListener() {}
   });
   const document = {
     createElement: element, createTextNode: text => ({textContent: text, children: []}),

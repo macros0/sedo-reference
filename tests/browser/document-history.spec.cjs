@@ -57,6 +57,28 @@ test('journal searches and displays the title recorded for an added source', asy
   await expect(card.getByRole('link', {name:'Открыть существующую редакцию'})).toHaveAttribute('href', new RegExp(revision.revision_id));
 });
 
+test('opens the update journal from the header before building collapsed document histories', async ({page}) => {
+  await page.goto('/site/');
+  await page.getByRole('link', {name:'Журнал обновлений', exact:true}).click();
+  const journal = page.locator('#updates');
+  await expect(journal.locator('.update-card').first()).toBeVisible();
+  const histories = journal.locator('.document-change-history');
+  await expect(histories.first().locator('summary')).toBeVisible();
+  await expect(histories.locator('.document-version-entry')).toHaveCount(0);
+
+  const history = histories.first();
+  const summary = history.locator('summary');
+  const entries = history.locator('.document-version-entry');
+  await summary.click();
+  await expect(entries.first()).toBeVisible();
+  const count = await entries.count();
+  await summary.press('Enter');
+  await expect(entries.first()).toBeHidden();
+  await summary.press('Enter');
+  await expect(entries.first()).toBeVisible();
+  await expect(entries).toHaveCount(count);
+});
+
 test('122 preserves the complete document change history with its exact source', async ({page}) => {
   await page.goto('/site/#message=122&env=test');
   const panel = page.locator('.version-panel').filter({has: page.getByRole('heading', {name: 'Тестовый контур'})});

@@ -103,7 +103,13 @@ function appendSchemaReview(container,r){
  if(!found){
   const status=review.tables||review.examples?"В проверенной части расхождений не найдено.":"Сопоставимых таблиц и XML-примеров для автоматической проверки не найдено.";
   report.append(node("p","meta",status+" "+coverage));
-  for(const note of review.notes||[])report.append(node("p","meta",note));
+  const notes=review.notes||[];
+  if(notes.length){
+   const details=node("details","schema-review-notes");
+   details.append(node("summary","","Подробности проверки ("+notes.length+")"));
+   for(const note of notes)details.append(node("p","meta",note));
+   report.append(details);
+  }
   return;
  }
  const button=node("button","open","Показать замечания ("+found+")");
@@ -151,13 +157,18 @@ function appendDocumentHistory(container,source){
  if(changes.length){
   const history=node('details','document-change-history');
   history.append(node('summary','','История изменений документа ('+changes.length+')'));
-  const url=officialDocumentURL(source)||source.document_download;
-  if(url)history.append(external('Источник истории изменений — DOCX',url));
-  for(const change of changes){
-   const entry=node('div','document-version-entry');
-   entry.append(node('p','meta','Версия документа · '+change.version),node('p','meta','Дата изменения · '+change.date),node('p','',change.description));
-   history.append(entry);
+  function renderChanges(){
+   if(!history.open)return;
+   history.removeEventListener('toggle',renderChanges);
+   const url=officialDocumentURL(source)||source.document_download;
+   if(url)history.append(external('Источник истории изменений — DOCX',url));
+   for(const change of changes){
+    const entry=node('div','document-version-entry');
+    entry.append(node('p','meta','Версия документа · '+change.version),node('p','meta','Дата изменения · '+change.date),node('p','',change.description));
+    history.append(entry);
+   }
   }
+  history.addEventListener('toggle',renderChanges);
   container.append(history);
  }
  const tables=source.version_tables||revision?.version_tables||[];

@@ -46,9 +46,9 @@
 .schema-review-item dt {margin-top:6px; font-weight:600}
 .schema-review-item dd {margin:0; white-space:pre-wrap}
 .version-panel .source {overflow-wrap:anywhere; max-width:100%}
-.document-change-history{margin:8px 0}
-.document-change-history summary{width:fit-content;cursor:pointer;font-weight:600;color:var(--green)}
-.document-change-history summary:focus-visible{outline:3px solid #43a48c;outline-offset:2px}
+.document-change-history,.schema-review-notes{margin:8px 0}
+:is(.document-change-history,.schema-review-notes)>summary{width:fit-content;cursor:pointer;font-weight:600;color:var(--green)}
+:is(.document-change-history,.schema-review-notes)>summary:focus-visible{outline:3px solid #43a48c;outline-offset:2px}
 
 .review-results {overflow-x:auto; margin-top:18px}
 .review-results table {border-collapse:collapse; width:100%; min-width:1050px; font-size:14px}
