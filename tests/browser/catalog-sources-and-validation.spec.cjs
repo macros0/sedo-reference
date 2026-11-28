@@ -43,6 +43,20 @@ test('a ready module schema keeps the diagnostic for its unresolved declaration'
  await expect(schema.locator('.schema-diagnostic')).toHaveText('r (пространство имён не указано) — Неоднозначные схемы');
 });
 
+test('100 production collapses schema review notes while keeping the result visible',async({page})=>{
+ await page.goto('/site/#message=100&env=prod');
+ const panel=page.locator('.version-panel').filter({has:page.getByRole('heading',{name:'Продуктивный контур'})});
+ const report=panel.locator('.schema-review');
+ await expect(report.getByText('В проверенной части расхождений не найдено.',{exact:false})).toBeVisible();
+ const note=report.getByText('Не установлено пространство имён ссылки b1_1:benefit1Approve',{exact:false}).first();
+ await expect(note).toBeHidden();
+ const summary=report.getByText(/^Подробности проверки \(\d+\)$/);
+ await summary.click();
+ await expect(note).toBeVisible();
+ await summary.press('Enter');
+ await expect(note).toBeHidden();
+});
+
 test('7810 production shows label date and version history from its DOCX',async({page})=>{
  await page.goto('/site/#message=7810&env=prod');
  const panel=page.locator('.version-panel').filter({has:page.getByRole('heading',{name:'Продуктивный контур'})});
@@ -60,10 +74,10 @@ test('7810 production shows label date and version history from its DOCX',async(
  const changeSource=changes.locator('a');
  const entries=changes.locator('.document-version-entry');
  await expect(summary).toHaveText('История изменений документа (2)');
- await expect(entries).toHaveCount(2);
  await expect(entries.first()).toBeHidden();
  await expect(changeSource).toBeHidden();
  await summary.click();
+ await expect(entries).toHaveCount(2);
  await expect(entries.first()).toBeVisible();
  await expect(changeSource).toHaveAttribute('href',revision.document_url);
  await expect(changeSource).toBeVisible();

@@ -2,11 +2,14 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const root=path.resolve(__dirname,'..');
 const catalog=JSON.parse(fs.readFileSync(path.join(root,'site/catalog-data.js'),'utf8').replace(/^window.SEDO_CATALOG=/,'').replace(/;\s*$/,''));
 class Element{
- constructor(tag){this.tagName=tag;this.children=[];this.textContent='';this.dataset={};this.value=''}
+ constructor(tag){this.tagName=tag;this.children=[];this.textContent='';this.dataset={};this.value='';this.listeners={};this.open=false}
  append(...children){this.children.push(...children)}
  add(child){this.children.push(child)}
  replaceChildren(...children){this.children=children}
  setAttribute(name,value){this[name]=value}
+ addEventListener(name,listener){(this.listeners[name]??=[]).push(listener)}
+ removeEventListener(name,listener){this.listeners[name]=(this.listeners[name]||[]).filter(item=>item!==listener)}
+ dispatchEvent(event){for(const listener of this.listeners[event.type]||[])listener(event)}
 }
 const nodes=new Map(),document={createElement:tag=>new Element(tag),createTextNode:text=>({textContent:text}),querySelector:()=>new Element('small'),getElementById:id=>{if(!nodes.has(id))nodes.set(id,new Element(id));return nodes.get(id)}};
 const context=vm.createContext({document,window:{SEDO_CATALOG:catalog,SedoReviewJournal:require('../web/review-journal.js')},URL,URLSearchParams,Intl,
@@ -70,6 +73,10 @@ console.log('Catalog provenance verified: DOCX version history, distinct dates, 
  const source={number:'122',environment:'test',source_type:'manual',label_date:'18.12.2025',document_history:[{version:'2.49',date:'18.12.2025',description:'Изменена структура ответа'}]};
  const host=new Element('section'); context.historyTestSource=source;context.historyTestHost=host;
  vm.runInContext('appendDocumentHistory(historyTestHost,historyTestSource)',context);
+ const history=descendants(host).find(n=>n.tagName==='details');
+ assert.ok(history,'document history is available as a disclosure');
+ assert.doesNotMatch(text(history),/Изменена структура ответа/,'history entries are not rendered before opening');
+ history.open=true;history.dispatchEvent({type:'toggle'});
  assert.match(text(host),/Дата спецификации при импорте.*18\.12\.2025/);
  assert.match(text(host),/Версия документа.*2\.49/);
  assert.match(text(host),/Дата изменения.*18\.12\.2025/);
@@ -82,6 +89,10 @@ console.log('Catalog provenance verified: DOCX version history, distinct dates, 
  const source={number:'122',environment:'test',document_sha256:digest,document_download:'documents/'+digest+'.docx'};
  const host=new Element('section');context.historyTestSource=source;context.historyTestHost=host;
  vm.runInContext('appendDocumentHistory(historyTestHost,historyTestSource)',context);
+ const history=descendants(host).find(n=>n.tagName==='details');
+ assert.ok(history);
+ assert.doesNotMatch(text(history),/Общая история исходного документа/,'shared document history is rendered on demand');
+ history.open=true;history.dispatchEvent({type:'toggle'});
  assert.match(text(host),/Общая история исходного документа/);
  assert.ok(descendants(host).some(n=>n.tagName==='a'&&n.href===source.document_download));
 }

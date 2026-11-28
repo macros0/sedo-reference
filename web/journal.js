@@ -1,4 +1,7 @@
 "use strict";
+var journalDayFormatter=new Intl.DateTimeFormat("ru-RU",{timeZone:"Europe/Moscow",dateStyle:"long"});
+var journalTimeFormatter=new Intl.DateTimeFormat("ru-RU",{timeZone:"Europe/Moscow",dateStyle:"short",timeStyle:"short"});
+var journalRangeFormatter=new Intl.DateTimeFormat("en",{timeZone:"Europe/Moscow",year:"numeric",month:"2-digit",day:"2-digit"});
 function updatesRoute(number,env){return new URLSearchParams(Object.fromEntries(Object.entries({updates:"1",message:number,env}).filter(([,v])=>v))).toString()}
 function journalDate(value){
  if(value===null||value===undefined||value==="")return null;
@@ -8,13 +11,12 @@ function journalDate(value){
 function observationDate(value,dayOnly=false){
  const date=journalDate(value);
  if(!date)return "Дата обнаружения не сохранена";
- const options=dayOnly?{dateStyle:"long"}:{dateStyle:"short",timeStyle:"short"};
- return new Intl.DateTimeFormat("ru-RU",{timeZone:"Europe/Moscow",...options}).format(date)+(dayOnly?"":" МСК");
+ return dayOnly?journalDayFormatter.format(date):journalTimeFormatter.format(date)+" МСК";
 }
 function journalMoscowDay(value){
  const date=journalDate(value);
  if(!date)return null;
- const parts=Object.fromEntries(new Intl.DateTimeFormat("en",{timeZone:"Europe/Moscow",year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(date).map(p=>[p.type,p.value]));
+ const parts=Object.fromEntries(journalRangeFormatter.formatToParts(date).map(p=>[p.type,p.value]));
  return parts.year+"-"+parts.month+"-"+parts.day;
 }
 function journalObservation(event){
